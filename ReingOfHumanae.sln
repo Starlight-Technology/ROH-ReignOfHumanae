@@ -5,26 +5,30 @@ VisualStudioVersion = 17.4.33403.182
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "ReingOfHumanae\Assembly-CSharp.csproj", "{3A3DF01E-58F9-6E35-9591-527B7F9B66AD}"
 EndProject
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "SavePlayerPosition", "SavePlayerPosition\SavePlayerPosition.pyproj", "{B1E569E5-125C-47B6-8927-39C824FFF8BA}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Itens de Solução", "Itens de Solução", "{58D44CD5-33A0-47D6-8D67-FEC6AFCB4106}"
-	ProjectSection(SolutionItems) = preProject
-		ReingOfHumanae\ObjetosJson.txt = ReingOfHumanae\ObjetosJson.txt
-	EndProjectSection
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "ROH.SavePlayerPosition", "SavePlayerPosition\ROH.SavePlayerPosition.pyproj", "{B1E569E5-125C-47B6-8927-39C824FFF8BA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ROH.Api.Player", "ROH.Api.Player\ROH.Api.Player.csproj", "{E6DF789D-2907-43C8-962A-5E975A3DC94E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ROH.Api.Login", "ROH.Api.Login\ROH.Api.Login.csproj", "{59CCA95D-E5F1-4B39-BDB9-F5B3D6B3AD02}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Domain", "ROH.Domain\ROH.Domain.csproj", "{EEB6CBD2-A58D-4089-BBB5-F9141F19533B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ROH.Domain", "ROH.Domain\ROH.Domain.csproj", "{EEB6CBD2-A58D-4089-BBB5-F9141F19533B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Context", "ROH.Context\ROH.Context.csproj", "{84F43228-131D-43A0-8DA9-7500E3B6F1C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ROH.Context", "ROH.Context\ROH.Context.csproj", "{84F43228-131D-43A0-8DA9-7500E3B6F1C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Models", "ROH.Models\ROH.Models.csproj", "{3B51FA34-D046-4B30-95F2-A10E9070D20A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ROH.Models", "ROH.Models\ROH.Models.csproj", "{3B51FA34-D046-4B30-95F2-A10E9070D20A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Services", "ROH.Services\ROH.Services.csproj", "{8D69B8FB-E35B-4896-AFB5-46AC3767ABEA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ROH.Services", "ROH.Services\ROH.Services.csproj", "{8D69B8FB-E35B-4896-AFB5-46AC3767ABEA}"
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "ROH.Web", "ROH.Web\ROH.Web.esproj", "{AF51D131-11A3-432F-A8DE-FAA413ECA243}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ROH.Test", "ROH.Test\ROH.Test.csproj", "{9165C2C7-7CC5-48BA-9A80-754EEE66F070}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{9163E653-710D-4F9F-96B0-EAEDDC610BFB}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\..\Rodrigo\Imagens\dockerps.JPG = ..\..\..\..\Rodrigo\Imagens\dockerps.JPG
+		install_docker_files.txt = install_docker_files.txt
+		ReingOfHumanae\Json.txt = ReingOfHumanae\Json.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -68,6 +72,10 @@ Global
 		{AF51D131-11A3-432F-A8DE-FAA413ECA243}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF51D131-11A3-432F-A8DE-FAA413ECA243}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AF51D131-11A3-432F-A8DE-FAA413ECA243}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{9165C2C7-7CC5-48BA-9A80-754EEE66F070}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9165C2C7-7CC5-48BA-9A80-754EEE66F070}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9165C2C7-7CC5-48BA-9A80-754EEE66F070}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9165C2C7-7CC5-48BA-9A80-754EEE66F070}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
