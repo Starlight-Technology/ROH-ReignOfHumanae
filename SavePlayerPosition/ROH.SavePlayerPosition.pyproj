@@ -12,7 +12,7 @@
     <OutputPath>.</OutputPath>
     <Name>ROH.SavePlayerPosition</Name>
     <RootNamespace>SavePlayerPosition</RootNamespace>
-    <InterpreterId>MSBuild|env1|$(MSBuildProjectFullPath)</InterpreterId>
+    <InterpreterId>Global|VisualStudio|python 3.11</InterpreterId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>

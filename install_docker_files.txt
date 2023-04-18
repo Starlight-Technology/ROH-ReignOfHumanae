@@ -3,5 +3,5 @@ make sure you have installed docker
 open a terminal and go to project folder that you want run
 make sure that have a dockerfile on that folder
 on terminal run: docker build -t NAME_OF_PROJECT .  <-- really need that dot
-now you have a image of project, just run : docker run -p (port_you_want_expose):(port_you_want_expose) IMAGE_NAME NAME_OF_CONTAINER 
+now you have a image of project, just run : docker run -p (port_you_want_expose):(port_you_want_expose) NAME_OF_CONTAINER IMAGE_NAME
 see print named "dockerps.jpg"

@@ -5,7 +5,7 @@ import json
 from pymongo import MongoClient
  
 # Connect to MongoDB
-client = MongoClient("0.0.0.0:27017")
+client = MongoClient("192.168.0.36:27017")
 db = client["player_position_realtime"]
 collection = db["player_position"]
  
