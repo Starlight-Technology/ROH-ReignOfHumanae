@@ -363,3 +363,26 @@ MigrationBackup/
 FodyWeavers.xsd
 /ReignOfHumanae.Unity/Library
 /ReignOfHumanae.Unity/Temp
+
+# Unity generated
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+
+# Build generated
+/[Bb]uild/
+
+# OS generated
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+
+# Exclude these files for security reasons
+*.unityproj.user
+*.booproj.user
+*.sln.docstates
