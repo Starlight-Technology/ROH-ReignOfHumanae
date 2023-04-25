@@ -1,6 +1,6 @@
 ﻿namespace ROH.Domain.Itens
 {
-    public class Enchantment
+    public record Enchantment(long Id, long? Damage, long? Defense, string? Animation, string Name, EnchantmentType Type)
     {
     }
 }

@@ -8,22 +8,10 @@ using System.Threading.Tasks;
 
 namespace ROH.Domain.Guilds
 {
-    public class Guild
+    public record Guild(long Id, string Name, string Description, ICollection<Character> Characters, ICollection<MembersPosition> Positions)
     {
-        public Guild(string name, string description, ICollection<Character> characters, ICollection<MembersPosition> positions)
+        public Guild(string name, string description, ICollection<Character> characters, ICollection<MembersPosition> positions) : this(default, name ?? throw new ArgumentNullException(nameof(name)), description ?? throw new ArgumentNullException(nameof(description)), characters ?? throw new ArgumentNullException(nameof(characters)), positions ?? throw new ArgumentNullException(nameof(positions)))
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
-            Description = description ?? throw new ArgumentNullException(nameof(description));
-            Characters = characters ?? throw new ArgumentNullException(nameof(characters));
-            Positions = positions ?? throw new ArgumentNullException(nameof(positions));
         }
-
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-
-        public virtual ICollection<Character> Characters { get; set; }
-        public virtual ICollection<MembersPosition> Positions { get; set; }
-
     }
 }
