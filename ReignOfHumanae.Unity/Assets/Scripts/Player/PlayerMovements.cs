@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-
 using UnityEngine;
 
 public class PlayerMoviments : MonoBehaviour
@@ -13,34 +9,43 @@ public class PlayerMoviments : MonoBehaviour
     public GameObject Camera;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         body = gameObject.GetComponent<Rigidbody>();
         body.freezeRotation = true;
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (isGrounded)
         {
             velocity = Input.GetKey(KeyCode.LeftShift) ? 7.0f : 3.2f;
 
             if (Input.GetKey(KeyCode.W))
+            {
                 MoveForward();
+            }
 
             if (Input.GetKey(KeyCode.S))
+            {
                 MoveBackward();
+            }
 
             if (Input.GetKey(KeyCode.D))
+            {
                 MoveRight();
+            }
 
             if (Input.GetKey(KeyCode.A))
+            {
                 MoveLeft();
+            }
 
             if (Input.GetKey(KeyCode.Space))
+            {
                 Jump();
-
+            }
         }
     }
 
@@ -73,8 +78,10 @@ public class PlayerMoviments : MonoBehaviour
         SetFront();
     }
 
-    private void SetFront() => gameObject.transform.rotation = Quaternion.Euler(new Vector3(0,Camera.transform.eulerAngles.y, 0));
-    
+    private void SetFront()
+    {
+        gameObject.transform.rotation = Quaternion.Euler(new Vector3(0, Camera.transform.eulerAngles.y, 0));
+    }
 
     private void OnCollisionEnter(Collision theCollision)
     {

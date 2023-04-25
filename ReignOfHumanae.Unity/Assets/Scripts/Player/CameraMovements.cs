@@ -1,10 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using System.Linq;
-
 using UnityEngine;
-using System;
 
 public class CameraMovements : MonoBehaviour
 {
@@ -21,20 +15,22 @@ public class CameraMovements : MonoBehaviour
     public float sensivity = 4.0f;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-
+        // Method intentionally left empty.
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (Input.GetKey(KeyCode.Mouse1))
+        {
             MoveCamera();
+        }
 
         Vector3 Direction = new(0, 0, distance);
         Quaternion rotation = Quaternion.Euler(currentY, currentX, 0);
-        transform.position = lookAt.position + rotation * Direction;
+        transform.position = lookAt.position + (rotation * Direction);
         transform.LookAt(lookAt.position);
 
     }

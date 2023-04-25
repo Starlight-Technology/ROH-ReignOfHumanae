@@ -1,11 +1,5 @@
 ﻿using ROH.Domain.Characters;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace ROH.Domain.Guilds
 {
     public record Guild(long Id, string Name, string Description, ICollection<Character> Characters, ICollection<MembersPosition> Positions)

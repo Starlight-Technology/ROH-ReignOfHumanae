@@ -1,8 +1,9 @@
+using Newtonsoft.Json;
+
 using System;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Assembly_CSharp.Assets.Scripts.Connection
 {
@@ -13,7 +14,7 @@ namespace Assembly_CSharp.Assets.Scripts.Connection
         public WebSocket()
         {
             _webSocket = new();
-        }       
+        }
 
         /// <summary>
         /// Connect to WebSocket
