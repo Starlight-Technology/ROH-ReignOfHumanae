@@ -30,6 +30,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{9163E653-710
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "ReignOfHumanae.Unity\Assembly-CSharp.csproj", "{A92ECAAB-BAC2-0858-4DFD-D6E0FBAC429B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Interfaces", "ROH.Interfaces\ROH.Interfaces.csproj", "{8D8DE61F-2624-4296-9BB1-4E6D699420CD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -76,6 +78,10 @@ Global
 		{A92ECAAB-BAC2-0858-4DFD-D6E0FBAC429B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A92ECAAB-BAC2-0858-4DFD-D6E0FBAC429B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A92ECAAB-BAC2-0858-4DFD-D6E0FBAC429B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D8DE61F-2624-4296-9BB1-4E6D699420CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D8DE61F-2624-4296-9BB1-4E6D699420CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D8DE61F-2624-4296-9BB1-4E6D699420CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D8DE61F-2624-4296-9BB1-4E6D699420CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
