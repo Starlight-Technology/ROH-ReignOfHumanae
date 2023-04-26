@@ -1,6 +1,6 @@
-﻿namespace ROH.Domain.Itens
+﻿namespace ROH.Domain.Effect
 {
-    public enum EnchantmentType
+    public enum EffectType
     {
         Arcane,
         Darkness,

@@ -1,6 +1,8 @@
-﻿namespace ROH.Domain.Itens
+﻿using ROH.Domain.Effect;
+
+namespace ROH.Domain.Itens
 {
-    public record Enchantment(long Id, long? Damage, long? Defense, string? Animation, string Name, EnchantmentType Type)
+    public record Enchantment(long Id, long? Damage, long? Defense, string? Animation, string Name, EffectType Type)
     {
     }
 }

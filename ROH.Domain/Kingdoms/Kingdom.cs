@@ -2,5 +2,5 @@
 
 namespace ROH.Domain.Kingdoms
 {
-    public record Kingdom(int Id, int IdRuler, Reign Reign, Character? Ruler, ICollection<Character>? Citzens, ICollection<Character>? Champions, ICollection<Relation>? KingdomRelations);
+    public record Kingdom(int Id, int IdRuler, Reign Reign, Character? Ruler, ICollection<Character>? Citzens, ICollection<Character>? Champions, ICollection<KingdomRelation>? KingdomRelations);
 }
