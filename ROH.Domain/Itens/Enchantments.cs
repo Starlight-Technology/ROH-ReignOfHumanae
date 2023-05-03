@@ -2,7 +2,7 @@
 
 namespace ROH.Domain.Itens
 {
-    public record Enchantment(long Id, long? Damage, long? Defense, string? Animation, string Name, EffectType Type)
+    public record Enchantment(long Id, long? Damage, long? Defense, string? Animation, string Name, EffectType Type, ICollection<ItemEnchantments> Items)
     {
     }
 }

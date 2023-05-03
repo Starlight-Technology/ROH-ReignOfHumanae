@@ -21,7 +21,7 @@ namespace ROH.Interfaces
         DbSet<AttackStatus> AttackStatuses { get; }
         DbSet<Character> Characters { get; }
         DbSet<DefenseStatus> DefenseStatuses { get; }
-        DbSet<EquipedItens> EquipedItens { get; }
+        DbSet<EquippedItens> EquipedItens { get; }
         DbSet<Skill> Skills { get; }
         DbSet<Status> Statuses { get; }
         DbSet<Guild> Guilds { get; }
