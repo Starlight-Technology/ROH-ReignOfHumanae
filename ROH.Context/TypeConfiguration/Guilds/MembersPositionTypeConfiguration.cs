@@ -17,7 +17,7 @@ namespace ROH.Context.TypeConfiguration.Guilds
         {
             builder.HasKey(p => p.Id);
 
-            builder.HasOne(p => p.Guild).WithMany(g => g.Positions).HasForeignKey(p => p.IdGuild);
+            builder.HasOne(p => p.Guild).WithMany(g => g.MembersPositions).HasForeignKey(p => p.IdGuild);
             builder.HasOne(p => p.Character).WithOne().HasForeignKey<MembersPosition>(p => p.IdCharacter);
         }
     }

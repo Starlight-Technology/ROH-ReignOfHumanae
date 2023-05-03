@@ -2,5 +2,9 @@
 
 namespace ROH.Domain.Accounts
 {
-    public record Account(long Id, long IdUser, string? UserName, string? RealName, DateOnly BirthDate, ICollection<Character>? Characters, User? User);
+    public record Account(long Id, long IdUser, string? UserName, string? RealName, DateOnly BirthDate)
+    {
+        public ICollection<Character>? Characters { get; init; }
+        public User? User { get; init; }
+    }
 }

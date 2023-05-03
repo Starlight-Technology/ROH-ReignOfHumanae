@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 
 namespace ROH.Domain.Characters
 {
-    public record CharacterInventory(long Id, long IdItem, long IdCharacter, Item Item, Character Character)
+    public record CharacterInventory(long Id, long IdItem, long IdCharacter)
     {
+        public virtual Character Character { get; set; }
+        public virtual Item Item { get; set; }
     }
 }

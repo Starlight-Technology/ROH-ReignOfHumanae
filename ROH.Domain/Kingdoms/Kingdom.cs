@@ -2,5 +2,11 @@
 
 namespace ROH.Domain.Kingdoms
 {
-    public record Kingdom(int Id, int IdRuler, Reign Reign, Character? Ruler, ICollection<Character>? Citzens, ICollection<Champion>? Champions, ICollection<KingdomRelation>? KingdomRelations);
+    public record Kingdom(long Id, long IdRuler, Reign Reign)
+    {
+        public virtual Character? Ruler { get; set; }
+        public virtual ICollection<Character>? Citzens { get; set; }
+        public virtual ICollection<Champion>? Champions { get; set; }
+        public virtual ICollection<KingdomRelation>? KingdomRelations { get; set; }
+    }
 }

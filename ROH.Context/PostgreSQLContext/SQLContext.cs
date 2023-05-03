@@ -60,7 +60,7 @@ namespace ROH.Context.PostgreSQLContext
 
         public DbSet<Champion> Champions { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseNpgsql("Data Source=192.168.0.37,1433;Initial Catalog=ROH;User ID=teste;Password=Teste123;");
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseNpgsql("Host=192.168.0.37;Port=5432;Database=ROH;Username=teste;Password=Teste123;");
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

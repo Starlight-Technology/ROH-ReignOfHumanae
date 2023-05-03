@@ -29,6 +29,7 @@ namespace ROH.Context.TypeConfiguration.Characters
             builder.HasOne(e => e.RightBracelet).WithMany().HasForeignKey(e => e.IdRightBracelet);
 
             builder.HasMany(e => e.LeftHandRings).WithOne(l => l.EquippedItens).HasForeignKey(l => l.IdEquippedItens);
+            builder.Ignore(e => e.LeftHandRings);
             builder.HasMany(e => e.RightHandRings).WithOne(l => l.EquippedItens).HasForeignKey(l => l.IdEquippedItens);
         }
     }

@@ -10,16 +10,18 @@ namespace ROH.Domain.Characters
                                long? IdLegs,
                                long? IdLeftBracelet,
                                long? IdNecklace,
-                               long? IdRightBracelet,
-                               Item? Armor,
-                               Item? Head,
-                               Item? Boots,
-                               Item? Gloves,
-                               Item? Legs,
-                               Item? LeftBracelet,
-                               Item? Necklace,
-                               Item? RightBracelet,
-                               Character? Character,
-                               ICollection<HandRing>? LeftHandRings,
-                               ICollection<HandRing>? RightHandRings);
+                               long? IdRightBracelet)
+    {
+        public virtual Item? Armor { get; set; }
+        public virtual Item? Head { get; set; }
+        public virtual Item? Boots { get; set; }
+        public virtual Item? Gloves { get; set; }
+        public virtual Item? Legs { get; set; }
+        public virtual Item? LeftBracelet { get; set; }
+        public virtual Item? Necklace { get; set; }
+        public virtual Item? RightBracelet { get; set; }
+        public virtual Character? Character { get; set; }
+        public virtual ICollection<HandRing>? LeftHandRings { get; set; }
+        public virtual ICollection<HandRing>? RightHandRings { get; set; }
+    }
 }

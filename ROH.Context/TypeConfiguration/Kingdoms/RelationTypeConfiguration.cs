@@ -18,6 +18,8 @@ namespace ROH.Context.TypeConfiguration.Kingdoms
             builder.HasKey(k => k.Id);
 
             builder.HasOne(k => k.Kingdom).WithMany(k => k.KingdomRelations).HasForeignKey(k => k.IdKingdom);
+            builder.Ignore(k => k.Kingdom);
+
             builder.HasOne(k => k.Kingdom2).WithMany(k => k.KingdomRelations).HasForeignKey(k => k.IdKingdom2);
         }
     }
