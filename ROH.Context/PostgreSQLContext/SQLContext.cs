@@ -1,5 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using ROH.Context.TypeConfiguration.Accounts;
+using ROH.Context.TypeConfiguration.Characters;
+using ROH.Context.TypeConfiguration.Guilds;
+using ROH.Context.TypeConfiguration.Itens;
+using ROH.Context.TypeConfiguration.Kingdoms;
 using ROH.Domain.Accounts;
 using ROH.Domain.Characters;
 using ROH.Domain.Guilds;
@@ -45,12 +50,40 @@ namespace ROH.Context.PostgreSQLContext
 
         public DbSet<KingdomRelation> KingdomRelations { get; set; }
 
+        public DbSet<CharacterSkill> characterSkills { get; set; }
+
+        public DbSet<HandRing> RingsEquipped { get; set; }
+
+        public DbSet<CharacterInventory> CharacterInventories { get; set; }
+
+        public DbSet<ItemEnchantment> ItemEnchantments { get; set; }
+
+        public DbSet<Champion> Champions { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseNpgsql("Data Source=192.168.0.37,1433;Initial Catalog=ROH;User ID=teste;Password=Teste123;");
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
+            modelBuilder.ApplyConfiguration(new AccountTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new UserTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new AttackStatusTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new CharacterSkillTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new CharacterTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new DefenseStatusTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new EquippedItensTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new HandRingTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new InventoryTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new SkillTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new StatusTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new GuildTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new MembersPositionTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new EnchantmentsTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new ItemEnchantmentsTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new ItemTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new ChampionTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new KingdomTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new RelationTypeConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

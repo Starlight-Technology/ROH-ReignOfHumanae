@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ROH.Context.TypeConfiguration.Itens
 {
-    public class EnchantMentsTypeConfiguration : IEntityTypeConfiguration<Enchantment>
+    public class EnchantmentsTypeConfiguration : IEntityTypeConfiguration<Enchantment>
     {
         public void Configure(EntityTypeBuilder<Enchantment> builder)
         {

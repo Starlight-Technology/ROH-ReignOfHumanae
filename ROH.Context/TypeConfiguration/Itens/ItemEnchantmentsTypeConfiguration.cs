@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace ROH.Context.TypeConfiguration.Itens
 {
-    public class ItemEnchantmentsTypeConfiguration : IEntityTypeConfiguration<ItemEnchantments>
+    public class ItemEnchantmentsTypeConfiguration : IEntityTypeConfiguration<ItemEnchantment>
     {
-        public void Configure(EntityTypeBuilder<ItemEnchantments> builder)
+        public void Configure(EntityTypeBuilder<ItemEnchantment> builder)
         {
             builder.HasKey(ie => ie.Id);
 

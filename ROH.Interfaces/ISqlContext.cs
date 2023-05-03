@@ -19,15 +19,20 @@ namespace ROH.Interfaces
         DbSet<User> Users { get; }
         DbSet<Account> Accounts { get; }
         DbSet<AttackStatus> AttackStatuses { get; }
+        DbSet<CharacterSkill> characterSkills { get; }
         DbSet<Character> Characters { get; }
         DbSet<DefenseStatus> DefenseStatuses { get; }
         DbSet<EquippedItens> EquipedItens { get; }
+        DbSet<HandRing> RingsEquipped { get; }
+        DbSet<CharacterInventory> CharacterInventories { get; }
         DbSet<Skill> Skills { get; }
         DbSet<Status> Statuses { get; }
         DbSet<Guild> Guilds { get; }
         DbSet<MembersPosition> MembersPositions { get; }
         DbSet<Enchantment> Enchantments { get; }
+        DbSet<ItemEnchantment> ItemEnchantments { get; }
         DbSet<Item> Items { get; }
+        DbSet<Champion> Champions { get; }
         DbSet<Kingdom> Kingdoms { get; }
         DbSet<KingdomRelation> KingdomRelations { get; }
 
