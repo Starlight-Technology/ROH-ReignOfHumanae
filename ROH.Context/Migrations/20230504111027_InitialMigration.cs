@@ -174,7 +174,7 @@ namespace ROH.Context.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CharacterInventories",
+                name: "CharacterInventory",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -184,9 +184,9 @@ namespace ROH.Context.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CharacterInventories", x => x.Id);
+                    table.PrimaryKey("PK_CharacterInventory", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CharacterInventories_Items_IdItem",
+                        name: "FK_CharacterInventory_Items_IdItem",
                         column: x => x.IdItem,
                         principalTable: "Items",
                         principalColumn: "Id",
@@ -223,7 +223,7 @@ namespace ROH.Context.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "characterSkills",
+                name: "CharacterSkills",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -233,15 +233,15 @@ namespace ROH.Context.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_characterSkills", x => x.Id);
+                    table.PrimaryKey("PK_CharacterSkills", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_characterSkills_Characters_IdCharacter",
+                        name: "FK_CharacterSkills_Characters_IdCharacter",
                         column: x => x.IdCharacter,
                         principalTable: "Characters",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_characterSkills_Skills_IdSkill",
+                        name: "FK_CharacterSkills_Skills_IdSkill",
                         column: x => x.IdSkill,
                         principalTable: "Skills",
                         principalColumn: "Id",
@@ -472,13 +472,13 @@ namespace ROH.Context.Migrations
                 column: "IdKingdom");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CharacterInventories_IdCharacter",
-                table: "CharacterInventories",
+                name: "IX_CharacterInventory_IdCharacter",
+                table: "CharacterInventory",
                 column: "IdCharacter");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CharacterInventories_IdItem",
-                table: "CharacterInventories",
+                name: "IX_CharacterInventory_IdItem",
+                table: "CharacterInventory",
                 column: "IdItem");
 
             migrationBuilder.CreateIndex(
@@ -497,13 +497,13 @@ namespace ROH.Context.Migrations
                 column: "IdKingdom");
 
             migrationBuilder.CreateIndex(
-                name: "IX_characterSkills_IdCharacter",
-                table: "characterSkills",
+                name: "IX_CharacterSkills_IdCharacter",
+                table: "CharacterSkills",
                 column: "IdCharacter");
 
             migrationBuilder.CreateIndex(
-                name: "IX_characterSkills_IdSkill",
-                table: "characterSkills",
+                name: "IX_CharacterSkills_IdSkill",
+                table: "CharacterSkills",
                 column: "IdSkill");
 
             migrationBuilder.CreateIndex(
@@ -619,8 +619,8 @@ namespace ROH.Context.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_CharacterInventories_Characters_IdCharacter",
-                table: "CharacterInventories",
+                name: "FK_CharacterInventory_Characters_IdCharacter",
+                table: "CharacterInventory",
                 column: "IdCharacter",
                 principalTable: "Characters",
                 principalColumn: "Id",
@@ -649,10 +649,10 @@ namespace ROH.Context.Migrations
                 name: "Champions");
 
             migrationBuilder.DropTable(
-                name: "CharacterInventories");
+                name: "CharacterInventory");
 
             migrationBuilder.DropTable(
-                name: "characterSkills");
+                name: "CharacterSkills");
 
             migrationBuilder.DropTable(
                 name: "DefenseStatuses");

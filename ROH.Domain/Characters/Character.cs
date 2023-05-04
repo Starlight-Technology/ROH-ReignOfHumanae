@@ -1,6 +1,5 @@
 ﻿using ROH.Domain.Accounts;
 using ROH.Domain.Guilds;
-using ROH.Domain.Itens;
 using ROH.Domain.Kingdoms;
 
 namespace ROH.Domain.Characters

@@ -12,7 +12,7 @@ using ROH.Context.PostgreSQLContext;
 namespace ROH.Context.Migrations
 {
     [DbContext(typeof(SqlContext))]
-    [Migration("20230503220828_InitialMigration")]
+    [Migration("20230504111027_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -154,7 +154,7 @@ namespace ROH.Context.Migrations
 
                     b.HasIndex("IdItem");
 
-                    b.ToTable("CharacterInventories");
+                    b.ToTable("CharacterInventory");
                 });
 
             modelBuilder.Entity("ROH.Domain.Characters.CharacterSkill", b =>
@@ -177,7 +177,7 @@ namespace ROH.Context.Migrations
 
                     b.HasIndex("IdSkill");
 
-                    b.ToTable("characterSkills");
+                    b.ToTable("CharacterSkills");
                 });
 
             modelBuilder.Entity("ROH.Domain.Characters.DefenseStatus", b =>

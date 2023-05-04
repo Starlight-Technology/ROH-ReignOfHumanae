@@ -151,7 +151,7 @@ namespace ROH.Context.Migrations
 
                     b.HasIndex("IdItem");
 
-                    b.ToTable("CharacterInventories");
+                    b.ToTable("CharacterInventory");
                 });
 
             modelBuilder.Entity("ROH.Domain.Characters.CharacterSkill", b =>
@@ -174,7 +174,7 @@ namespace ROH.Context.Migrations
 
                     b.HasIndex("IdSkill");
 
-                    b.ToTable("characterSkills");
+                    b.ToTable("CharacterSkills");
                 });
 
             modelBuilder.Entity("ROH.Domain.Characters.DefenseStatus", b =>

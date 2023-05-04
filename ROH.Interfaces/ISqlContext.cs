@@ -6,12 +6,6 @@ using ROH.Domain.Guilds;
 using ROH.Domain.Itens;
 using ROH.Domain.Kingdoms;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace ROH.Interfaces
 {
     public interface ISqlContext
@@ -19,12 +13,12 @@ namespace ROH.Interfaces
         DbSet<User> Users { get; }
         DbSet<Account> Accounts { get; }
         DbSet<AttackStatus> AttackStatuses { get; }
-        DbSet<CharacterSkill> characterSkills { get; }
+        DbSet<CharacterSkill> CharacterSkills { get; }
         DbSet<Character> Characters { get; }
         DbSet<DefenseStatus> DefenseStatuses { get; }
         DbSet<EquippedItens> EquipedItens { get; }
         DbSet<HandRing> RingsEquipped { get; }
-        DbSet<CharacterInventory> CharacterInventories { get; }
+        DbSet<CharacterInventory> CharacterInventory { get; }
         DbSet<Skill> Skills { get; }
         DbSet<Status> Statuses { get; }
         DbSet<Guild> Guilds { get; }

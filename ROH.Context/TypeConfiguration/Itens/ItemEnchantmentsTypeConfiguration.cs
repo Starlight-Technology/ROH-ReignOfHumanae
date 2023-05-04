@@ -3,22 +3,16 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using ROH.Domain.Itens;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace ROH.Context.TypeConfiguration.Itens
 {
     public class ItemEnchantmentsTypeConfiguration : IEntityTypeConfiguration<ItemEnchantment>
     {
         public void Configure(EntityTypeBuilder<ItemEnchantment> builder)
         {
-            builder.HasKey(ie => ie.Id);
+            _ = builder.HasKey(ie => ie.Id);
 
-            builder.HasOne(ie => ie.Item).WithMany(i => i.Enchantments).HasForeignKey(ie => ie.IdItem);
-            builder.HasOne(ie => ie.Enchantment).WithMany(i => i.Items).HasForeignKey(ie => ie.IdEnchantment);
+            _ = builder.HasOne(ie => ie.Item).WithMany(i => i.Enchantments).HasForeignKey(ie => ie.IdItem);
+            _ = builder.HasOne(ie => ie.Enchantment).WithMany(i => i.Items).HasForeignKey(ie => ie.IdEnchantment);
         }
     }
 }
