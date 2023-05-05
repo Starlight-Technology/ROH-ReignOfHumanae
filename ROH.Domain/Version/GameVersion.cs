@@ -16,12 +16,12 @@ namespace ROH.Domain.Version
     /// <param name="Release"></param>
     /// <param name="Review"></param>
     /// <param name="Released"></param>
-    public record GameVersion(long Id, int Version, int Release, int Review, bool Released)
+    public record GameVersion(long Id, int Version, int Release, int Review, bool Released, DateTime ReleaseDate)
     {
         private DateTime versionDate;
-        private DateTime releaseDate;
 
+#pragma warning disable S3237 // "value" is defined on set
         public DateTime VersionDate { get => versionDate; set => versionDate = DateTime.Now; }
-        public DateTime ReleaseDate { get => releaseDate; set => releaseDate = DateTime.Now; }
+#pragma warning restore S3237 // "value" is defined on set
     }
 }
