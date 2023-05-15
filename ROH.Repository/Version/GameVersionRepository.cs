@@ -2,10 +2,12 @@
 
 using ROH.Domain.Version;
 using ROH.Interfaces;
+using ROH.Interfaces.Repository.Version;
 
 namespace ROH.Repository.Version
 {
-    public class GameVersionRepository
+
+    public class GameVersionRepository : IGameVersionRepository
     {
         private readonly ISqlContext _context;
 
@@ -15,6 +17,10 @@ namespace ROH.Repository.Version
         }
 
         public async Task<GameVersion?> GetCurrentGameVersion() => await _context.GameVersions.OrderByDescending(v => v.ReleaseDate).FirstOrDefaultAsync();
+
+        public async Task<IList<GameVersion>?> GetAllVersions() => await _context.GameVersions.Where(v => v.Id > 0).ToListAsync();
+
+        public async Task<IList<GameVersion>?> GetAllReleasedVersions() => await _context.GameVersions.Where(v => v.Released).ToListAsync();
 
         public async Task<GameVersion> SetNewGameVersion(GameVersion version)
         {
