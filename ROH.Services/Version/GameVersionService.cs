@@ -1,0 +1,61 @@
+﻿using ROH.Domain.Version;
+using ROH.Interfaces.Repository.Version;
+using ROH.Models.Response;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ROH.Services.Version
+{
+    public class GameVersionService
+    {
+        private readonly IGameVersionRepository _versionRepository;
+
+        public GameVersionService(IGameVersionRepository versionRepository)
+        {
+            _versionRepository = versionRepository;
+        }
+
+        public async Task<DefaultResponse> GetAllVersions()
+        {
+            var versions = await _versionRepository.GetAllVersions();
+            return new DefaultResponse(ObjectResponse: versions);
+
+        }
+
+        public async Task<DefaultResponse> GetAllReleasedVersions()
+        {
+            var versions = await _versionRepository.GetAllReleasedVersions();
+
+            return new DefaultResponse(ObjectResponse: versions, Message: "That are all released versions");
+        }
+
+
+
+        public async Task<DefaultResponse> NewVersion(GameVersion version)
+        {
+            bool valid = await VerifyIfVersionDontExist(version);
+            if (!valid)
+                return new DefaultResponse(HttpStatus: System.Net.HttpStatusCode.Conflict,
+                                           Message: "This version already exist.");
+
+            await _versionRepository.SetNewGameVersion(version);
+
+            return new DefaultResponse(Message: "New game version created.");
+        }
+
+        private async Task<bool> VerifyIfVersionDontExist(GameVersion version)
+        {
+            var versions = await _versionRepository.GetAllVersions();
+#pragma warning disable CS8604 // Possible null reference argument.
+            if (versions != null || versions.Count <= 0)
+                return versions.Any(v => v == version);
+#pragma warning restore CS8604 // Possible null reference argument.
+
+            return false;
+        }
+    }
+}

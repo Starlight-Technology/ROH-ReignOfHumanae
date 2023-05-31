@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace ROH.Domain.Version
 {
-    public record GameVersionFile(long Id, long IdVersion, string Path, string Format)
+    public record GameVersionFile(long Id, long IdVersion, string Name, long Size, string Path, string Format)
     {
         public virtual GameVersion? GameVersion { get; set; }
+        public string Content { get; set; }
     }
 }
