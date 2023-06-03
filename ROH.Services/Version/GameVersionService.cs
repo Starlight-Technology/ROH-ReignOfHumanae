@@ -33,12 +33,10 @@ namespace ROH.Services.Version
             return new DefaultResponse(ObjectResponse: versions, Message: "That are all released versions");
         }
 
-
-
         public async Task<DefaultResponse> NewVersion(GameVersion version)
         {
-            bool valid = await VerifyIfVersionDontExist(version);
-            if (!valid)
+            bool valid = await VerifyIfVersionExist(version);
+            if (valid)
                 return new DefaultResponse(HttpStatus: System.Net.HttpStatusCode.Conflict,
                                            Message: "This version already exist.");
 
@@ -47,13 +45,11 @@ namespace ROH.Services.Version
             return new DefaultResponse(Message: "New game version created.");
         }
 
-        private async Task<bool> VerifyIfVersionDontExist(GameVersion version)
+        private async Task<bool> VerifyIfVersionExist(GameVersion version)
         {
             var versions = await _versionRepository.GetAllVersions();
-#pragma warning disable CS8604 // Possible null reference argument.
-            if (versions != null || versions.Count <= 0)
+            if (versions != null && versions.Count > 0)
                 return versions.Any(v => v == version);
-#pragma warning restore CS8604 // Possible null reference argument.
 
             return false;
         }
