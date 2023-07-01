@@ -15,7 +15,7 @@ namespace ROH.Validations.Version
         public GameVersionFileValidator()
         {
             RuleFor(f => f.IdVersion).GreaterThan(0);
-
+            RuleFor(f => f.GameVersion).NotNull().SetValidator(new GameVersionValidator() as IValidator<GameVersion?>);
             RuleFor(f => f.Content).NotEmpty();
             RuleFor(f => f.Format).NotEmpty();
             RuleFor(f => f.Name).NotEmpty();

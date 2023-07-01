@@ -33,32 +33,35 @@ namespace ROH.Services.Version
 
         public async Task NewFile(GameVersionFile file)
         {
-
             var validation = await _validator.ValidateAsync(file);
 
             if (validation.IsValid)
             {
 #if DEBUG
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-                string path = @$"C:\ROHUpdateFiles\{file.GameVersion.Version}.{file.GameVersion.Release}.{file.GameVersion.Review}\{file.Name}"; // path to file
+                string path = @$"C:\ROHUpdateFiles\{file.GameVersion.Version}.{file.GameVersion.Release}.{file.GameVersion.Review}\"; // path to file
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
 #elif RELEASE
+                throw NotImplementedException();
 #endif
-                using (FileStream fs = File.Create(path))
+                if (!Directory.Exists(Path.GetDirectoryName(path)))
                 {
-                    // writing data in string
-                    string dataAsString = "data"; //your data
-                    byte[] info = new UTF8Encoding(true).GetBytes(dataAsString);
-                    fs.Write(info, 0, info.Length);
-
-                    // writing data in bytes already
-                    byte[] data = new byte[] { 0x0 };
-                    fs.Write(data, 0, data.Length);
+                    Directory.CreateDirectory(Path.GetDirectoryName(path) ?? Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\ROHFiles");
                 }
+
+                if (File.Exists(path + file.Name))
+                    File.Delete(path + file.Name);
+
+                using FileStream fs = File.Create(path + file.Name);
+                // writing data in string
+                byte[] info = new UTF8Encoding(true).GetBytes(file.Content);
+                fs.Write(info, 0, info.Length);
+
+                await _repository.SaveFile(file);
             }
             else
             {
-                StringBuilder errors = new StringBuilder();
+                StringBuilder errors = new();
                 foreach (var error in validation.Errors)
                 {
                     errors.Append($";{error}");
@@ -67,6 +70,7 @@ namespace ROH.Services.Version
 
                 throw new Exception(errorString);
             }
+
 
         }
 
