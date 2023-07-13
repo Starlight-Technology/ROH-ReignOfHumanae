@@ -1,5 +1,6 @@
 ﻿using ROH.Domain.Version;
 using ROH.Interfaces.Repository.Version;
+using ROH.Interfaces.Services;
 using ROH.Models.Response;
 
 using System;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ROH.Services.Version
 {
-    public class GameVersionService
+    public class GameVersionService : IGameVersionService
     {
         private readonly IGameVersionRepository _versionRepository;
 
@@ -45,7 +46,7 @@ namespace ROH.Services.Version
             return new DefaultResponse(Message: "New game version created.");
         }
 
-        private async Task<bool> VerifyIfVersionExist(GameVersion version)
+        public async Task<bool> VerifyIfVersionExist(GameVersion version)
         {
             var versions = await _versionRepository.GetAllVersions();
             if (versions != null && versions.Count > 0)
