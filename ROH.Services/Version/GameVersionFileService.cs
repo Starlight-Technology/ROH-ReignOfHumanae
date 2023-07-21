@@ -2,7 +2,7 @@
 
 using ROH.Domain.Version;
 using ROH.Interfaces.Repository.Version;
-using ROH.Interfaces.Services;
+using ROH.Interfaces.Services.Version;
 using ROH.Models.Response;
 
 using System.IO;
@@ -11,7 +11,7 @@ using System.Text;
 
 namespace ROH.Services.Version
 {
-    public class GameVersionFileService
+    public class GameVersionFileService : IGameVersionFileService
     {
         private readonly IGameVersionFileRepository _repository;
         private readonly IGameVersionService _gameVersion;

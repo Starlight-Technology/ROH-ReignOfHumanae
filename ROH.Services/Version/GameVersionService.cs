@@ -1,6 +1,6 @@
 ﻿using ROH.Domain.Version;
 using ROH.Interfaces.Repository.Version;
-using ROH.Interfaces.Services;
+using ROH.Interfaces.Services.Version;
 using ROH.Models.Response;
 
 using System;
@@ -53,6 +53,12 @@ namespace ROH.Services.Version
                 return versions.Any(v => v == version);
 
             return false;
+        }
+
+        public async Task<DefaultResponse> GetCurrentVersion()
+        {
+            var version = await _versionRepository.GetCurrentGameVersion();
+            return new DefaultResponse(ObjectResponse: version);
         }
     }
 }

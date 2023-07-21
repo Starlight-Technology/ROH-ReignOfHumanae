@@ -14,4 +14,11 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ROH.Context\ROH.Context.csproj" />
+    <ProjectReference Include="..\ROH.Interfaces\ROH.Interfaces.csproj" />
+    <ProjectReference Include="..\ROH.Repository\ROH.Repository.csproj" />
+    <ProjectReference Include="..\ROH.Services\ROH.Services.csproj" />
+  </ItemGroup>
+
 </Project>

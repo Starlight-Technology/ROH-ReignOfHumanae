@@ -5,7 +5,7 @@ using Moq;
 
 using ROH.Domain.Version;
 using ROH.Interfaces.Repository.Version;
-using ROH.Interfaces.Services;
+using ROH.Interfaces.Services.Version;
 using ROH.Services.Version;
 
 using System;
