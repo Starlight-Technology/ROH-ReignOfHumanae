@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ROH.Domain\ROH.Domain.csproj" />
-    <ProjectReference Include="..\ROH.Models\ROH.Models.csproj" />
+    <ProjectReference Include="..\ROH.StandardModels\ROH.StandardModels.csproj" />
   </ItemGroup>
 
 </Project>

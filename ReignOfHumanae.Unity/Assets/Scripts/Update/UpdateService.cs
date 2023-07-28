@@ -19,20 +19,21 @@ namespace Assets.Scripts.Update
         private GameVersionModel gameVersion;
 
         // Start is called before the first frame update
-        async void Start()
+        void Start()
         {
             TxtUpdate.text = "Looking for updates...";
             TxtUpdate.color = Color.red;
-            await LookForUpdate();
+            LookForUpdate().Wait();
         }
 
         private Task LookForUpdate()
         {
-            gameVersion = new GameVersionModel();
-
-            gameVersion.Version = PlayerPrefs.GetInt("version-version");
-            gameVersion.Release = PlayerPrefs.GetInt("version-release");
-            gameVersion.Review = PlayerPrefs.GetInt("version-review");
+            gameVersion = new GameVersionModel
+            {
+                Version = PlayerPrefs.GetInt("version-version"),
+                Release = PlayerPrefs.GetInt("version-release"),
+                Review = PlayerPrefs.GetInt("version-review")
+            };
 
 
 

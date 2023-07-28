@@ -3,7 +3,7 @@
 using ROH.Domain.Version;
 using ROH.Interfaces.Repository.Version;
 using ROH.Interfaces.Services.Version;
-using ROH.Models.Response;
+using ROH.StandardModels.Response;
 
 using System.IO;
 using System.Net;
@@ -51,7 +51,7 @@ namespace ROH.Services.Version
                     }
                     else
                     {
-                        return new DefaultResponse(null, HttpStatus: HttpStatusCode.NotFound, Message: "Game Version Not Found.");
+                        return new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "Game Version Not Found.");
                     }
                 }
                 else
@@ -68,7 +68,7 @@ namespace ROH.Services.Version
             }
             else
             {
-                return new DefaultResponse(null, HttpStatus: HttpStatusCode.NotFound, Message: "File Not Found.");
+                return new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File Not Found.");
             }
         }
 
@@ -76,7 +76,7 @@ namespace ROH.Services.Version
         {
             var files = await _repository.GetFiles(version);
 
-            return new DefaultResponse(ObjectResponse: files);
+            return new DefaultResponse(objectResponse: files);
         }
 
         public async Task NewFile(GameVersionFile file)
