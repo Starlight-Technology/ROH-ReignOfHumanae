@@ -1,1 +1,9 @@
 # ROH
+
+MMORPG that tells the history about a world with magic and technology. The world of Reign of Humanæ began with only one intelligent race, the Humanae. As time passed, the Humanae divided into four distinct races: Humans, Elves, Dwarfs, and Demons. Each race had unique characteristics and abilities that made them stand out from the others. The Humans were known for their adaptability and large communities. They had the ability to learn things 15% faster than other races and had a 10% resistance to cold. The Elves were a reclusive race that lived in small communities within forests. They had a deep connection with nature and had the ability to learn nature magic and agility skills 20% faster than other races. Creatures in the forest would not attack them unless provoked. The Dwarfs lived in caverns and did not like other races, particularly the Elves. They were known for their advanced technology and had the ability to make items 25% more powerful. They were also 10% faster at mining and could learn strength skills 20% faster than other races. However, they struggled with magic, finding it 20% harder to learn. The Demons preferred warm climates and did not like other races. They had a natural ability to learn fire magic 25% faster than other races and had a 50% resistance to fire. However, they found it 20% harder to learn agility and strength skills. As the races interacted, alliances and rivalries were formed. Some races formed alliances to gain an advantage in the world, while others waged wars against each other. The world of Reign of Humanæ was full of adventure and excitement as the races battled for supremacy in a world filled with magic and technology.
+
+
+![ArchtectureDiagram](https://github.com/RodrigoMartinsMoraes-Z/ROH-ReignOfHumanae/assets/28880737/db5055d2-56c7-4e10-b819-f5c6a0770c5f)
+
+V1.0
+![ROH - Diagram1](https://github.com/RodrigoMartinsMoraes-Z/ROH-ReignOfHumanae/assets/28880737/2d082135-6c2e-4265-a93f-a8b7b4519f8d)
