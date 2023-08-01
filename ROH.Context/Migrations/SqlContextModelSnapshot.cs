@@ -568,6 +568,63 @@ namespace ROH.Context.Migrations
                     b.ToTable("KingdomRelations");
                 });
 
+            modelBuilder.Entity("ROH.Domain.Version.GameVersion", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<int>("Release")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("ReleaseDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("Released")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("Review")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("VersionDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GameVersions");
+                });
+
+            modelBuilder.Entity("ROH.Domain.Version.GameVersionFile", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Format")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<long>("IdVersion")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdVersion");
+
+                    b.ToTable("GameVersionFiles");
+                });
+
             modelBuilder.Entity("ROH.Domain.Accounts.User", b =>
                 {
                     b.HasOne("ROH.Domain.Accounts.Account", "Account")
@@ -830,6 +887,17 @@ namespace ROH.Context.Migrations
                         .IsRequired();
 
                     b.Navigation("Kingdom2");
+                });
+
+            modelBuilder.Entity("ROH.Domain.Version.GameVersionFile", b =>
+                {
+                    b.HasOne("ROH.Domain.Version.GameVersion", "GameVersion")
+                        .WithMany()
+                        .HasForeignKey("IdVersion")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("GameVersion");
                 });
 
             modelBuilder.Entity("ROH.Domain.Accounts.Account", b =>

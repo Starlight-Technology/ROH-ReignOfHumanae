@@ -6,4 +6,11 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ROH.Domain\ROH.Domain.csproj" />
+    <ProjectReference Include="..\ROH.Interfaces\ROH.Interfaces.csproj" />
+    <ProjectReference Include="..\ROH.Models\ROH.Models.csproj" />
+    <ProjectReference Include="..\ROH.Validations\ROH.Validations.csproj" />
+  </ItemGroup>
+
 </Project>

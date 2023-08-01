@@ -12,6 +12,6 @@
                                 long WaterDefenseLevel,
                                 long WindDefenseLevel)
     {
-        public virtual Character Character { get; set; }
+        public virtual Character? Character { get; set; }
     }
 }

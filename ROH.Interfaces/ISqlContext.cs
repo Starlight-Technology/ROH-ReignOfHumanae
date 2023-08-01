@@ -5,6 +5,7 @@ using ROH.Domain.Characters;
 using ROH.Domain.Guilds;
 using ROH.Domain.Itens;
 using ROH.Domain.Kingdoms;
+using ROH.Domain.Version;
 
 namespace ROH.Interfaces
 {
@@ -29,6 +30,8 @@ namespace ROH.Interfaces
         DbSet<Champion> Champions { get; }
         DbSet<Kingdom> Kingdoms { get; }
         DbSet<KingdomRelation> KingdomRelations { get; }
+        DbSet<GameVersion> GameVersions { get; }
+        DbSet<GameVersionFile> GameVersionFiles { get; }
 
         int SaveChanges();
         Task<int> SaveChangesAsync();

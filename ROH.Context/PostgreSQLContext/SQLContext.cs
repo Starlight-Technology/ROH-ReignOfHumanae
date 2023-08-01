@@ -5,11 +5,13 @@ using ROH.Context.TypeConfiguration.Characters;
 using ROH.Context.TypeConfiguration.Guilds;
 using ROH.Context.TypeConfiguration.Itens;
 using ROH.Context.TypeConfiguration.Kingdoms;
+using ROH.Context.TypeConfiguration.Version;
 using ROH.Domain.Accounts;
 using ROH.Domain.Characters;
 using ROH.Domain.Guilds;
 using ROH.Domain.Itens;
 using ROH.Domain.Kingdoms;
+using ROH.Domain.Version;
 using ROH.Interfaces;
 
 namespace ROH.Context.PostgreSQLContext
@@ -54,6 +56,10 @@ namespace ROH.Context.PostgreSQLContext
 
         public DbSet<Champion> Champions { get; set; }
 
+        public DbSet<GameVersion> GameVersions { get; set; }
+
+        public DbSet<GameVersionFile> GameVersionFiles { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             _ = optionsBuilder.UseNpgsql("Host=192.168.0.37;Port=5432;Database=ROH;Username=teste;Password=Teste123;");
@@ -80,6 +86,8 @@ namespace ROH.Context.PostgreSQLContext
             _ = modelBuilder.ApplyConfiguration(new ChampionTypeConfiguration());
             _ = modelBuilder.ApplyConfiguration(new KingdomTypeConfiguration());
             _ = modelBuilder.ApplyConfiguration(new RelationTypeConfiguration());
+            _ = modelBuilder.ApplyConfiguration(new GameVersionTypeConfiguration());
+            _ = modelBuilder.ApplyConfiguration(new GameVersionFileTypeConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
