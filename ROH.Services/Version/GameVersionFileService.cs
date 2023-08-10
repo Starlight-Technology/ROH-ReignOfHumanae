@@ -1,9 +1,14 @@
-﻿using FluentValidation;
+﻿// Ignore Spelling: validator
+
+using AutoMapper;
+
+using FluentValidation;
 
 using ROH.Domain.Version;
 using ROH.Interfaces.Repository.Version;
 using ROH.Interfaces.Services.Version;
 using ROH.StandardModels.Response;
+using ROH.StandardModels.Version;
 
 using System.IO;
 using System.Net;
@@ -15,13 +20,15 @@ namespace ROH.Services.Version
     {
         private readonly IGameVersionFileRepository _repository;
         private readonly IGameVersionService _gameVersion;
-        private readonly IValidator<GameVersionFile> _validator;
+        private readonly IValidator<GameVersionFileModel> _validator;
+        private readonly IMapper _mapper;
 
-        public GameVersionFileService(IGameVersionFileRepository gameVersionFileRepository, IValidator<GameVersionFile> validator, IGameVersionService gameVersion)
+        public GameVersionFileService(IGameVersionFileRepository gameVersionFileRepository, IValidator<GameVersionFileModel> validator, IGameVersionService gameVersion, IMapper mapper)
         {
             _repository = gameVersionFileRepository;
             _validator = validator;
             _gameVersion = gameVersion;
+            _mapper = mapper;
         }
 
         public async Task<DefaultResponse> DownloadFile(long id)
@@ -30,18 +37,17 @@ namespace ROH.Services.Version
 
             if (file != null)
             {
-
-                var validation = await _validator.ValidateAsync(file);
+                file = file with { GameVersion = _mapper.Map<GameVersion>(_gameVersion.GetVersionById(file.IdVersion).Result?.ObjectResponse) };
+                var fileModel = _mapper.Map<GameVersionFileModel>(file);
+                var validation = await _validator.ValidateAsync(fileModel);
                 if (validation.IsValid)
                 {
                     if (file.GameVersion != null &&
-                        await _gameVersion.VerifyIfVersionExist(file.GameVersion))
+                        await _gameVersion.VerifyIfVersionExist(_mapper.Map<GameVersionModel>(file.GameVersion)))
                     {
                         string path = string.Empty;
 #if DEBUG
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
                         path = @$"C:\ROHUpdateFiles\{file.GameVersion.Version}.{file.GameVersion.Release}.{file.GameVersion.Review}\"; // path to file
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
 #elif RELEASE
                 throw NotImplementedException();
 #endif
@@ -72,15 +78,16 @@ namespace ROH.Services.Version
             }
         }
 
-        public async Task<DefaultResponse> GetFiles(GameVersion version)
+        public async Task<DefaultResponse> GetFiles(GameVersionModel version)
         {
-            var files = await _repository.GetFiles(version);
+            var files = await _repository.GetFiles(_mapper.Map<GameVersion>(version));
 
             return new DefaultResponse(objectResponse: files);
         }
 
-        public async Task NewFile(GameVersionFile file)
+        public async Task NewFile(GameVersionFileModel file)
         {
+
             var validation = await _validator.ValidateAsync(file);
 
             if (validation.IsValid)
@@ -90,13 +97,11 @@ namespace ROH.Services.Version
                 {
                     string path = "";
 #if DEBUG
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
                     path = @$"C:\ROHUpdateFiles\{file.GameVersion.Version}.{file.GameVersion.Release}.{file.GameVersion.Review}\"; // path to file
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
 #elif RELEASE
                 throw NotImplementedException();
 #endif
-                    file = file with { Path = path };
+                    file.Path = path;
 
                     if (!Directory.Exists(Path.GetDirectoryName(path)))
                     {
@@ -111,7 +116,9 @@ namespace ROH.Services.Version
                     byte[] info = new UTF8Encoding(true).GetBytes(file.Content);
                     await fs.WriteAsync(info);
 
-                    await _repository.SaveFile(file);
+                    var entity = _mapper.Map<GameVersionFile>(file);
+
+                    await _repository.SaveFile(entity);
                 }
                 else
                 {
@@ -129,6 +136,8 @@ namespace ROH.Services.Version
 
                 throw new Exception(errorString);
             }
+
+
 
 
         }

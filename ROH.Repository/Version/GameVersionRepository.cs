@@ -16,6 +16,8 @@ namespace ROH.Repository.Version
             _context = context;
         }
 
+        public async Task<GameVersion?> GetVersionById(long versionId) => await _context.GameVersions.FindAsync(versionId); 
+
         public async Task<GameVersion?> GetCurrentGameVersion() => await _context.GameVersions.OrderByDescending(v => v.ReleaseDate).FirstOrDefaultAsync();
 
         public async Task<IList<GameVersion>?> GetAllVersions() => await _context.GameVersions.Where(v => v.Id > 0).ToListAsync();

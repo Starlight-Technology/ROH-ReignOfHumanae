@@ -1,3 +1,5 @@
+using AutoMapper;
+
 using FluentValidation;
 
 using ROH.Context.PostgreSQLContext;
@@ -5,8 +7,10 @@ using ROH.Domain.Version;
 using ROH.Interfaces;
 using ROH.Interfaces.Repository.Version;
 using ROH.Interfaces.Services.Version;
+using ROH.Mapper.Version;
 using ROH.Repository.Version;
 using ROH.Services.Version;
+using ROH.StandardModels.Version;
 using ROH.Validations.Version;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,8 +28,18 @@ builder.Services.AddScoped<IGameVersionRepository, GameVersionRepository>();
 builder.Services.AddScoped<IGameVersionService, GameVersionService>();
 builder.Services.AddScoped<IGameVersionFileService, GameVersionFileService>();
 
-builder.Services.AddScoped<IValidator<GameVersion>, GameVersionValidator>();
-builder.Services.AddScoped<IValidator<GameVersionFile>, GameVersionFileValidator>();
+builder.Services.AddScoped<IValidator<GameVersionModel>, GameVersionModelValidator>();
+builder.Services.AddScoped<IValidator<GameVersionFileModel>, GameVersionFileModelValidator>();
+
+// Auto Mapper Configurations
+var mappingConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new GameVersionFileMapping());
+    mc.AddProfile(new GameVersionMapping());
+});
+
+IMapper mapper = mappingConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
 
 var app = builder.Build();
 
@@ -38,9 +52,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapPost("/CreateNewVersion", () =>
+app.MapPost("/CreateNewVersion", async (IGameVersionService _gameVersionService, GameVersionModel model) =>
 {
-
+    return await _gameVersionService.NewVersion(model);
 })
 .WithName("CreateNewVersion")
 .WithOpenApi();

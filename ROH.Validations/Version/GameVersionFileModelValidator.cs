@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 
 using ROH.Domain.Version;
+using ROH.StandardModels.Version;
 
 using System;
 using System.Collections.Generic;
@@ -10,12 +11,11 @@ using System.Threading.Tasks;
 
 namespace ROH.Validations.Version
 {
-    public class GameVersionFileValidator : AbstractValidator<GameVersionFile>
+    public class GameVersionFileModelValidator : AbstractValidator<GameVersionFileModel>
     {
-        public GameVersionFileValidator()
+        public GameVersionFileModelValidator()
         {
-            RuleFor(f => f.IdVersion).GreaterThan(0);
-            RuleFor(f => f.GameVersion).NotNull().SetValidator(new GameVersionValidator() as IValidator<GameVersion?>);
+            RuleFor(f => f.GameVersion).NotNull().SetValidator(new GameVersionModelValidator() as IValidator<GameVersionModel?>);
             RuleFor(f => f.Content).NotEmpty();
             RuleFor(f => f.Format).NotEmpty();
             RuleFor(f => f.Name).NotEmpty();

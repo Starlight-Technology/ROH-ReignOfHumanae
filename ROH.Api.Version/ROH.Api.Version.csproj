@@ -9,6 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.5" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
@@ -17,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ROH.Context\ROH.Context.csproj" />
     <ProjectReference Include="..\ROH.Interfaces\ROH.Interfaces.csproj" />
+    <ProjectReference Include="..\ROH.Mapper\ROH.Mapper.csproj" />
     <ProjectReference Include="..\ROH.Repository\ROH.Repository.csproj" />
     <ProjectReference Include="..\ROH.Services\ROH.Services.csproj" />
   </ItemGroup>

@@ -10,6 +10,7 @@ namespace ROH.Interfaces.Repository.Version
 {
     public interface IGameVersionRepository
     {
+        Task<GameVersion?> GetVersionById(long versionId);
         Task<IList<GameVersion>?> GetAllReleasedVersions();
         Task<IList<GameVersion>?> GetAllVersions();
         Task<GameVersion?> GetCurrentGameVersion();

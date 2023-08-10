@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ROH.Domain\ROH.Domain.csproj" />
     <ProjectReference Include="..\ROH.Interfaces\ROH.Interfaces.csproj" />
     <ProjectReference Include="..\ROH.Validations\ROH.Validations.csproj" />

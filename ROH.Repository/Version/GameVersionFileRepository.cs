@@ -21,7 +21,6 @@ namespace ROH.Repository.Version
 
         public async Task SaveFile(GameVersionFile file)
         {
-            file = file with { Content = string.Empty };
             await _context.GameVersionFiles.AddAsync(file);
             await _context.SaveChangesAsync();
         }

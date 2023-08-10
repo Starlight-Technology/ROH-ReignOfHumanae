@@ -8,18 +8,19 @@ namespace ROH.StandardModels.Version
 {
     public class GameVersionFileModel
     {
-        public string Name { get; }
-        public long Size { get; }
-        public string Path { get; }
-        public string Format { get; }
+        public string Name { get; set; }
+        public long Size { get; set; }
+        public string Path { get; set; }
+        public string Format { get; set; }
+        public string Content { get; set; }
         public virtual GameVersionModel? GameVersion { get; set; }
 
-        public GameVersionFileModel(string name, long size, string path, string format)
+        public GameVersionFileModel(string name = "", string path = "", string format = "", string content = "")
         {
             Name = name;
-            Size = size;
             Path = path;
             Format = format;
+            Content = content;
         }
     }
 
