@@ -1,8 +1,5 @@
 using Assets.Scripts.Models.Version;
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using TMPro;
@@ -16,10 +13,9 @@ namespace Assets.Scripts.Update
     {
         public TextMeshProUGUI TxtUpdate { get; set; }
         public Button BtnLogin { get; set; }
-        private GameVersionModel gameVersion;
 
         // Start is called before the first frame update
-        void Start()
+        private void Start()
         {
             TxtUpdate.text = "Looking for updates...";
             TxtUpdate.color = Color.red;
@@ -28,22 +24,14 @@ namespace Assets.Scripts.Update
 
         private Task LookForUpdate()
         {
-            gameVersion = new GameVersionModel
+            GameVersionModel gameVersion = new ()
             {
                 Version = PlayerPrefs.GetInt("version-version"),
                 Release = PlayerPrefs.GetInt("version-release"),
                 Review = PlayerPrefs.GetInt("version-review")
             };
 
-
-
             return Task.CompletedTask;
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using ROH.Domain.Itens;
+﻿using ROH.Domain.items;
 
 namespace ROH.Domain.Characters
 {
@@ -6,6 +6,5 @@ namespace ROH.Domain.Characters
     {
         public virtual Character? Character { get; set; }
         public virtual Item? Item { get; set; }
-    
     }
 }

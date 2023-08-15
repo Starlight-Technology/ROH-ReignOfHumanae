@@ -1,10 +1,10 @@
-﻿using ROH.Domain.Itens;
+﻿using ROH.Domain.items;
 
 namespace ROH.Domain.Characters
 {
-    public record HandRing(long Id, long IdEquippedItens, long IdItem)
+    public record HandRing(long Id, long IdEquippedItems, long IdItem)
     {
-        public virtual EquippedItens? EquippedItens { get; set; }
+        public virtual EquippedItems? EquippedItems { get; set; }
         public virtual Item? Item { get; set; }
     }
 }

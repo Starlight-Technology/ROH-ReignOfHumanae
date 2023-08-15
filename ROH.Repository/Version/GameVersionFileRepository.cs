@@ -15,14 +15,20 @@ namespace ROH.Repository.Version
             _context = context;
         }
 
-        public async Task<GameVersionFile?> GetFile(long id) => await _context.GameVersionFiles.FindAsync(id);
+        public async Task<GameVersionFile?> GetFile(long id)
+        {
+            return await _context.GameVersionFiles.FindAsync(id);
+        }
 
-        public async Task<List<GameVersionFile>> GetFiles(GameVersion version) => await _context.GameVersionFiles.Where(v => v.IdVersion == version.Id).ToListAsync();
+        public async Task<List<GameVersionFile>> GetFiles(GameVersion version)
+        {
+            return await _context.GameVersionFiles.Where(v => v.IdVersion == version.Id).ToListAsync();
+        }
 
         public async Task SaveFile(GameVersionFile file)
         {
-            await _context.GameVersionFiles.AddAsync(file);
-            await _context.SaveChangesAsync();
+            _ = await _context.GameVersionFiles.AddAsync(file);
+            _ = await _context.SaveChangesAsync();
         }
     }
 }

@@ -3,7 +3,7 @@
 using ROH.Domain.Accounts;
 using ROH.Domain.Characters;
 using ROH.Domain.Guilds;
-using ROH.Domain.Itens;
+using ROH.Domain.items;
 using ROH.Domain.Kingdoms;
 using ROH.Domain.Version;
 
@@ -17,7 +17,7 @@ namespace ROH.Interfaces
         DbSet<CharacterSkill> CharacterSkills { get; }
         DbSet<Character> Characters { get; }
         DbSet<DefenseStatus> DefenseStatuses { get; }
-        DbSet<EquippedItens> EquipedItens { get; }
+        DbSet<EquippedItems> EquippedItems { get; }
         DbSet<HandRing> RingsEquipped { get; }
         DbSet<CharacterInventory> CharacterInventory { get; }
         DbSet<Skill> Skills { get; }
@@ -34,6 +34,7 @@ namespace ROH.Interfaces
         DbSet<GameVersionFile> GameVersionFiles { get; }
 
         int SaveChanges();
+
         Task<int> SaveChangesAsync();
     }
 }

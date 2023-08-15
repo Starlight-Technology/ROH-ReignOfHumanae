@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ROH.StandardModels.Version
+﻿namespace ROH.StandardModels.Version
 {
     public class GameVersionFileModel
     {
@@ -23,6 +17,4 @@ namespace ROH.StandardModels.Version
             Content = content;
         }
     }
-
-
 }

@@ -10,7 +10,6 @@ using ROH.Interfaces.Services.Version;
 using ROH.StandardModels.Response;
 using ROH.StandardModels.Version;
 
-using System.IO;
 using System.Net;
 using System.Text;
 
@@ -33,13 +32,13 @@ namespace ROH.Services.Version
 
         public async Task<DefaultResponse> DownloadFile(long id)
         {
-            var file = await _repository.GetFile(id);
+            GameVersionFile? file = await _repository.GetFile(id);
 
             if (file != null)
             {
                 file = file with { GameVersion = _mapper.Map<GameVersion>(_gameVersion.GetVersionById(file.IdVersion).Result?.ObjectResponse) };
-                var fileModel = _mapper.Map<GameVersionFileModel>(file);
-                var validation = await _validator.ValidateAsync(fileModel);
+                GameVersionFileModel fileModel = _mapper.Map<GameVersionFileModel>(file);
+                FluentValidation.Results.ValidationResult validation = await _validator.ValidateAsync(fileModel);
                 if (validation.IsValid)
                 {
                     if (file.GameVersion != null &&
@@ -51,7 +50,7 @@ namespace ROH.Services.Version
 #elif RELEASE
                 throw NotImplementedException();
 #endif
-                        var fileContent = await File.ReadAllLinesAsync(path + file.Name);
+                        string[] fileContent = await File.ReadAllLinesAsync(path + file.Name);
 
                         return new DefaultResponse(fileContent[0], HttpStatusCode.OK);
                     }
@@ -63,7 +62,7 @@ namespace ROH.Services.Version
                 else
                 {
                     StringBuilder errors = new();
-                    foreach (var error in validation.Errors)
+                    foreach (FluentValidation.Results.ValidationFailure? error in validation.Errors)
                     {
                         errors.Append($";{error}");
                     }
@@ -80,15 +79,14 @@ namespace ROH.Services.Version
 
         public async Task<DefaultResponse> GetFiles(GameVersionModel version)
         {
-            var files = await _repository.GetFiles(_mapper.Map<GameVersion>(version));
+            List<GameVersionFile> files = await _repository.GetFiles(_mapper.Map<GameVersion>(version));
 
             return new DefaultResponse(objectResponse: files);
         }
 
         public async Task NewFile(GameVersionFileModel file)
         {
-
-            var validation = await _validator.ValidateAsync(file);
+            FluentValidation.Results.ValidationResult validation = await _validator.ValidateAsync(file);
 
             if (validation.IsValid)
             {
@@ -109,14 +107,16 @@ namespace ROH.Services.Version
                     }
 
                     if (File.Exists(path + file.Name))
+                    {
                         File.Delete(path + file.Name);
+                    }
 
                     using FileStream fs = File.Create(path + file.Name);
 
                     byte[] info = new UTF8Encoding(true).GetBytes(file.Content);
                     await fs.WriteAsync(info);
 
-                    var entity = _mapper.Map<GameVersionFile>(file);
+                    GameVersionFile entity = _mapper.Map<GameVersionFile>(file);
 
                     await _repository.SaveFile(entity);
                 }
@@ -128,7 +128,7 @@ namespace ROH.Services.Version
             else
             {
                 StringBuilder errors = new();
-                foreach (var error in validation.Errors)
+                foreach (FluentValidation.Results.ValidationFailure? error in validation.Errors)
                 {
                     errors.Append($";{error}");
                 }
@@ -136,11 +136,6 @@ namespace ROH.Services.Version
 
                 throw new Exception(errorString);
             }
-
-
-
-
         }
-
     }
 }

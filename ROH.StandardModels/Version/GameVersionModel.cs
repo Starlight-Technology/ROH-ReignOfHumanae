@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace ROH.StandardModels.Version
-{    
+{
     public class GameVersionModel
     {
         public int Version { get; set; }
@@ -13,11 +13,6 @@ namespace ROH.StandardModels.Version
 
         public GameVersionModel()
         {
-                
         }
-
     }
-
-
-
 }

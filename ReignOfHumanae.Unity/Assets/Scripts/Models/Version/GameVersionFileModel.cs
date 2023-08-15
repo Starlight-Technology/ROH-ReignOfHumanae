@@ -1,11 +1,5 @@
 ﻿using Assets.Scripts.Models.Version;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace ROH.Models.Version
 {
     public record GameVersionFileModel
@@ -17,5 +11,4 @@ namespace ROH.Models.Version
         public string Content { get; set; }
         public virtual GameVersionModel GameVersion { get; set; }
     }
-
 }

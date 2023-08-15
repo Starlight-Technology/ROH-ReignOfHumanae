@@ -3,18 +3,18 @@
 using ROH.Context.TypeConfiguration.Accounts;
 using ROH.Context.TypeConfiguration.Characters;
 using ROH.Context.TypeConfiguration.Guilds;
-using ROH.Context.TypeConfiguration.Itens;
+using ROH.Context.TypeConfiguration.items;
 using ROH.Context.TypeConfiguration.Kingdoms;
 using ROH.Context.TypeConfiguration.Version;
 using ROH.Domain.Accounts;
 using ROH.Domain.Characters;
 using ROH.Domain.Guilds;
-using ROH.Domain.Itens;
+using ROH.Domain.items;
 using ROH.Domain.Kingdoms;
 using ROH.Domain.Version;
 using ROH.Interfaces;
 
-namespace ROH.Context.PostgreSQLContext
+namespace ROH.Context.PostgresSQLContext
 {
     public class SqlContext : DbContext, ISqlContext
     {
@@ -28,7 +28,7 @@ namespace ROH.Context.PostgreSQLContext
 
         public DbSet<DefenseStatus> DefenseStatuses { get; set; }
 
-        public DbSet<EquippedItens> EquipedItens { get; set; }
+        public DbSet<EquippedItems> EquippedItems { get; set; }
 
         public DbSet<Skill> Skills { get; set; }
 
@@ -73,7 +73,7 @@ namespace ROH.Context.PostgreSQLContext
             _ = modelBuilder.ApplyConfiguration(new CharacterSkillTypeConfiguration());
             _ = modelBuilder.ApplyConfiguration(new CharacterTypeConfiguration());
             _ = modelBuilder.ApplyConfiguration(new DefenseStatusTypeConfiguration());
-            _ = modelBuilder.ApplyConfiguration(new EquippedItensTypeConfiguration());
+            _ = modelBuilder.ApplyConfiguration(new EquippedItemsTypeConfiguration());
             _ = modelBuilder.ApplyConfiguration(new HandRingTypeConfiguration());
             _ = modelBuilder.ApplyConfiguration(new InventoryTypeConfiguration());
             _ = modelBuilder.ApplyConfiguration(new SkillTypeConfiguration());

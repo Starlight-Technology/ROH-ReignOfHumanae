@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ROH.Domain.Version
+﻿namespace ROH.Domain.Version
 {
     /// <summary>
     /// Version is the version of the game, greate changes like something in history
-    /// Release is for changes like events or new itens
+    /// Release is for changes like events or new items
     /// Review is for fixes
     /// </summary>
     /// <param name="Id"></param>
@@ -22,5 +15,4 @@ namespace ROH.Domain.Version
         public DateTime? ReleaseDate { get; set; }
         public DateTime VersionDate { get; set; }
     }
- 
 }

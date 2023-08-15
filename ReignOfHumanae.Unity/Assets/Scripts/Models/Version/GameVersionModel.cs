@@ -11,6 +11,4 @@ namespace Assets.Scripts.Models.Version
         public DateTime ReleaseDate { get; set; }
         public DateTime VersionDate { get; set; }
     }
-
-
 }

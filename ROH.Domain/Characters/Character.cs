@@ -24,7 +24,7 @@ namespace ROH.Domain.Characters
         public virtual AttackStatus? AttackStatus { get; set; }
         public virtual Account? Account { get; set; }
         public virtual DefenseStatus? DefenseStatus { get; set; }
-        public virtual EquippedItens? EquippedItens { get; set; }
+        public virtual EquippedItems? EquippedItems { get; set; }
         public virtual Status? Status { get; set; }
         public virtual Guild? Guild { get; set; }
         public virtual Kingdom? Kingdom { get; set; }
