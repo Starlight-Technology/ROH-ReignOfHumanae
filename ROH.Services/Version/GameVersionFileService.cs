@@ -1,4 +1,4 @@
-﻿// Ignore Spelling: validator
+﻿ // Ignore Spelling: validator
 
 using AutoMapper;
 
@@ -46,9 +46,9 @@ namespace ROH.Services.Version
                     {
                         string path = string.Empty;
 #if DEBUG
-                        path = @$"C:\ROHUpdateFiles\{file.GameVersion.Version}.{file.GameVersion.Release}.{file.GameVersion.Review}\"; // path to file
+                        path = @$"C:\ROHUpdateFiles\{file.GameVersion.Version}.{file.GameVersion.Release}.{file.GameVersion.Review}\"; // path to file on Windows
 #elif RELEASE
-                throw NotImplementedException();
+                        path = @$"\app\data\ROH\ROHUpdateFiles\{file.GameVersion.Version}.{file.GameVersion.Release}.{file.GameVersion.Review}\"; //path to file on Linux
 #endif
                         string[] fileContent = await File.ReadAllLinesAsync(path + file.Name);
 
@@ -97,7 +97,7 @@ namespace ROH.Services.Version
 #if DEBUG
                     path = @$"C:\ROHUpdateFiles\{file.GameVersion.Version}.{file.GameVersion.Release}.{file.GameVersion.Review}\"; // path to file
 #elif RELEASE
-                throw NotImplementedException();
+                    path = @$"\app\data\ROH\ROHUpdateFiles\{file.GameVersion.Version}.{file.GameVersion.Release}.{file.GameVersion.Review}\"; //path to file on Linux
 #endif
                     file.Path = path;
 
