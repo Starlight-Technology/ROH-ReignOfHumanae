@@ -1,0 +1,30 @@
+﻿@page "/manager/new-update"
+<p>
+    <label for="Version">Version:</label>
+    <input type="number" id="Version" @bind="Version" />
+</p>
+<p>
+    <label for="Release">Release:</label>
+    <input type="number" id="Release" @bind="Release" />
+</p>
+<p>
+    <label for="Review">Review:</label>
+    <input type="number" id="Review" @bind="Review" />
+</p>
+
+<button @onclick="ConsoleWrite">Console Log</button>
+
+@code {
+
+    private int Version = 0;
+    private int Release = 0;
+    private int Review = 0;
+
+    private void ConsoleWrite()
+    {
+        Console.WriteLine($"Version: {Version}");
+        Console.WriteLine($"Release: {Release}");
+        Console.WriteLine($"Review: {Review}");
+    }
+
+}

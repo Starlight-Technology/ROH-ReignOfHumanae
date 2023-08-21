@@ -43,7 +43,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ROH.StandardModels", "ROH.S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ROH.Mapper", "ROH.Mapper\ROH.Mapper.csproj", "{C45EDD52-91F5-4267-8333-6760F9DCF728}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Blazor.Server", "ROH.Blazor.Server\ROH.Blazor.Server.csproj", "{C707994C-5626-4CD6-9C10-E5E5D6D341CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ROH.Blazor.Server", "ROH.Blazor.Server\ROH.Blazor.Server.csproj", "{C707994C-5626-4CD6-9C10-E5E5D6D341CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Utils", "ROH.Utils\ROH.Utils.csproj", "{12888BCB-FE73-48BF-952E-0C3EAB481D4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -109,6 +111,10 @@ Global
 		{C707994C-5626-4CD6-9C10-E5E5D6D341CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C707994C-5626-4CD6-9C10-E5E5D6D341CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C707994C-5626-4CD6-9C10-E5E5D6D341CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12888BCB-FE73-48BF-952E-0C3EAB481D4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12888BCB-FE73-48BF-952E-0C3EAB481D4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12888BCB-FE73-48BF-952E-0C3EAB481D4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12888BCB-FE73-48BF-952E-0C3EAB481D4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
