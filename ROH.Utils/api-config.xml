@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ApiConfig>
   <ServiceUrls>
-    <Service name="Version" url="https://localhost:7240" />
+    <Service name="Version" url="https://localhost:44389/" />
   </ServiceUrls>
 </ApiConfig>

@@ -19,8 +19,7 @@ namespace ROH.Utils.ApiConfiguration
     {
         private static readonly ApiConfigReader _apiConfig = new ApiConfigReader();
 
-        private static readonly Dictionary<ApiUrl, Uri> _apiUrl = _apiConfig.GetApiUrl();
- 
+        private static readonly Dictionary<ApiUrl, Uri> _apiUrl = _apiConfig.GetApiUrl(); 
 
         public enum Services
         {

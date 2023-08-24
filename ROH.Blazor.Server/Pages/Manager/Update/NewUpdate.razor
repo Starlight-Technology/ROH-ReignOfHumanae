@@ -1,30 +1,41 @@
 ﻿@page "/manager/new-update"
+@using ROH.Blazor.Server.Api;
+@using ROH.StandardModels.Version;
 <p>
     <label for="Version">Version:</label>
-    <input type="number" id="Version" @bind="Version" />
+    <input type="number" id="Version" @bind="inputVersion" />
 </p>
 <p>
     <label for="Release">Release:</label>
-    <input type="number" id="Release" @bind="Release" />
+    <input type="number" id="Release" @bind="inputRelease" />
 </p>
 <p>
     <label for="Review">Review:</label>
-    <input type="number" id="Review" @bind="Review" />
+    <input type="number" id="Review" @bind="inputReview" />
 </p>
 
 <button @onclick="ConsoleWrite">Console Log</button>
+<button @onclick="CreateNewVersion">Create New Version</button>
 
 @code {
+    private readonly VersionService _versionService = new VersionService();
 
-    private int Version = 0;
-    private int Release = 0;
-    private int Review = 0;
+    private int inputVersion = 0;
+    private int inputRelease = 0;
+    private int inputReview = 0;
+
+    private async Task CreateNewVersion()
+    {
+        GameVersionModel model = new GameVersionModel() { Version = inputVersion, Release = inputRelease, Review = inputReview };
+
+        await _versionService.CreateNewVersion(model);
+    }
 
     private void ConsoleWrite()
     {
-        Console.WriteLine($"Version: {Version}");
-        Console.WriteLine($"Release: {Release}");
-        Console.WriteLine($"Review: {Review}");
+        Console.WriteLine($"Version: {inputVersion}");
+        Console.WriteLine($"Release: {inputRelease}");
+        Console.WriteLine($"Review: {inputReview}");
     }
 
 }

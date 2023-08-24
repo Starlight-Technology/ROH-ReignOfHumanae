@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
 
@@ -18,7 +20,11 @@ namespace ROH.Utils.ApiConfiguration
 
         public ApiConfigReader()
         {
-            _config = XDocument.Load("~/api-config.xml");
+            string assemblyLocation = Assembly.GetExecutingAssembly().Location;
+            string assemblyDirectory = Path.GetDirectoryName(assemblyLocation);
+            string xmlFilePath = Path.Combine(assemblyDirectory, "api-config.xml");
+
+            _config = XDocument.Load(xmlFilePath);
         }
 
         public Dictionary<ApiUrl, Uri> GetApiUrl()

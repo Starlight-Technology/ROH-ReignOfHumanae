@@ -37,6 +37,7 @@ namespace ROH.Repository.Version
 
         public async Task<GameVersion> SetNewGameVersion(GameVersion version)
         {
+            version.VersionDate = DateTime.UtcNow;
             _ = await _context.GameVersions.AddAsync(version);
             _ = await _context.SaveChangesAsync();
 
@@ -50,5 +51,8 @@ namespace ROH.Repository.Version
 
             return version;
         }
+
+        public async Task<bool> VerifyIfExist(GameVersion version) => await _context.GameVersions.AnyAsync(v => v.Release == version.Release && v.Review == version.Review && v.Version == version.Version);
+
     }
 }
