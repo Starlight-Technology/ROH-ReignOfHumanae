@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ROH.Test", "ROH.Test\ROH.Te
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{9163E653-710D-4F9F-96B0-EAEDDC610BFB}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\..\..\Rodrigo\Imagens\dockerps.JPG = ..\..\..\..\Rodrigo\Imagens\dockerps.JPG
+		..\..\..\Rodrigo\Imagens\dockerps.JPG = ..\..\..\Rodrigo\Imagens\dockerps.JPG
 		install_docker_files.txt = install_docker_files.txt
 		ReingOfHumanae\Json.txt = ReingOfHumanae\Json.txt
 	EndProjectSection
@@ -45,7 +45,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ROH.Mapper", "ROH.Mapper\RO
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ROH.Blazor.Server", "ROH.Blazor.Server\ROH.Blazor.Server.csproj", "{C707994C-5626-4CD6-9C10-E5E5D6D341CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Utils", "ROH.Utils\ROH.Utils.csproj", "{12888BCB-FE73-48BF-952E-0C3EAB481D4E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ROH.Utils", "ROH.Utils\ROH.Utils.csproj", "{12888BCB-FE73-48BF-952E-0C3EAB481D4E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Gateway", "ROH.Gateway\ROH.Gateway.csproj", "{51B628AF-3D52-4F25-A2B7-2811C538FA58}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -115,6 +117,10 @@ Global
 		{12888BCB-FE73-48BF-952E-0C3EAB481D4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12888BCB-FE73-48BF-952E-0C3EAB481D4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12888BCB-FE73-48BF-952E-0C3EAB481D4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51B628AF-3D52-4F25-A2B7-2811C538FA58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51B628AF-3D52-4F25-A2B7-2811C538FA58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51B628AF-3D52-4F25-A2B7-2811C538FA58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51B628AF-3D52-4F25-A2B7-2811C538FA58}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
