@@ -44,13 +44,11 @@ namespace ROH.Utils.ApiConfiguration
 
             if (apiParameters.Count > 0)
             {
-                parameters.Append("?");
-
                 for (int i = 0; i < apiParameters.Count; i++)
                 {
                     if (i == 0)
                     {
-                        parameters.Append($"{apiParameters[i].Name}={apiParameters[i].Value}");
+                        parameters.Append($"?{apiParameters[i].Name}={apiParameters[i].Value}");
                     }
                     else
                     {
