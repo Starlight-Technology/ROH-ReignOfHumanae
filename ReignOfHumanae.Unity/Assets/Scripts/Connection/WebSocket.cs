@@ -38,6 +38,5 @@ namespace Assembly_CSharp.Assets.Scripts.Connection
         {
             await _webSocket.CloseAsync(closeStatus, statusDescription, cancellationToken);
         }
-
     }
 }

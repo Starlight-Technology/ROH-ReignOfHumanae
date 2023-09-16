@@ -4,7 +4,12 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <CodeAnalysisRuleSet>..\.sonarlint\rohcsharp.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="..\.sonarlint\roh\CSharp\SonarLint.xml" Link="SonarLint.xml" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.5.2" />
@@ -14,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ROH.Domain\ROH.Domain.csproj" />
+    <ProjectReference Include="..\ROH.StandardModels\ROH.StandardModels.csproj" />
   </ItemGroup>
 
 </Project>

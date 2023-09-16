@@ -4,6 +4,7 @@ namespace ROH.Models.Response
 {
     public class DefaultResponse
     {
+#nullable enable
         public object? ObjectResponse { get; set; }
         public HttpStatusCode HttpStatus { get; set; }
         public string Message { get; set; }

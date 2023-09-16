@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using ROH.Domain.Itens;
+using ROH.Domain.items;
 
-namespace ROH.Context.TypeConfiguration.Itens
+namespace ROH.Context.TypeConfiguration.items
 {
     public class ItemEnchantmentsTypeConfiguration : IEntityTypeConfiguration<ItemEnchantment>
     {

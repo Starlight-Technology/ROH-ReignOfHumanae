@@ -1,15 +1,18 @@
+using AutoMapper;
+
 using FluentValidation;
 
-using ROH.Context.PostgreSQLContext;
-using ROH.Domain.Version;
+using ROH.Context.PostgresSQLContext;
 using ROH.Interfaces;
 using ROH.Interfaces.Repository.Version;
 using ROH.Interfaces.Services.Version;
+using ROH.Mapper.Version;
 using ROH.Repository.Version;
 using ROH.Services.Version;
+using ROH.StandardModels.Version;
 using ROH.Validations.Version;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -24,33 +27,41 @@ builder.Services.AddScoped<IGameVersionRepository, GameVersionRepository>();
 builder.Services.AddScoped<IGameVersionService, GameVersionService>();
 builder.Services.AddScoped<IGameVersionFileService, GameVersionFileService>();
 
-builder.Services.AddScoped<IValidator<GameVersion>, GameVersionValidator>();
-builder.Services.AddScoped<IValidator<GameVersionFile>, GameVersionFileValidator>();
+builder.Services.AddScoped<IValidator<GameVersionModel>, GameVersionModelValidation>();
+builder.Services.AddScoped<IValidator<GameVersionFileModel>, GameVersionFileModelValidation>();
 
-var app = builder.Build();
+// Auto Mapper Configurations
+MapperConfiguration mappingConfig = new(mc =>
+{
+    mc.AddProfile(new GameVersionFileMapping());
+    mc.AddProfile(new GameVersionMapping());
+});
+
+IMapper mapper = mappingConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
+
+WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    _ = app.UseSwagger();
+    _ = app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 
-app.MapPost("/CreateNewVersion", () =>
+app.MapPost("/CreateNewVersion", async (IGameVersionService _gameVersionService, GameVersionModel model) =>
 {
-
+    return await _gameVersionService.NewVersion(model);
 })
 .WithName("CreateNewVersion")
 .WithOpenApi();
 
-app.MapGet("/GetCurrentVersion", async (IGameVersionService _gameVersionService)  =>
+app.MapGet("/GetCurrentVersion", async (IGameVersionService _gameVersionService) =>
 {
     return await _gameVersionService.GetCurrentVersion();
 }).WithName("GetCurrentVersion")
   .WithOpenApi();
 
 app.Run();
-
-

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using ROH.Context.PostgreSQLContext;
+using ROH.Context.PostgresSQLContext;
 
 #nullable disable
 
@@ -217,7 +217,7 @@ namespace ROH.Context.Migrations
                     b.ToTable("DefenseStatuses");
                 });
 
-            modelBuilder.Entity("ROH.Domain.Characters.EquippedItens", b =>
+            modelBuilder.Entity("ROH.Domain.Characters.EquippedItems", b =>
                 {
                     b.Property<long>("IdCharacter")
                         .HasColumnType("bigint");
@@ -264,7 +264,7 @@ namespace ROH.Context.Migrations
 
                     b.HasIndex("IdRightBracelet");
 
-                    b.ToTable("EquipedItens");
+                    b.ToTable("EquippedItems");
                 });
 
             modelBuilder.Entity("ROH.Domain.Characters.HandRing", b =>
@@ -275,7 +275,7 @@ namespace ROH.Context.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("IdEquippedItens")
+                    b.Property<long>("IdEquippedItems")
                         .HasColumnType("bigint");
 
                     b.Property<long>("IdItem")
@@ -283,7 +283,7 @@ namespace ROH.Context.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdEquippedItens");
+                    b.HasIndex("IdEquippedItems");
 
                     b.HasIndex("IdItem");
 
@@ -410,95 +410,6 @@ namespace ROH.Context.Migrations
                     b.ToTable("MembersPositions");
                 });
 
-            modelBuilder.Entity("ROH.Domain.Itens.Enchantment", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("Animation")
-                        .HasColumnType("text");
-
-                    b.Property<long?>("Damage")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("Defense")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Enchantments");
-                });
-
-            modelBuilder.Entity("ROH.Domain.Itens.Item", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<int?>("Attack")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Defense")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Descricao")
-                        .HasColumnType("text");
-
-                    b.Property<string>("File")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Format")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Sprite")
-                        .HasColumnType("text");
-
-                    b.Property<int>("Weight")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Items");
-                });
-
-            modelBuilder.Entity("ROH.Domain.Itens.ItemEnchantment", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<long>("IdEnchantment")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("IdItem")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IdEnchantment");
-
-                    b.HasIndex("IdItem");
-
-                    b.ToTable("ItemEnchantments");
-                });
-
             modelBuilder.Entity("ROH.Domain.Kingdoms.Champion", b =>
                 {
                     b.Property<long>("Id")
@@ -579,7 +490,7 @@ namespace ROH.Context.Migrations
                     b.Property<int>("Release")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("ReleaseDate")
+                    b.Property<DateTime?>("ReleaseDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("Released")
@@ -614,15 +525,111 @@ namespace ROH.Context.Migrations
                     b.Property<long>("IdVersion")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Path")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<long>("Size")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
                     b.HasIndex("IdVersion");
 
                     b.ToTable("GameVersionFiles");
+                });
+
+            modelBuilder.Entity("ROH.Domain.items.Enchantment", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Animation")
+                        .HasColumnType("text");
+
+                    b.Property<long?>("Damage")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("Defense")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Enchantments");
+                });
+
+            modelBuilder.Entity("ROH.Domain.items.Item", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<int?>("Attack")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("Defense")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Descricao")
+                        .HasColumnType("text");
+
+                    b.Property<string>("File")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Format")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Sprite")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Weight")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Items");
+                });
+
+            modelBuilder.Entity("ROH.Domain.items.ItemEnchantment", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("IdEnchantment")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("IdItem")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdEnchantment");
+
+                    b.HasIndex("IdItem");
+
+                    b.ToTable("ItemEnchantments");
                 });
 
             modelBuilder.Entity("ROH.Domain.Accounts.User", b =>
@@ -660,7 +667,7 @@ namespace ROH.Context.Migrations
                         .HasForeignKey("IdGuild");
 
                     b.HasOne("ROH.Domain.Kingdoms.Kingdom", "Kingdom")
-                        .WithMany("Citzens")
+                        .WithMany("Citizens")
                         .HasForeignKey("IdKingdom")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -680,7 +687,7 @@ namespace ROH.Context.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ROH.Domain.Itens.Item", "Item")
+                    b.HasOne("ROH.Domain.items.Item", "Item")
                         .WithMany()
                         .HasForeignKey("IdItem")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -721,43 +728,43 @@ namespace ROH.Context.Migrations
                     b.Navigation("Character");
                 });
 
-            modelBuilder.Entity("ROH.Domain.Characters.EquippedItens", b =>
+            modelBuilder.Entity("ROH.Domain.Characters.EquippedItems", b =>
                 {
-                    b.HasOne("ROH.Domain.Itens.Item", "Armor")
+                    b.HasOne("ROH.Domain.items.Item", "Armor")
                         .WithMany()
                         .HasForeignKey("IdArmor");
 
-                    b.HasOne("ROH.Domain.Itens.Item", "Boots")
+                    b.HasOne("ROH.Domain.items.Item", "Boots")
                         .WithMany()
                         .HasForeignKey("IdBoots");
 
                     b.HasOne("ROH.Domain.Characters.Character", "Character")
-                        .WithOne("EquippedItens")
-                        .HasForeignKey("ROH.Domain.Characters.EquippedItens", "IdCharacter")
+                        .WithOne("EquippedItems")
+                        .HasForeignKey("ROH.Domain.Characters.EquippedItems", "IdCharacter")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ROH.Domain.Itens.Item", "Gloves")
+                    b.HasOne("ROH.Domain.items.Item", "Gloves")
                         .WithMany()
                         .HasForeignKey("IdGloves");
 
-                    b.HasOne("ROH.Domain.Itens.Item", "Head")
+                    b.HasOne("ROH.Domain.items.Item", "Head")
                         .WithMany()
                         .HasForeignKey("IdHead");
 
-                    b.HasOne("ROH.Domain.Itens.Item", "LeftBracelet")
+                    b.HasOne("ROH.Domain.items.Item", "LeftBracelet")
                         .WithMany()
                         .HasForeignKey("IdLeftBracelet");
 
-                    b.HasOne("ROH.Domain.Itens.Item", "Legs")
+                    b.HasOne("ROH.Domain.items.Item", "Legs")
                         .WithMany()
                         .HasForeignKey("IdLegs");
 
-                    b.HasOne("ROH.Domain.Itens.Item", "Necklace")
+                    b.HasOne("ROH.Domain.items.Item", "Necklace")
                         .WithMany()
                         .HasForeignKey("IdNecklace");
 
-                    b.HasOne("ROH.Domain.Itens.Item", "RightBracelet")
+                    b.HasOne("ROH.Domain.items.Item", "RightBracelet")
                         .WithMany()
                         .HasForeignKey("IdRightBracelet");
 
@@ -782,19 +789,19 @@ namespace ROH.Context.Migrations
 
             modelBuilder.Entity("ROH.Domain.Characters.HandRing", b =>
                 {
-                    b.HasOne("ROH.Domain.Characters.EquippedItens", "EquippedItens")
+                    b.HasOne("ROH.Domain.Characters.EquippedItems", "EquippedItems")
                         .WithMany("RightHandRings")
-                        .HasForeignKey("IdEquippedItens")
+                        .HasForeignKey("IdEquippedItems")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ROH.Domain.Itens.Item", "Item")
+                    b.HasOne("ROH.Domain.items.Item", "Item")
                         .WithMany()
                         .HasForeignKey("IdItem")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("EquippedItens");
+                    b.Navigation("EquippedItems");
 
                     b.Navigation("Item");
                 });
@@ -827,25 +834,6 @@ namespace ROH.Context.Migrations
                     b.Navigation("Character");
 
                     b.Navigation("Guild");
-                });
-
-            modelBuilder.Entity("ROH.Domain.Itens.ItemEnchantment", b =>
-                {
-                    b.HasOne("ROH.Domain.Itens.Enchantment", "Enchantment")
-                        .WithMany("Items")
-                        .HasForeignKey("IdEnchantment")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ROH.Domain.Itens.Item", "Item")
-                        .WithMany("Enchantments")
-                        .HasForeignKey("IdItem")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Enchantment");
-
-                    b.Navigation("Item");
                 });
 
             modelBuilder.Entity("ROH.Domain.Kingdoms.Champion", b =>
@@ -900,6 +888,25 @@ namespace ROH.Context.Migrations
                     b.Navigation("GameVersion");
                 });
 
+            modelBuilder.Entity("ROH.Domain.items.ItemEnchantment", b =>
+                {
+                    b.HasOne("ROH.Domain.items.Enchantment", "Enchantment")
+                        .WithMany("Items")
+                        .HasForeignKey("IdEnchantment")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ROH.Domain.items.Item", "Item")
+                        .WithMany("Enchantments")
+                        .HasForeignKey("IdItem")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Enchantment");
+
+                    b.Navigation("Item");
+                });
+
             modelBuilder.Entity("ROH.Domain.Accounts.Account", b =>
                 {
                     b.Navigation("Characters");
@@ -909,24 +916,20 @@ namespace ROH.Context.Migrations
 
             modelBuilder.Entity("ROH.Domain.Characters.Character", b =>
                 {
-                    b.Navigation("AttackStatus")
-                        .IsRequired();
+                    b.Navigation("AttackStatus");
 
-                    b.Navigation("DefenseStatus")
-                        .IsRequired();
+                    b.Navigation("DefenseStatus");
 
-                    b.Navigation("EquippedItens")
-                        .IsRequired();
+                    b.Navigation("EquippedItems");
 
                     b.Navigation("Inventory");
 
                     b.Navigation("Skills");
 
-                    b.Navigation("Status")
-                        .IsRequired();
+                    b.Navigation("Status");
                 });
 
-            modelBuilder.Entity("ROH.Domain.Characters.EquippedItens", b =>
+            modelBuilder.Entity("ROH.Domain.Characters.EquippedItems", b =>
                 {
                     b.Navigation("RightHandRings");
                 });
@@ -938,23 +941,23 @@ namespace ROH.Context.Migrations
                     b.Navigation("MembersPositions");
                 });
 
-            modelBuilder.Entity("ROH.Domain.Itens.Enchantment", b =>
-                {
-                    b.Navigation("Items");
-                });
-
-            modelBuilder.Entity("ROH.Domain.Itens.Item", b =>
-                {
-                    b.Navigation("Enchantments");
-                });
-
             modelBuilder.Entity("ROH.Domain.Kingdoms.Kingdom", b =>
                 {
                     b.Navigation("Champions");
 
-                    b.Navigation("Citzens");
+                    b.Navigation("Citizens");
 
                     b.Navigation("KingdomRelations");
+                });
+
+            modelBuilder.Entity("ROH.Domain.items.Enchantment", b =>
+                {
+                    b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("ROH.Domain.items.Item", b =>
+                {
+                    b.Navigation("Enchantments");
                 });
 #pragma warning restore 612, 618
         }

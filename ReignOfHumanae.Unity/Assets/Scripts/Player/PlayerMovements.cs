@@ -1,101 +1,104 @@
 using UnityEngine;
 
-public class PlayerMoviments : MonoBehaviour
+namespace Assets.Scripts.Player
 {
-    private Rigidbody body;
-    private float velocity;
-    private bool isGrounded;
-
-    public GameObject Camera;
-
-    // Start is called before the first frame update
-    private void Start()
+    public class PlayerMovements : MonoBehaviour
     {
-        body = gameObject.GetComponent<Rigidbody>();
-        body.freezeRotation = true;
-    }
+        private Rigidbody body;
+        private float velocity;
+        private bool isGrounded;
 
-    // Update is called once per frame
-    private void Update()
-    {
-        if (isGrounded)
+        public GameObject Camera { get; set; }
+
+        // Start is called before the first frame update
+        private void Start()
         {
-            velocity = Input.GetKey(KeyCode.LeftShift) ? 7.0f : 3.2f;
+            body = gameObject.GetComponent<Rigidbody>();
+            body.freezeRotation = true;
+        }
 
-            if (Input.GetKey(KeyCode.W))
+        // Update is called once per frame
+        private void Update()
+        {
+            if (isGrounded)
             {
-                MoveForward();
-            }
+                velocity = Input.GetKey(KeyCode.LeftShift) ? 7.0f : 3.2f;
 
-            if (Input.GetKey(KeyCode.S))
-            {
-                MoveBackward();
-            }
+                if (Input.GetKey(KeyCode.W))
+                {
+                    MoveForward();
+                }
 
-            if (Input.GetKey(KeyCode.D))
-            {
-                MoveRight();
-            }
+                if (Input.GetKey(KeyCode.S))
+                {
+                    MoveBackward();
+                }
 
-            if (Input.GetKey(KeyCode.A))
-            {
-                MoveLeft();
-            }
+                if (Input.GetKey(KeyCode.D))
+                {
+                    MoveRight();
+                }
 
-            if (Input.GetKey(KeyCode.Space))
-            {
-                Jump();
+                if (Input.GetKey(KeyCode.A))
+                {
+                    MoveLeft();
+                }
+
+                if (Input.GetKey(KeyCode.Space))
+                {
+                    Jump();
+                }
             }
         }
-    }
 
-    private void Jump()
-    {
-        body.AddRelativeForce(new Vector3(0, velocity * 2, 0), ForceMode.VelocityChange);
-    }
-
-    private void MoveForward()
-    {
-        body.AddRelativeForce(new Vector3(0, 0, velocity), ForceMode.VelocityChange);
-        SetFront();
-    }
-
-    private void MoveBackward()
-    {
-        body.AddRelativeForce(new Vector3(0, 0, -velocity), ForceMode.VelocityChange);
-        SetFront();
-    }
-
-    private void MoveRight()
-    {
-        body.AddRelativeForce(new Vector3(velocity, 0, 0), ForceMode.VelocityChange);
-        SetFront();
-    }
-
-    private void MoveLeft()
-    {
-        body.AddRelativeForce(new Vector3(-velocity, 0, 0), ForceMode.VelocityChange);
-        SetFront();
-    }
-
-    private void SetFront()
-    {
-        gameObject.transform.rotation = Quaternion.Euler(new Vector3(0, Camera.transform.eulerAngles.y, 0));
-    }
-
-    private void OnCollisionEnter(Collision theCollision)
-    {
-        if (theCollision.gameObject.CompareTag("Ground"))
+        private void Jump()
         {
-            isGrounded = true;
+            body.AddRelativeForce(new Vector3(0, velocity * 2, 0), ForceMode.VelocityChange);
         }
-    }
 
-    private void OnCollisionExit(Collision theCollision)
-    {
-        if (theCollision.gameObject.CompareTag("Ground"))
+        private void MoveForward()
         {
-            isGrounded = false;
+            body.AddRelativeForce(new Vector3(0, 0, velocity), ForceMode.VelocityChange);
+            SetFront();
+        }
+
+        private void MoveBackward()
+        {
+            body.AddRelativeForce(new Vector3(0, 0, -velocity), ForceMode.VelocityChange);
+            SetFront();
+        }
+
+        private void MoveRight()
+        {
+            body.AddRelativeForce(new Vector3(velocity, 0, 0), ForceMode.VelocityChange);
+            SetFront();
+        }
+
+        private void MoveLeft()
+        {
+            body.AddRelativeForce(new Vector3(-velocity, 0, 0), ForceMode.VelocityChange);
+            SetFront();
+        }
+
+        private void SetFront()
+        {
+            gameObject.transform.rotation = Quaternion.Euler(new Vector3(0, Camera.transform.eulerAngles.y, 0));
+        }
+
+        private void OnCollisionEnter(Collision theCollision)
+        {
+            if (theCollision.gameObject.CompareTag("Ground"))
+            {
+                isGrounded = true;
+            }
+        }
+
+        private void OnCollisionExit(Collision theCollision)
+        {
+            if (theCollision.gameObject.CompareTag("Ground"))
+            {
+                isGrounded = false;
+            }
         }
     }
 }

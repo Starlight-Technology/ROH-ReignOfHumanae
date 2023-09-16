@@ -386,3 +386,4 @@ Thumbs.db
 *.unityproj.user
 *.booproj.user
 *.sln.docstates
+/.sonarqube/conf

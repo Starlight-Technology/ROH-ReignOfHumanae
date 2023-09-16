@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ROH.Domain.Version
+﻿namespace ROH.Domain.Version
 {
     /// <summary>
     /// Version is the version of the game, greate changes like something in history
-    /// Release is for changes like events or new itens
+    /// Release is for changes like events or new items
     /// Review is for fixes
     /// </summary>
     /// <param name="Id"></param>
@@ -16,12 +10,9 @@ namespace ROH.Domain.Version
     /// <param name="Release"></param>
     /// <param name="Review"></param>
     /// <param name="Released"></param>
-    public record GameVersion(long Id, int Version, int Release, int Review, bool Released, DateTime ReleaseDate)
+    public record GameVersion(long Id = 0, int Version = 0, int Release = 0, int Review = 0, bool Released = false)
     {
-        private DateTime versionDate;
-
-#pragma warning disable S3237 // "value" is defined on set
-        public DateTime VersionDate { get => versionDate; set => versionDate = DateTime.Now; }
-#pragma warning restore S3237 // "value" is defined on set
+        public DateTime? ReleaseDate { get; set; }
+        public DateTime VersionDate { get; set; }
     }
 }
