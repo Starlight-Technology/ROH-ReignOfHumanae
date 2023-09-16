@@ -1,5 +1,16 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+a.navbar-brand {
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
+}
+
+.fa {
+    margin-right: 10px;
+}
+
+
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }

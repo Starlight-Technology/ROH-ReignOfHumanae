@@ -1,0 +1,19 @@
+﻿@namespace Components
+
+
+<div class="card">
+    <div class="card-header" style="text-align:center">
+        @Header
+    </div>
+    <div class="card-body">
+        @ChildContent
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string? Header { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

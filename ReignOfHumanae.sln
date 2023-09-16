@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ROH.Test", "ROH.Test\ROH.Te
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{9163E653-710D-4F9F-96B0-EAEDDC610BFB}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\..\Rodrigo\Imagens\dockerps.JPG = ..\..\..\Rodrigo\Imagens\dockerps.JPG
+		..\..\Imagens\dockerps.JPG = ..\..\Imagens\dockerps.JPG
 		install_docker_files.txt = install_docker_files.txt
 		ReingOfHumanae\Json.txt = ReingOfHumanae\Json.txt
 	EndProjectSection
@@ -47,7 +47,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ROH.Blazor.Server", "ROH.Bl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ROH.Utils", "ROH.Utils\ROH.Utils.csproj", "{12888BCB-FE73-48BF-952E-0C3EAB481D4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Gateway", "ROH.Gateway\ROH.Gateway.csproj", "{3AF7E2FF-848D-416C-AA13-48B5742DF4FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ROH.Gateway", "ROH.Gateway\ROH.Gateway.csproj", "{3AF7E2FF-848D-416C-AA13-48B5742DF4FF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

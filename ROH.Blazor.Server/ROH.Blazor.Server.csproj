@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Pages\CardComponent.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
     <AdditionalFiles Include="..\.sonarlint\roh\CSharp\SonarLint.xml" Link="SonarLint.xml" />
   </ItemGroup>
 
@@ -23,6 +27,18 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ROH.Utils\ROH.Utils.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\CardComponent.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\CardComponent.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pages\Components\CardComponent.razor" />
   </ItemGroup>
 
 </Project>

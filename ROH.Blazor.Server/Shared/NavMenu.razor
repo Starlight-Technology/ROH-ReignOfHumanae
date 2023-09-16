@@ -11,25 +11,40 @@
     <nav class="flex-column">
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>      
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/Manager/Version/VersionManager" Match="NavLinkMatch.All">
-                <span class="" aria-hidden="true"></span> Manage
+                <span class="fa fa-solid fa-home" aria-hidden="true" style="margin-right:10px"></span> Home
             </NavLink>
         </div>
-
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" @onclick="ToggleSubMenuManage" Match="NavLinkMatch.All">
+                <span class="fa fa-solid fa-list" aria-hidden="true" style="margin-right:10px"></span> Manage
+            </NavLink>
+            @if (showSubMenuManage)
+            {
+                <div class="nav-item px-2">
+                    <NavLink class="nav-link" href="/Manager/Version/VersionManager" Match="NavLinkMatch.All">
+                        <span class="" aria-hidden="true"></span> Manage Version
+                    </NavLink>
+                </div>
+            }
+        </div>
     </nav>
 </div>
 
+
+
 @code {
     private bool collapseNavMenu = true;
+    private bool showSubMenuManage = false;
 
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    private void ToggleSubMenuManage()
+    {
+        showSubMenuManage = !showSubMenuManage;
     }
 }
