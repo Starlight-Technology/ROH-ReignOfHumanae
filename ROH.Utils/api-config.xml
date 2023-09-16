@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ApiConfig>
   <ServiceUrls>
-    <Service name="GateWay" url="https://localhost:44305" />
+    <Service name="GateWay" url="https://localhost:44305/" />
     <Service name="Version" url="https://localhost:44389/" />
   </ServiceUrls>
 </ApiConfig>

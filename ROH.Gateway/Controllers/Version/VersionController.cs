@@ -10,10 +10,10 @@ namespace ROH.Gateway.Controllers.Version
     {
         private readonly Utils.ApiConfiguration.Api _api = new();
 
-        [HttpGet]
+        [HttpGet("GetCurrentVersion")]
         public async Task<IActionResult> GetCurrentVersion() => Ok(await _api.Get(Utils.ApiConfiguration.Api.Services.GetCurrentVersion, new List<Utils.ApiConfiguration.ApiParameters>()));
 
-        [HttpPost]
+        [HttpPost("CreateNewVersion")]
         public async Task<IActionResult> CreateNewVersion(GameVersionModel model) => Ok(await _api.Post(Utils.ApiConfiguration.Api.Services.CreateNewVersion, model));
     }
 }

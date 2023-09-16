@@ -1,0 +1,134 @@
+﻿@page "/Manager/Version/VersionManager"
+@using Newtonsoft.Json;
+@using ROH.Blazor.Server.Api;
+@using ROH.StandardModels.Version;
+
+<div class="row">
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-header" style="text-align:center">
+                New Version
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label for="Version">Version:</label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="number" id="Version" class="form-control" @bind="inputVersion" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label for="Release">Release:</label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="number" id="Release" class="form-control" @bind="inputRelease" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label for="Review">Review:</label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="number" id="Review" class="form-control" @bind="inputReview" />
+                    </div>
+                </div>
+                <div class="row" style="margin-top:20px;">
+                    <div class="col-sm-12 text-center">
+                        <button class="btn btn-primary" @onclick="CreateNewVersion">Create New Version</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-header" style="text-align:center">
+                Current Version
+            </div>
+            <div class="card-body">
+                @if (isLoadingCurrentVersion)
+                {
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                }
+                else
+                {
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label for="Release">Version:</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input type="number" id="Release" class="form-control" @bind="currentVersion.Version" readonly />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label for="Release">Release:</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input type="number" id="Release" class="form-control" @bind="currentVersion.Release" readonly />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label for="Release">Review:</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input type="number" id="Release" class="form-control" @bind="currentVersion.Review" readonly />
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+@code {
+    private readonly VersionService _versionService = new VersionService();
+
+    private int inputVersion = 0;
+    private int inputRelease = 0;
+    private int inputReview = 0;
+
+    private bool isLoadingCurrentVersion = true;
+
+    private GameVersionModel currentVersion = new()
+        {
+            Version = 0,
+            Release = 0,
+            Review = 0
+        };
+
+    protected override async void OnInitialized()
+    {
+        base.OnInitialized();
+        await GetCurrentVersion();
+    }
+
+    private async Task CreateNewVersion()
+    {
+        GameVersionModel model = new GameVersionModel() { Version = inputVersion, Release = inputRelease, Review = inputReview };
+
+        var response = await _versionService.CreateNewVersion(model);
+    }
+
+    private async Task GetCurrentVersion()
+    {
+        isLoadingCurrentVersion = true;
+        var currentVersionResponse = await _versionService.GetCurrentVersion();
+
+        if (currentVersionResponse != null && currentVersionResponse?.ObjectResponse != null)
+        {
+            currentVersion = JsonConvert.DeserializeObject<GameVersionModel>(currentVersionResponse.ObjectResponse.ToString());
+        }
+        isLoadingCurrentVersion = false;
+        StateHasChanged();
+    }
+}

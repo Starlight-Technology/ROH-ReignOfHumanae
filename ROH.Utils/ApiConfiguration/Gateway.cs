@@ -22,14 +22,16 @@ namespace ROH.Utils.ApiConfiguration
 
         public enum Services
         {
-            Version,
+            GetCurrentVersion,
+            CreateNewVersion,
         }
 
         private static readonly Dictionary<Services, Uri> _gatewayServiceUrl = new Dictionary<Services, Uri>
         {
             #region VERSION
 
-            {Services.Version, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Version" ) },
+            {Services.GetCurrentVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Version/GetCurrentVersion" ) },
+            {Services.CreateNewVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Version/CreateNewVersion" ) },
             #endregion VERSION
         };
 
