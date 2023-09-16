@@ -54,7 +54,6 @@ namespace ROH.Services.Version
         }
 
         public async Task<bool> VerifyIfVersionExist(GameVersionModel version) => await _versionRepository.VerifyIfExist(_mapper.Map<GameVersion>(version));
-        
 
         public async Task<DefaultResponse> GetCurrentVersion()
         {

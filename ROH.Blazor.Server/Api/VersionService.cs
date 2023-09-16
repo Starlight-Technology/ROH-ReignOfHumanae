@@ -7,10 +7,10 @@ namespace ROH.Blazor.Server.Api
 {
     public class VersionService
     {
-        private readonly Utils.ApiConfiguration.Api _api = new();
+        private readonly Utils.ApiConfiguration.Gateway _gateway = new();
 
-        public async Task<DefaultResponse?> GetCurrentVersion() => await _api.Get(Utils.ApiConfiguration.Api.Services.GetCurrentVersion, new List<Utils.ApiConfiguration.ApiParameters>());
+        public async Task<DefaultResponse?> GetCurrentVersion() => await _gateway.Get(Utils.ApiConfiguration.Gateway.Services.Version, new List<Utils.ApiConfiguration.ApiParameters>());
 
-        public async Task<DefaultResponse?> CreateNewVersion(GameVersionModel model) => await _api.Post(Utils.ApiConfiguration.Api.Services.CreateNewVersion, model);
+        public async Task<DefaultResponse?> CreateNewVersion(GameVersionModel model) => await _gateway.Post(Utils.ApiConfiguration.Gateway.Services.Version, model);
     }
 }

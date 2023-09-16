@@ -1,4 +1,4 @@
-﻿ // Ignore Spelling: validator
+﻿// Ignore Spelling: validator
 
 using AutoMapper;
 

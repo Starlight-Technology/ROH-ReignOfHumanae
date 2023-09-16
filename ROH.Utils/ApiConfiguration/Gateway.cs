@@ -1,6 +1,8 @@
-﻿// Ignore Spelling: Api Utils
+﻿// Ignore Spelling: Utils
 
 using Newtonsoft.Json;
+
+using ROH.StandardModels.Response;
 
 using System;
 using System.Collections.Generic;
@@ -12,7 +14,7 @@ using static ROH.Utils.ApiConfiguration.ApiConfigReader;
 
 namespace ROH.Utils.ApiConfiguration
 {
-    public class Api
+    public class Gateway
     {
         private static readonly ApiConfigReader _apiConfig = new ApiConfigReader();
 
@@ -20,20 +22,18 @@ namespace ROH.Utils.ApiConfiguration
 
         public enum Services
         {
-            GetCurrentVersion,
-            CreateNewVersion
+            Version,
         }
 
-        private static readonly Dictionary<Services, Uri> _servicesUrl = new Dictionary<Services, Uri>
+        private static readonly Dictionary<Services, Uri> _gatewayServiceUrl = new Dictionary<Services, Uri>
         {
             #region VERSION
 
-            {Services.GetCurrentVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"GetCurrentVersion" ) },
-            {Services.CreateNewVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"CreateNewVersion" ) }
+            {Services.Version, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Version" ) },
             #endregion VERSION
         };
 
-        public async Task<string> Get(Services service, List<ApiParameters> apiParameters)
+        public async Task<DefaultResponse?> Get(Services service, List<ApiParameters> apiParameters)
         {
             using HttpClient client = new HttpClient();
 
@@ -57,39 +57,57 @@ namespace ROH.Utils.ApiConfiguration
                 param = parameters.ToString();
             }
 
-            var response = await client.GetAsync(_servicesUrl.GetValueOrDefault(service) + param);
-            response.EnsureSuccessStatusCode();
+            var response = await client.GetAsync(_gatewayServiceUrl.GetValueOrDefault(service) + param);
 
-            return await response.Content.ReadAsStringAsync();
+            if (response != null)
+            {
+                string responseJson = await response.Content.ReadAsStringAsync();
+
+                return JsonConvert.DeserializeObject<DefaultResponse>(responseJson);
+            }
+
+            return new DefaultResponse(message: "Error, the connection has failed!");
         }
 
-        public async Task<string> Post(Services service, object objectToSend)
+        public async Task<DefaultResponse?> Post(Services service, object objectToSend)
         {
             using HttpClient client = new HttpClient();
 
             var jsonContent = JsonConvert.SerializeObject(objectToSend);
             var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-            var response = await client.PostAsync(_servicesUrl.GetValueOrDefault(service), httpContent);
-            response.EnsureSuccessStatusCode();
+            var response = await client.PostAsync(_gatewayServiceUrl.GetValueOrDefault(service), httpContent);
 
-            return await response.Content.ReadAsStringAsync();
+            if (response != null)
+            {
+                string responseJson = await response.Content.ReadAsStringAsync();
+
+                return JsonConvert.DeserializeObject<DefaultResponse>(responseJson);
+            }
+
+            return new DefaultResponse(message: "Error, the connection has failed!");
         }
 
-        public async Task<string> Update(Services service, object objectToSend)
+        public async Task<DefaultResponse?> Update(Services service, object objectToSend)
         {
             using HttpClient client = new HttpClient();
 
             var jsonContent = JsonConvert.SerializeObject(objectToSend);
             var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-            var response = await client.PutAsync(_servicesUrl.GetValueOrDefault(service), httpContent);
-            response.EnsureSuccessStatusCode();
+            var response = await client.PutAsync(_gatewayServiceUrl.GetValueOrDefault(service), httpContent);
 
-            return await response.Content.ReadAsStringAsync();
+            if (response != null)
+            {
+                string responseJson = await response.Content.ReadAsStringAsync();
+
+                return JsonConvert.DeserializeObject<DefaultResponse>(responseJson);
+            }
+
+            return new DefaultResponse(message: "Error, the connection has failed!");
         }
 
-        public async Task<string> Delete(Services service, List<ApiParameters> apiParameters)
+        public async Task<DefaultResponse?> Delete(Services service, List<ApiParameters> apiParameters)
         {
             using HttpClient client = new HttpClient();
 
@@ -115,10 +133,16 @@ namespace ROH.Utils.ApiConfiguration
                 param = parameters.ToString();
             }
 
-            var response = await client.DeleteAsync(_servicesUrl.GetValueOrDefault(service) + param);
-            response.EnsureSuccessStatusCode();
+            var response = await client.DeleteAsync(_gatewayServiceUrl.GetValueOrDefault(service) + param);
 
-            return await response.Content.ReadAsStringAsync();
+            if (response != null)
+            {
+                string responseJson = await response.Content.ReadAsStringAsync();
+
+                return JsonConvert.DeserializeObject<DefaultResponse>(responseJson);
+            }
+
+            return new DefaultResponse(message: "Error, the connection has failed!");
         }
     }
 }

@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using System.Xml.Linq;
 
 namespace ROH.Utils.ApiConfiguration
@@ -15,7 +14,8 @@ namespace ROH.Utils.ApiConfiguration
 
         public enum ApiUrl
         {
-            Version
+            Version,
+            GateWay
         }
 
         public ApiConfigReader()
