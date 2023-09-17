@@ -2,7 +2,7 @@ using AutoMapper;
 
 using FluentValidation;
 
-using ROH.Context.PostgresSQLContext;
+using ROH.Context.PostgreSQLContext;
 using ROH.Interfaces;
 using ROH.Interfaces.Repository.Version;
 using ROH.Interfaces.Services.Version;

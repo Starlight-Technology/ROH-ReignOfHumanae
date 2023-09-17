@@ -52,6 +52,9 @@ namespace ROH.Repository.Version
             return version;
         }
 
-        public async Task<bool> VerifyIfExist(GameVersion version) => await _context.GameVersions.AnyAsync(v => v.Release == version.Release && v.Review == version.Review && v.Version == version.Version);
+        public async Task<bool> VerifyIfExist(GameVersion version)
+        {
+            return await _context.GameVersions.AnyAsync(v => v.Release == version.Release && v.Review == version.Review && v.Version == version.Version);
+        }
     }
 }

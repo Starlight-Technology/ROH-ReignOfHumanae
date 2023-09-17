@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using ROH.Domain.items;
 
-namespace ROH.Context.TypeConfiguration.items
+namespace ROH.Context.TypeConfiguration.Items
 {
     public class ItemTypeConfiguration : IEntityTypeConfiguration<Item>
     {

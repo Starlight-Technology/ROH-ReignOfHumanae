@@ -53,7 +53,10 @@ namespace ROH.Services.Version
             return new DefaultResponse(message: "New game version created.");
         }
 
-        public async Task<bool> VerifyIfVersionExist(GameVersionModel version) => await _versionRepository.VerifyIfExist(_mapper.Map<GameVersion>(version));
+        public async Task<bool> VerifyIfVersionExist(GameVersionModel version)
+        {
+            return await _versionRepository.VerifyIfExist(_mapper.Map<GameVersion>(version));
+        }
 
         public async Task<DefaultResponse> GetCurrentVersion()
         {

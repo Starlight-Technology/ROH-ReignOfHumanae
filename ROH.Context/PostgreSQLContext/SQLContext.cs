@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿// Ignore Spelling: Postgre
+
+using Microsoft.EntityFrameworkCore;
 
 using ROH.Context.TypeConfiguration.Accounts;
 using ROH.Context.TypeConfiguration.Characters;
 using ROH.Context.TypeConfiguration.Guilds;
-using ROH.Context.TypeConfiguration.items;
+using ROH.Context.TypeConfiguration.Items;
 using ROH.Context.TypeConfiguration.Kingdoms;
 using ROH.Context.TypeConfiguration.Version;
 using ROH.Domain.Accounts;
@@ -14,7 +16,7 @@ using ROH.Domain.Kingdoms;
 using ROH.Domain.Version;
 using ROH.Interfaces;
 
-namespace ROH.Context.PostgresSQLContext
+namespace ROH.Context.PostgreSQLContext
 {
     public class SqlContext : DbContext, ISqlContext
     {
