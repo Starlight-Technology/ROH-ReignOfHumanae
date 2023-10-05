@@ -1,4 +1,5 @@
-﻿using ROH.Domain.Version;
+﻿using ROH.Domain.Paginator;
+using ROH.Domain.Version;
 
 namespace ROH.Interfaces.Repository.Version
 {
@@ -8,7 +9,7 @@ namespace ROH.Interfaces.Repository.Version
 
         Task<IList<GameVersion>?> GetAllReleasedVersions();
 
-        Task<IList<GameVersion>?> GetAllVersions();
+        Task<Paginated> GetAllVersions(int take = 10, int skip = 0);
 
         Task<GameVersion?> GetCurrentGameVersion();
 

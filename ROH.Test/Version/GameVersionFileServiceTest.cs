@@ -16,10 +16,10 @@ namespace ROH.Test.Version
 {
     public class GameVersionFileServiceTest
     {
-        private readonly GameVersionModel _versionModel = new() { Version = 1, Release = 1, Review = 1, Released = false, ReleaseDate = null, VersionDate = DateTime.Today };
+        private readonly GameVersionModel _versionModel = new() { Version = 1, Release = 1, Review = 1, Released = false, ReleaseDate = null, VersionDate = DateTime.UtcNow };
         private readonly GameVersionFileModel _fileModel = new() { Name = "testFile", Size = 26354178, Path = "~/testFolder", Format = "format", Content = "wertfgby834ht348ghrfowefj234fh32urf3fh23rfhfh83" };
 
-        private readonly GameVersion _version = new(1, 1, 1, 1, false);
+        private readonly GameVersion _version = new(null, null, 1, 1, 1, 1, false);
         private readonly GameVersionFile _file = new(1, 1, "testFile", 26354178, "~/testFolder", "format");
 
         [Fact]
@@ -49,7 +49,7 @@ namespace ROH.Test.Version
             DefaultResponse result = await service.GetFiles(_versionModel);
 
             // Assert
-            Assert.Equal(files, result.ObjectResponse);
+            Assert.Equivalent(files, result.ObjectResponse);
         }
 
         [Fact]

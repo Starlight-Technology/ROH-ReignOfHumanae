@@ -9,7 +9,7 @@ namespace ROH.Interfaces.Services.Version
 
         Task<DefaultResponse> GetAllReleasedVersions();
 
-        Task<DefaultResponse> GetAllVersions();
+        Task<DefaultResponse> GetAllVersions(int take = 10, int page = 1);
 
         Task<DefaultResponse> GetCurrentVersion();
 

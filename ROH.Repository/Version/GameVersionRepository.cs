@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using ROH.Domain.Paginator;
 using ROH.Domain.Version;
 using ROH.Interfaces;
 using ROH.Interfaces.Repository.Version;
@@ -25,9 +26,11 @@ namespace ROH.Repository.Version
             return await _context.GameVersions.OrderByDescending(v => v.ReleaseDate).FirstOrDefaultAsync();
         }
 
-        public async Task<IList<GameVersion>?> GetAllVersions()
+        public async Task<Paginated> GetAllVersions(int take = 10, int skip = 0)
         {
-            return await _context.GameVersions.Where(v => v.Id > 0).ToListAsync();
+            List<GameVersion> versions = await _context.GameVersions.Skip(skip).Take(take).ToListAsync();
+            int total = _context.GameVersions.Count();
+            return new(total, versions as dynamic);
         }
 
         public async Task<IList<GameVersion>?> GetAllReleasedVersions()
@@ -37,7 +40,7 @@ namespace ROH.Repository.Version
 
         public async Task<GameVersion> SetNewGameVersion(GameVersion version)
         {
-            version.VersionDate = DateTime.UtcNow;
+            version = version with { VersionDate = DateTime.UtcNow};
             _ = await _context.GameVersions.AddAsync(version);
             _ = await _context.SaveChangesAsync();
 
