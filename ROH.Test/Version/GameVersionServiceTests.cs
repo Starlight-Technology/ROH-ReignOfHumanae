@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿// Ignore Spelling: Shouldnt Havent
+
+using AutoMapper;
 
 using FluentValidation;
 
@@ -157,5 +159,72 @@ namespace ROH.Test.Version
             Assert.True(versions.First().Version == 6);
             Assert.True(versions.Last().Version == 10);
         }
+
+        [Fact]
+        public async Task GetAllReleasedVersions_ShouldReturnListWithReleasedVersions_WhenHaveAny()
+        {
+            // Arrange
+            MapperConfiguration config = new(cfg =>
+            {
+                // Configure your mappings here
+                _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
+            });
+
+            Mapper mapper = new(config);
+
+            List<dynamic> listOfVersions = new();
+
+            for (int i = 0; i < 10; i++)
+            {
+                GameVersion version = _version with { Id = i + 1 , Released = true};
+
+                listOfVersions.Add(version as dynamic);
+            }
+
+            Paginated paginatedVersions = new(listOfVersions.Count, listOfVersions);
+
+            Mock<IGameVersionRepository> mockRepository = new();
+            _ = mockRepository.Setup(x => x.GetAllReleasedVersions(10, 0)).ReturnsAsync(paginatedVersions);
+
+            GameVersionService service = new(mockRepository.Object, mapper);
+
+            // Act
+            DefaultResponse? result = await service.GetAllReleasedVersions();
+            var versions = ((PaginatedModel?)result.ObjectResponse)?.ObjectResponse?.Cast<GameVersionModel>().ToList();
+
+            // Assert
+            Assert.True(versions?.Any());
+        }
+
+        [Fact]
+        public async Task GetAllReleasedVersions_ShouldntReturnListWithReleasedVersions_WhenHaventAny()
+        {
+            // Arrange
+            MapperConfiguration config = new(cfg =>
+            {
+                // Configure your mappings here
+                _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
+            });
+
+            Mapper mapper = new(config);
+
+            List<dynamic> listOfVersions = new();
+             
+
+            Paginated paginatedVersions = new(listOfVersions.Count, listOfVersions);
+
+            Mock<IGameVersionRepository> mockRepository = new();
+            _ = mockRepository.Setup(x => x.GetAllReleasedVersions(10, 0)).ReturnsAsync(paginatedVersions);
+
+            GameVersionService service = new(mockRepository.Object, mapper);
+
+            // Act
+            DefaultResponse? result = await service.GetAllReleasedVersions();
+            var versions = ((PaginatedModel?)result.ObjectResponse)?.ObjectResponse?.Cast<GameVersionModel>().ToList();
+
+            // Assert
+            Assert.False(versions?.Any());
+        }
+
     }
 }

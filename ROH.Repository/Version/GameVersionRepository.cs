@@ -5,6 +5,8 @@ using ROH.Domain.Version;
 using ROH.Interfaces;
 using ROH.Interfaces.Repository.Version;
 
+using System;
+
 namespace ROH.Repository.Version
 {
     public class GameVersionRepository : IGameVersionRepository
@@ -33,9 +35,11 @@ namespace ROH.Repository.Version
             return new(total, versions as dynamic);
         }
 
-        public async Task<IList<GameVersion>?> GetAllReleasedVersions()
+        public async Task<Paginated> GetAllReleasedVersions(int take = 10, int skip = 0)
         {
-            return await _context.GameVersions.Where(v => v.Released).ToListAsync();
+            List<GameVersion> versions = await _context.GameVersions.Where(v => v.Released).Skip(skip).Take(take).ToListAsync();
+            int total = _context.GameVersions.Count();
+            return new(total, versions as dynamic);
         }
 
         public async Task<GameVersion> SetNewGameVersion(GameVersion version)

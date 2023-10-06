@@ -7,7 +7,7 @@ namespace ROH.Interfaces.Services.Version
     {
         Task<DefaultResponse?> GetVersionById(long idVersion);
 
-        Task<DefaultResponse> GetAllReleasedVersions();
+        Task<DefaultResponse> GetAllReleasedVersions(int take = 10, int page = 1);
 
         Task<DefaultResponse> GetAllVersions(int take = 10, int page = 1);
 

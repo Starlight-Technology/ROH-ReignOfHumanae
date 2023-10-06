@@ -51,11 +51,27 @@ namespace ROH.Services.Version
             return new DefaultResponse(objectResponse: paginatedModel);
         }
 
-        public async Task<DefaultResponse> GetAllReleasedVersions()
+        public async Task<DefaultResponse> GetAllReleasedVersions(int take = 10, int page = 1)
         {
-            IList<GameVersion>? versions = await _versionRepository.GetAllReleasedVersions();
+            int skip = take * (page - 1);
 
-            return new DefaultResponse(objectResponse: _mapper.Map<IList<GameVersionModel>>(versions), message: "That are all released versions");
+            var result = await _versionRepository.GetAllReleasedVersions(take, skip);
+
+            IList<GameVersion>? versions = result.ObjectResponse.Cast<GameVersion>().ToList();
+            int total = result.Total;
+            int pages = 0;
+            if (versions != null && versions.Count > 0)
+                pages = (int)Math.Ceiling((double)total / take);
+
+
+            IList<GameVersionModel> versionModels = _mapper.Map<IList<GameVersionModel>>(versions);
+
+            List<object> versionObjects = versionModels.Cast<object>().ToList();
+
+            PaginatedModel paginatedModel = new() { TotalPages = pages, ObjectResponse = versionObjects };
+
+            return new DefaultResponse(objectResponse: paginatedModel, message: "That are all released versions");
+
         }
 
         public async Task<DefaultResponse> NewVersion(GameVersionModel version)
