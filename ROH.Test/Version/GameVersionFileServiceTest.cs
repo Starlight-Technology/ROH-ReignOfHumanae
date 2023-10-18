@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using System.Net;
+using System.Runtime.InteropServices.JavaScript;
+using AutoMapper;
 
 using FluentValidation;
 using FluentValidation.Results;
@@ -85,9 +87,85 @@ namespace ROH.Test.Version
 
             await Task.CompletedTask;
         }
+        
+        [Fact]
+        public async Task NewFile_With_Invalid_File_Returns_Error()
+        {
+            // Arrange
+            MapperConfiguration config = new(cfg =>
+            {
+                // Configure your mappings here
+                _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
+                _ = cfg.CreateMap<GameVersionFile, GameVersionFileModel>().ReverseMap();
+            });
+
+            Mapper mapper = new(config);
+
+            _fileModel.GameVersion = _versionModel;
+            Mock<IValidator<GameVersionFileModel>> mockValidator = new();
+            _ = mockValidator.Setup(x => x.ValidateAsync(_fileModel, CancellationToken.None))
+                .ReturnsAsync(new ValidationResult(
+                    new List<ValidationFailure>
+                        {
+                        new("Name", "Name cannot be empty.")
+                        })
+                    );
+
+            Mock<IGameVersionFileRepository> mockRepository = new();
+            _ = mockRepository.Setup(x => x.SaveFile(It.IsAny<GameVersionFile>())).Returns(Task.CompletedTask);
+
+            Mock<IGameVersionService> mockVersionService = new();
+            _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(true);
+
+            GameVersionFileService service = new(mockRepository.Object, mockValidator.Object, mockVersionService.Object, mapper);
+
+            // Act
+            _fileModel.Name = "";
+            var result = await service.NewFile(_fileModel);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.BadRequest, result.HttpStatus);
+            Assert.False(string.IsNullOrWhiteSpace(result.Message));
+
+        }
 
         [Fact]
-        public async Task DownloadFile_Returns_File()
+        public async Task NewFile_With_Invalid_Version_Returns_Error()
+        {
+            // Arrange
+            MapperConfiguration config = new(cfg =>
+            {
+                // Configure your mappings here
+                _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
+                _ = cfg.CreateMap<GameVersionFile, GameVersionFileModel>().ReverseMap();
+            });
+
+            Mapper mapper = new(config);
+
+            _fileModel.GameVersion = _versionModel;
+            Mock<IValidator<GameVersionFileModel>> mockValidator = new();
+            _ = mockValidator.Setup(x => x.ValidateAsync(_fileModel, CancellationToken.None))
+                .ReturnsAsync(new ValidationResult());
+
+            Mock<IGameVersionFileRepository> mockRepository = new();
+            _ = mockRepository.Setup(x => x.SaveFile(It.IsAny<GameVersionFile>())).Returns(Task.CompletedTask);
+
+            Mock<IGameVersionService> mockVersionService = new();
+            _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(false);
+
+            GameVersionFileService service = new(mockRepository.Object, mockValidator.Object, mockVersionService.Object, mapper);
+
+            // Act
+            var result = await service.NewFile(_fileModel);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.BadRequest, result.HttpStatus);
+            Assert.False(string.IsNullOrWhiteSpace(result.Message));
+
+        }
+
+        [Fact]
+        public async Task DownloadFile_Returns_File_WhenFileExist()
         {
             // Arrange
             MapperConfiguration config = new(cfg =>
@@ -118,6 +196,111 @@ namespace ROH.Test.Version
 
             // Assert
             Assert.Equal("wertfgby834ht348ghrfowefj234fh32urf3fh23rfhfh83", result.ObjectResponse);
+        }
+
+        [Fact]
+        public async Task DownloadFile_Returns_NotFound_WhenFileNotExist()
+        {
+            // Arrange
+            MapperConfiguration config = new(cfg =>
+            {
+                // Configure your mappings here
+                _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
+                _ = cfg.CreateMap<GameVersionFile, GameVersionFileModel>().ReverseMap();
+            });
+
+            Mapper mapper = new(config);
+
+            _fileModel.GameVersion = _versionModel;
+
+            Mock<IGameVersionFileRepository> mockRepository = new();
+            _ = mockRepository.Setup(x => x.GetFile(It.IsAny<long>())).ReturnsAsync(value: null);
+
+            Mock<IGameVersionService> mockVersionService = new();
+            _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(true);
+            _ = mockVersionService.Setup(x => x.GetVersionById(It.IsAny<long>())).Returns(Task.FromResult<DefaultResponse?>(new DefaultResponse(objectResponse: _version)));
+
+            Mock<IValidator<GameVersionFileModel>> mockValidator = new();
+            _ = mockValidator.Setup(x => x.ValidateAsync(It.IsAny<GameVersionFileModel>(), CancellationToken.None)).ReturnsAsync(new ValidationResult());
+
+            GameVersionFileService service = new(mockRepository.Object, mockValidator.Object, mockVersionService.Object, mapper);
+
+            // Act
+            DefaultResponse result = await service.DownloadFile(_file.Id);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NotFound, result.HttpStatus);
+        }
+
+        [Fact]
+        public async Task DownloadFile_Returns_Error_WhenException()
+        {
+            // Arrange
+            MapperConfiguration config = new(cfg =>
+            {
+                // Configure your mappings here
+                _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
+                _ = cfg.CreateMap<GameVersionFile, GameVersionFileModel>().ReverseMap();
+            });
+
+            Mapper mapper = new(config);
+
+            _fileModel.GameVersion = _versionModel;
+
+            Mock<IGameVersionFileRepository> mockRepository = new();
+            _ = mockRepository.Setup(x => x.GetFile(It.IsAny<long>())).ReturnsAsync(_file with { Name = "" });
+
+            Mock<IGameVersionService> mockVersionService = new();
+            _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(true);
+            _ = mockVersionService.Setup(x => x.GetVersionById(It.IsAny<long>())).Returns(Task.FromResult<DefaultResponse?>(new DefaultResponse(objectResponse: _version)));
+
+            Mock<IValidator<GameVersionFileModel>> mockValidator = new();
+            _ = mockValidator.Setup(x => x.ValidateAsync(It.IsAny<GameVersionFileModel>(), CancellationToken.None)).ReturnsAsync(new ValidationResult());
+
+            GameVersionFileService service = new(mockRepository.Object, mockValidator.Object, mockVersionService.Object, mapper);
+
+            // Act
+            DefaultResponse result = await service.DownloadFile(_file.Id);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.BadRequest, result.HttpStatus);
+            Assert.False(string.IsNullOrWhiteSpace(result.Message));
+        }
+
+        [Fact]
+        public async Task DownloadFile_Returns_Error_WhenFileIsNotValid()
+        {
+            // Arrange
+            MapperConfiguration config = new(cfg =>
+            {
+                // Configure your mappings here
+                _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
+                _ = cfg.CreateMap<GameVersionFile, GameVersionFileModel>().ReverseMap();
+            });
+
+            Mapper mapper = new(config);
+
+            _fileModel.GameVersion = _versionModel;
+
+            Mock<IGameVersionFileRepository> mockRepository = new();
+            _ = mockRepository.Setup(x => x.GetFile(It.IsAny<long>())).ReturnsAsync(_file with { Name = "" });
+
+            Mock<IGameVersionService> mockVersionService = new();
+            _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(true);
+            _ = mockVersionService.Setup(x => x.GetVersionById(It.IsAny<long>())).Returns(Task.FromResult<DefaultResponse?>(new DefaultResponse(objectResponse: _version)));
+
+            Mock<IValidator<GameVersionFileModel>> mockValidator = new();
+            _ = mockValidator.Setup(x => x.ValidateAsync(It.IsAny<GameVersionFileModel>(), CancellationToken.None)).ReturnsAsync(new ValidationResult(new List<ValidationFailure>
+                    {new ValidationFailure("Name", "Name cannot be empty")}));
+
+            GameVersionFileService service = new(mockRepository.Object, mockValidator.Object, mockVersionService.Object, mapper);
+
+            // Act
+            DefaultResponse result = await service.DownloadFile(_file.Id);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.BadRequest, result.HttpStatus);
+            Assert.False(string.IsNullOrWhiteSpace(result.Message));
         }
     }
 }

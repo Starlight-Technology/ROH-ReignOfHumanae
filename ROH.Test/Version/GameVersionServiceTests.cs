@@ -156,8 +156,8 @@ namespace ROH.Test.Version
 
             // Assert
             Assert.True(versions?.Count == 5);
-            Assert.True(versions.First().Version == 6);
-            Assert.True(versions.Last().Version == 10);
+            Assert.True(versions[0].Version == 6);
+            Assert.True(versions[^1].Version == 10);
         }
 
         [Fact]

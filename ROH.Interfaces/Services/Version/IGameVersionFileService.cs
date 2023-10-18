@@ -9,6 +9,6 @@ namespace ROH.Interfaces.Services.Version
 
         Task<DefaultResponse> GetFiles(GameVersionModel version);
 
-        Task NewFile(GameVersionFileModel file);
+        Task<DefaultResponse> NewFile(GameVersionFileModel file);
     }
 }

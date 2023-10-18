@@ -38,7 +38,7 @@ namespace ROH.Services.Version
             IList<GameVersion>? versions = result.ObjectResponse.Cast<GameVersion>().ToList();
             int total = result.Total;
             int pages = 0;
-            if (versions != null && versions.Count > 0)
+            if (versions.Count > 0)
                 pages = (int)Math.Ceiling((double)total / take);
 
 
@@ -60,7 +60,7 @@ namespace ROH.Services.Version
             IList<GameVersion>? versions = result.ObjectResponse.Cast<GameVersion>().ToList();
             int total = result.Total;
             int pages = 0;
-            if (versions != null && versions.Count > 0)
+            if (versions.Count > 0)
                 pages = (int)Math.Ceiling((double)total / take);
 
 
