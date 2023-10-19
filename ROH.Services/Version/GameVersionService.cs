@@ -96,7 +96,7 @@ namespace ROH.Services.Version
         public async Task<DefaultResponse> GetCurrentVersion()
         {
             GameVersion? version = await _versionRepository.GetCurrentGameVersion();
-            return new DefaultResponse(objectResponse: _mapper.Map<GameVersion>(version));
+            return new DefaultResponse(objectResponse: _mapper.Map<GameVersionModel>(version));
         }
     }
 }

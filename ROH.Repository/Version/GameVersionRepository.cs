@@ -25,19 +25,32 @@ namespace ROH.Repository.Version
 
         public async Task<GameVersion?> GetCurrentGameVersion()
         {
-            return await _context.GameVersions.OrderByDescending(v => v.ReleaseDate).FirstOrDefaultAsync();
+            return await _context.GameVersions.Where(v=>v.Released).OrderByDescending(v => v.ReleaseDate).FirstOrDefaultAsync();
         }
 
         public async Task<Paginated> GetAllVersions(int take = 10, int skip = 0)
         {
-            List<GameVersion> versions = await _context.GameVersions.Skip(skip).Take(take).ToListAsync(); // Assuming GameVersions is a dynamic type
+            List<GameVersion> versions = await _context.GameVersions
+                .OrderBy(gv => gv.Version)
+                .ThenBy(gv => gv.Release)
+                .ThenBy(gv => gv.Review)
+                .Skip(skip)
+                .Take(take)
+                .ToListAsync();
             int total = _context.GameVersions.Count();
             return new (total, versions.Cast<dynamic>().ToList());
         }
 
         public async Task<Paginated> GetAllReleasedVersions(int take = 10, int skip = 0)
         {
-            List<GameVersion> versions = await _context.GameVersions.Where(v => v.Released).Skip(skip).Take(take).ToListAsync();
+            List<GameVersion> versions = await _context.GameVersions
+                .Where(v => v.Released)
+                .OrderBy(gv => gv.Version)
+                .ThenBy(gv => gv.Release)
+                .ThenBy(gv => gv.Review)
+                .Skip(skip)
+                .Take(take)
+                .ToListAsync();
             int total = _context.GameVersions.Count();
             return new (total, versions.Cast<dynamic>().ToList());
         }

@@ -16,27 +16,32 @@
     else
     {
         <div class="row">
-            <div class="col-sm-4">
+            <div class="col-sm-1">
                 <label for="Release">Version:</label>
             </div>
-            <div class="col-sm-8">
+            <div class="col-sm-1">
                 <input type="number" id="Release" class="form-control" @bind="currentVersion.Version" readonly />
             </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-4">
+  
+            <div class="col-sm-1">
                 <label for="Release">Release:</label>
             </div>
-            <div class="col-sm-8">
+            <div class="col-sm-1">
                 <input type="number" id="Release" class="form-control" @bind="currentVersion.Release" readonly />
             </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-4">
+     
+            <div class="col-sm-1">
                 <label for="Release">Review:</label>
             </div>
-            <div class="col-sm-8">
+            <div class="col-sm-1">
                 <input type="number" id="Release" class="form-control" @bind="currentVersion.Review" readonly />
+            </div>
+
+            <div class="col-sm-1">
+                <label for="Release">Released Date:</label>
+            </div>
+            <div class="col-sm-3">
+                <input type="date" id="Release" class="form-control" @bind="currentVersion.ReleaseDate" readonly />
             </div>
         </div>
     }

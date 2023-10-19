@@ -1,0 +1,119 @@
+﻿@namespace Manager.Version.Components
+@using Newtonsoft.Json;
+@using Newtonsoft.Json.Linq;
+@using ROH.StandardModels.Paginator;
+@using ROH.StandardModels.Version
+@using ROH.Blazor.Server.Api;
+@using Components;
+
+<CardComponent Header="Versions">
+    @if (isLoadingCurrentVersion)
+    {
+        <div style="text-align:center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only"></span>
+            </div>
+        </div>
+    }
+    else
+    {
+        @if (PagedGameVersions?.Count > 0)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Version</th>
+                        <th>Release</th>
+                        <th>Review</th>
+                        <th>Released Date</th>
+                        <th>Version Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (GameVersionModel gameVersion in PagedGameVersions)
+                    {
+                        <tr>
+                            <td>@gameVersion.Version</td>
+                            <td>@gameVersion.Release</td>
+                            <td>@gameVersion.Review</td>
+                            <td>@gameVersion.ReleaseDate</td>
+                            <td>@gameVersion.VersionDate</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="col-sm-6">
+                    <button @onclick="PreviousPage" disabled="@IsFirstPage">Previous</button>
+                </div>
+                <div class="col-sm-6">
+                    <button @onclick="NextPage" disabled="@IsLastPage">Next</button>
+                </div>
+            </div>
+        }
+    }
+
+</CardComponent>
+
+@code {
+    private readonly VersionService _versionService = new VersionService();
+    private bool isLoadingCurrentVersion = true;
+    private List<GameVersionModel>? PagedGameVersions = new List<GameVersionModel>();
+    private int TotalPages = 0;
+    private int PageSize = 10;
+    private int CurrentPage = 1;
+
+    private bool IsFirstPage => CurrentPage == 1;
+    private bool IsLastPage => (CurrentPage * PageSize) >= TotalPages;
+
+
+    private async Task PreviousPage()
+    {
+        if (!IsFirstPage)
+        {
+            CurrentPage--;
+            await GetAllVersion(page: CurrentPage);
+        }
+    }
+
+    private async Task NextPage()
+    {
+        if (!IsLastPage)
+        {
+            CurrentPage++;
+            await GetAllVersion(page: CurrentPage);
+        }
+    }
+
+
+    protected override async void OnInitialized()
+    {
+        base.OnInitialized();
+        await GetAllVersion();
+    }
+
+    private async Task GetAllVersion(int page = 1, int take = 10)
+    {
+        isLoadingCurrentVersion = true;
+        var currentVersionResponse = await _versionService.GetAllVersionsPaginated(page, take);
+
+        if (currentVersionResponse != null && currentVersionResponse?.ObjectResponse != null)
+        {
+            var result = JsonConvert.DeserializeObject<PaginatedModel>(currentVersionResponse.ObjectResponse.ToString());
+            TotalPages = result.TotalPages;
+
+            if (result != null && result?.ObjectResponse != null)
+            {
+                var versionList = result.ObjectResponse.ToList();
+
+                foreach (var item in versionList)
+                {
+                    var gameVersionModel = JsonConvert.DeserializeObject<GameVersionModel>(item.ToString());
+                    PagedGameVersions?.Add(gameVersionModel);
+                }
+            }
+        }
+        isLoadingCurrentVersion = false;
+        StateHasChanged();
+    }
+}
