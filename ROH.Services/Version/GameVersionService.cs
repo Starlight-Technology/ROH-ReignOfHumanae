@@ -46,7 +46,7 @@ namespace ROH.Services.Version
 
             List<object> versionObjects = versionModels.Cast<object>().ToList();
 
-            PaginatedModel paginatedModel = new() {TotalPages = pages,  ObjectResponse = versionObjects };
+            PaginatedModel paginatedModel = new() { TotalPages = pages, ObjectResponse = versionObjects };
 
             return new DefaultResponse(objectResponse: paginatedModel);
         }
@@ -76,8 +76,8 @@ namespace ROH.Services.Version
 
         public async Task<DefaultResponse> NewVersion(GameVersionModel version)
         {
-            bool valid = await VerifyIfVersionExist(version);
-            if (valid)
+           
+            if (await VerifyIfVersionExist(version))
             {
                 return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.Conflict,
                                            message: "This version already exist.");
@@ -85,7 +85,7 @@ namespace ROH.Services.Version
 
             _ = await _versionRepository.SetNewGameVersion(_mapper.Map<GameVersion>(version));
 
-            return new DefaultResponse(message: "New game version created.");
+            return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.Created, message: "New game version created.");
         }
 
         public async Task<bool> VerifyIfVersionExist(GameVersionModel version)

@@ -15,6 +15,8 @@ using ROH.StandardModels.Paginator;
 using ROH.StandardModels.Response;
 using ROH.StandardModels.Version;
 
+using System.Net;
+
 namespace ROH.Test.Version
 {
     public class GameVersionServiceTests
@@ -226,5 +228,53 @@ namespace ROH.Test.Version
             Assert.False(versions?.Any());
         }
 
+        [Fact]
+        public async Task NewVersion_ShouldReturnStatusCreated_WhenVersionCreatedWithSuccess()
+        {
+            // Arrange
+            MapperConfiguration config = new(cfg =>
+            {
+                // Configure your mappings here
+                _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
+            });
+
+            Mapper mapper = new(config);
+
+            Mock<IGameVersionRepository> mockRepository = new();
+            _ = mockRepository.Setup(x => x.SetNewGameVersion(_version)).ReturnsAsync(_version);
+
+            GameVersionService service = new(mockRepository.Object, mapper);
+
+            // Act
+            var result = await service.NewVersion(_versionModel);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Created, result.HttpStatus);
+        }
+
+        [Fact]
+        public async Task NewVersion_ShouldReturnStatusConflict_WhenVersionNotCreated()
+        {
+            // Arrange
+            MapperConfiguration config = new(cfg =>
+            {
+                // Configure your mappings here
+                _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
+            });
+
+            Mapper mapper = new(config);
+
+            Mock<IGameVersionRepository> mockRepository = new();
+            _ = mockRepository.Setup(x => x.SetNewGameVersion(It.IsAny<GameVersion>())).ReturnsAsync(_version);
+            _ = mockRepository.Setup(x => x.VerifyIfExist(It.IsAny<GameVersion>())).ReturnsAsync(true);
+
+            GameVersionService service = new(mockRepository.Object, mapper);
+
+            // Act
+            var result = await service.NewVersion(_versionModel);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Conflict, result.HttpStatus);
+        }
     }
 }
