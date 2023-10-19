@@ -21,7 +21,8 @@ namespace ROH.Utils.ApiConfiguration
         public enum Services
         {
             GetCurrentVersion,
-            CreateNewVersion
+            CreateNewVersion,
+            GetAllVersionsPaginated
         }
 
         private static readonly Dictionary<Services, Uri> _servicesUrl = new Dictionary<Services, Uri>
@@ -29,7 +30,8 @@ namespace ROH.Utils.ApiConfiguration
             #region VERSION
 
             {Services.GetCurrentVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"GetCurrentVersion" ) },
-            {Services.CreateNewVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"CreateNewVersion" ) }
+            {Services.CreateNewVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"CreateNewVersion" ) },
+            {Services.GetAllVersionsPaginated, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"GetAllVersionsPaginated" ) }
             #endregion VERSION
         };
 
@@ -58,7 +60,6 @@ namespace ROH.Utils.ApiConfiguration
             }
 
             var response = await client.GetAsync(_servicesUrl.GetValueOrDefault(service) + param);
-            response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadAsStringAsync();
         }
@@ -71,7 +72,6 @@ namespace ROH.Utils.ApiConfiguration
             var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
             var response = await client.PostAsync(_servicesUrl.GetValueOrDefault(service), httpContent);
-            response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadAsStringAsync();
         }
@@ -84,7 +84,6 @@ namespace ROH.Utils.ApiConfiguration
             var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
             var response = await client.PutAsync(_servicesUrl.GetValueOrDefault(service), httpContent);
-            response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadAsStringAsync();
         }
@@ -116,7 +115,6 @@ namespace ROH.Utils.ApiConfiguration
             }
 
             var response = await client.DeleteAsync(_servicesUrl.GetValueOrDefault(service) + param);
-            response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadAsStringAsync();
         }
