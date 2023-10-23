@@ -69,4 +69,10 @@ app.MapGet("GetAllVersionsPaginated", async (IGameVersionService _gameVersionSer
 }).WithName("GetAllVersionsPaginated")
   .WithOpenApi();
 
+app.MapGet("GetAllReleasedVersionsPaginated", async (IGameVersionService _gameVersionService, int page, int take) =>
+{
+    return await _gameVersionService.GetAllReleasedVersions(page: page, take: take);
+}).WithName("GetAllReleasedVersionsPaginated")
+  .WithOpenApi();
+
 app.Run();

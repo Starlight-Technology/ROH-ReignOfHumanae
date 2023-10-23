@@ -19,6 +19,12 @@ namespace ROH.Gateway.Controllers.Version
             new Utils.ApiConfiguration.ApiParameters() {Name="take", Value= take.ToString() },
         }));
 
+        [HttpGet("GetAllReleasedVersionsPaginated")]
+        public async Task<IActionResult> GetAllReleasedVersionsPaginated(int page = 1, int take = 10) => Ok(await _api.Get(Utils.ApiConfiguration.Api.Services.GetAllReleasedVersionsPaginated, new List<Utils.ApiConfiguration.ApiParameters>() {
+            new Utils.ApiConfiguration.ApiParameters() {Name="page", Value= page.ToString() },
+            new Utils.ApiConfiguration.ApiParameters() {Name="take", Value= take.ToString() },
+        }));
+
         [HttpPost("CreateNewVersion")]
         public async Task<IActionResult> CreateNewVersion(GameVersionModel model) => Ok(await _api.Post(Utils.ApiConfiguration.Api.Services.CreateNewVersion, model));
     }

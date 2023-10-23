@@ -106,8 +106,12 @@ namespace ROH.Services.Version
 
                 if (validation.IsValid)
                 {
+                    var currentVersion = _gameVersion.GetCurrentVersion().Result.ObjectResponse as GameVersion;
+
                     if (file.GameVersion != null &&
-                        await _gameVersion.VerifyIfVersionExist(file.GameVersion))
+                        await _gameVersion.VerifyIfVersionExist(file.GameVersion) &&
+                        !file.GameVersion.Released &&
+                        file.GameVersion.VersionDate > currentVersion?.VersionDate)
                     {
                         string path = "";
 #if DEBUG

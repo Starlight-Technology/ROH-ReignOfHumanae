@@ -2,11 +2,24 @@
 @using Newtonsoft.Json;
 @using Newtonsoft.Json.Linq;
 @using ROH.StandardModels.Paginator;
+@using ROH.StandardModels.Response;
 @using ROH.StandardModels.Version
 @using ROH.Blazor.Server.Api;
 @using Components;
 
 <CardComponent Header="Versions">
+    <div class="row">
+        <div class="col-sm-12">
+            <label for="releasedVersionSelect"></label>
+            <select id="releasedVersionSelect" @onchange="OnVersionTypeChange">
+                @foreach (var type in versionTypes)
+                {
+                    <option value="@type">@type</option>
+                }
+            </select>
+        </div>
+    </div>
+
     @if (isLoadingCurrentVersion)
     {
         <div style="text-align:center">
@@ -15,6 +28,7 @@
             </div>
         </div>
     }
+
     else
     {
         @if (PagedGameVersions?.Count > 0)
@@ -56,6 +70,13 @@
 </CardComponent>
 
 @code {
+    private List<string> versionTypes = new List<string>()
+    {
+        "All Versions",
+        "Released Versions"
+    };
+
+    private string selectedVersionType = "All Versions";
     private readonly VersionService _versionService = new VersionService();
     private bool isLoadingCurrentVersion = true;
     private List<GameVersionModel>? PagedGameVersions = new List<GameVersionModel>();
@@ -66,6 +87,7 @@
     private bool IsFirstPage => CurrentPage == 1;
     private bool IsLastPage => (CurrentPage * PageSize) >= TotalPages;
 
+    private DefaultResponse? currentVersionResponse = null;
 
     private async Task PreviousPage()
     {
@@ -85,6 +107,15 @@
         }
     }
 
+    private async Task OnVersionTypeChange(ChangeEventArgs e)
+    {
+        if (e.Value == null)
+            return;
+
+        selectedVersionType = e.Value?.ToString() ?? "All Versions";
+        await GetAllVersion();
+    }
+
 
     protected override async void OnInitialized()
     {
@@ -95,7 +126,13 @@
     private async Task GetAllVersion(int page = 1, int take = 10)
     {
         isLoadingCurrentVersion = true;
-        var currentVersionResponse = await _versionService.GetAllVersionsPaginated(page, take);
+        PagedGameVersions = new List<GameVersionModel>();
+        currentVersionResponse = null;
+        if (selectedVersionType == "All Versions")
+            currentVersionResponse = await _versionService.GetAllVersionsPaginated(page, take);
+        else if (selectedVersionType == "Released Versions")
+            currentVersionResponse = await _versionService.GetAllReleasedVersionsPaginated(page, take);
+
 
         if (currentVersionResponse != null && currentVersionResponse?.ObjectResponse != null)
         {
