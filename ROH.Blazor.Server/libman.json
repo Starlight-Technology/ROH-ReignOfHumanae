@@ -1,0 +1,10 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "sweetalert2@11.7.32",
+      "destination": "wwwroot/sweetalert2/"
+    }
+  ]
+}

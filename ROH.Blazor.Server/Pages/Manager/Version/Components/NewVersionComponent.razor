@@ -1,7 +1,10 @@
 ﻿@namespace Manager.Version.Components
+@using ROH.Blazor.Server.Helpers;
+@using ROH.Blazor.Server.Helpers.Types;
 @using ROH.StandardModels.Version
 @using ROH.Blazor.Server.Api;
-@using Components;
+@using Pages.Components;
+@inject SweetAlertService SweetAlert
 
 <CardComponent Header="New Version">
     <div class="row">
@@ -33,6 +36,7 @@
             <button class="btn btn-primary" @onclick="CreateNewVersion">Create New Version</button>
         </div>
     </div>
+
 </CardComponent>
 
 @code {
@@ -41,6 +45,7 @@
     private int inputVersion = 0;
     private int inputRelease = 0;
     private int inputReview = 0;
+    private string responseMessage = "";
 
     private GameVersionModel currentVersion = new()
         {
@@ -50,11 +55,21 @@
         };
 
 
-
     private async Task CreateNewVersion()
     {
         GameVersionModel model = new GameVersionModel() { Version = inputVersion, Release = inputRelease, Review = inputReview };
 
         var response = await _versionService.CreateNewVersion(model);
+
+        if (response?.HttpStatus != System.Net.HttpStatusCode.OK)
+        {
+            responseMessage = response?.Message ?? "";
+            await SweetAlert.Show("", responseMessage, SweetAlertType.Error);
+        }
+        else if (response?.HttpStatus == System.Net.HttpStatusCode.OK)
+        {
+            responseMessage = "Version created successfully";
+            await SweetAlert.Show("", responseMessage, SweetAlertType.Success);
+        }
     }
 }
