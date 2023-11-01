@@ -4,6 +4,7 @@
 @using ROH.StandardModels.Version
 @using ROH.Blazor.Server.Api;
 @using Pages.Components;
+@using ROH.Utils.Helpers
 @inject SweetAlertService SweetAlert
 
 <CardComponent Header="New Version">
@@ -61,15 +62,7 @@
 
         var response = await _versionService.CreateNewVersion(model);
 
-        if (response?.HttpStatus != System.Net.HttpStatusCode.OK)
-        {
-            responseMessage = response?.Message ?? "";
-            await SweetAlert.Show("", responseMessage, SweetAlertType.Error);
-        }
-        else if (response?.HttpStatus == System.Net.HttpStatusCode.OK)
-        {
-            responseMessage = "Version created successfully";
-            await SweetAlert.Show("", responseMessage, SweetAlertType.Success);
-        }
+        if (response != null)
+            await SweetAlert.ShowResponse(response);
     }
 }
