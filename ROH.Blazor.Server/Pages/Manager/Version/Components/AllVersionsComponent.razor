@@ -33,29 +33,31 @@
     {
         @if (PagedGameVersions?.Count > 0)
         {
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Version</th>
-                        <th>Release</th>
-                        <th>Review</th>
-                        <th>Released Date</th>
-                        <th>Version Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (GameVersionModel gameVersion in PagedGameVersions)
-                    {
+            <div style="overflow-y:auto">
+                <table class="table">
+                    <thead>
                         <tr>
-                            <td>@gameVersion.Version</td>
-                            <td>@gameVersion.Release</td>
-                            <td>@gameVersion.Review</td>
-                            <td>@gameVersion.ReleaseDate</td>
-                            <td>@gameVersion.VersionDate</td>
+                            <th>Version</th>
+                            <th>Release</th>
+                            <th>Review</th>
+                            <th>Released Date</th>
+                            <th>Version Date</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (GameVersionModel gameVersion in PagedGameVersions)
+                        {
+                            <tr>
+                                <td>@gameVersion.Version</td>
+                                <td>@gameVersion.Release</td>
+                                <td>@gameVersion.Review</td>
+                                <td>@gameVersion.ReleaseDate</td>
+                                <td>@gameVersion.VersionDate</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
             <div class="row">
                 <div class="col-sm-6">
                     <button @onclick="PreviousPage" disabled="@IsFirstPage">Previous</button>
