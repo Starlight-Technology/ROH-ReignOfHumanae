@@ -36,7 +36,7 @@ namespace ROH.Context.Migrations
                     b.Property<Guid>("Guid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasDefaultValueSql("newsequentialid()");
+                        .HasDefaultValueSql("uuid-ossp()");
 
                     b.Property<long>("IdUser")
                         .HasColumnType("bigint");
@@ -66,7 +66,7 @@ namespace ROH.Context.Migrations
                     b.Property<Guid>("Guid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasDefaultValueSql("newsequentialid()");
+                        .HasDefaultValueSql("uuid-ossp()");
 
                     b.Property<long>("IdAccount")
                         .HasColumnType("bigint");
@@ -118,7 +118,7 @@ namespace ROH.Context.Migrations
                     b.Property<Guid>("Guid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasDefaultValueSql("newsequentialid()");
+                        .HasDefaultValueSql("uuid-ossp()");
 
                     b.Property<long>("IdAccount")
                         .HasColumnType("bigint");
@@ -392,7 +392,7 @@ namespace ROH.Context.Migrations
                     b.Property<Guid>("Guid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasDefaultValueSql("newsequentialid()");
+                        .HasDefaultValueSql("uuid-ossp()");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -510,7 +510,7 @@ namespace ROH.Context.Migrations
                     b.Property<Guid>("Guid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasDefaultValueSql("newsequentialid()");
+                        .HasDefaultValueSql("uuid-ossp()");
 
                     b.Property<int>("Release")
                         .HasColumnType("integer");
@@ -550,7 +550,7 @@ namespace ROH.Context.Migrations
                     b.Property<Guid>("Guid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasDefaultValueSql("newsequentialid()");
+                        .HasDefaultValueSql("uuid-ossp()");
 
                     b.Property<long>("IdVersion")
                         .HasColumnType("bigint");
@@ -628,7 +628,7 @@ namespace ROH.Context.Migrations
                     b.Property<Guid>("Guid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasDefaultValueSql("newsequentialid()");
+                        .HasDefaultValueSql("uuid-ossp()");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");

@@ -11,7 +11,7 @@ namespace ROH.Context.TypeConfiguration.Version
         {
             _ = builder.HasKey(g => g.Id);
 
-            _ = builder.Property(g => g.Guid).HasDefaultValueSql("newsequentialid()");
+            _ = builder.Property(g => g.Guid).HasDefaultValueSql("gen_random_uuid()");
         }
     }
 }

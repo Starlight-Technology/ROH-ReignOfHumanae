@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -12,23 +12,24 @@ namespace ROH.Context.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            _ = migrationBuilder.CreateTable(
+            migrationBuilder.CreateTable(
                 name: "Accounts",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     IdUser = table.Column<long>(type: "bigint", nullable: false),
+                    Guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     UserName = table.Column<string>(type: "text", nullable: true),
                     RealName = table.Column<string>(type: "text", nullable: true),
                     BirthDate = table.Column<DateOnly>(type: "date", nullable: false)
                 },
                 constraints: table =>
                 {
-                    _ = table.PrimaryKey("PK_Accounts", x => x.Id);
+                    table.PrimaryKey("PK_Accounts", x => x.Id);
                 });
 
-            _ = migrationBuilder.CreateTable(
+            migrationBuilder.CreateTable(
                 name: "Enchantments",
                 columns: table => new
                 {
@@ -42,47 +43,50 @@ namespace ROH.Context.Migrations
                 },
                 constraints: table =>
                 {
-                    _ = table.PrimaryKey("PK_Enchantments", x => x.Id);
+                    table.PrimaryKey("PK_Enchantments", x => x.Id);
                 });
 
-            _ = migrationBuilder.CreateTable(
+            migrationBuilder.CreateTable(
                 name: "GameVersions",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ReleaseDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    VersionDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     Version = table.Column<int>(type: "integer", nullable: false),
                     Release = table.Column<int>(type: "integer", nullable: false),
                     Review = table.Column<int>(type: "integer", nullable: false),
-                    Released = table.Column<bool>(type: "boolean", nullable: false),
-                    ReleaseDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    VersionDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    Released = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
-                    _ = table.PrimaryKey("PK_GameVersions", x => x.Id);
+                    table.PrimaryKey("PK_GameVersions", x => x.Id);
                 });
 
-            _ = migrationBuilder.CreateTable(
+            migrationBuilder.CreateTable(
                 name: "Guilds",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    _ = table.PrimaryKey("PK_Guilds", x => x.Id);
+                    table.PrimaryKey("PK_Guilds", x => x.Id);
                 });
 
-            _ = migrationBuilder.CreateTable(
+            migrationBuilder.CreateTable(
                 name: "Items",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     Attack = table.Column<int>(type: "integer", nullable: true),
                     Defense = table.Column<int>(type: "integer", nullable: true),
                     Weight = table.Column<int>(type: "integer", nullable: false),
@@ -94,10 +98,10 @@ namespace ROH.Context.Migrations
                 },
                 constraints: table =>
                 {
-                    _ = table.PrimaryKey("PK_Items", x => x.Id);
+                    table.PrimaryKey("PK_Items", x => x.Id);
                 });
 
-            _ = migrationBuilder.CreateTable(
+            migrationBuilder.CreateTable(
                 name: "Skills",
                 columns: table => new
                 {
@@ -112,23 +116,24 @@ namespace ROH.Context.Migrations
                 },
                 constraints: table =>
                 {
-                    _ = table.PrimaryKey("PK_Skills", x => x.Id);
+                    table.PrimaryKey("PK_Skills", x => x.Id);
                 });
 
-            _ = migrationBuilder.CreateTable(
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     IdAccount = table.Column<long>(type: "bigint", nullable: false),
+                    Guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     Email = table.Column<string>(type: "text", nullable: true),
                     Password = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    _ = table.PrimaryKey("PK_Users", x => x.Id);
-                    _ = table.ForeignKey(
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.ForeignKey(
                         name: "FK_Users_Accounts_IdAccount",
                         column: x => x.IdAccount,
                         principalTable: "Accounts",
@@ -136,22 +141,23 @@ namespace ROH.Context.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            _ = migrationBuilder.CreateTable(
+            migrationBuilder.CreateTable(
                 name: "GameVersionFiles",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     IdVersion = table.Column<long>(type: "bigint", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
+                    Guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     Size = table.Column<long>(type: "bigint", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
                     Path = table.Column<string>(type: "text", nullable: false),
                     Format = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    _ = table.PrimaryKey("PK_GameVersionFiles", x => x.Id);
-                    _ = table.ForeignKey(
+                    table.PrimaryKey("PK_GameVersionFiles", x => x.Id);
+                    table.ForeignKey(
                         name: "FK_GameVersionFiles_GameVersions_IdVersion",
                         column: x => x.IdVersion,
                         principalTable: "GameVersions",
@@ -159,7 +165,7 @@ namespace ROH.Context.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            _ = migrationBuilder.CreateTable(
+            migrationBuilder.CreateTable(
                 name: "ItemEnchantments",
                 columns: table => new
                 {
@@ -170,14 +176,14 @@ namespace ROH.Context.Migrations
                 },
                 constraints: table =>
                 {
-                    _ = table.PrimaryKey("PK_ItemEnchantments", x => x.Id);
-                    _ = table.ForeignKey(
+                    table.PrimaryKey("PK_ItemEnchantments", x => x.Id);
+                    table.ForeignKey(
                         name: "FK_ItemEnchantments_Enchantments_IdEnchantment",
                         column: x => x.IdEnchantment,
                         principalTable: "Enchantments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    _ = table.ForeignKey(
+                    table.ForeignKey(
                         name: "FK_ItemEnchantments_Items_IdItem",
                         column: x => x.IdItem,
                         principalTable: "Items",
@@ -185,7 +191,7 @@ namespace ROH.Context.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            _ = migrationBuilder.CreateTable(
+            migrationBuilder.CreateTable(
                 name: "AttackStatuses",
                 columns: table => new
                 {
@@ -197,10 +203,10 @@ namespace ROH.Context.Migrations
                 },
                 constraints: table =>
                 {
-                    _ = table.PrimaryKey("PK_AttackStatuses", x => x.IdCharacter);
+                    table.PrimaryKey("PK_AttackStatuses", x => x.IdCharacter);
                 });
 
-            _ = migrationBuilder.CreateTable(
+            migrationBuilder.CreateTable(
                 name: "Champions",
                 columns: table => new
                 {
@@ -211,10 +217,10 @@ namespace ROH.Context.Migrations
                 },
                 constraints: table =>
                 {
-                    _ = table.PrimaryKey("PK_Champions", x => x.Id);
+                    table.PrimaryKey("PK_Champions", x => x.Id);
                 });
 
-            _ = migrationBuilder.CreateTable(
+            migrationBuilder.CreateTable(
                 name: "CharacterInventory",
                 columns: table => new
                 {
@@ -225,8 +231,8 @@ namespace ROH.Context.Migrations
                 },
                 constraints: table =>
                 {
-                    _ = table.PrimaryKey("PK_CharacterInventory", x => x.Id);
-                    _ = table.ForeignKey(
+                    table.PrimaryKey("PK_CharacterInventory", x => x.Id);
+                    table.ForeignKey(
                         name: "FK_CharacterInventory_Items_IdItem",
                         column: x => x.IdItem,
                         principalTable: "Items",
@@ -234,7 +240,7 @@ namespace ROH.Context.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            _ = migrationBuilder.CreateTable(
+            migrationBuilder.CreateTable(
                 name: "Characters",
                 columns: table => new
                 {
@@ -243,27 +249,28 @@ namespace ROH.Context.Migrations
                     IdAccount = table.Column<long>(type: "bigint", nullable: false),
                     IdGuild = table.Column<long>(type: "bigint", nullable: true),
                     IdKingdom = table.Column<long>(type: "bigint", nullable: false),
+                    Guid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     Name = table.Column<string>(type: "text", nullable: true),
                     Race = table.Column<int>(type: "integer", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    _ = table.PrimaryKey("PK_Characters", x => x.Id);
-                    _ = table.ForeignKey(
+                    table.PrimaryKey("PK_Characters", x => x.Id);
+                    table.ForeignKey(
                         name: "FK_Characters_Accounts_IdAccount",
                         column: x => x.IdAccount,
                         principalTable: "Accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    _ = table.ForeignKey(
+                    table.ForeignKey(
                         name: "FK_Characters_Guilds_IdGuild",
                         column: x => x.IdGuild,
                         principalTable: "Guilds",
                         principalColumn: "Id");
                 });
 
-            _ = migrationBuilder.CreateTable(
+            migrationBuilder.CreateTable(
                 name: "CharacterSkills",
                 columns: table => new
                 {
@@ -274,14 +281,14 @@ namespace ROH.Context.Migrations
                 },
                 constraints: table =>
                 {
-                    _ = table.PrimaryKey("PK_CharacterSkills", x => x.Id);
-                    _ = table.ForeignKey(
+                    table.PrimaryKey("PK_CharacterSkills", x => x.Id);
+                    table.ForeignKey(
                         name: "FK_CharacterSkills_Characters_IdCharacter",
                         column: x => x.IdCharacter,
                         principalTable: "Characters",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    _ = table.ForeignKey(
+                    table.ForeignKey(
                         name: "FK_CharacterSkills_Skills_IdSkill",
                         column: x => x.IdSkill,
                         principalTable: "Skills",
@@ -289,7 +296,7 @@ namespace ROH.Context.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            _ = migrationBuilder.CreateTable(
+            migrationBuilder.CreateTable(
                 name: "DefenseStatuses",
                 columns: table => new
                 {
@@ -307,8 +314,8 @@ namespace ROH.Context.Migrations
                 },
                 constraints: table =>
                 {
-                    _ = table.PrimaryKey("PK_DefenseStatuses", x => x.IdCharacter);
-                    _ = table.ForeignKey(
+                    table.PrimaryKey("PK_DefenseStatuses", x => x.IdCharacter);
+                    table.ForeignKey(
                         name: "FK_DefenseStatuses_Characters_IdCharacter",
                         column: x => x.IdCharacter,
                         principalTable: "Characters",
@@ -316,7 +323,7 @@ namespace ROH.Context.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            _ = migrationBuilder.CreateTable(
+            migrationBuilder.CreateTable(
                 name: "EquippedItems",
                 columns: table => new
                 {
@@ -332,56 +339,56 @@ namespace ROH.Context.Migrations
                 },
                 constraints: table =>
                 {
-                    _ = table.PrimaryKey("PK_EquippedItems", x => x.IdCharacter);
-                    _ = table.ForeignKey(
+                    table.PrimaryKey("PK_EquippedItems", x => x.IdCharacter);
+                    table.ForeignKey(
                         name: "FK_EquippedItems_Characters_IdCharacter",
                         column: x => x.IdCharacter,
                         principalTable: "Characters",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    _ = table.ForeignKey(
+                    table.ForeignKey(
                         name: "FK_EquippedItems_Items_IdArmor",
                         column: x => x.IdArmor,
                         principalTable: "Items",
                         principalColumn: "Id");
-                    _ = table.ForeignKey(
+                    table.ForeignKey(
                         name: "FK_EquippedItems_Items_IdBoots",
                         column: x => x.IdBoots,
                         principalTable: "Items",
                         principalColumn: "Id");
-                    _ = table.ForeignKey(
+                    table.ForeignKey(
                         name: "FK_EquippedItems_Items_IdGloves",
                         column: x => x.IdGloves,
                         principalTable: "Items",
                         principalColumn: "Id");
-                    _ = table.ForeignKey(
+                    table.ForeignKey(
                         name: "FK_EquippedItems_Items_IdHead",
                         column: x => x.IdHead,
                         principalTable: "Items",
                         principalColumn: "Id");
-                    _ = table.ForeignKey(
+                    table.ForeignKey(
                         name: "FK_EquippedItems_Items_IdLeftBracelet",
                         column: x => x.IdLeftBracelet,
                         principalTable: "Items",
                         principalColumn: "Id");
-                    _ = table.ForeignKey(
+                    table.ForeignKey(
                         name: "FK_EquippedItems_Items_IdLegs",
                         column: x => x.IdLegs,
                         principalTable: "Items",
                         principalColumn: "Id");
-                    _ = table.ForeignKey(
+                    table.ForeignKey(
                         name: "FK_EquippedItems_Items_IdNecklace",
                         column: x => x.IdNecklace,
                         principalTable: "Items",
                         principalColumn: "Id");
-                    _ = table.ForeignKey(
+                    table.ForeignKey(
                         name: "FK_EquippedItems_Items_IdRightBracelet",
                         column: x => x.IdRightBracelet,
                         principalTable: "Items",
                         principalColumn: "Id");
                 });
 
-            _ = migrationBuilder.CreateTable(
+            migrationBuilder.CreateTable(
                 name: "Kingdoms",
                 columns: table => new
                 {
@@ -392,8 +399,8 @@ namespace ROH.Context.Migrations
                 },
                 constraints: table =>
                 {
-                    _ = table.PrimaryKey("PK_Kingdoms", x => x.Id);
-                    _ = table.ForeignKey(
+                    table.PrimaryKey("PK_Kingdoms", x => x.Id);
+                    table.ForeignKey(
                         name: "FK_Kingdoms_Characters_IdRuler",
                         column: x => x.IdRuler,
                         principalTable: "Characters",
@@ -401,7 +408,7 @@ namespace ROH.Context.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            _ = migrationBuilder.CreateTable(
+            migrationBuilder.CreateTable(
                 name: "MembersPositions",
                 columns: table => new
                 {
@@ -413,14 +420,14 @@ namespace ROH.Context.Migrations
                 },
                 constraints: table =>
                 {
-                    _ = table.PrimaryKey("PK_MembersPositions", x => x.Id);
-                    _ = table.ForeignKey(
+                    table.PrimaryKey("PK_MembersPositions", x => x.Id);
+                    table.ForeignKey(
                         name: "FK_MembersPositions_Characters_IdCharacter",
                         column: x => x.IdCharacter,
                         principalTable: "Characters",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    _ = table.ForeignKey(
+                    table.ForeignKey(
                         name: "FK_MembersPositions_Guilds_IdGuild",
                         column: x => x.IdGuild,
                         principalTable: "Guilds",
@@ -428,7 +435,7 @@ namespace ROH.Context.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            _ = migrationBuilder.CreateTable(
+            migrationBuilder.CreateTable(
                 name: "Statuses",
                 columns: table => new
                 {
@@ -446,8 +453,8 @@ namespace ROH.Context.Migrations
                 },
                 constraints: table =>
                 {
-                    _ = table.PrimaryKey("PK_Statuses", x => x.IdCharacter);
-                    _ = table.ForeignKey(
+                    table.PrimaryKey("PK_Statuses", x => x.IdCharacter);
+                    table.ForeignKey(
                         name: "FK_Statuses_Characters_IdCharacter",
                         column: x => x.IdCharacter,
                         principalTable: "Characters",
@@ -455,7 +462,7 @@ namespace ROH.Context.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            _ = migrationBuilder.CreateTable(
+            migrationBuilder.CreateTable(
                 name: "RingsEquipped",
                 columns: table => new
                 {
@@ -466,14 +473,14 @@ namespace ROH.Context.Migrations
                 },
                 constraints: table =>
                 {
-                    _ = table.PrimaryKey("PK_RingsEquipped", x => x.Id);
-                    _ = table.ForeignKey(
+                    table.PrimaryKey("PK_RingsEquipped", x => x.Id);
+                    table.ForeignKey(
                         name: "FK_RingsEquipped_EquippedItems_IdEquippedItems",
                         column: x => x.IdEquippedItems,
                         principalTable: "EquippedItems",
                         principalColumn: "IdCharacter",
                         onDelete: ReferentialAction.Cascade);
-                    _ = table.ForeignKey(
+                    table.ForeignKey(
                         name: "FK_RingsEquipped_Items_IdItem",
                         column: x => x.IdItem,
                         principalTable: "Items",
@@ -481,7 +488,7 @@ namespace ROH.Context.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            _ = migrationBuilder.CreateTable(
+            migrationBuilder.CreateTable(
                 name: "KingdomRelations",
                 columns: table => new
                 {
@@ -493,8 +500,8 @@ namespace ROH.Context.Migrations
                 },
                 constraints: table =>
                 {
-                    _ = table.PrimaryKey("PK_KingdomRelations", x => x.Id);
-                    _ = table.ForeignKey(
+                    table.PrimaryKey("PK_KingdomRelations", x => x.Id);
+                    table.ForeignKey(
                         name: "FK_KingdomRelations_Kingdoms_IdKingdom2",
                         column: x => x.IdKingdom2,
                         principalTable: "Kingdoms",
@@ -502,145 +509,145 @@ namespace ROH.Context.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            _ = migrationBuilder.CreateIndex(
+            migrationBuilder.CreateIndex(
                 name: "IX_Champions_IdCharacter",
                 table: "Champions",
                 column: "IdCharacter");
 
-            _ = migrationBuilder.CreateIndex(
+            migrationBuilder.CreateIndex(
                 name: "IX_Champions_IdKingdom",
                 table: "Champions",
                 column: "IdKingdom");
 
-            _ = migrationBuilder.CreateIndex(
+            migrationBuilder.CreateIndex(
                 name: "IX_CharacterInventory_IdCharacter",
                 table: "CharacterInventory",
                 column: "IdCharacter");
 
-            _ = migrationBuilder.CreateIndex(
+            migrationBuilder.CreateIndex(
                 name: "IX_CharacterInventory_IdItem",
                 table: "CharacterInventory",
                 column: "IdItem");
 
-            _ = migrationBuilder.CreateIndex(
+            migrationBuilder.CreateIndex(
                 name: "IX_Characters_IdAccount",
                 table: "Characters",
                 column: "IdAccount");
 
-            _ = migrationBuilder.CreateIndex(
+            migrationBuilder.CreateIndex(
                 name: "IX_Characters_IdGuild",
                 table: "Characters",
                 column: "IdGuild");
 
-            _ = migrationBuilder.CreateIndex(
+            migrationBuilder.CreateIndex(
                 name: "IX_Characters_IdKingdom",
                 table: "Characters",
                 column: "IdKingdom");
 
-            _ = migrationBuilder.CreateIndex(
+            migrationBuilder.CreateIndex(
                 name: "IX_CharacterSkills_IdCharacter",
                 table: "CharacterSkills",
                 column: "IdCharacter");
 
-            _ = migrationBuilder.CreateIndex(
+            migrationBuilder.CreateIndex(
                 name: "IX_CharacterSkills_IdSkill",
                 table: "CharacterSkills",
                 column: "IdSkill");
 
-            _ = migrationBuilder.CreateIndex(
+            migrationBuilder.CreateIndex(
                 name: "IX_EquippedItems_IdArmor",
                 table: "EquippedItems",
                 column: "IdArmor");
 
-            _ = migrationBuilder.CreateIndex(
+            migrationBuilder.CreateIndex(
                 name: "IX_EquippedItems_IdBoots",
                 table: "EquippedItems",
                 column: "IdBoots");
 
-            _ = migrationBuilder.CreateIndex(
+            migrationBuilder.CreateIndex(
                 name: "IX_EquippedItems_IdGloves",
                 table: "EquippedItems",
                 column: "IdGloves");
 
-            _ = migrationBuilder.CreateIndex(
+            migrationBuilder.CreateIndex(
                 name: "IX_EquippedItems_IdHead",
                 table: "EquippedItems",
                 column: "IdHead");
 
-            _ = migrationBuilder.CreateIndex(
+            migrationBuilder.CreateIndex(
                 name: "IX_EquippedItems_IdLeftBracelet",
                 table: "EquippedItems",
                 column: "IdLeftBracelet");
 
-            _ = migrationBuilder.CreateIndex(
+            migrationBuilder.CreateIndex(
                 name: "IX_EquippedItems_IdLegs",
                 table: "EquippedItems",
                 column: "IdLegs");
 
-            _ = migrationBuilder.CreateIndex(
+            migrationBuilder.CreateIndex(
                 name: "IX_EquippedItems_IdNecklace",
                 table: "EquippedItems",
                 column: "IdNecklace");
 
-            _ = migrationBuilder.CreateIndex(
+            migrationBuilder.CreateIndex(
                 name: "IX_EquippedItems_IdRightBracelet",
                 table: "EquippedItems",
                 column: "IdRightBracelet");
 
-            _ = migrationBuilder.CreateIndex(
+            migrationBuilder.CreateIndex(
                 name: "IX_GameVersionFiles_IdVersion",
                 table: "GameVersionFiles",
                 column: "IdVersion");
 
-            _ = migrationBuilder.CreateIndex(
+            migrationBuilder.CreateIndex(
                 name: "IX_ItemEnchantments_IdEnchantment",
                 table: "ItemEnchantments",
                 column: "IdEnchantment");
 
-            _ = migrationBuilder.CreateIndex(
+            migrationBuilder.CreateIndex(
                 name: "IX_ItemEnchantments_IdItem",
                 table: "ItemEnchantments",
                 column: "IdItem");
 
-            _ = migrationBuilder.CreateIndex(
+            migrationBuilder.CreateIndex(
                 name: "IX_KingdomRelations_IdKingdom2",
                 table: "KingdomRelations",
                 column: "IdKingdom2");
 
-            _ = migrationBuilder.CreateIndex(
+            migrationBuilder.CreateIndex(
                 name: "IX_Kingdoms_IdRuler",
                 table: "Kingdoms",
                 column: "IdRuler",
                 unique: true);
 
-            _ = migrationBuilder.CreateIndex(
+            migrationBuilder.CreateIndex(
                 name: "IX_MembersPositions_IdCharacter",
                 table: "MembersPositions",
                 column: "IdCharacter",
                 unique: true);
 
-            _ = migrationBuilder.CreateIndex(
+            migrationBuilder.CreateIndex(
                 name: "IX_MembersPositions_IdGuild",
                 table: "MembersPositions",
                 column: "IdGuild");
 
-            _ = migrationBuilder.CreateIndex(
+            migrationBuilder.CreateIndex(
                 name: "IX_RingsEquipped_IdEquippedItems",
                 table: "RingsEquipped",
                 column: "IdEquippedItems");
 
-            _ = migrationBuilder.CreateIndex(
+            migrationBuilder.CreateIndex(
                 name: "IX_RingsEquipped_IdItem",
                 table: "RingsEquipped",
                 column: "IdItem");
 
-            _ = migrationBuilder.CreateIndex(
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_IdAccount",
                 table: "Users",
                 column: "IdAccount",
                 unique: true);
 
-            _ = migrationBuilder.AddForeignKey(
+            migrationBuilder.AddForeignKey(
                 name: "FK_AttackStatuses_Characters_IdCharacter",
                 table: "AttackStatuses",
                 column: "IdCharacter",
@@ -648,7 +655,7 @@ namespace ROH.Context.Migrations
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 
-            _ = migrationBuilder.AddForeignKey(
+            migrationBuilder.AddForeignKey(
                 name: "FK_Champions_Characters_IdCharacter",
                 table: "Champions",
                 column: "IdCharacter",
@@ -656,7 +663,7 @@ namespace ROH.Context.Migrations
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 
-            _ = migrationBuilder.AddForeignKey(
+            migrationBuilder.AddForeignKey(
                 name: "FK_Champions_Kingdoms_IdKingdom",
                 table: "Champions",
                 column: "IdKingdom",
@@ -664,7 +671,7 @@ namespace ROH.Context.Migrations
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 
-            _ = migrationBuilder.AddForeignKey(
+            migrationBuilder.AddForeignKey(
                 name: "FK_CharacterInventory_Characters_IdCharacter",
                 table: "CharacterInventory",
                 column: "IdCharacter",
@@ -672,7 +679,7 @@ namespace ROH.Context.Migrations
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 
-            _ = migrationBuilder.AddForeignKey(
+            migrationBuilder.AddForeignKey(
                 name: "FK_Characters_Kingdoms_IdKingdom",
                 table: "Characters",
                 column: "IdKingdom",
@@ -684,71 +691,71 @@ namespace ROH.Context.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            _ = migrationBuilder.DropForeignKey(
+            migrationBuilder.DropForeignKey(
                 name: "FK_Kingdoms_Characters_IdRuler",
                 table: "Kingdoms");
 
-            _ = migrationBuilder.DropTable(
+            migrationBuilder.DropTable(
                 name: "AttackStatuses");
 
-            _ = migrationBuilder.DropTable(
+            migrationBuilder.DropTable(
                 name: "Champions");
 
-            _ = migrationBuilder.DropTable(
+            migrationBuilder.DropTable(
                 name: "CharacterInventory");
 
-            _ = migrationBuilder.DropTable(
+            migrationBuilder.DropTable(
                 name: "CharacterSkills");
 
-            _ = migrationBuilder.DropTable(
+            migrationBuilder.DropTable(
                 name: "DefenseStatuses");
 
-            _ = migrationBuilder.DropTable(
+            migrationBuilder.DropTable(
                 name: "GameVersionFiles");
 
-            _ = migrationBuilder.DropTable(
+            migrationBuilder.DropTable(
                 name: "ItemEnchantments");
 
-            _ = migrationBuilder.DropTable(
+            migrationBuilder.DropTable(
                 name: "KingdomRelations");
 
-            _ = migrationBuilder.DropTable(
+            migrationBuilder.DropTable(
                 name: "MembersPositions");
 
-            _ = migrationBuilder.DropTable(
+            migrationBuilder.DropTable(
                 name: "RingsEquipped");
 
-            _ = migrationBuilder.DropTable(
+            migrationBuilder.DropTable(
                 name: "Statuses");
 
-            _ = migrationBuilder.DropTable(
+            migrationBuilder.DropTable(
                 name: "Users");
 
-            _ = migrationBuilder.DropTable(
+            migrationBuilder.DropTable(
                 name: "Skills");
 
-            _ = migrationBuilder.DropTable(
+            migrationBuilder.DropTable(
                 name: "GameVersions");
 
-            _ = migrationBuilder.DropTable(
+            migrationBuilder.DropTable(
                 name: "Enchantments");
 
-            _ = migrationBuilder.DropTable(
+            migrationBuilder.DropTable(
                 name: "EquippedItems");
 
-            _ = migrationBuilder.DropTable(
+            migrationBuilder.DropTable(
                 name: "Items");
 
-            _ = migrationBuilder.DropTable(
+            migrationBuilder.DropTable(
                 name: "Characters");
 
-            _ = migrationBuilder.DropTable(
+            migrationBuilder.DropTable(
                 name: "Accounts");
 
-            _ = migrationBuilder.DropTable(
+            migrationBuilder.DropTable(
                 name: "Guilds");
 
-            _ = migrationBuilder.DropTable(
+            migrationBuilder.DropTable(
                 name: "Kingdoms");
         }
     }

@@ -11,7 +11,7 @@ namespace ROH.Context.TypeConfiguration.Characters
         {
             _ = builder.HasKey(c => c.Id);
 
-            _ = builder.Property(g => g.Guid).HasDefaultValueSql("newsequentialid()");
+            _ = builder.Property(g => g.Guid).HasDefaultValueSql("gen_random_uuid()");
 
             _ = builder.HasOne(c => c.Account).WithMany(a => a.Characters).HasForeignKey(c => c.IdAccount);
 
