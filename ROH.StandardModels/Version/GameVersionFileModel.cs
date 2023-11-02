@@ -1,7 +1,10 @@
-﻿namespace ROH.StandardModels.Version
+﻿using System;
+
+namespace ROH.StandardModels.Version
 {
     public class GameVersionFileModel
     {
+        public Guid Guid { get; set; }
         public string Name { get; set; }
         public long Size { get; set; }
         public string Path { get; set; }

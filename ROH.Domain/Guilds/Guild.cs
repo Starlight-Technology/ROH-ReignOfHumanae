@@ -3,11 +3,13 @@
 namespace ROH.Domain.Guilds
 {
     public record Guild(long Id,
+                        Guid Guid,
                         string Name,
                         string Description)
     {
         public Guild(string name,
                      string description) : this(
+                         default,
                          default,
                          name ?? throw new ArgumentNullException(nameof(name)),
                          description ?? throw new ArgumentNullException(nameof(description)))

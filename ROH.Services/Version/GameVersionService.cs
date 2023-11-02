@@ -22,9 +22,9 @@ namespace ROH.Services.Version
             _mapper = mapper;
         }
 
-        public async Task<DefaultResponse?> GetVersionById(long idVersion)
+        public async Task<DefaultResponse?> GetVersionByGuid(Guid versionGuid)
         {
-            GameVersion? version = await _versionRepository.GetVersionById(idVersion);
+            GameVersion? version = await _versionRepository.GetVersionByGuid(versionGuid);
             GameVersionModel model = _mapper.Map<GameVersionModel>(version);
             return new DefaultResponse() { ObjectResponse = model };
         }

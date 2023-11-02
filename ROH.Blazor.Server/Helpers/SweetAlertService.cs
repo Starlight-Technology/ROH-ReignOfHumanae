@@ -1,4 +1,6 @@
-﻿using Microsoft.JSInterop;
+﻿// Ignore Spelling: js
+
+using Microsoft.JSInterop;
 
 using ROH.Blazor.Server.Helpers.Types;
 using ROH.StandardModels.Response;

@@ -5,7 +5,7 @@ namespace ROH.Interfaces.Repository.Version
 {
     public interface IGameVersionRepository
     {
-        Task<GameVersion?> GetVersionById(long versionId);
+        Task<GameVersion?> GetVersionByGuid(Guid versionGuid);
 
         Task<Paginated> GetAllReleasedVersions(int take = 10, int skip = 0);
 

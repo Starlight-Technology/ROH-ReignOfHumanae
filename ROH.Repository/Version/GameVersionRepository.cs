@@ -18,14 +18,14 @@ namespace ROH.Repository.Version
             _context = context;
         }
 
-        public async Task<GameVersion?> GetVersionById(long versionId)
+        public async Task<GameVersion?> GetVersionByGuid(Guid versionGuid)
         {
-            return await _context.GameVersions.FindAsync(versionId);
+            return await _context.GameVersions.FirstOrDefaultAsync(v => v.Guid == versionGuid);
         }
 
         public async Task<GameVersion?> GetCurrentGameVersion()
         {
-            return await _context.GameVersions.Where(v=>v.Released).OrderByDescending(v => v.ReleaseDate).FirstOrDefaultAsync();
+            return await _context.GameVersions.Where(v => v.Released).OrderByDescending(v => v.ReleaseDate).FirstOrDefaultAsync();
         }
 
         public async Task<Paginated> GetAllVersions(int take = 10, int skip = 0)
@@ -38,7 +38,7 @@ namespace ROH.Repository.Version
                 .Take(take)
                 .ToListAsync();
             int total = _context.GameVersions.Count();
-            return new (total, versions.Cast<dynamic>().ToList());
+            return new(total, versions.Cast<dynamic>().ToList());
         }
 
         public async Task<Paginated> GetAllReleasedVersions(int take = 10, int skip = 0)
@@ -52,12 +52,12 @@ namespace ROH.Repository.Version
                 .Take(take)
                 .ToListAsync();
             int total = _context.GameVersions.Count();
-            return new (total, versions.Cast<dynamic>().ToList());
+            return new(total, versions.Cast<dynamic>().ToList());
         }
 
         public async Task<GameVersion> SetNewGameVersion(GameVersion version)
         {
-            version = version with { VersionDate = DateTime.UtcNow};
+            version = version with { VersionDate = DateTime.UtcNow };
             _ = await _context.GameVersions.AddAsync(version);
             _ = await _context.SaveChangesAsync();
 
