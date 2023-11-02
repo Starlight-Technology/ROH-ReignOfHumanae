@@ -51,13 +51,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapPost("/CreateNewVersion", async (IGameVersionService _gameVersionService, GameVersionModel model) =>
+app.MapPost("CreateNewVersion", async (IGameVersionService _gameVersionService, GameVersionModel model) =>
 {
     return await _gameVersionService.NewVersion(model);
 }).WithName("CreateNewVersion")
   .WithOpenApi();
 
-app.MapGet("/GetCurrentVersion", async (IGameVersionService _gameVersionService) =>
+app.MapGet("GetCurrentVersion", async (IGameVersionService _gameVersionService) =>
 {
     return await _gameVersionService.GetCurrentVersion();
 }).WithName("GetCurrentVersion")
@@ -73,6 +73,12 @@ app.MapGet("GetAllReleasedVersionsPaginated", async (IGameVersionService _gameVe
 {
     return await _gameVersionService.GetAllReleasedVersions(page: page, take: take);
 }).WithName("GetAllReleasedVersionsPaginated")
+  .WithOpenApi();
+
+app.MapGet("GetVersionDetails", async (IGameVersionService _gameVersionService, Guid guid) =>
+{
+    return await _gameVersionService.GetVersionByGuid(guid);
+}).WithName("GetVersionDetails")
   .WithOpenApi();
 
 app.Run();

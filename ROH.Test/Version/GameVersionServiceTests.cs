@@ -23,13 +23,15 @@ namespace ROH.Test.Version
     {
         private static readonly DateTime _utcNow = DateTime.UtcNow;
 
-        private readonly GameVersionModel _versionModel = new() { Version = 1, Release = 1, Review = 1, Released = false, ReleaseDate = null, VersionDate = _utcNow };
+        private static readonly Guid _guidGenerated = Guid.NewGuid();
 
-        private readonly GameVersion _version = new(null, _utcNow, 1, 1, 1, 1, false);
+        private readonly GameVersionModel _versionModel = new() { Guid = _guidGenerated, Version = 1, Release = 1, Review = 1, Released = false, ReleaseDate = null, VersionDate = _utcNow };
+
+        private readonly GameVersion _version = new(null, _utcNow, 1, _guidGenerated, 1, 1, 1, false);
 
 
         [Fact]
-        public async Task GetVersionById_ShouldReturnVersion_WhenVersionExists()
+        public async Task GetVersionByGuid_ShouldReturnVersion_WhenVersionExists()
         {
             // Arrange
             MapperConfiguration config = new(cfg =>
@@ -41,12 +43,12 @@ namespace ROH.Test.Version
             Mapper mapper = new(config);
 
             Mock<IGameVersionRepository> mockRepository = new();
-            _ = mockRepository.Setup(x => x.GetVersionById(It.IsAny<long>())).ReturnsAsync(_version);
+            _ = mockRepository.Setup(x => x.GetVersionByGuid(It.IsAny<Guid>())).ReturnsAsync(_version);
 
             GameVersionService service = new(mockRepository.Object, mapper);
 
             // Act
-            DefaultResponse? result = await service.GetVersionById(1);
+            DefaultResponse? result = await service.GetVersionByGuid(_guidGenerated);
 
             // Assert
             Assert.Equivalent(_versionModel, result?.ObjectResponse);
@@ -178,7 +180,7 @@ namespace ROH.Test.Version
 
             for (int i = 0; i < 10; i++)
             {
-                GameVersion version = _version with { Id = i + 1 , Released = true};
+                GameVersion version = _version with { Id = i + 1, Released = true };
 
                 listOfVersions.Add(version as dynamic);
             }
@@ -211,7 +213,7 @@ namespace ROH.Test.Version
             Mapper mapper = new(config);
 
             List<dynamic> listOfVersions = new();
-             
+
 
             Paginated paginatedVersions = new(listOfVersions.Count, listOfVersions);
 

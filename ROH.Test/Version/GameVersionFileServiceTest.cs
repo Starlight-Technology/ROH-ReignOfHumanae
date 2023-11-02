@@ -21,8 +21,8 @@ namespace ROH.Test.Version
         private readonly GameVersionModel _versionModel = new() { Version = 1, Release = 1, Review = 1, Released = false, ReleaseDate = null, VersionDate = DateTime.UtcNow };
         private readonly GameVersionFileModel _fileModel = new() { Name = "testFile", Size = 26354178, Path = "~/testFolder", Format = "format", Content = "wertfgby834ht348ghrfowefj234fh32urf3fh23rfhfh83" };
 
-        private readonly GameVersion _version = new(null, null, 1, 1, 1, 1, false);
-        private readonly GameVersionFile _file = new(1, 1, "testFile", 26354178, "~/testFolder", "format");
+        private readonly GameVersion _version = new(null, null,  1, Guid.NewGuid(), 1, 1, 1, false);
+        private readonly GameVersionFile _file = new(1, 1, Guid.NewGuid(),  26354178, "testFile", "~/testFolder", "format");
 
         [Fact]
         public async Task GetFiles_Returns_Files()
@@ -184,7 +184,7 @@ namespace ROH.Test.Version
 
             Mock<IGameVersionService> mockVersionService = new();
             _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(true);
-            _ = mockVersionService.Setup(x => x.GetVersionById(It.IsAny<long>())).Returns(Task.FromResult<DefaultResponse?>(new DefaultResponse(objectResponse: _version)));
+            _ = mockVersionService.Setup(x => x.GetVersionByGuid(It.IsAny<Guid>())).Returns(Task.FromResult<DefaultResponse?>(new DefaultResponse(objectResponse: _version)));
 
             Mock<IValidator<GameVersionFileModel>> mockValidator = new();
             _ = mockValidator.Setup(x => x.ValidateAsync(It.IsAny<GameVersionFileModel>(), CancellationToken.None)).ReturnsAsync(new ValidationResult());
@@ -218,7 +218,7 @@ namespace ROH.Test.Version
 
             Mock<IGameVersionService> mockVersionService = new();
             _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(true);
-            _ = mockVersionService.Setup(x => x.GetVersionById(It.IsAny<long>())).Returns(Task.FromResult<DefaultResponse?>(new DefaultResponse(objectResponse: _version)));
+            _ = mockVersionService.Setup(x => x.GetVersionByGuid(It.IsAny<Guid>())).Returns(Task.FromResult<DefaultResponse?>(new DefaultResponse(objectResponse: _version)));
 
             Mock<IValidator<GameVersionFileModel>> mockValidator = new();
             _ = mockValidator.Setup(x => x.ValidateAsync(It.IsAny<GameVersionFileModel>(), CancellationToken.None)).ReturnsAsync(new ValidationResult());
@@ -252,7 +252,7 @@ namespace ROH.Test.Version
 
             Mock<IGameVersionService> mockVersionService = new();
             _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(true);
-            _ = mockVersionService.Setup(x => x.GetVersionById(It.IsAny<long>())).Returns(Task.FromResult<DefaultResponse?>(new DefaultResponse(objectResponse: _version)));
+            _ = mockVersionService.Setup(x => x.GetVersionByGuid(It.IsAny<Guid>())).Returns(Task.FromResult<DefaultResponse?>(new DefaultResponse(objectResponse: _version)));
 
             Mock<IValidator<GameVersionFileModel>> mockValidator = new();
             _ = mockValidator.Setup(x => x.ValidateAsync(It.IsAny<GameVersionFileModel>(), CancellationToken.None)).ReturnsAsync(new ValidationResult());
@@ -287,7 +287,7 @@ namespace ROH.Test.Version
 
             Mock<IGameVersionService> mockVersionService = new();
             _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(true);
-            _ = mockVersionService.Setup(x => x.GetVersionById(It.IsAny<long>())).Returns(Task.FromResult<DefaultResponse?>(new DefaultResponse(objectResponse: _version)));
+            _ = mockVersionService.Setup(x => x.GetVersionByGuid(It.IsAny<Guid>())).Returns(Task.FromResult<DefaultResponse?>(new DefaultResponse(objectResponse: _version)));
 
             Mock<IValidator<GameVersionFileModel>> mockValidator = new();
             _ = mockValidator.Setup(x => x.ValidateAsync(It.IsAny<GameVersionFileModel>(), CancellationToken.None)).ReturnsAsync(new ValidationResult(new List<ValidationFailure>

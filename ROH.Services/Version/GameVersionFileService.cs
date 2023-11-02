@@ -40,7 +40,7 @@ namespace ROH.Services.Version
                 {
                     file = file with
                     {
-                        GameVersion = _mapper.Map<GameVersion>(_gameVersion.GetVersionById(file.IdVersion).Result
+                        GameVersion = _mapper.Map<GameVersion>(_gameVersion.GetVersionByGuid(file.Guid).Result
                             ?.ObjectResponse)
                     };
                     GameVersionFileModel fileModel = _mapper.Map<GameVersionFileModel>(file);

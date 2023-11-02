@@ -11,6 +11,8 @@ namespace ROH.Context.TypeConfiguration.Guilds
         {
             _ = builder.HasKey(g => g.Id);
 
+            _ = builder.Property(g => g.Guid).HasDefaultValueSql("newsequentialid()");
+
             _ = builder.HasMany(g => g.Characters).WithOne(c => c.Guild).HasForeignKey(c => c.IdGuild);
             _ = builder.HasMany(g => g.MembersPositions).WithOne(p => p.Guild).HasForeignKey(p => p.IdGuild);
         }

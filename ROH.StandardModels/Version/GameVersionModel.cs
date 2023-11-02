@@ -4,6 +4,7 @@ namespace ROH.StandardModels.Version
 {
     public class GameVersionModel
     {
+        public Guid Guid { get; set; }
         public int Version { get; set; }
         public int Release { get; set; }
         public int Review { get; set; }

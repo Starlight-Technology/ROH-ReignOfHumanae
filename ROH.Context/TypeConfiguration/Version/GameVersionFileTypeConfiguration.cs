@@ -11,6 +11,8 @@ namespace ROH.Context.TypeConfiguration.Version
         {
             _ = builder.HasKey(f => f.Id);
 
+            _ = builder.Property(g => g.Guid).HasDefaultValueSql("newsequentialid()");
+
             _ = builder.HasOne(f => f.GameVersion).WithMany().HasForeignKey(f => f.IdVersion);
         }
     }
