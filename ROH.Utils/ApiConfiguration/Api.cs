@@ -23,7 +23,10 @@ namespace ROH.Utils.ApiConfiguration
             GetCurrentVersion,
             CreateNewVersion,
             GetAllVersionsPaginated,
-            GetAllReleasedVersionsPaginated
+            GetAllReleasedVersionsPaginated,
+            GetVersionDetails,
+
+            UploadFile,
         }
 
         private static readonly Dictionary<Services, Uri> _servicesUrl = new Dictionary<Services, Uri>
@@ -33,8 +36,13 @@ namespace ROH.Utils.ApiConfiguration
             {Services.GetCurrentVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"GetCurrentVersion" ) },
             {Services.CreateNewVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"CreateNewVersion" ) },
             {Services.GetAllVersionsPaginated, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"GetAllVersionsPaginated" ) },
-            {Services.GetAllReleasedVersionsPaginated, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"GetAllReleasedVersionsPaginated" ) }
+            {Services.GetAllReleasedVersionsPaginated, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"GetAllReleasedVersionsPaginated" ) },
+            {Services.GetVersionDetails, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"GetVersionDetails" ) },
             #endregion VERSION
+
+            #region FILES
+             {Services.GetVersionDetails, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"UploadFile" ) }
+            #endregion
         };
 
         public async Task<string> Get(Services service, List<ApiParameters> apiParameters)

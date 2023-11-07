@@ -75,7 +75,7 @@ app.MapGet("GetAllReleasedVersionsPaginated", async (IGameVersionService _gameVe
 }).WithName("GetAllReleasedVersionsPaginated")
   .WithOpenApi();
 
-app.MapGet("GetVersionDetails", async (IGameVersionService _gameVersionService, Guid guid) =>
+app.MapGet("GetVersionDetails", async (IGameVersionService _gameVersionService, string guid) =>
 {
     return await _gameVersionService.GetVersionByGuid(guid);
 }).WithName("GetVersionDetails")

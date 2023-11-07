@@ -43,6 +43,10 @@
             <div class="col-sm-3">
                 <input type="date" id="ReleaseDate" class="form-control" @bind="currentVersion.ReleaseDate" readonly />
             </div>
+
+            <div class="col-sm-1">
+                <a href="/Manager/Version/VersionDetails/@currentVersion.Guid"><i class="fa fa-solid fa-eye">DETAILS</i></a>
+            </div>
         </div>
 
     }

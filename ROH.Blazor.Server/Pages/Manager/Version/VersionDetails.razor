@@ -1,0 +1,77 @@
+﻿@page "/Manager/Version/VersionDetails/{versionGuid}"
+@using ROH.Blazor.Server.Api;
+@using ROH.Blazor.Server.Helpers;
+@using ROH.StandardModels.Version;
+@using ROH.Utils.Helpers;
+@inject SweetAlertService _sweetAlert
+<Pages.Components.CardComponent Header="Version">
+    <div class="row">
+        <div class="col-sm-1">
+            <label for="Version">Version:</label>
+        </div>
+        <div class="col-sm-1">
+            <input type="number" id="Version" class="form-control" @bind="gameVersion.Version" readonly />
+        </div>
+
+        <div class="col-sm-1">
+            <label for="Release">Release:</label>
+        </div>
+        <div class="col-sm-1">
+            <input type="number" id="Release" class="form-control" @bind="gameVersion.Release" readonly />
+        </div>
+
+        <div class="col-sm-1">
+            <label for="Review">Review:</label>
+        </div>
+        <div class="col-sm-1">
+            <input type="number" id="Review" class="form-control" @bind="gameVersion.Review" readonly />
+        </div>
+
+        @if (gameVersion.ReleaseDate.HasValue)
+        {
+            <div class="col-sm-1">
+                <label for="ReleaseDate">Released Date:</label>
+            </div>
+            <div class="col-sm-3">
+                <input type="date" id="ReleaseDate" class="form-control" @bind="gameVersion.ReleaseDate" readonly />
+            </div>
+        }
+
+    </div>
+</Pages.Components.CardComponent>
+
+<Pages.Components.CardComponent Header="Version Files">
+</Pages.Components.CardComponent>
+
+@code {
+    [Parameter]
+    public string? versionGuid { get; set; }
+
+    private readonly VersionService _versionService = new VersionService();
+
+    private GameVersionModel gameVersion = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetVersionByGuid();
+    }
+
+    private async Task GetVersionByGuid()
+    {
+        if (Guid.TryParse(versionGuid, out Guid guid))
+        {
+            var response = await _versionService.GetVersionDetails(guid);
+
+            if (response != null && response.HttpStatus.IsSuccessStatusCode())
+                gameVersion = response?.ResponseToModel<GameVersionModel>() ?? new();
+            else if (response != null)
+                await _sweetAlert.ShowResponse(response);
+        }
+        else
+        {
+            await _sweetAlert.Show("ERROR", "Incorrect uuid version", Helpers.Types.SweetAlertType.Error);
+        }
+
+        StateHasChanged();
+    }
+}

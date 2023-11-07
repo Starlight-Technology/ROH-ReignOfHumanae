@@ -25,7 +25,8 @@ namespace ROH.Utils.ApiConfiguration
             GetCurrentVersion,
             CreateNewVersion,
             GetAllVersionsPaginated,
-            GetAllReleasedVersionsPaginated
+            GetAllReleasedVersionsPaginated,
+            GetVersionDetails
         }
 
         private static readonly Dictionary<Services, Uri> _gatewayServiceUrl = new Dictionary<Services, Uri>
@@ -36,6 +37,7 @@ namespace ROH.Utils.ApiConfiguration
             {Services.CreateNewVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Version/CreateNewVersion" ) },
             {Services.GetAllVersionsPaginated, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Version/GetAllVersionsPaginated" ) },
             {Services.GetAllReleasedVersionsPaginated, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Version/GetAllReleasedVersionsPaginated" ) },
+            {Services.GetVersionDetails, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Version/GetVersionDetails" ) },
             #endregion VERSION
         };
 

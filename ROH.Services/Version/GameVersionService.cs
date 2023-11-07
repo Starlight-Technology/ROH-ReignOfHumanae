@@ -22,11 +22,16 @@ namespace ROH.Services.Version
             _mapper = mapper;
         }
 
-        public async Task<DefaultResponse?> GetVersionByGuid(Guid versionGuid)
+        public async Task<DefaultResponse?> GetVersionByGuid(string versionGuid)
         {
-            GameVersion? version = await _versionRepository.GetVersionByGuid(versionGuid);
-            GameVersionModel model = _mapper.Map<GameVersionModel>(version);
-            return new DefaultResponse() { ObjectResponse = model };
+            if (Guid.TryParse(versionGuid, out var guid))
+            {
+
+                GameVersion? version = await _versionRepository.GetVersionByGuid(guid);
+                GameVersionModel model = _mapper.Map<GameVersionModel>(version);
+                return new DefaultResponse() { ObjectResponse = model };
+            }
+            return new DefaultResponse() { HttpStatus= System.Net.HttpStatusCode.ExpectationFailed, Message = "The Guid is invalid!"};
         }
 
         public async Task<DefaultResponse> GetAllVersions(int take = 10, int page = 1)

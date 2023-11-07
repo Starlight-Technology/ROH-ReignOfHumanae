@@ -5,7 +5,7 @@
 @using ROH.Blazor.Server.Api;
 @using Pages.Components;
 @using ROH.Utils.Helpers
-@inject SweetAlertService SweetAlert
+@inject SweetAlertService _sweetAlert
 
 <CardComponent Header="New Version">
     <div class="row">
@@ -46,7 +46,6 @@
     private int inputVersion = 0;
     private int inputRelease = 0;
     private int inputReview = 0;
-    private string responseMessage = "";
 
     private GameVersionModel currentVersion = new()
         {
@@ -63,6 +62,6 @@
         var response = await _versionService.CreateNewVersion(model);
 
         if (response != null)
-            await SweetAlert.ShowResponse(response);
+            await _sweetAlert.ShowResponse(response);
     }
 }

@@ -5,7 +5,7 @@ namespace ROH.Interfaces.Services.Version
 {
     public interface IGameVersionService
     {
-        Task<DefaultResponse?> GetVersionByGuid(Guid versionGuid);
+        Task<DefaultResponse?> GetVersionByGuid(string versionGuid);
 
         Task<DefaultResponse> GetAllReleasedVersions(int take = 10, int page = 1);
 

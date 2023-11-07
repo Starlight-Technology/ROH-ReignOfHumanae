@@ -25,6 +25,11 @@ namespace ROH.Gateway.Controllers.Version
             new Utils.ApiConfiguration.ApiParameters() {Name="take", Value= take.ToString() },
         }));
 
+        [HttpGet("GetVersionDetails")]
+        public async Task<IActionResult> GetVersionDetails(Guid guid) => Ok(await _api.Get(Utils.ApiConfiguration.Api.Services.GetVersionDetails, new List<Utils.ApiConfiguration.ApiParameters>() {
+            new Utils.ApiConfiguration.ApiParameters() {Name="guid", Value = guid.ToString() },
+        }));
+
         [HttpPost("CreateNewVersion")]
         public async Task<IActionResult> CreateNewVersion(GameVersionModel model) => Ok(await _api.Post(Utils.ApiConfiguration.Api.Services.CreateNewVersion, model));
     }

@@ -24,5 +24,10 @@ namespace ROH.Blazor.Server.Api
             new Utils.ApiConfiguration.ApiParameters() {Name="page", Value= page.ToString() },
             new Utils.ApiConfiguration.ApiParameters() {Name="take", Value= take.ToString() },
         });
+
+        public async Task<DefaultResponse?> GetVersionDetails(Guid guid ) => await _gateway.Get(Utils.ApiConfiguration.Gateway.Services.GetVersionDetails, new List<Utils.ApiConfiguration.ApiParameters> 
+        {       
+            new Utils.ApiConfiguration.ApiParameters() {Name="guid", Value= guid.ToString() },
+        });
     }
 }
