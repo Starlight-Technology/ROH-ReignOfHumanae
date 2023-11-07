@@ -41,7 +41,7 @@ namespace ROH.Utils.ApiConfiguration
             #endregion VERSION
 
             #region FILES
-             {Services.GetVersionDetails, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"UploadFile" ) }
+             {Services.UploadFile, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.VersionFile),"UploadFile" ) }
             #endregion
         };
 

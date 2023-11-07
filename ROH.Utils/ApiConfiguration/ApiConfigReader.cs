@@ -15,7 +15,8 @@ namespace ROH.Utils.ApiConfiguration
         public enum ApiUrl
         {
             Version,
-            GateWay
+            VersionFile,
+            GateWay,
         }
 
         public ApiConfigReader()
