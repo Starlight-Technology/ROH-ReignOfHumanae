@@ -1,11 +1,16 @@
 ﻿@namespace Manager.Version.Components
 @using ROH.Blazor.Server.Helpers;
 @using ROH.Blazor.Server.Helpers.Types;
+@using ROH.Blazor.Server.Interfaces.Api;
+@using ROH.Blazor.Server.Interfaces.Helpers;
 @using ROH.StandardModels.Version
 @using ROH.Blazor.Server.Api;
 @using Pages.Components;
 @using ROH.Utils.Helpers
-@inject SweetAlertService _sweetAlert
+
+@inject ISweetAlertService _sweetAlert;
+    
+@inject IVersionService _versionService;
 
 <CardComponent Header="New Version">
     <div class="row">
@@ -41,7 +46,6 @@
 </CardComponent>
 
 @code {
-    private readonly VersionService _versionService = new VersionService();
 
     private int inputVersion = 0;
     private int inputRelease = 0;

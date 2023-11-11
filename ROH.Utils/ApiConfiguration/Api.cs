@@ -26,7 +26,7 @@ namespace ROH.Utils.ApiConfiguration
             GetAllReleasedVersionsPaginated,
             GetVersionDetails,
 
-            UploadFile,
+            UploadVersionFile,
         }
 
         private static readonly Dictionary<Services, Uri> _servicesUrl = new Dictionary<Services, Uri>
@@ -41,7 +41,7 @@ namespace ROH.Utils.ApiConfiguration
             #endregion VERSION
 
             #region FILES
-             {Services.UploadFile, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.VersionFile),"UploadFile" ) }
+             {Services.UploadVersionFile, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.VersionFile),"UploadFile" ) }
             #endregion
         };
 

@@ -3,10 +3,11 @@ using ROH.Blazor.Server.Helpers;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var servicesManager = new ServicesManager();
+
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-var servicesManager = new ServicesManager();
 servicesManager.ConfigureServices(builder.Services);
 
 var app = builder.Build();

@@ -1,11 +1,14 @@
 ﻿@namespace Manager.Version.Components
 @using Newtonsoft.Json;
 @using Newtonsoft.Json.Linq;
+@using ROH.Blazor.Server.Interfaces.Api;
 @using ROH.StandardModels.Paginator;
 @using ROH.StandardModels.Response;
 @using ROH.StandardModels.Version
 @using ROH.Blazor.Server.Api;
 @using Pages.Components;
+
+@inject IVersionService _versionService;
 
 <CardComponent Header="Versions">
     <div class="row">
@@ -84,7 +87,6 @@
     };
 
     private string selectedVersionType = "All Versions";
-    private readonly VersionService _versionService = new VersionService();
     private bool isLoadingCurrentVersion = true;
     private List<GameVersionModel>? PagedGameVersions = new List<GameVersionModel>();
     private int TotalPages = 0;

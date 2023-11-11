@@ -1,9 +1,10 @@
-﻿using ROH.StandardModels.Response;
+﻿using ROH.Blazor.Server.Interfaces.Api;
+using ROH.StandardModels.Response;
 using ROH.StandardModels.Version;
 
 namespace ROH.Blazor.Server.Api
 {
-    public class VersionFileService
+    public class VersionFileService : IVersionFileService
     {
         private readonly Utils.ApiConfiguration.Gateway _gateway = new();
 

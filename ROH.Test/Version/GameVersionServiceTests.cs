@@ -48,7 +48,7 @@ namespace ROH.Test.Version
             GameVersionService service = new(mockRepository.Object, mapper);
 
             // Act
-            DefaultResponse? result = await service.GetVersionByGuid(_guidGenerated);
+            DefaultResponse? result = await service.GetVersionByGuid(_guidGenerated.ToString());
 
             // Assert
             Assert.Equivalent(_versionModel, result?.ObjectResponse);

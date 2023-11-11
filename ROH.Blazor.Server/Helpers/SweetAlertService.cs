@@ -3,12 +3,13 @@
 using Microsoft.JSInterop;
 
 using ROH.Blazor.Server.Helpers.Types;
+using ROH.Blazor.Server.Interfaces.Helpers;
 using ROH.StandardModels.Response;
 using ROH.Utils.Helpers;
 
 namespace ROH.Blazor.Server.Helpers
 {
-    public class SweetAlertService
+    public class SweetAlertService : ISweetAlertService
     {
         private readonly IJSRuntime _jsRuntime;
 

@@ -1,9 +1,11 @@
 ﻿@namespace Manager.Version.Components
 @using Newtonsoft.Json;
+@using ROH.Blazor.Server.Interfaces.Api;
 @using ROH.StandardModels.Version
 @using ROH.Blazor.Server.Api;
 @using Pages.Components;
 
+@inject IVersionService _versionService;
 <CardComponent Header="Current Version">
     @if (isLoadingCurrentVersion)
     {
@@ -54,7 +56,6 @@
 </CardComponent>
 
 @code {
-    private readonly VersionService _versionService = new VersionService();
 
     private bool isLoadingCurrentVersion = true;
 

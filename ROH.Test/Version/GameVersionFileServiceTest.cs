@@ -184,7 +184,7 @@ namespace ROH.Test.Version
 
             Mock<IGameVersionService> mockVersionService = new();
             _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(true);
-            _ = mockVersionService.Setup(x => x.GetVersionByGuid(It.IsAny<Guid>())).Returns(Task.FromResult<DefaultResponse?>(new DefaultResponse(objectResponse: _version)));
+            _ = mockVersionService.Setup(x => x.GetVersionByGuid(It.IsAny<string>())).Returns(Task.FromResult<DefaultResponse?>(new DefaultResponse(objectResponse: _version)));
 
             Mock<IValidator<GameVersionFileModel>> mockValidator = new();
             _ = mockValidator.Setup(x => x.ValidateAsync(It.IsAny<GameVersionFileModel>(), CancellationToken.None)).ReturnsAsync(new ValidationResult());
@@ -218,7 +218,7 @@ namespace ROH.Test.Version
 
             Mock<IGameVersionService> mockVersionService = new();
             _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(true);
-            _ = mockVersionService.Setup(x => x.GetVersionByGuid(It.IsAny<Guid>())).Returns(Task.FromResult<DefaultResponse?>(new DefaultResponse(objectResponse: _version)));
+            _ = mockVersionService.Setup(x => x.GetVersionByGuid(It.IsAny<string>())).Returns(Task.FromResult<DefaultResponse?>(new DefaultResponse(objectResponse: _version)));
 
             Mock<IValidator<GameVersionFileModel>> mockValidator = new();
             _ = mockValidator.Setup(x => x.ValidateAsync(It.IsAny<GameVersionFileModel>(), CancellationToken.None)).ReturnsAsync(new ValidationResult());
@@ -252,7 +252,7 @@ namespace ROH.Test.Version
 
             Mock<IGameVersionService> mockVersionService = new();
             _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(true);
-            _ = mockVersionService.Setup(x => x.GetVersionByGuid(It.IsAny<Guid>())).Returns(Task.FromResult<DefaultResponse?>(new DefaultResponse(objectResponse: _version)));
+            _ = mockVersionService.Setup(x => x.GetVersionByGuid(It.IsAny<string>())).Returns(Task.FromResult<DefaultResponse?>(new DefaultResponse(objectResponse: _version)));
 
             Mock<IValidator<GameVersionFileModel>> mockValidator = new();
             _ = mockValidator.Setup(x => x.ValidateAsync(It.IsAny<GameVersionFileModel>(), CancellationToken.None)).ReturnsAsync(new ValidationResult());
@@ -287,7 +287,7 @@ namespace ROH.Test.Version
 
             Mock<IGameVersionService> mockVersionService = new();
             _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(true);
-            _ = mockVersionService.Setup(x => x.GetVersionByGuid(It.IsAny<Guid>())).Returns(Task.FromResult<DefaultResponse?>(new DefaultResponse(objectResponse: _version)));
+            _ = mockVersionService.Setup(x => x.GetVersionByGuid(It.IsAny<string>())).Returns(Task.FromResult<DefaultResponse?>(new DefaultResponse(objectResponse: _version)));
 
             Mock<IValidator<GameVersionFileModel>> mockValidator = new();
             _ = mockValidator.Setup(x => x.ValidateAsync(It.IsAny<GameVersionFileModel>(), CancellationToken.None)).ReturnsAsync(new ValidationResult(new List<ValidationFailure>

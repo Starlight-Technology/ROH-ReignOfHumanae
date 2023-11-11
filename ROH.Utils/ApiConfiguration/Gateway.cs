@@ -42,7 +42,7 @@ namespace ROH.Utils.ApiConfiguration
             #endregion VERSION
 
             #region FILES
-             {Services.UploadFile, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/VersionFile/" ) }
+             {Services.UploadFile, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/VersionFile/UploadFile" ) }
             #endregion
         };
 

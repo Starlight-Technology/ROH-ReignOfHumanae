@@ -12,12 +12,14 @@ namespace ROH.StandardModels.Version
         public string Content { get; set; }
         public virtual GameVersionModel? GameVersion { get; set; }
 
-        public GameVersionFileModel(string name = "", string path = "", string format = "", string content = "")
+        public GameVersionFileModel(string name = "", string path = "", string format = "", string content = "", long size = 0, GameVersionModel? gameVersion = null)
         {
             Name = name;
             Path = path;
             Format = format;
             Content = content;
+            Size = size;
+            GameVersion = gameVersion;
         }
     }
 }
