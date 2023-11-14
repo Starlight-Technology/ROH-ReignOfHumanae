@@ -4,7 +4,7 @@
 NETWORK_NAME="roh_network"
 
 # Create network
-docker network create --drive bridge $NETWORK_NAME
+docker network inspect $NETWORK_NAME > /dev/null 2>&1 || docker network create $NETWORK_NAME
 
 # Build and run the Gateway Dockerfile
 docker build -t roh.gateway -f ./ROH.Gateway/Dockerfile .
