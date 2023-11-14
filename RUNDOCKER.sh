@@ -1,20 +1,20 @@
 #!/bin/bash
 
-# Build and run script for Dockerized projects in a solution
-
 # Define the common Docker network name
 NETWORK_NAME="roh_network"
 
 # Build and run the Gateway Dockerfile
-docker build -t roh.gateway -f ROH.Gateway/Dockerfile .
-docker run -d --name gateway --network=$NETWORK_NAME -p 8080:80 roh.gateway
+docker build -t roh.gateway -f ./ROH.Gateway/Dockerfile .
+docker run -d --name gateway --network $NETWORK_NAME -p 8080:80 roh.gateway
 
 # Iterate through other projects and build/run their Dockerfiles
 for project in $(find . -type f -name "Dockerfile" -not -path "./ROH.Gateway*"); do
   project_name=$(dirname $project)
-  docker build -t roh.$project_name -f $project .
-  docker run -d --name $project_name --network=$NETWORK_NAME roh.$project_name
+  image_name="roh.$(basename $project_name | tr '[:upper:]' '[:lower:]')"  # Ensure lowercase image name
+  docker build -t $image_name -f $project .
+  docker run -d --name $(basename $project_name) --network $NETWORK_NAME $image_name
 done
+
 
 #
 #This script assumes the following:
