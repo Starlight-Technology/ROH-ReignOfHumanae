@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33403.182
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "ROH.SavePlayerPosition", "SavePlayerPosition\ROH.SavePlayerPosition.pyproj", "{B1E569E5-125C-47B6-8927-39C824FFF8BA}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ROH.Api.Player", "ROH.Api.Player\ROH.Api.Player.csproj", "{E6DF789D-2907-43C8-962A-5E975A3DC94E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ROH.Api.Login", "ROH.Api.Login\ROH.Api.Login.csproj", "{59CCA95D-E5F1-4B39-BDB9-F5B3D6B3AD02}"
@@ -58,8 +56,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B1E569E5-125C-47B6-8927-39C824FFF8BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B1E569E5-125C-47B6-8927-39C824FFF8BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E6DF789D-2907-43C8-962A-5E975A3DC94E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E6DF789D-2907-43C8-962A-5E975A3DC94E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6DF789D-2907-43C8-962A-5E975A3DC94E}.Release|Any CPU.ActiveCfg = Release|Any CPU

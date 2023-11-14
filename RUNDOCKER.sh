@@ -3,6 +3,9 @@
 # Define the common Docker network name
 NETWORK_NAME="roh_network"
 
+# Create network
+docker network create --drive bridge $NETWORK_NAME
+
 # Build and run the Gateway Dockerfile
 docker build -t roh.gateway -f ./ROH.Gateway/Dockerfile .
 docker run -d --name gateway --network $NETWORK_NAME -p 8080:80 roh.gateway
