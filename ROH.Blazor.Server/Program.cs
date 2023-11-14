@@ -29,4 +29,4 @@ app.UseRouting();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
-app.Run();
+app.Run("http://*:5151", "https://*:7026", "http://*:9010");

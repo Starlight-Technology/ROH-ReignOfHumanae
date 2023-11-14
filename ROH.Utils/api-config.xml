@@ -1,8 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ApiConfig>
-  <ServiceUrls>
-    <Service name="GateWay" url="https://localhost:44305/" />
-    <Service name="Version" url="https://localhost:44389/" />
-    <Service name="VersionFile" url="https://localhost:44318/" />
-  </ServiceUrls>
+  <Develop>
+    <ServiceUrls>
+      <Service name="GateWay" url="https://localhost:44305/" />
+      <Service name="Version" url="https://localhost:44389/" />
+      <Service name="VersionFile" url="https://localhost:44318/" />
+    </ServiceUrls>
+  </Develop>
+  <Release>
+    <ServiceUrls>
+      <Service name="GateWay" url="http://gateway/" />
+      <Service name="Version" url="http://roh.api.version/" />
+      <Service name="VersionFile" url="http://roh.api.versionfiles/" />
+    </ServiceUrls>
+  </Release>
+
 </ApiConfig>
