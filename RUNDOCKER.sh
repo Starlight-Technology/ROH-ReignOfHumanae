@@ -6,6 +6,12 @@ NETWORK_NAME="roh_network"
 # Check if the Docker network exists, and create it if it doesn't
 docker network inspect $NETWORK_NAME > /dev/null 2>&1 || docker network create $NETWORK_NAME
 
+# Remove existing containers with names 'gateway', 'blazor', and other project containers
+docker rm -f gateway blazor $(docker ps -a -q --filter="name=roh.*" --format="{{.Names}}") 2>/dev/null
+
+# Remove existing images with names starting with 'roh.'
+docker rmi $(docker images -q --filter="reference=roh.*") 2>/dev/null
+
 # Build and run the Gateway Dockerfile
 docker build -t roh.gateway -f ./ROH.Gateway/Dockerfile .
 docker run -d --name gateway --network $NETWORK_NAME -p 9001:9001 roh.gateway
@@ -21,6 +27,7 @@ for project in $(find . -type f -name "Dockerfile" -not -path "./ROH.Gateway*" -
   docker build -t $image_name -f $project .
   docker run -d --name $(basename $project_name) --network $NETWORK_NAME $image_name
 done
+
 
 
 
