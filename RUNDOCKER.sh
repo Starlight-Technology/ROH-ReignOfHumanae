@@ -3,20 +3,25 @@
 # Define the common Docker network name
 NETWORK_NAME="roh_network"
 
-# Create network
+# Check if the Docker network exists, and create it if it doesn't
 docker network inspect $NETWORK_NAME > /dev/null 2>&1 || docker network create $NETWORK_NAME
 
 # Build and run the Gateway Dockerfile
 docker build -t roh.gateway -f ./ROH.Gateway/Dockerfile .
-docker run -d --name gateway --network $NETWORK_NAME -p 8080:80 roh.gateway
+docker run -d --name gateway --network $NETWORK_NAME -p 9001:9001 roh.gateway
+
+# Build and run the ROH.Docker.Server Dockerfile
+docker build -t roh.blazor.server -f ./ROH.Blazor.Server/Dockerfile .
+docker run -d --name blazor --network $NETWORK_NAME -p 9010:9010 roh.blazor.server
 
 # Iterate through other projects and build/run their Dockerfiles
-for project in $(find . -type f -name "Dockerfile" -not -path "./ROH.Gateway*"); do
+for project in $(find . -type f -name "Dockerfile" -not -path "./ROH.Gateway*" -not -path "./ROH.Blazor.Server*"); do
   project_name=$(dirname $project)
   image_name="roh.$(basename $project_name | tr '[:upper:]' '[:lower:]')"  # Ensure lowercase image name
   docker build -t $image_name -f $project .
   docker run -d --name $(basename $project_name) --network $NETWORK_NAME $image_name
 done
+
 
 
 #
