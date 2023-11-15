@@ -20,5 +20,9 @@
         int Release = 0, 
         int Review = 0, 
         bool Released = false
-        );
+        )
+    {
+        public ICollection<GameVersionFile> versionFiles { get; set; }
+    }
+
 }
