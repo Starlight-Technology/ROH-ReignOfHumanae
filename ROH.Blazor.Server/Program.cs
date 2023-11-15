@@ -10,6 +10,9 @@ builder.Services.AddServerSideBlazor();
 
 servicesManager.ConfigureServices(builder.Services);
 
+// Configure Kestrel to listen on a specific port
+builder.WebHost.ConfigureKestrel(options => options.ListenAnyIP(9010));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -29,4 +32,4 @@ app.UseRouting();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
-app.Run("http://*:9010");
+app.Run();

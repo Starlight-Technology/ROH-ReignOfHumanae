@@ -54,7 +54,7 @@ namespace ROH.Services.Version
 #if DEBUG
                             path =
                                 @$"C:\ROHUpdateFiles\{file.GameVersion.Version}.{file.GameVersion.Release}.{file.GameVersion.Review}\"; // path to file on Windows
-#elif RELEASE
+#else 
                          path = @$"\app\data\ROH\ROHUpdateFiles\{file.GameVersion.Version}.{file.GameVersion.Release}.{file.GameVersion.Review}\"; //path to file on Linux
 #endif
                             string[] fileContent = await File.ReadAllLinesAsync(path + file.Name);
@@ -162,7 +162,7 @@ namespace ROH.Services.Version
         {
 #if DEBUG
             return @$"C:\ROHUpdateFiles\{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}\";
-#elif RELEASE
+#else
     return @$"\app\data\ROH\ROHUpdateFiles\{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}\";
 #endif
         }

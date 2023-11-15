@@ -7,6 +7,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Configure Kestrel to listen on a specific port
+builder.WebHost.ConfigureKestrel(options => options.ListenAnyIP(9001));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -22,4 +25,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run("http://*:9001");
+app.Run();

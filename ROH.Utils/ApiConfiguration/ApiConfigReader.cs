@@ -36,6 +36,8 @@ namespace ROH.Utils.ApiConfiguration
 #if DEBUG
             // Debug configuration
             string configuration = "Develop";
+#elif TEST
+            string configuration = "Test";
 #else
         // Release configuration
         string configuration = "Release";
