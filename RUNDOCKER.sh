@@ -10,7 +10,7 @@ docker network inspect $NETWORK_NAME > /dev/null 2>&1 || docker network create $
 docker rm -f gateway blazor $(docker ps -a -q --filter="name=roh.*" --format="{{.Names}}") 2>/dev/null
 
 # Remove existing images with names starting with 'roh.'
-docker rmi $(docker images -q --filter="reference=roh.*") 2>/dev/null
+docker rmi -f $(docker images -q --filter="reference=roh.*") 2>/dev/null
 
 # Build and run the Gateway Dockerfile
 docker build -t roh.gateway -f ./ROH.Gateway/Dockerfile .
