@@ -9,16 +9,16 @@
   </Develop>
   <Test>
     <ServiceUrls>
-      <Service name="GateWay" url="https://192.168.0.37:9001/" />
-      <Service name="Version" url="https://roh.api.version/" />
-      <Service name="VersionFile" url="https://roh.api.versionfiles/" />
+      <Service name="GateWay" url="http://192.168.0.37:9001/" />
+      <Service name="Version" url="http://roh.api.version/" />
+      <Service name="VersionFile" url="http://roh.api.versionfiles/" />
     </ServiceUrls>
   </Test>
   <Release>
     <ServiceUrls>
-      <Service name="GateWay" url="https://gateway/" />
-      <Service name="Version" url="https://roh.api.version/" />
-      <Service name="VersionFile" url="https://roh.api.versionfiles/" />
+      <Service name="GateWay" url="http://gateway/" />
+      <Service name="Version" url="http://roh.api.version/" />
+      <Service name="VersionFile" url="http://roh.api.versionfiles/" />
     </ServiceUrls>
   </Release>
 

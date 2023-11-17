@@ -49,7 +49,7 @@ if (app.Environment.IsDevelopment())
     _ = app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.MapPost("CreateNewVersion", async (IGameVersionService _gameVersionService, GameVersionModel model) =>
 {
