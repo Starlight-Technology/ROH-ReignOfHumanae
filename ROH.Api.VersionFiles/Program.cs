@@ -48,9 +48,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//app.UseHttpsRedirection();
-
-
 
 app.MapPost("UploadFile", async (IGameVersionFileService _gameVersionFileService, GameVersionFileModel file) =>
 {

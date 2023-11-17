@@ -6,7 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 var servicesManager = new ServicesManager();
 
 builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
+
+builder.Services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
 
 servicesManager.ConfigureServices(builder.Services);
 
@@ -23,7 +24,10 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-//app.UseHttpsRedirection();
+#if RELEASE
+app.UseHttpsRedirection();
+#endif
+
 
 app.UseStaticFiles();
 
