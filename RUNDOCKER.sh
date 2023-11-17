@@ -7,7 +7,7 @@ NETWORK_NAME="roh_network"
 docker network inspect $NETWORK_NAME > /dev/null 2>&1 || docker network create $NETWORK_NAME
 
 # Remove existing containers with names 'gateway', 'blazor', and other project containers
-docker rm -f gateway blazor $(docker ps -a -q --filter="name=roh.*" --format="{{.Names}}") 2>/dev/null
+docker rm -f gateway blazor $(docker ps -a -q --filter="name=ROH.*" --format="{{.Names}}") 2>/dev/null
 
 # Remove existing images with names starting with 'roh.'
 docker rmi -f $(docker images -q --filter="reference=roh.*") 2>/dev/null
