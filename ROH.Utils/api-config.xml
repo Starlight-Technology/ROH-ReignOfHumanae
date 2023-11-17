@@ -16,7 +16,7 @@
   </Test>
   <Release>
     <ServiceUrls>
-      <Service name="GateWay" url="http://gateway/" />
+      <Service name="GateWay" url="http://gateway:9001/" />
       <Service name="Version" url="http://roh.api.version/" />
       <Service name="VersionFile" url="http://roh.api.versionfiles/" />
     </ServiceUrls>
