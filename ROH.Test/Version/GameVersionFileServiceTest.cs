@@ -1,6 +1,4 @@
-﻿using System.Net;
-using System.Runtime.InteropServices.JavaScript;
-using AutoMapper;
+﻿using AutoMapper;
 
 using FluentValidation;
 using FluentValidation.Results;
@@ -14,15 +12,19 @@ using ROH.Services.Version;
 using ROH.StandardModels.Response;
 using ROH.StandardModels.Version;
 
+using System.Net;
+
 namespace ROH.Test.Version
 {
     public class GameVersionFileServiceTest
     {
-        private readonly GameVersionModel _versionModel = new() { Version = 1, Release = 1, Review = 1, Released = false, ReleaseDate = null, VersionDate = DateTime.UtcNow };
-        private readonly GameVersionFileModel _fileModel = new() { Name = "testFile", Size = 26354178, Path = "~/testFolder", Format = "format", Content = "wertfgby834ht348ghrfowefj234fh32urf3fh23rfhfh83" };
+        private static readonly Guid testGuid = Guid.NewGuid();
 
-        private readonly GameVersion _version = new(null, null,  1, Guid.NewGuid(), 1, 1, 1, false);
-        private readonly GameVersionFile _file = new(1, 1, Guid.NewGuid(),  26354178, "testFile", "~/testFolder", "format");
+        private readonly GameVersionModel _versionModel = new() { Version = 1, Release = 1, Review = 1, Released = false, ReleaseDate = null, VersionDate = DateTime.UtcNow };
+        private readonly GameVersionFileModel _fileModel = new() { Name = "testFile", Size = 26354178, Path = "~/testFolder", Format = "format" , Guid = testGuid };
+
+        private readonly GameVersion _version = new(null, null, 1, testGuid, 1, 1, 1, false);
+        private readonly GameVersionFile _file = new(1, 1, testGuid, 26354178, "testFile", "~/testFolder", "format");
 
         [Fact]
         public async Task GetFiles_Returns_Files()
@@ -40,18 +42,19 @@ namespace ROH.Test.Version
             List<GameVersionFile> files = new() { _file };
 
             Mock<IGameVersionFileRepository> mockRepository = new();
-            _ = mockRepository.Setup(x => x.GetFiles(It.IsAny<GameVersion>())).ReturnsAsync(files);
+            _ = mockRepository.Setup(x => x.GetFiles(It.IsAny<Guid>())).ReturnsAsync(files);
 
             Mock<IGameVersionService> mockVersionService = new();
+            mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<string>())).ReturnsAsync(true);
 
             Mock<IValidator<GameVersionFileModel>> mockValidator = new();
             GameVersionFileService service = new(mockRepository.Object, mockValidator.Object, mockVersionService.Object, mapper);
 
             // Act
-            DefaultResponse result = await service.GetFiles(_versionModel);
+            DefaultResponse result = await service.GetFiles(_version.Guid.ToString());
 
             // Assert
-            Assert.Equivalent(files, result.ObjectResponse);
+            Assert.Equivalent(new List<GameVersionFileModel> { _fileModel}, result.ObjectResponse);
         }
 
         [Fact]
@@ -87,7 +90,7 @@ namespace ROH.Test.Version
 
             await Task.CompletedTask;
         }
-        
+
         [Fact]
         public async Task NewFile_With_Invalid_File_Returns_Error()
         {
@@ -126,7 +129,6 @@ namespace ROH.Test.Version
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, result.HttpStatus);
             Assert.False(string.IsNullOrWhiteSpace(result.Message));
-
         }
 
         [Fact]
@@ -161,7 +163,6 @@ namespace ROH.Test.Version
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, result.HttpStatus);
             Assert.False(string.IsNullOrWhiteSpace(result.Message));
-
         }
 
         [Fact]

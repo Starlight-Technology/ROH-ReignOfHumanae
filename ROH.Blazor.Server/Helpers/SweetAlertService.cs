@@ -32,7 +32,6 @@ namespace ROH.Blazor.Server.Helpers
             else if (response.HttpStatus.IsClientErrorStatusCode() || response.HttpStatus.IsServerErrorStatusCode())
                 type = SweetAlertType.Error;
 
-
             await Show("", response.Message, type);
         }
     }

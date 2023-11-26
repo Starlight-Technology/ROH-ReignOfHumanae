@@ -1095,7 +1095,6 @@
 
   /// <reference path="../../../../sweetalert2.d.ts"/>
 
-
   /** @type {InputClass[]} */
   const inputClasses = ['input', 'file', 'range', 'select', 'radio', 'checkbox', 'textarea'];
 
@@ -4277,6 +4276,5 @@
   Swal.default = Swal;
 
   return Swal;
-
 }));
 if (typeof this !== 'undefined' && this.Sweetalert2){this.swal = this.sweetAlert = this.Swal = this.SweetAlert = this.Sweetalert2}

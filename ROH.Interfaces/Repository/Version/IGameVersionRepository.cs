@@ -18,5 +18,7 @@ namespace ROH.Interfaces.Repository.Version
         Task<GameVersion> UpdateGameVersion(GameVersion version);
 
         Task<bool> VerifyIfExist(GameVersion version);
+
+        Task<bool> VerifyIfExist(Guid versionGuid);
     }
 }

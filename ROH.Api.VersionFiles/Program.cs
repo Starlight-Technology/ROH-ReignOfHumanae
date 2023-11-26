@@ -48,13 +48,17 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
 app.MapPost("UploadFile", async (IGameVersionFileService _gameVersionFileService, GameVersionFileModel file) =>
 {
     return await _gameVersionFileService.NewFile(file);
 }).WithName("UploadFile")
   .WithOpenApi();
 
+app.MapGet("GetAllVersionFiles", async (IGameVersionFileService _gameVersionFileService, string versionGuid) =>
+{
+    return await _gameVersionFileService.GetFiles(versionGuid);
+}
+).WithName("GetAllVersionFiles")
+.WithOpenApi();
+
 app.Run();
-
-

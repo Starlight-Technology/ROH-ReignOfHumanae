@@ -5,8 +5,6 @@ using ROH.Domain.Version;
 using ROH.Interfaces;
 using ROH.Interfaces.Repository.Version;
 
-using System;
-
 namespace ROH.Repository.Version
 {
     public class GameVersionRepository : IGameVersionRepository
@@ -75,6 +73,11 @@ namespace ROH.Repository.Version
         public async Task<bool> VerifyIfExist(GameVersion version)
         {
             return await _context.GameVersions.AnyAsync(v => v.Release == version.Release && v.Review == version.Review && v.Version == version.Version);
+        }
+
+        public async Task<bool> VerifyIfExist(Guid versionGuid)
+        {
+            return await _context.GameVersions.AnyAsync(v => v.Guid == versionGuid);
         }
     }
 }

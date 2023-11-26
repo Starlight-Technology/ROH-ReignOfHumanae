@@ -2,14 +2,11 @@
 
 using AutoMapper;
 
-using FluentValidation;
-
 using Moq;
 
 using ROH.Domain.Paginator;
 using ROH.Domain.Version;
 using ROH.Interfaces.Repository.Version;
-using ROH.Interfaces.Services.Version;
 using ROH.Services.Version;
 using ROH.StandardModels.Paginator;
 using ROH.StandardModels.Response;
@@ -28,7 +25,6 @@ namespace ROH.Test.Version
         private readonly GameVersionModel _versionModel = new() { Guid = _guidGenerated, Version = 1, Release = 1, Review = 1, Released = false, ReleaseDate = null, VersionDate = _utcNow };
 
         private readonly GameVersion _version = new(null, _utcNow, 1, _guidGenerated, 1, 1, 1, false);
-
 
         [Fact]
         public async Task GetVersionByGuid_ShouldReturnVersion_WhenVersionExists()
@@ -213,7 +209,6 @@ namespace ROH.Test.Version
             Mapper mapper = new(config);
 
             List<dynamic> listOfVersions = new();
-
 
             Paginated paginatedVersions = new(listOfVersions.Count, listOfVersions);
 

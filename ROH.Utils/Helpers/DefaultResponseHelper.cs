@@ -7,7 +7,7 @@ using System;
 namespace ROH.Utils.Helpers
 {
     public static class DefaultResponseHelper
-    {        
+    {
         public static T ResponseToModel<T>(this DefaultResponse response)
         {
             try

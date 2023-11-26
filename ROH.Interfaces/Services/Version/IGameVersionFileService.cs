@@ -7,7 +7,7 @@ namespace ROH.Interfaces.Services.Version
     {
         Task<DefaultResponse> DownloadFile(long id);
 
-        Task<DefaultResponse> GetFiles(GameVersionModel version);
+        Task<DefaultResponse> GetFiles(string versionGuid);
 
         Task<DefaultResponse> NewFile(GameVersionFileModel fileModel);
     }

@@ -49,7 +49,6 @@ if (app.Environment.IsDevelopment())
     _ = app.UseSwaggerUI();
 }
 
-
 app.MapPost("CreateNewVersion", async (IGameVersionService _gameVersionService, GameVersionModel model) =>
 {
     return await _gameVersionService.NewVersion(model);

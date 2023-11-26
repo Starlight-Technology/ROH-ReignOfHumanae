@@ -12,17 +12,16 @@
     /// <param name="Review"></param>
     /// <param name="Released"></param>
     public record GameVersion(
-        DateTime? ReleaseDate, 
-        DateTime? VersionDate, 
-        long Id = 0, 
-        Guid Guid = default, 
-        int Version = 0, 
-        int Release = 0, 
-        int Review = 0, 
+        DateTime? ReleaseDate,
+        DateTime? VersionDate,
+        long Id = 0,
+        Guid Guid = default,
+        int Version = 0,
+        int Release = 0,
+        int Review = 0,
         bool Released = false
         )
     {
-        public ICollection<GameVersionFile> versionFiles { get; set; }
+        public ICollection<GameVersionFile> VersionFiles { get; init; } = new List<GameVersionFile>();
     }
-
 }

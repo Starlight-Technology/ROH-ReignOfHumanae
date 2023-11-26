@@ -22,7 +22,6 @@ namespace ROH.Utils.ApiConfiguration
 
         public ApiConfigReader()
         {
-
             string assemblyLocation = Assembly.GetExecutingAssembly().Location;
             string assemblyDirectory = Path.GetDirectoryName(assemblyLocation);
             string xmlFilePath = Path.Combine(assemblyDirectory, "api-config.xml");
@@ -56,5 +55,4 @@ namespace ROH.Utils.ApiConfiguration
             return apiUrls;
         }
     }
-
 }

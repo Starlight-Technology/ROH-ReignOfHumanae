@@ -54,7 +54,7 @@ namespace ROH.Services.Version
 #if DEBUG
                             path =
                                 @$"C:\ROHUpdateFiles\{file.GameVersion.Version}.{file.GameVersion.Release}.{file.GameVersion.Review}\"; // path to file on Windows
-#else 
+#else
                          path = @$"\app\data\ROH\ROHUpdateFiles\{file.GameVersion.Version}.{file.GameVersion.Release}.{file.GameVersion.Review}\"; //path to file on Linux
 #endif
                             string[] fileContent = await File.ReadAllLinesAsync(path + file.Name);
@@ -91,11 +91,19 @@ namespace ROH.Services.Version
             }
         }
 
-        public async Task<DefaultResponse> GetFiles(GameVersionModel version)
+        public async Task<DefaultResponse> GetFiles(string versionGuid)
         {
-            List<GameVersionFile> files = await _repository.GetFiles(_mapper.Map<GameVersion>(version));
+            var response = await _gameVersion.VerifyIfVersionExist(versionGuid);
 
-            return new DefaultResponse(objectResponse: files);
+            if (response)
+            {
+                Guid.TryParse(versionGuid, out var guid);
+                List<GameVersionFileModel> files = _mapper.Map<List<GameVersionFileModel>>(await _repository.GetFiles(guid));
+
+                return new DefaultResponse(objectResponse: files);
+            }
+
+            return new DefaultResponse(httpStatus: HttpStatusCode.NotFound);
         }
 
         public async Task<DefaultResponse> NewFile(GameVersionFileModel fileModel)
@@ -105,7 +113,7 @@ namespace ROH.Services.Version
                 var validation = await ValidateFileAsync(fileModel);
                 if (validation != null && !validation.IsValid && validation.Errors.Any())
                 {
-                    return new DefaultResponse(null,HttpStatusCode.BadRequest, validation.Errors.ToString()!);
+                    return new DefaultResponse(null, HttpStatusCode.BadRequest, validation.Errors.ToString()!);
                 }
 
                 var file = _mapper.Map<GameVersionFile>(fileModel);
@@ -132,7 +140,7 @@ namespace ROH.Services.Version
             }
             catch (Exception ex)
             {
-                return new DefaultResponse(null,HttpStatusCode.BadRequest, ex.Message);
+                return new DefaultResponse(null, HttpStatusCode.BadRequest, ex.Message);
             }
         }
 
@@ -193,8 +201,8 @@ namespace ROH.Services.Version
             }
 
             GameVersionFile entity = _mapper.Map<GameVersionFile>(file);
+
             await _repository.SaveFile(entity);
         }
-
     }
 }

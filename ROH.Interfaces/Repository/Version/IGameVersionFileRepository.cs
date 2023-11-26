@@ -8,6 +8,8 @@ namespace ROH.Interfaces.Repository.Version
 
         Task<List<GameVersionFile>> GetFiles(GameVersion version);
 
+        Task<List<GameVersionFile>> GetFiles(Guid versionGuid);
+
         Task SaveFile(GameVersionFile file);
     }
 }

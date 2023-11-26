@@ -28,7 +28,6 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 #endif
 
-
 app.UseStaticFiles();
 
 app.UseRouting();

@@ -21,5 +21,4 @@
       <Service name="VersionFile" url="http://roh.api.versionfiles/" />
     </ServiceUrls>
   </Release>
-
 </ApiConfig>

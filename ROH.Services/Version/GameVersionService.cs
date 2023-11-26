@@ -7,8 +7,6 @@ using ROH.StandardModels.Paginator;
 using ROH.StandardModels.Response;
 using ROH.StandardModels.Version;
 
-using System;
-
 namespace ROH.Services.Version
 {
     public class GameVersionService : IGameVersionService
@@ -22,16 +20,15 @@ namespace ROH.Services.Version
             _mapper = mapper;
         }
 
-        public async Task<DefaultResponse?> GetVersionByGuid(string versionGuid)
+        public async Task<DefaultResponse> GetVersionByGuid(string versionGuid)
         {
             if (Guid.TryParse(versionGuid, out var guid))
             {
-
                 GameVersion? version = await _versionRepository.GetVersionByGuid(guid);
                 GameVersionModel model = _mapper.Map<GameVersionModel>(version);
                 return new DefaultResponse() { ObjectResponse = model };
             }
-            return new DefaultResponse() { HttpStatus= System.Net.HttpStatusCode.ExpectationFailed, Message = "The Guid is invalid!"};
+            return new DefaultResponse() { HttpStatus = System.Net.HttpStatusCode.ExpectationFailed, Message = "The Guid is invalid!" };
         }
 
         public async Task<DefaultResponse> GetAllVersions(int take = 10, int page = 1)
@@ -45,7 +42,6 @@ namespace ROH.Services.Version
             int pages = 0;
             if (versions.Count > 0)
                 pages = (int)Math.Ceiling((double)total / take);
-
 
             IList<GameVersionModel> versionModels = _mapper.Map<IList<GameVersionModel>>(versions);
 
@@ -68,7 +64,6 @@ namespace ROH.Services.Version
             if (versions.Count > 0)
                 pages = (int)Math.Ceiling((double)total / take);
 
-
             IList<GameVersionModel> versionModels = _mapper.Map<IList<GameVersionModel>>(versions);
 
             List<object> versionObjects = versionModels.Cast<object>().ToList();
@@ -76,12 +71,10 @@ namespace ROH.Services.Version
             PaginatedModel paginatedModel = new() { TotalPages = pages, ObjectResponse = versionObjects };
 
             return new DefaultResponse(objectResponse: paginatedModel, message: "That are all released versions");
-
         }
 
         public async Task<DefaultResponse> NewVersion(GameVersionModel version)
         {
-           
             if (await VerifyIfVersionExist(version))
             {
                 return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.Conflict,
@@ -96,6 +89,15 @@ namespace ROH.Services.Version
         public async Task<bool> VerifyIfVersionExist(GameVersionModel version)
         {
             return await _versionRepository.VerifyIfExist(_mapper.Map<GameVersion>(version));
+        }
+
+        public async Task<bool> VerifyIfVersionExist(string versionGuid)
+        {
+            if (Guid.TryParse(versionGuid, out var guid))
+            {
+                return await _versionRepository.VerifyIfExist(guid);
+            }
+            return false;
         }
 
         public async Task<DefaultResponse> GetCurrentVersion()
