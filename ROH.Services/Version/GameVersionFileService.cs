@@ -95,9 +95,8 @@ namespace ROH.Services.Version
         {
             var response = await _gameVersion.VerifyIfVersionExist(versionGuid);
 
-            if (response)
+            if (response && Guid.TryParse(versionGuid, out var guid))
             {
-                Guid.TryParse(versionGuid, out var guid);
                 List<GameVersionFileModel> files = _mapper.Map<List<GameVersionFileModel>>(await _repository.GetFiles(guid));
 
                 return new DefaultResponse(objectResponse: files);

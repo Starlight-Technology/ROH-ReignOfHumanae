@@ -10,7 +10,7 @@ namespace ROH.Domain.Guilds
         public Guild(string name,
                      string description) : this(
                          default,
-                         default,
+                         Guid.Empty,
                          name ?? throw new ArgumentNullException(nameof(name)),
                          description ?? throw new ArgumentNullException(nameof(description)))
         {
