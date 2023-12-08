@@ -22,7 +22,7 @@
                 <label for="Version">Version:</label>
             </div>
             <div class="col-sm-1">
-                <input type="number" id="Version" class="form-control" @bind="currentVersion.Version" readonly />
+                <input type="number" id="Version" class="form-control" @bind="currentVersion!.Version" readonly />
             </div>
 
             <div class="col-sm-1">
@@ -59,7 +59,7 @@
 
     private bool isLoadingCurrentVersion = true;
 
-    private GameVersionModel currentVersion = new()
+    private GameVersionModel? currentVersion = new()
         {
             Version = 0,
             Release = 0,
@@ -79,7 +79,7 @@
 
         if (currentVersionResponse != null && currentVersionResponse?.ObjectResponse != null)
         {
-            currentVersion = JsonConvert.DeserializeObject<GameVersionModel>(currentVersionResponse.ObjectResponse.ToString());
+            currentVersion = JsonConvert.DeserializeObject<GameVersionModel>(currentVersionResponse.ObjectResponse.ToString()!);
         }
         isLoadingCurrentVersion = false;
         StateHasChanged();

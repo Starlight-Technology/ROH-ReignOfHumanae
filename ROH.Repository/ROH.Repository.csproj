@@ -13,12 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ROH.Domain\ROH.Domain.csproj" />
-    <ProjectReference Include="..\ROH.Interfaces\ROH.Interfaces.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -12,7 +12,10 @@ namespace ROH.Utils.Helpers
         {
             try
             {
-                return JsonConvert.DeserializeObject<T>(response.ObjectResponse?.ToString());
+                if (response != null && response.ObjectResponse != null)
+                    return JsonConvert.DeserializeObject<T>(response.ObjectResponse.ToString())!;
+
+                throw new InvalidCastException();
             }
             catch (InvalidCastException)
             {
