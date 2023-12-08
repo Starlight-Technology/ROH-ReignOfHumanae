@@ -1,9 +1,9 @@
 using ROH.Blazor.Server.Helpers;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var servicesManager = new ServicesManager();
+ServicesManager servicesManager = new();
 
 builder.Services.AddRazorPages();
 
@@ -14,7 +14,7 @@ servicesManager.ConfigureServices(builder.Services);
 // Configure Kestrel to listen on a specific port
 builder.WebHost.ConfigureKestrel(options => options.ListenAnyIP(9010));
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

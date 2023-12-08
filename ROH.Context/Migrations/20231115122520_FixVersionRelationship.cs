@@ -10,7 +10,7 @@ namespace ROH.Context.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<Guid>(
+            _ = migrationBuilder.AlterColumn<Guid>(
                 name: "Guid",
                 table: "Users",
                 type: "uuid",
@@ -20,7 +20,7 @@ namespace ROH.Context.Migrations
                 oldType: "uuid",
                 oldDefaultValueSql: "uuid-ossp()");
 
-            migrationBuilder.AlterColumn<Guid>(
+            _ = migrationBuilder.AlterColumn<Guid>(
                 name: "Guid",
                 table: "Items",
                 type: "uuid",
@@ -30,7 +30,7 @@ namespace ROH.Context.Migrations
                 oldType: "uuid",
                 oldDefaultValueSql: "uuid-ossp()");
 
-            migrationBuilder.AlterColumn<Guid>(
+            _ = migrationBuilder.AlterColumn<Guid>(
                 name: "Guid",
                 table: "Guilds",
                 type: "uuid",
@@ -40,7 +40,7 @@ namespace ROH.Context.Migrations
                 oldType: "uuid",
                 oldDefaultValueSql: "uuid-ossp()");
 
-            migrationBuilder.AlterColumn<Guid>(
+            _ = migrationBuilder.AlterColumn<Guid>(
                 name: "Guid",
                 table: "GameVersions",
                 type: "uuid",
@@ -50,7 +50,7 @@ namespace ROH.Context.Migrations
                 oldType: "uuid",
                 oldDefaultValueSql: "uuid-ossp()");
 
-            migrationBuilder.AlterColumn<Guid>(
+            _ = migrationBuilder.AlterColumn<Guid>(
                 name: "Guid",
                 table: "GameVersionFiles",
                 type: "uuid",
@@ -60,7 +60,7 @@ namespace ROH.Context.Migrations
                 oldType: "uuid",
                 oldDefaultValueSql: "uuid-ossp()");
 
-            migrationBuilder.AlterColumn<Guid>(
+            _ = migrationBuilder.AlterColumn<Guid>(
                 name: "Guid",
                 table: "Characters",
                 type: "uuid",
@@ -70,7 +70,7 @@ namespace ROH.Context.Migrations
                 oldType: "uuid",
                 oldDefaultValueSql: "uuid-ossp()");
 
-            migrationBuilder.AlterColumn<Guid>(
+            _ = migrationBuilder.AlterColumn<Guid>(
                 name: "Guid",
                 table: "Accounts",
                 type: "uuid",
@@ -84,7 +84,7 @@ namespace ROH.Context.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<Guid>(
+            _ = migrationBuilder.AlterColumn<Guid>(
                 name: "Guid",
                 table: "Users",
                 type: "uuid",
@@ -94,7 +94,7 @@ namespace ROH.Context.Migrations
                 oldType: "uuid",
                 oldDefaultValueSql: "gen_random_uuid()");
 
-            migrationBuilder.AlterColumn<Guid>(
+            _ = migrationBuilder.AlterColumn<Guid>(
                 name: "Guid",
                 table: "Items",
                 type: "uuid",
@@ -104,7 +104,7 @@ namespace ROH.Context.Migrations
                 oldType: "uuid",
                 oldDefaultValueSql: "gen_random_uuid()");
 
-            migrationBuilder.AlterColumn<Guid>(
+            _ = migrationBuilder.AlterColumn<Guid>(
                 name: "Guid",
                 table: "Guilds",
                 type: "uuid",
@@ -114,7 +114,7 @@ namespace ROH.Context.Migrations
                 oldType: "uuid",
                 oldDefaultValueSql: "gen_random_uuid()");
 
-            migrationBuilder.AlterColumn<Guid>(
+            _ = migrationBuilder.AlterColumn<Guid>(
                 name: "Guid",
                 table: "GameVersions",
                 type: "uuid",
@@ -124,7 +124,7 @@ namespace ROH.Context.Migrations
                 oldType: "uuid",
                 oldDefaultValueSql: "gen_random_uuid()");
 
-            migrationBuilder.AlterColumn<Guid>(
+            _ = migrationBuilder.AlterColumn<Guid>(
                 name: "Guid",
                 table: "GameVersionFiles",
                 type: "uuid",
@@ -134,7 +134,7 @@ namespace ROH.Context.Migrations
                 oldType: "uuid",
                 oldDefaultValueSql: "gen_random_uuid()");
 
-            migrationBuilder.AlterColumn<Guid>(
+            _ = migrationBuilder.AlterColumn<Guid>(
                 name: "Guid",
                 table: "Characters",
                 type: "uuid",
@@ -144,7 +144,7 @@ namespace ROH.Context.Migrations
                 oldType: "uuid",
                 oldDefaultValueSql: "gen_random_uuid()");
 
-            migrationBuilder.AlterColumn<Guid>(
+            _ = migrationBuilder.AlterColumn<Guid>(
                 name: "Guid",
                 table: "Accounts",
                 type: "uuid",

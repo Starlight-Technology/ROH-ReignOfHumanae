@@ -62,13 +62,13 @@ namespace ROH.Test.Version
 
             Mapper mapper = new(config);
 
-            List<dynamic> listOfVersions = new();
+            List<dynamic> listOfVersions = [];
 
             for (int i = 0; i < 10; i++)
             {
                 GameVersion version = _version with { Id = i + 1 };
 
-                listOfVersions.Add(version as dynamic);
+                listOfVersions.Add(version);
             }
 
             Paginated paginatedVersions = new(listOfVersions.Count, listOfVersions);
@@ -80,7 +80,7 @@ namespace ROH.Test.Version
 
             // Act
             DefaultResponse? result = await service.GetAllVersions();
-            var versions = ((PaginatedModel?)result.ObjectResponse)?.ObjectResponse?.Cast<GameVersionModel>().ToList();
+            List<GameVersionModel>? versions = ((PaginatedModel?)result.ObjectResponse)?.ObjectResponse?.Cast<GameVersionModel>().ToList();
 
             // Assert
             Assert.True(versions?.Count > 1);
@@ -98,13 +98,13 @@ namespace ROH.Test.Version
 
             Mapper mapper = new(config);
 
-            List<dynamic> listOfVersions = new();
+            List<dynamic> listOfVersions = [];
 
             for (int i = 0; i < 10; i++)
             {
                 GameVersion version = _version with { Id = i + 1 };
 
-                listOfVersions.Add(version as dynamic);
+                listOfVersions.Add(version);
             }
 
             Paginated paginatedVersions = new(5, listOfVersions.Take(5).ToList());
@@ -116,7 +116,7 @@ namespace ROH.Test.Version
 
             // Act
             DefaultResponse? result = await service.GetAllVersions(5, 1);
-            var versions = ((PaginatedModel?)result.ObjectResponse)?.ObjectResponse?.Cast<GameVersionModel>().ToList();
+            List<GameVersionModel>? versions = ((PaginatedModel?)result.ObjectResponse)?.ObjectResponse?.Cast<GameVersionModel>().ToList();
 
             // Assert
             Assert.True(versions?.Count == 5);
@@ -134,13 +134,13 @@ namespace ROH.Test.Version
 
             Mapper mapper = new(config);
 
-            List<dynamic> listOfVersions = new();
+            List<dynamic> listOfVersions = [];
 
             for (int i = 0; i < 10; i++)
             {
                 GameVersion version = _version with { Id = i + 1, Version = i + 1 };
 
-                listOfVersions.Add(version as dynamic);
+                listOfVersions.Add(version);
             }
 
             Paginated paginatedVersions = new(10, listOfVersions.Skip(5).Take(5).ToList());
@@ -152,7 +152,7 @@ namespace ROH.Test.Version
 
             // Act
             DefaultResponse? result = await service.GetAllVersions(5, 2);
-            var versions = ((PaginatedModel?)result.ObjectResponse)?.ObjectResponse?.Cast<GameVersionModel>().ToList();
+            List<GameVersionModel>? versions = ((PaginatedModel?)result.ObjectResponse)?.ObjectResponse?.Cast<GameVersionModel>().ToList();
 
             // Assert
             Assert.True(versions?.Count == 5);
@@ -172,13 +172,13 @@ namespace ROH.Test.Version
 
             Mapper mapper = new(config);
 
-            List<dynamic> listOfVersions = new();
+            List<dynamic> listOfVersions = [];
 
             for (int i = 0; i < 10; i++)
             {
                 GameVersion version = _version with { Id = i + 1, Released = true };
 
-                listOfVersions.Add(version as dynamic);
+                listOfVersions.Add(version);
             }
 
             Paginated paginatedVersions = new(listOfVersions.Count, listOfVersions);
@@ -190,10 +190,10 @@ namespace ROH.Test.Version
 
             // Act
             DefaultResponse? result = await service.GetAllReleasedVersions();
-            var versions = ((PaginatedModel?)result.ObjectResponse)?.ObjectResponse?.Cast<GameVersionModel>().ToList();
+            List<GameVersionModel>? versions = ((PaginatedModel?)result.ObjectResponse)?.ObjectResponse?.Cast<GameVersionModel>().ToList();
 
             // Assert
-            Assert.True(versions?.Any());
+            Assert.True(versions?.Count > 0);
         }
 
         [Fact]
@@ -208,7 +208,7 @@ namespace ROH.Test.Version
 
             Mapper mapper = new(config);
 
-            List<dynamic> listOfVersions = new();
+            List<dynamic> listOfVersions = [];
 
             Paginated paginatedVersions = new(listOfVersions.Count, listOfVersions);
 
@@ -219,10 +219,10 @@ namespace ROH.Test.Version
 
             // Act
             DefaultResponse? result = await service.GetAllReleasedVersions();
-            var versions = ((PaginatedModel?)result.ObjectResponse)?.ObjectResponse?.Cast<GameVersionModel>().ToList();
+            List<GameVersionModel>? versions = ((PaginatedModel?)result.ObjectResponse)?.ObjectResponse?.Cast<GameVersionModel>().ToList();
 
             // Assert
-            Assert.False(versions?.Any());
+            Assert.False(versions?.Count > 0);
         }
 
         [Fact]
@@ -243,7 +243,7 @@ namespace ROH.Test.Version
             GameVersionService service = new(mockRepository.Object, mapper);
 
             // Act
-            var result = await service.NewVersion(_versionModel);
+            DefaultResponse result = await service.NewVersion(_versionModel);
 
             // Assert
             Assert.Equal(HttpStatusCode.Created, result.HttpStatus);
@@ -268,7 +268,7 @@ namespace ROH.Test.Version
             GameVersionService service = new(mockRepository.Object, mapper);
 
             // Act
-            var result = await service.NewVersion(_versionModel);
+            DefaultResponse result = await service.NewVersion(_versionModel);
 
             // Assert
             Assert.Equal(HttpStatusCode.Conflict, result.HttpStatus);

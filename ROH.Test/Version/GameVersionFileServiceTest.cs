@@ -21,7 +21,7 @@ namespace ROH.Test.Version
         private static readonly Guid _testGuid = Guid.NewGuid();
 
         private readonly GameVersionModel _versionModel = new() { Version = 1, Release = 1, Review = 1, Released = false, ReleaseDate = null, VersionDate = DateTime.UtcNow };
-        private readonly GameVersionFileModel _fileModel = new() { Name = "testFile", Size = 26354178, Path = "~/testFolder", Format = "format" , Guid = _testGuid };
+        private readonly GameVersionFileModel _fileModel = new() { Name = "testFile", Size = 26354178, Path = "~/testFolder", Format = "format", Guid = _testGuid };
 
         private readonly GameVersion _version = new(null, null, 1, _testGuid, 1, 1, 1, false);
         private readonly GameVersionFile _file = new(1, 1, _testGuid, 26354178, "testFile", "~/testFolder", "format");
@@ -39,13 +39,13 @@ namespace ROH.Test.Version
 
             Mapper mapper = new(config);
 
-            List<GameVersionFile> files = new() { _file };
+            List<GameVersionFile> files = [_file];
 
             Mock<IGameVersionFileRepository> mockRepository = new();
             _ = mockRepository.Setup(x => x.GetFiles(It.IsAny<Guid>())).ReturnsAsync(files);
 
             Mock<IGameVersionService> mockVersionService = new();
-            mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<string>())).ReturnsAsync(true);
+            _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<string>())).ReturnsAsync(true);
 
             Mock<IValidator<GameVersionFileModel>> mockValidator = new();
             GameVersionFileService service = new(mockRepository.Object, mockValidator.Object, mockVersionService.Object, mapper);
@@ -54,7 +54,7 @@ namespace ROH.Test.Version
             DefaultResponse result = await service.GetFiles(_version.Guid.ToString());
 
             // Assert
-            Assert.Equivalent(new List<GameVersionFileModel> { _fileModel}, result.ObjectResponse);
+            Assert.Equivalent(new List<GameVersionFileModel> { _fileModel }, result.ObjectResponse);
         }
 
         [Fact]
@@ -124,7 +124,7 @@ namespace ROH.Test.Version
 
             // Act
             _fileModel.Name = "";
-            var result = await service.NewFile(_fileModel);
+            DefaultResponse result = await service.NewFile(_fileModel);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, result.HttpStatus);
@@ -158,7 +158,7 @@ namespace ROH.Test.Version
             GameVersionFileService service = new(mockRepository.Object, mockValidator.Object, mockVersionService.Object, mapper);
 
             // Act
-            var result = await service.NewFile(_fileModel);
+            DefaultResponse result = await service.NewFile(_fileModel);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, result.HttpStatus);
@@ -292,7 +292,7 @@ namespace ROH.Test.Version
 
             Mock<IValidator<GameVersionFileModel>> mockValidator = new();
             _ = mockValidator.Setup(x => x.ValidateAsync(It.IsAny<GameVersionFileModel>(), CancellationToken.None)).ReturnsAsync(new ValidationResult(new List<ValidationFailure>
-                    {new ValidationFailure("Name", "Name cannot be empty")}));
+                    {new("Name", "Name cannot be empty")}));
 
             GameVersionFileService service = new(mockRepository.Object, mockValidator.Object, mockVersionService.Object, mapper);
 

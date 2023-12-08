@@ -18,12 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ROH.Domain\ROH.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="ROH.Interfaces">
-      <HintPath>..\ROH.Interfaces\obj\Debug\net7.0\ref\ROH.Interfaces.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\ROH.Interfaces\ROH.Interfaces.csproj" />
   </ItemGroup>
 
 </Project>

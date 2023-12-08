@@ -9,14 +9,8 @@ using ROH.Utils.Helpers;
 
 namespace ROH.Blazor.Server.Helpers
 {
-    public class SweetAlertService : ISweetAlertService
+    public class SweetAlertService(IJSRuntime _jsRuntime) : ISweetAlertService
     {
-        private readonly IJSRuntime _jsRuntime;
-
-        public SweetAlertService(IJSRuntime jsRuntime)
-        {
-            _jsRuntime = jsRuntime;
-        }
 
         public async Task Show(string title, string message, SweetAlertType type)
         {
@@ -28,9 +22,13 @@ namespace ROH.Blazor.Server.Helpers
             SweetAlertType type = SweetAlertType.Error;
 
             if (response.HttpStatus.IsSuccessStatusCode())
+            {
                 type = SweetAlertType.Success;
+            }
             else if (response.HttpStatus.IsClientErrorStatusCode() || response.HttpStatus.IsServerErrorStatusCode())
+            {
                 type = SweetAlertType.Error;
+            }
 
             await Show("", response.Message, type);
         }

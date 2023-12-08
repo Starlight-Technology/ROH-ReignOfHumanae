@@ -9,7 +9,14 @@ namespace ROH.Blazor.Server.Api
     {
         private readonly Utils.ApiConfiguration.Gateway _gateway = new();
 
-        public async Task<DefaultResponse?> UploadVersionFile(GameVersionFileModel model) => await _gateway.Post(Utils.ApiConfiguration.Gateway.Services.UploadFile, model);
-        public async Task<DefaultResponse?> GetAllVersionFiles(string versionGuid) => await _gateway.Get(Utils.ApiConfiguration.Gateway.Services.UploadFile, new List<ApiParameters>() { new ApiParameters() { Name = "versionGuid", Value = versionGuid } });
+        public async Task<DefaultResponse?> UploadVersionFile(GameVersionFileModel model)
+        {
+            return await _gateway.Post(Utils.ApiConfiguration.Gateway.Services.UploadFile, model);
+        }
+
+        public async Task<DefaultResponse?> GetAllVersionFiles(string versionGuid)
+        {
+            return await _gateway.Get(Utils.ApiConfiguration.Gateway.Services.UploadFile, [new ApiParameters() { Name = "versionGuid", Value = versionGuid }]);
+        }
     }
 }

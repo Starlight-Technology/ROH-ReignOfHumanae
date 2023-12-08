@@ -15,40 +15,27 @@ using System.Text;
 
 namespace ROH.Services.Version
 {
-    public class GameVersionFileService : IGameVersionFileService
+    public class GameVersionFileService(IGameVersionFileRepository gameVersionFileRepository, IValidator<GameVersionFileModel> validator, IGameVersionService gameVersion, IMapper mapper) : IGameVersionFileService
     {
-        private readonly IGameVersionFileRepository _repository;
-        private readonly IGameVersionService _gameVersion;
-        private readonly IValidator<GameVersionFileModel> _validator;
-        private readonly IMapper _mapper;
-
-        public GameVersionFileService(IGameVersionFileRepository gameVersionFileRepository, IValidator<GameVersionFileModel> validator, IGameVersionService gameVersion, IMapper mapper)
-        {
-            _repository = gameVersionFileRepository;
-            _validator = validator;
-            _gameVersion = gameVersion;
-            _mapper = mapper;
-        }
-
         public async Task<DefaultResponse> DownloadFile(long id)
         {
             try
             {
-                GameVersionFile? file = await _repository.GetFile(id);
+                GameVersionFile? file = await gameVersionFileRepository.GetFile(id);
 
                 if (file != null)
                 {
                     file = file with
                     {
-                        GameVersion = _mapper.Map<GameVersion>(_gameVersion.GetVersionByGuid(file.Guid.ToString()).Result
+                        GameVersion = mapper.Map<GameVersion>(gameVersion.GetVersionByGuid(file.Guid.ToString()).Result
                             ?.ObjectResponse)
                     };
-                    GameVersionFileModel fileModel = _mapper.Map<GameVersionFileModel>(file);
-                    FluentValidation.Results.ValidationResult validation = await _validator.ValidateAsync(fileModel);
+                    GameVersionFileModel fileModel = mapper.Map<GameVersionFileModel>(file);
+                    FluentValidation.Results.ValidationResult validation = await validator.ValidateAsync(fileModel);
                     if (validation.IsValid)
                     {
                         if (file.GameVersion != null &&
-                            await _gameVersion.VerifyIfVersionExist(_mapper.Map<GameVersionModel>(file.GameVersion)))
+                            await gameVersion.VerifyIfVersionExist(mapper.Map<GameVersionModel>(file.GameVersion)))
                         {
                             string path = string.Empty;
 #if DEBUG
@@ -93,11 +80,11 @@ namespace ROH.Services.Version
 
         public async Task<DefaultResponse> GetFiles(string versionGuid)
         {
-            var response = await _gameVersion.VerifyIfVersionExist(versionGuid);
+            bool response = await gameVersion.VerifyIfVersionExist(versionGuid);
 
-            if (response && Guid.TryParse(versionGuid, out var guid))
+            if (response && Guid.TryParse(versionGuid, out Guid guid))
             {
-                List<GameVersionFileModel> files = _mapper.Map<List<GameVersionFileModel>>(await _repository.GetFiles(guid));
+                List<GameVersionFileModel> files = mapper.Map<List<GameVersionFileModel>>(await gameVersionFileRepository.GetFiles(guid));
 
                 return new DefaultResponse(objectResponse: files);
             }
@@ -109,16 +96,16 @@ namespace ROH.Services.Version
         {
             try
             {
-                var validation = await ValidateFileAsync(fileModel);
-                if (validation != null && !validation.IsValid && validation.Errors.Any())
+                FluentValidation.Results.ValidationResult validation = await ValidateFileAsync(fileModel);
+                if (validation != null && !validation.IsValid && validation.Errors.Count > 0)
                 {
                     return new DefaultResponse(null, HttpStatusCode.BadRequest, validation.Errors.ToString()!);
                 }
 
-                var file = _mapper.Map<GameVersionFile>(fileModel);
-                var currentVersion = await GetCurrentVersionAsync();
+                GameVersionFile file = mapper.Map<GameVersionFile>(fileModel);
+                GameVersion? currentVersion = await GetCurrentVersionAsync();
 
-                if (file.GameVersion != null && await _gameVersion.VerifyIfVersionExist(fileModel.GameVersion!))
+                if (file.GameVersion != null && await gameVersion.VerifyIfVersionExist(fileModel.GameVersion!))
                 {
                     if (await ShouldRejectFileUpload(file.GameVersion, currentVersion))
                     {
@@ -145,12 +132,12 @@ namespace ROH.Services.Version
 
         private async Task<FluentValidation.Results.ValidationResult> ValidateFileAsync(GameVersionFileModel file)
         {
-            return await _validator.ValidateAsync(file);
+            return await validator.ValidateAsync(file);
         }
 
         private async Task<GameVersion?> GetCurrentVersionAsync()
         {
-            return (await _gameVersion.GetCurrentVersion()).ObjectResponse as GameVersion;
+            return (await gameVersion.GetCurrentVersion()).ObjectResponse as GameVersion;
         }
 
         private static Task<bool> ShouldRejectFileUpload(GameVersion gameVersion, GameVersion? currentVersion)
@@ -178,7 +165,7 @@ namespace ROH.Services.Version
         {
             if (!Directory.Exists(Path.GetDirectoryName(path)))
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(path) ?? Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\ROHFiles");
+                _ = Directory.CreateDirectory(Path.GetDirectoryName(path) ?? Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\ROHFiles");
             }
 
             return Task.CompletedTask;
@@ -199,9 +186,9 @@ namespace ROH.Services.Version
                 await fs.WriteAsync(info);
             }
 
-            GameVersionFile entity = _mapper.Map<GameVersionFile>(file);
+            GameVersionFile entity = mapper.Map<GameVersionFile>(file);
 
-            await _repository.SaveFile(entity);
+            await gameVersionFileRepository.SaveFile(entity);
         }
     }
 }

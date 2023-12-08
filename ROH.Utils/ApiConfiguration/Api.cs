@@ -59,20 +59,15 @@ namespace ROH.Utils.ApiConfiguration
             {
                 for (int i = 0; i < apiParameters.Count; i++)
                 {
-                    if (i == 0)
-                    {
-                        parameters.Append($"?{apiParameters[i].Name}={apiParameters[i].Value}");
-                    }
-                    else
-                    {
-                        parameters.Append($"&{apiParameters[i].Name}={apiParameters[i].Value}");
-                    }
+                    _ = i == 0
+                        ? parameters.Append($"?{apiParameters[i].Name}={apiParameters[i].Value}")
+                        : parameters.Append($"&{apiParameters[i].Name}={apiParameters[i].Value}");
                 }
 
                 param = parameters.ToString();
             }
 
-            var response = await client.GetAsync(_servicesUrl.GetValueOrDefault(service) + param);
+            HttpResponseMessage response = await client.GetAsync(_servicesUrl.GetValueOrDefault(service) + param);
 
             return await response.Content.ReadAsStringAsync();
         }
@@ -81,10 +76,10 @@ namespace ROH.Utils.ApiConfiguration
         {
             using HttpClient client = new HttpClient();
 
-            var jsonContent = JsonConvert.SerializeObject(objectToSend);
-            var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            string jsonContent = JsonConvert.SerializeObject(objectToSend);
+            StringContent httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-            var response = await client.PostAsync(_servicesUrl.GetValueOrDefault(service), httpContent);
+            HttpResponseMessage response = await client.PostAsync(_servicesUrl.GetValueOrDefault(service), httpContent);
 
             return await response.Content.ReadAsStringAsync();
         }
@@ -93,10 +88,10 @@ namespace ROH.Utils.ApiConfiguration
         {
             using HttpClient client = new HttpClient();
 
-            var jsonContent = JsonConvert.SerializeObject(objectToSend);
-            var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            string jsonContent = JsonConvert.SerializeObject(objectToSend);
+            StringContent httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-            var response = await client.PutAsync(_servicesUrl.GetValueOrDefault(service), httpContent);
+            HttpResponseMessage response = await client.PutAsync(_servicesUrl.GetValueOrDefault(service), httpContent);
 
             return await response.Content.ReadAsStringAsync();
         }
@@ -110,24 +105,19 @@ namespace ROH.Utils.ApiConfiguration
 
             if (apiParameters.Count > 0)
             {
-                parameters.Append("?");
+                _ = parameters.Append("?");
 
                 for (int i = 0; i < apiParameters.Count; i++)
                 {
-                    if (i == 0)
-                    {
-                        parameters.Append($"{apiParameters[i].Name}={apiParameters[i].Value}");
-                    }
-                    else
-                    {
-                        parameters.Append($"&{apiParameters[i].Name}={apiParameters[i].Value}");
-                    }
+                    _ = i == 0
+                        ? parameters.Append($"{apiParameters[i].Name}={apiParameters[i].Value}")
+                        : parameters.Append($"&{apiParameters[i].Name}={apiParameters[i].Value}");
                 }
 
                 param = parameters.ToString();
             }
 
-            var response = await client.DeleteAsync(_servicesUrl.GetValueOrDefault(service) + param);
+            HttpResponseMessage response = await client.DeleteAsync(_servicesUrl.GetValueOrDefault(service) + param);
 
             return await response.Content.ReadAsStringAsync();
         }

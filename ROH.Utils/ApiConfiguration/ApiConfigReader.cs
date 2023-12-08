@@ -41,13 +41,13 @@ namespace ROH.Utils.ApiConfiguration
         // Release configuration
         string configuration = "Release";
 #endif
-            var selectedConfiguration = _config.Descendants(configuration).FirstOrDefault() ?? throw new InvalidOperationException($"Configuration '{configuration}' not found in api-config.xml");
-            var apiUrls = new Dictionary<ApiUrl, Uri>();
+            XElement selectedConfiguration = _config.Descendants(configuration).FirstOrDefault() ?? throw new InvalidOperationException($"Configuration '{configuration}' not found in api-config.xml");
+            Dictionary<ApiUrl, Uri> apiUrls = new Dictionary<ApiUrl, Uri>();
 
-            foreach (var serviceElement in selectedConfiguration.Descendants("Service"))
+            foreach (XElement? serviceElement in selectedConfiguration.Descendants("Service"))
             {
-                var serviceName = Enum.Parse<ApiUrl>(serviceElement.Attribute("name").Value);
-                var serviceUrl = new Uri(serviceElement.Attribute("url").Value);
+                ApiUrl serviceName = Enum.Parse<ApiUrl>(serviceElement.Attribute("name").Value);
+                Uri serviceUrl = new Uri(serviceElement.Attribute("url").Value);
 
                 apiUrls.Add(serviceName, serviceUrl);
             }

@@ -9,23 +9,14 @@ using ROH.StandardModels.Version;
 
 namespace ROH.Services.Version
 {
-    public class GameVersionService : IGameVersionService
+    public class GameVersionService(IGameVersionRepository versionRepository, IMapper mapper) : IGameVersionService
     {
-        private readonly IGameVersionRepository _versionRepository;
-        private readonly IMapper _mapper;
-
-        public GameVersionService(IGameVersionRepository versionRepository, IMapper mapper)
-        {
-            _versionRepository = versionRepository;
-            _mapper = mapper;
-        }
-
         public async Task<DefaultResponse> GetVersionByGuid(string versionGuid)
         {
-            if (Guid.TryParse(versionGuid, out var guid))
+            if (Guid.TryParse(versionGuid, out Guid guid))
             {
-                GameVersion? version = await _versionRepository.GetVersionByGuid(guid);
-                GameVersionModel model = _mapper.Map<GameVersionModel>(version);
+                GameVersion? version = await versionRepository.GetVersionByGuid(guid);
+                GameVersionModel model = mapper.Map<GameVersionModel>(version);
                 return new DefaultResponse() { ObjectResponse = model };
             }
             return new DefaultResponse() { HttpStatus = System.Net.HttpStatusCode.ExpectationFailed, Message = "The Guid is invalid!" };
@@ -35,15 +26,17 @@ namespace ROH.Services.Version
         {
             int skip = take * (page - 1);
 
-            var result = await _versionRepository.GetAllVersions(take, skip);
+            Domain.Paginator.Paginated result = await versionRepository.GetAllVersions(take, skip);
 
             IList<GameVersion>? versions = result.ObjectResponse.Cast<GameVersion>().ToList();
             int total = result.Total;
             int pages = 0;
             if (versions.Count > 0)
+            {
                 pages = (int)Math.Ceiling((double)total / take);
+            }
 
-            IList<GameVersionModel> versionModels = _mapper.Map<IList<GameVersionModel>>(versions);
+            IList<GameVersionModel> versionModels = mapper.Map<IList<GameVersionModel>>(versions);
 
             List<object> versionObjects = versionModels.Cast<object>().ToList();
 
@@ -56,15 +49,17 @@ namespace ROH.Services.Version
         {
             int skip = take * (page - 1);
 
-            var result = await _versionRepository.GetAllReleasedVersions(take, skip);
+            Domain.Paginator.Paginated result = await versionRepository.GetAllReleasedVersions(take, skip);
 
             IList<GameVersion>? versions = result.ObjectResponse.Cast<GameVersion>().ToList();
             int total = result.Total;
             int pages = 0;
             if (versions.Count > 0)
+            {
                 pages = (int)Math.Ceiling((double)total / take);
+            }
 
-            IList<GameVersionModel> versionModels = _mapper.Map<IList<GameVersionModel>>(versions);
+            IList<GameVersionModel> versionModels = mapper.Map<IList<GameVersionModel>>(versions);
 
             List<object> versionObjects = versionModels.Cast<object>().ToList();
 
@@ -81,29 +76,25 @@ namespace ROH.Services.Version
                                            message: "This version already exist.");
             }
 
-            _ = await _versionRepository.SetNewGameVersion(_mapper.Map<GameVersion>(version));
+            _ = await versionRepository.SetNewGameVersion(mapper.Map<GameVersion>(version));
 
             return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.Created, message: "New game version created.");
         }
 
         public async Task<bool> VerifyIfVersionExist(GameVersionModel version)
         {
-            return await _versionRepository.VerifyIfExist(_mapper.Map<GameVersion>(version));
+            return await versionRepository.VerifyIfExist(mapper.Map<GameVersion>(version));
         }
 
         public async Task<bool> VerifyIfVersionExist(string versionGuid)
         {
-            if (Guid.TryParse(versionGuid, out var guid))
-            {
-                return await _versionRepository.VerifyIfExist(guid);
-            }
-            return false;
+            return Guid.TryParse(versionGuid, out Guid guid) && await versionRepository.VerifyIfExist(guid);
         }
 
         public async Task<DefaultResponse> GetCurrentVersion()
         {
-            GameVersion? version = await _versionRepository.GetCurrentGameVersion();
-            return new DefaultResponse(objectResponse: _mapper.Map<GameVersionModel>(version));
+            GameVersion? version = await versionRepository.GetCurrentGameVersion();
+            return new DefaultResponse(objectResponse: mapper.Map<GameVersionModel>(version));
         }
     }
 }
