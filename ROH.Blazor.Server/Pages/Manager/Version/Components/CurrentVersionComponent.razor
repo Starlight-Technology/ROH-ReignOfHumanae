@@ -1,9 +1,11 @@
 ﻿@namespace Manager.Version.Components
 @using Newtonsoft.Json;
+@using ROH.Blazor.Server.Interfaces.Api;
 @using ROH.StandardModels.Version
 @using ROH.Blazor.Server.Api;
-@using Components;
+@using Pages.Components;
 
+@inject IVersionService _versionService;
 <CardComponent Header="Current Version">
     @if (isLoadingCurrentVersion)
     {
@@ -16,39 +18,48 @@
     else
     {
         <div class="row">
-            <div class="col-sm-4">
-                <label for="Release">Version:</label>
+            <div class="col-sm-1">
+                <label for="Version">Version:</label>
             </div>
-            <div class="col-sm-8">
-                <input type="number" id="Release" class="form-control" @bind="currentVersion.Version" readonly />
+            <div class="col-sm-1">
+                <input type="number" id="Version" class="form-control" @bind="currentVersion!.Version" readonly />
             </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-4">
+
+            <div class="col-sm-1">
                 <label for="Release">Release:</label>
             </div>
-            <div class="col-sm-8">
+            <div class="col-sm-1">
                 <input type="number" id="Release" class="form-control" @bind="currentVersion.Release" readonly />
             </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-4">
-                <label for="Release">Review:</label>
+
+            <div class="col-sm-1">
+                <label for="Review">Review:</label>
             </div>
-            <div class="col-sm-8">
-                <input type="number" id="Release" class="form-control" @bind="currentVersion.Review" readonly />
+            <div class="col-sm-1">
+                <input type="number" id="Review" class="form-control" @bind="currentVersion.Review" readonly />
+            </div>
+
+            <div class="col-sm-1">
+                <label for="ReleaseDate">Released Date:</label>
+            </div>
+            <div class="col-sm-3">
+                <input type="date" id="ReleaseDate" class="form-control" @bind="currentVersion.ReleaseDate" readonly />
+            </div>
+
+            <div class="col-sm-1">
+                <a href="/Manager/Version/VersionDetails/@currentVersion.Guid"><i class="fa fa-solid fa-eye">DETAILS</i></a>
             </div>
         </div>
+
     }
 
 </CardComponent>
 
 @code {
-    private readonly VersionService _versionService = new VersionService();
 
     private bool isLoadingCurrentVersion = true;
 
-    private GameVersionModel currentVersion = new()
+    private GameVersionModel? currentVersion = new()
         {
             Version = 0,
             Release = 0,
@@ -68,7 +79,7 @@
 
         if (currentVersionResponse != null && currentVersionResponse?.ObjectResponse != null)
         {
-            currentVersion = JsonConvert.DeserializeObject<GameVersionModel>(currentVersionResponse.ObjectResponse.ToString());
+            currentVersion = JsonConvert.DeserializeObject<GameVersionModel>(currentVersionResponse.ObjectResponse.ToString()!);
         }
         isLoadingCurrentVersion = false;
         StateHasChanged();

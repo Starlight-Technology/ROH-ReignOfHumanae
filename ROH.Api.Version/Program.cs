@@ -49,19 +49,34 @@ if (app.Environment.IsDevelopment())
     _ = app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
-app.MapPost("/CreateNewVersion", async (IGameVersionService _gameVersionService, GameVersionModel model) =>
+app.MapPost("CreateNewVersion", async (IGameVersionService _gameVersionService, GameVersionModel model) =>
 {
     return await _gameVersionService.NewVersion(model);
-})
-.WithName("CreateNewVersion")
-.WithOpenApi();
+}).WithName("CreateNewVersion")
+  .WithOpenApi();
 
-app.MapGet("/GetCurrentVersion", async (IGameVersionService _gameVersionService) =>
+app.MapGet("GetCurrentVersion", async (IGameVersionService _gameVersionService) =>
 {
     return await _gameVersionService.GetCurrentVersion();
 }).WithName("GetCurrentVersion")
+  .WithOpenApi();
+
+app.MapGet("GetAllVersionsPaginated", async (IGameVersionService _gameVersionService, int page, int take) =>
+{
+    return await _gameVersionService.GetAllVersions(page: page, take: take);
+}).WithName("GetAllVersionsPaginated")
+  .WithOpenApi();
+
+app.MapGet("GetAllReleasedVersionsPaginated", async (IGameVersionService _gameVersionService, int page, int take) =>
+{
+    return await _gameVersionService.GetAllReleasedVersions(page: page, take: take);
+}).WithName("GetAllReleasedVersionsPaginated")
+  .WithOpenApi();
+
+app.MapGet("GetVersionDetails", async (IGameVersionService _gameVersionService, string guid) =>
+{
+    return await _gameVersionService.GetVersionByGuid(guid);
+}).WithName("GetVersionDetails")
   .WithOpenApi();
 
 app.Run();

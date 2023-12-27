@@ -1,14 +1,15 @@
-﻿using ROH.Domain.Version;
+﻿using ROH.Domain.Paginator;
+using ROH.Domain.Version;
 
 namespace ROH.Interfaces.Repository.Version
 {
     public interface IGameVersionRepository
     {
-        Task<GameVersion?> GetVersionById(long versionId);
+        Task<GameVersion?> GetVersionByGuid(Guid versionGuid);
 
-        Task<IList<GameVersion>?> GetAllReleasedVersions();
+        Task<Paginated> GetAllReleasedVersions(int take = 10, int skip = 0);
 
-        Task<IList<GameVersion>?> GetAllVersions();
+        Task<Paginated> GetAllVersions(int take = 10, int skip = 0);
 
         Task<GameVersion?> GetCurrentGameVersion();
 
@@ -17,5 +18,7 @@ namespace ROH.Interfaces.Repository.Version
         Task<GameVersion> UpdateGameVersion(GameVersion version);
 
         Task<bool> VerifyIfExist(GameVersion version);
+
+        Task<bool> VerifyIfExist(Guid versionGuid);
     }
 }

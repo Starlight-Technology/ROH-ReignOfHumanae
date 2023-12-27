@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
 
@@ -15,7 +16,8 @@ namespace ROH.Utils.ApiConfiguration
         public enum ApiUrl
         {
             Version,
-            GateWay
+            VersionFile,
+            GateWay,
         }
 
         public ApiConfigReader()
@@ -29,12 +31,23 @@ namespace ROH.Utils.ApiConfiguration
 
         public Dictionary<ApiUrl, Uri> GetApiUrl()
         {
-            var apiUrls = new Dictionary<ApiUrl, Uri>();
+            // Select the appropriate configuration based on the build configuration
+#if DEBUG
+            // Debug configuration
+            string configuration = "Develop";
+#elif TEST
+            string configuration = "Test";
+#else
+        // Release configuration
+        string configuration = "Release";
+#endif
+            XElement selectedConfiguration = _config.Descendants(configuration).FirstOrDefault() ?? throw new InvalidOperationException($"Configuration '{configuration}' not found in api-config.xml");
+            Dictionary<ApiUrl, Uri> apiUrls = new Dictionary<ApiUrl, Uri>();
 
-            foreach (var serviceElement in _config.Descendants("Service"))
+            foreach (XElement? serviceElement in selectedConfiguration.Descendants("Service"))
             {
-                var serviceName = Enum.Parse<ApiUrl>(serviceElement.Attribute("name").Value);
-                var serviceUrl = new Uri(serviceElement.Attribute("url").Value);
+                ApiUrl serviceName = Enum.Parse<ApiUrl>(serviceElement.Attribute("name").Value);
+                Uri serviceUrl = new Uri(serviceElement.Attribute("url").Value);
 
                 apiUrls.Add(serviceName, serviceUrl);
             }

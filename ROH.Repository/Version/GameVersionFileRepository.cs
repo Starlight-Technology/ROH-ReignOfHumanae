@@ -6,29 +6,33 @@ using ROH.Interfaces.Repository.Version;
 
 namespace ROH.Repository.Version
 {
-    public class GameVersionFileRepository : IGameVersionFileRepository
+    public class GameVersionFileRepository(ISqlContext context) : IGameVersionFileRepository
     {
-        private readonly ISqlContext _context;
-
-        public GameVersionFileRepository(ISqlContext context)
-        {
-            _context = context;
-        }
-
         public async Task<GameVersionFile?> GetFile(long id)
         {
-            return await _context.GameVersionFiles.FindAsync(id);
+            return await context.GameVersionFiles.FindAsync(id);
         }
 
         public async Task<List<GameVersionFile>> GetFiles(GameVersion version)
         {
-            return await _context.GameVersionFiles.Where(v => v.IdVersion == version.Id).ToListAsync();
+            long versionId = context.GameVersions.FirstAsync(v => v.Guid == version.Guid).Result.Id;
+
+            return await context.GameVersionFiles.Where(v => v.IdVersion == versionId).ToListAsync();
+        }
+
+        public async Task<List<GameVersionFile>> GetFiles(Guid versionGuid)
+        {
+            long versionId = context.GameVersions.FirstAsync(v => v.Guid == versionGuid).Result.Id;
+
+            return await context.GameVersionFiles.Where(v => v.IdVersion == versionId).ToListAsync();
         }
 
         public async Task SaveFile(GameVersionFile file)
         {
-            _ = await _context.GameVersionFiles.AddAsync(file);
-            _ = await _context.SaveChangesAsync();
+            file.GameVersion = await context.GameVersions.FirstAsync(v => v.Guid == file.GameVersion!.Guid);
+
+            _ = await context.GameVersionFiles.AddAsync(file);
+            _ = await context.SaveChangesAsync();
         }
     }
 }

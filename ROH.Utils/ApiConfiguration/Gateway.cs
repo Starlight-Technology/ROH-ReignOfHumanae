@@ -24,6 +24,11 @@ namespace ROH.Utils.ApiConfiguration
         {
             GetCurrentVersion,
             CreateNewVersion,
+            GetAllVersionsPaginated,
+            GetAllReleasedVersionsPaginated,
+            GetVersionDetails,
+            UploadFile,
+            GetAllVersionFiles
         }
 
         private static readonly Dictionary<Services, Uri> _gatewayServiceUrl = new Dictionary<Services, Uri>
@@ -32,7 +37,16 @@ namespace ROH.Utils.ApiConfiguration
 
             {Services.GetCurrentVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Version/GetCurrentVersion" ) },
             {Services.CreateNewVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Version/CreateNewVersion" ) },
+            {Services.GetAllVersionsPaginated, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Version/GetAllVersionsPaginated" ) },
+            {Services.GetAllReleasedVersionsPaginated, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Version/GetAllReleasedVersionsPaginated" ) },
+            {Services.GetVersionDetails, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Version/GetVersionDetails" ) },
             #endregion VERSION
+
+            #region FILES
+
+             {Services.UploadFile, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/VersionFile/UploadFile" ) },
+             {Services.GetAllVersionFiles, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/VersionFile/GetAllVersionFiles" ) }
+            #endregion FILES
         };
 
         public async Task<DefaultResponse?> Get(Services service, List<ApiParameters> apiParameters)
@@ -46,20 +60,15 @@ namespace ROH.Utils.ApiConfiguration
             {
                 for (int i = 0; i < apiParameters.Count; i++)
                 {
-                    if (i == 0)
-                    {
-                        parameters.Append($"?{apiParameters[i].Name}={apiParameters[i].Value}");
-                    }
-                    else
-                    {
-                        parameters.Append($"&{apiParameters[i].Name}={apiParameters[i].Value}");
-                    }
+                    _ = i == 0
+                        ? parameters.Append($"?{apiParameters[i].Name}={apiParameters[i].Value}")
+                        : parameters.Append($"&{apiParameters[i].Name}={apiParameters[i].Value}");
                 }
 
                 param = parameters.ToString();
             }
 
-            var response = await client.GetAsync(_gatewayServiceUrl.GetValueOrDefault(service) + param);
+            HttpResponseMessage response = await client.GetAsync(_gatewayServiceUrl.GetValueOrDefault(service) + param);
 
             if (response != null)
             {
@@ -75,10 +84,10 @@ namespace ROH.Utils.ApiConfiguration
         {
             using HttpClient client = new HttpClient();
 
-            var jsonContent = JsonConvert.SerializeObject(objectToSend);
-            var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            string jsonContent = JsonConvert.SerializeObject(objectToSend);
+            StringContent httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-            var response = await client.PostAsync(_gatewayServiceUrl.GetValueOrDefault(service), httpContent);
+            HttpResponseMessage response = await client.PostAsync(_gatewayServiceUrl.GetValueOrDefault(service), httpContent);
 
             if (response != null)
             {
@@ -94,10 +103,10 @@ namespace ROH.Utils.ApiConfiguration
         {
             using HttpClient client = new HttpClient();
 
-            var jsonContent = JsonConvert.SerializeObject(objectToSend);
-            var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            string jsonContent = JsonConvert.SerializeObject(objectToSend);
+            StringContent httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-            var response = await client.PutAsync(_gatewayServiceUrl.GetValueOrDefault(service), httpContent);
+            HttpResponseMessage response = await client.PutAsync(_gatewayServiceUrl.GetValueOrDefault(service), httpContent);
 
             if (response != null)
             {
@@ -118,24 +127,19 @@ namespace ROH.Utils.ApiConfiguration
 
             if (apiParameters.Count > 0)
             {
-                parameters.Append("?");
+                _ = parameters.Append("?");
 
                 for (int i = 0; i < apiParameters.Count; i++)
                 {
-                    if (i == 0)
-                    {
-                        parameters.Append($"{apiParameters[i].Name}={apiParameters[i].Value}");
-                    }
-                    else
-                    {
-                        parameters.Append($"&{apiParameters[i].Name}={apiParameters[i].Value}");
-                    }
+                    _ = i == 0
+                        ? parameters.Append($"{apiParameters[i].Name}={apiParameters[i].Value}")
+                        : parameters.Append($"&{apiParameters[i].Name}={apiParameters[i].Value}");
                 }
 
                 param = parameters.ToString();
             }
 
-            var response = await client.DeleteAsync(_gatewayServiceUrl.GetValueOrDefault(service) + param);
+            HttpResponseMessage response = await client.DeleteAsync(_gatewayServiceUrl.GetValueOrDefault(service) + param);
 
             if (response != null)
             {

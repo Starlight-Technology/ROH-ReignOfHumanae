@@ -1,7 +1,16 @@
 ﻿@namespace Manager.Version.Components
+@using ROH.Blazor.Server.Helpers;
+@using ROH.Blazor.Server.Helpers.Types;
+@using ROH.Blazor.Server.Interfaces.Api;
+@using ROH.Blazor.Server.Interfaces.Helpers;
 @using ROH.StandardModels.Version
 @using ROH.Blazor.Server.Api;
-@using Components;
+@using Pages.Components;
+@using ROH.Utils.Helpers
+
+@inject ISweetAlertService _sweetAlert;
+    
+@inject IVersionService _versionService;
 
 <CardComponent Header="New Version">
     <div class="row">
@@ -33,10 +42,10 @@
             <button class="btn btn-primary" @onclick="CreateNewVersion">Create New Version</button>
         </div>
     </div>
+
 </CardComponent>
 
 @code {
-    private readonly VersionService _versionService = new VersionService();
 
     private int inputVersion = 0;
     private int inputRelease = 0;
@@ -50,11 +59,13 @@
         };
 
 
-
     private async Task CreateNewVersion()
     {
         GameVersionModel model = new GameVersionModel() { Version = inputVersion, Release = inputRelease, Review = inputReview };
 
         var response = await _versionService.CreateNewVersion(model);
+
+        if (response != null)
+            await _sweetAlert.ShowResponse(response);
     }
 }

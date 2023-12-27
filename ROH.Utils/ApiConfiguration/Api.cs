@@ -21,7 +21,13 @@ namespace ROH.Utils.ApiConfiguration
         public enum Services
         {
             GetCurrentVersion,
-            CreateNewVersion
+            CreateNewVersion,
+            GetAllVersionsPaginated,
+            GetAllReleasedVersionsPaginated,
+            GetVersionDetails,
+
+            UploadVersionFile,
+            GetAllVersionFiles
         }
 
         private static readonly Dictionary<Services, Uri> _servicesUrl = new Dictionary<Services, Uri>
@@ -29,8 +35,17 @@ namespace ROH.Utils.ApiConfiguration
             #region VERSION
 
             {Services.GetCurrentVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"GetCurrentVersion" ) },
-            {Services.CreateNewVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"CreateNewVersion" ) }
+            {Services.CreateNewVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"CreateNewVersion" ) },
+            {Services.GetAllVersionsPaginated, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"GetAllVersionsPaginated" ) },
+            {Services.GetAllReleasedVersionsPaginated, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"GetAllReleasedVersionsPaginated" ) },
+            {Services.GetVersionDetails, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"GetVersionDetails" ) },
             #endregion VERSION
+
+            #region FILES
+
+             {Services.UploadVersionFile, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.VersionFile),"UploadFile" ) },
+             {Services.GetAllVersionFiles, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.VersionFile),"GetAllVersionFiles" ) }
+            #endregion FILES
         };
 
         public async Task<string> Get(Services service, List<ApiParameters> apiParameters)
@@ -44,21 +59,15 @@ namespace ROH.Utils.ApiConfiguration
             {
                 for (int i = 0; i < apiParameters.Count; i++)
                 {
-                    if (i == 0)
-                    {
-                        parameters.Append($"?{apiParameters[i].Name}={apiParameters[i].Value}");
-                    }
-                    else
-                    {
-                        parameters.Append($"&{apiParameters[i].Name}={apiParameters[i].Value}");
-                    }
+                    _ = i == 0
+                        ? parameters.Append($"?{apiParameters[i].Name}={apiParameters[i].Value}")
+                        : parameters.Append($"&{apiParameters[i].Name}={apiParameters[i].Value}");
                 }
 
                 param = parameters.ToString();
             }
 
-            var response = await client.GetAsync(_servicesUrl.GetValueOrDefault(service) + param);
-            response.EnsureSuccessStatusCode();
+            HttpResponseMessage response = await client.GetAsync(_servicesUrl.GetValueOrDefault(service) + param);
 
             return await response.Content.ReadAsStringAsync();
         }
@@ -67,11 +76,10 @@ namespace ROH.Utils.ApiConfiguration
         {
             using HttpClient client = new HttpClient();
 
-            var jsonContent = JsonConvert.SerializeObject(objectToSend);
-            var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            string jsonContent = JsonConvert.SerializeObject(objectToSend);
+            StringContent httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-            var response = await client.PostAsync(_servicesUrl.GetValueOrDefault(service), httpContent);
-            response.EnsureSuccessStatusCode();
+            HttpResponseMessage response = await client.PostAsync(_servicesUrl.GetValueOrDefault(service), httpContent);
 
             return await response.Content.ReadAsStringAsync();
         }
@@ -80,11 +88,10 @@ namespace ROH.Utils.ApiConfiguration
         {
             using HttpClient client = new HttpClient();
 
-            var jsonContent = JsonConvert.SerializeObject(objectToSend);
-            var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            string jsonContent = JsonConvert.SerializeObject(objectToSend);
+            StringContent httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-            var response = await client.PutAsync(_servicesUrl.GetValueOrDefault(service), httpContent);
-            response.EnsureSuccessStatusCode();
+            HttpResponseMessage response = await client.PutAsync(_servicesUrl.GetValueOrDefault(service), httpContent);
 
             return await response.Content.ReadAsStringAsync();
         }
@@ -98,25 +105,19 @@ namespace ROH.Utils.ApiConfiguration
 
             if (apiParameters.Count > 0)
             {
-                parameters.Append("?");
+                _ = parameters.Append("?");
 
                 for (int i = 0; i < apiParameters.Count; i++)
                 {
-                    if (i == 0)
-                    {
-                        parameters.Append($"{apiParameters[i].Name}={apiParameters[i].Value}");
-                    }
-                    else
-                    {
-                        parameters.Append($"&{apiParameters[i].Name}={apiParameters[i].Value}");
-                    }
+                    _ = i == 0
+                        ? parameters.Append($"{apiParameters[i].Name}={apiParameters[i].Value}")
+                        : parameters.Append($"&{apiParameters[i].Name}={apiParameters[i].Value}");
                 }
 
                 param = parameters.ToString();
             }
 
-            var response = await client.DeleteAsync(_servicesUrl.GetValueOrDefault(service) + param);
-            response.EnsureSuccessStatusCode();
+            HttpResponseMessage response = await client.DeleteAsync(_servicesUrl.GetValueOrDefault(service) + param);
 
             return await response.Content.ReadAsStringAsync();
         }

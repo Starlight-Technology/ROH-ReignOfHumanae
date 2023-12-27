@@ -8,12 +8,13 @@ namespace ROH.Domain.Characters
                             long IdAccount,
                             long? IdGuild,
                             long IdKingdom,
+                            Guid Guid,
                             string? Name,
                             Race Race)
     {
         private DateTime dateCreated;
 
-        public Character(long id, long idAccount, long? idGuild, long idKingdom, string? name, Race race, DateTime dateCreated) : this(id, idAccount, idGuild, idKingdom, name, race)
+        public Character(long id, long idAccount, long? idGuild, long idKingdom, Guid guid, string? name, Race race, DateTime dateCreated) : this(id, idAccount, idGuild, idKingdom, guid, name, race)
         {
             this.dateCreated = dateCreated;
         }

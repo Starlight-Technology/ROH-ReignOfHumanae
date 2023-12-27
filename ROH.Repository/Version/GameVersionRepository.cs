@@ -1,60 +1,76 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using ROH.Domain.Paginator;
 using ROH.Domain.Version;
 using ROH.Interfaces;
 using ROH.Interfaces.Repository.Version;
 
 namespace ROH.Repository.Version
 {
-    public class GameVersionRepository : IGameVersionRepository
+    public class GameVersionRepository(ISqlContext context) : IGameVersionRepository
     {
-        private readonly ISqlContext _context;
-
-        public GameVersionRepository(ISqlContext context)
+        public async Task<GameVersion?> GetVersionByGuid(Guid versionGuid)
         {
-            _context = context;
-        }
-
-        public async Task<GameVersion?> GetVersionById(long versionId)
-        {
-            return await _context.GameVersions.FindAsync(versionId);
+            return await context.GameVersions.FirstOrDefaultAsync(v => v.Guid == versionGuid);
         }
 
         public async Task<GameVersion?> GetCurrentGameVersion()
         {
-            return await _context.GameVersions.OrderByDescending(v => v.ReleaseDate).FirstOrDefaultAsync();
+            return await context.GameVersions.Where(v => v.Released).OrderByDescending(v => v.ReleaseDate).FirstOrDefaultAsync();
         }
 
-        public async Task<IList<GameVersion>?> GetAllVersions()
+        public async Task<Paginated> GetAllVersions(int take = 10, int skip = 0)
         {
-            return await _context.GameVersions.Where(v => v.Id > 0).ToListAsync();
+            List<GameVersion> versions = await context.GameVersions
+                .OrderBy(gv => gv.Version)
+                .ThenBy(gv => gv.Release)
+                .ThenBy(gv => gv.Review)
+                .Skip(skip)
+                .Take(take)
+                .ToListAsync();
+            int total = context.GameVersions.Count();
+            return new(total, versions.Cast<dynamic>().ToList());
         }
 
-        public async Task<IList<GameVersion>?> GetAllReleasedVersions()
+        public async Task<Paginated> GetAllReleasedVersions(int take = 10, int skip = 0)
         {
-            return await _context.GameVersions.Where(v => v.Released).ToListAsync();
+            List<GameVersion> versions = await context.GameVersions
+                .Where(v => v.Released)
+                .OrderBy(gv => gv.Version)
+                .ThenBy(gv => gv.Release)
+                .ThenBy(gv => gv.Review)
+                .Skip(skip)
+                .Take(take)
+                .ToListAsync();
+            int total = context.GameVersions.Count();
+            return new(total, versions.Cast<dynamic>().ToList());
         }
 
         public async Task<GameVersion> SetNewGameVersion(GameVersion version)
         {
-            version.VersionDate = DateTime.UtcNow;
-            _ = await _context.GameVersions.AddAsync(version);
-            _ = await _context.SaveChangesAsync();
+            version = version with { VersionDate = DateTime.UtcNow };
+            _ = await context.GameVersions.AddAsync(version);
+            _ = await context.SaveChangesAsync();
 
             return version;
         }
 
         public async Task<GameVersion> UpdateGameVersion(GameVersion version)
         {
-            _ = _context.GameVersions.Update(version);
-            _ = await _context.SaveChangesAsync();
+            _ = context.GameVersions.Update(version);
+            _ = await context.SaveChangesAsync();
 
             return version;
         }
 
         public async Task<bool> VerifyIfExist(GameVersion version)
         {
-            return await _context.GameVersions.AnyAsync(v => v.Release == version.Release && v.Review == version.Review && v.Version == version.Version);
+            return await context.GameVersions.AnyAsync(v => v.Release == version.Release && v.Review == version.Review && v.Version == version.Version);
+        }
+
+        public async Task<bool> VerifyIfExist(Guid versionGuid)
+        {
+            return await context.GameVersions.AnyAsync(v => v.Guid == versionGuid);
         }
     }
 }

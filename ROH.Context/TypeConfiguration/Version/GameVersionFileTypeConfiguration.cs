@@ -11,7 +11,9 @@ namespace ROH.Context.TypeConfiguration.Version
         {
             _ = builder.HasKey(f => f.Id);
 
-            _ = builder.HasOne(f => f.GameVersion).WithMany().HasForeignKey(f => f.IdVersion);
+            _ = builder.Property(g => g.Guid).HasDefaultValueSql("gen_random_uuid()");
+
+            _ = builder.HasOne(f => f.GameVersion).WithMany(v => v.VersionFiles).HasForeignKey(f => f.IdVersion);
         }
     }
 }

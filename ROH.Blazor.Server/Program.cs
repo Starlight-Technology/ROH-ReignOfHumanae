@@ -1,10 +1,21 @@
-var builder = WebApplication.CreateBuilder(args);
+using ROH.Blazor.Server.Helpers;
+
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
+ServicesManager servicesManager = new();
 
-var app = builder.Build();
+builder.Services.AddRazorPages();
+
+builder.Services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
+
+
+servicesManager.ConfigureServices(builder.Services);
+
+// Configure Kestrel to listen on a specific port
+builder.WebHost.ConfigureKestrel(options => options.ListenAnyIP(9010));
+
+WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -14,7 +25,9 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+#if RELEASE
 app.UseHttpsRedirection();
+#endif
 
 app.UseStaticFiles();
 
