@@ -9,6 +9,7 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
 
+
 servicesManager.ConfigureServices(builder.Services);
 
 // Configure Kestrel to listen on a specific port
