@@ -11,6 +11,7 @@ using ROH.Repository.Version;
 using ROH.Services.Version;
 using ROH.StandardModels.Version;
 using ROH.Validations.Version;
+using ROH.Utils.Helpers;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -55,9 +56,9 @@ app.MapPost("CreateNewVersion", async (IGameVersionService _gameVersionService, 
 }).WithName("CreateNewVersion")
   .WithOpenApi();
 
-app.MapGet("GetCurrentVersion", async (IGameVersionService _gameVersionService) =>
+app.MapGet("GetCurrentVersion", (IGameVersionService _gameVersionService) =>
 {
-    return await _gameVersionService.GetCurrentVersion();
+    return _gameVersionService.GetCurrentVersion().Result.MapObjectResponse<GameVersionModel>();
 }).WithName("GetCurrentVersion")
   .WithOpenApi();
 

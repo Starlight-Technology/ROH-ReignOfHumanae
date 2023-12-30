@@ -16,8 +16,7 @@ namespace ROH.Services.Version
             if (Guid.TryParse(versionGuid, out Guid guid))
             {
                 GameVersion? version = await versionRepository.GetVersionByGuid(guid);
-                GameVersionModel model = mapper.Map<GameVersionModel>(version);
-                return new DefaultResponse() { ObjectResponse = model };
+                return new DefaultResponse() { ObjectResponse = version };
             }
             return new DefaultResponse() { HttpStatus = System.Net.HttpStatusCode.ExpectationFailed, Message = "The Guid is invalid!" };
         }
@@ -94,7 +93,7 @@ namespace ROH.Services.Version
         public async Task<DefaultResponse> GetCurrentVersion()
         {
             GameVersion? version = await versionRepository.GetCurrentGameVersion();
-            return new DefaultResponse(objectResponse: mapper.Map<GameVersionModel>(version));
+            return new DefaultResponse(objectResponse: version);
         }
     }
 }

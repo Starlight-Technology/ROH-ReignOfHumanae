@@ -22,5 +22,24 @@ namespace ROH.Utils.Helpers
                 throw new InvalidCastException($"Can't convert object response to {typeof(T)}.");
             }
         }
+
+        public static DefaultResponse MapObjectResponse<T>(this DefaultResponse response)
+        {
+            try
+            {
+                if (response.ObjectResponse != null)
+                {
+                    var objectJson = JsonConvert.SerializeObject(response.ObjectResponse);
+                    var model = JsonConvert.DeserializeObject<T>(objectJson);
+                    return new DefaultResponse(model, response.HttpStatus, response.Message);
+                }
+
+                return new DefaultResponse(null, response.HttpStatus, response.Message);
+            }
+            catch (Exception)
+            {
+                throw new InvalidCastException($"Can't convert object response to {typeof(T)}.");
+            }
+        }
     }
 }

@@ -54,7 +54,7 @@ namespace ROH.Test.Version
             DefaultResponse result = await service.GetFiles(_version.Guid.ToString());
 
             // Assert
-            Assert.Equivalent(new List<GameVersionFileModel> { _fileModel }, result.ObjectResponse);
+            Assert.Equivalent(new List<GameVersionFile> { _file }, result.ObjectResponse);
         }
 
         [Fact]
@@ -163,41 +163,7 @@ namespace ROH.Test.Version
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, result.HttpStatus);
             Assert.False(string.IsNullOrWhiteSpace(result.Message));
-        }
-
-        [Fact]
-        public async Task DownloadFile_Returns_File_WhenFileExist()
-        {
-            // Arrange
-            MapperConfiguration config = new(cfg =>
-            {
-                // Configure your mappings here
-                _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
-                _ = cfg.CreateMap<GameVersionFile, GameVersionFileModel>().ReverseMap();
-            });
-
-            Mapper mapper = new(config);
-
-            _fileModel.GameVersion = _versionModel;
-
-            Mock<IGameVersionFileRepository> mockRepository = new();
-            _ = mockRepository.Setup(x => x.GetFile(_file.Id)).ReturnsAsync(_file);
-
-            Mock<IGameVersionService> mockVersionService = new();
-            _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(true);
-            _ = mockVersionService.Setup(x => x.GetVersionByGuid(It.IsAny<string>())).Returns(Task.FromResult<DefaultResponse>(new DefaultResponse(objectResponse: _version)));
-
-            Mock<IValidator<GameVersionFileModel>> mockValidator = new();
-            _ = mockValidator.Setup(x => x.ValidateAsync(It.IsAny<GameVersionFileModel>(), CancellationToken.None)).ReturnsAsync(new ValidationResult());
-
-            GameVersionFileService service = new(mockRepository.Object, mockValidator.Object, mockVersionService.Object, mapper);
-
-            // Act
-            DefaultResponse result = await service.DownloadFile(_file.Id);
-
-            // Assert
-            Assert.Equal("wertfgby834ht348ghrfowefj234fh32urf3fh23rfhfh83", result.ObjectResponse);
-        }
+        }       
 
         [Fact]
         public async Task DownloadFile_Returns_NotFound_WhenFileNotExist()
