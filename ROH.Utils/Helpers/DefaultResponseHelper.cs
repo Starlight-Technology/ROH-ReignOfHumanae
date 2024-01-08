@@ -13,7 +13,9 @@ namespace ROH.Utils.Helpers
             try
             {
                 if (response != null && response.ObjectResponse != null)
+                {
                     JsonConvert.DeserializeObject<T>(response.ObjectResponse.ToString());
+                }
 
                 throw new InvalidCastException();
             }

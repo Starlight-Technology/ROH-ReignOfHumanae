@@ -134,7 +134,7 @@ namespace ROH.Utils.ApiConfiguration
         {
             using HttpClient client = new HttpClient();
 
-            string param = GetParams(parametersObject);        
+            string param = GetParams(parametersObject);
 
             HttpResponseMessage response = await client.DeleteAsync(_gatewayServiceUrl.GetValueOrDefault(service) + param);
 

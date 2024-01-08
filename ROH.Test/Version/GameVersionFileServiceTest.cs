@@ -163,7 +163,7 @@ namespace ROH.Test.Version
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, result.HttpStatus);
             Assert.False(string.IsNullOrWhiteSpace(result.Message));
-        }       
+        }
 
         [Fact]
         public async Task DownloadFile_Returns_NotFound_WhenFileNotExist()

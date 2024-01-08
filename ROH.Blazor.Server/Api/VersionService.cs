@@ -20,4 +20,4 @@ namespace ROH.Blazor.Server.Api
 
         public async Task<DefaultResponse?> GetVersionDetails(Guid guid) => await _gateway.Get(Utils.ApiConfiguration.Gateway.Services.GetVersionDetails, new { Guid = guid });
     }
-} 
+}
