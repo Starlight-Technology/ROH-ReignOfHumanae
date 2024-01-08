@@ -48,28 +48,40 @@ namespace ROH.Utils.ApiConfiguration
             #endregion FILES
         };
 
-        public async Task<string> Get(Services service, List<ApiParameters> apiParameters)
+        public async Task<string> Get<T>(Services service, T parametersObject)
         {
             using HttpClient client = new HttpClient();
 
+            string param = GetParams(parametersObject);
+
+            HttpResponseMessage response = await client.GetAsync(_servicesUrl.GetValueOrDefault(service) + param);
+
+            return await response.Content.ReadAsStringAsync();
+        }
+
+        private static string GetParams<T>(T parametersObject)
+        {
             StringBuilder parameters = new StringBuilder();
             string param = "";
 
-            if (apiParameters.Count > 0)
+            if (parametersObject != null)
             {
-                for (int i = 0; i < apiParameters.Count; i++)
+                var properties = typeof(T).GetProperties();
+
+                for (int i = 0; i < properties.Length; i++)
                 {
+                    var value = properties[i].GetValue(parametersObject);
+                    var encodedValue = Uri.EscapeDataString(value?.ToString() ?? "");
+
                     _ = i == 0
-                        ? parameters.Append($"?{apiParameters[i].Name}={apiParameters[i].Value}")
-                        : parameters.Append($"&{apiParameters[i].Name}={apiParameters[i].Value}");
+                        ? parameters.Append($"?{properties[i].Name}={encodedValue}")
+                        : parameters.Append($"&{properties[i].Name}={encodedValue}");
                 }
 
                 param = parameters.ToString();
             }
 
-            HttpResponseMessage response = await client.GetAsync(_servicesUrl.GetValueOrDefault(service) + param);
-
-            return await response.Content.ReadAsStringAsync();
+            return param;
         }
 
         public async Task<string> Post(Services service, object objectToSend)
@@ -96,26 +108,11 @@ namespace ROH.Utils.ApiConfiguration
             return await response.Content.ReadAsStringAsync();
         }
 
-        public async Task<string> Delete(Services service, List<ApiParameters> apiParameters)
+        public async Task<string> Delete<T>(Services service, T parametersObject)
         {
             using HttpClient client = new HttpClient();
 
-            StringBuilder parameters = new StringBuilder();
-            string param = "";
-
-            if (apiParameters.Count > 0)
-            {
-                _ = parameters.Append("?");
-
-                for (int i = 0; i < apiParameters.Count; i++)
-                {
-                    _ = i == 0
-                        ? parameters.Append($"{apiParameters[i].Name}={apiParameters[i].Value}")
-                        : parameters.Append($"&{apiParameters[i].Name}={apiParameters[i].Value}");
-                }
-
-                param = parameters.ToString();
-            }
+            string param = GetParams(parametersObject);
 
             HttpResponseMessage response = await client.DeleteAsync(_servicesUrl.GetValueOrDefault(service) + param);
 

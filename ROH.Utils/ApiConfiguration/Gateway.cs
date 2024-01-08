@@ -49,24 +49,11 @@ namespace ROH.Utils.ApiConfiguration
             #endregion FILES
         };
 
-        public async Task<DefaultResponse?> Get(Services service, List<ApiParameters> apiParameters)
+        public async Task<DefaultResponse?> Get<T>(Services service, T parametersObject)
         {
             using HttpClient client = new HttpClient();
 
-            StringBuilder parameters = new StringBuilder();
-            string param = "";
-
-            if (apiParameters.Count > 0)
-            {
-                for (int i = 0; i < apiParameters.Count; i++)
-                {
-                    _ = i == 0
-                        ? parameters.Append($"?{apiParameters[i].Name}={apiParameters[i].Value}")
-                        : parameters.Append($"&{apiParameters[i].Name}={apiParameters[i].Value}");
-                }
-
-                param = parameters.ToString();
-            }
+            string param = GetParams(parametersObject);
 
             HttpResponseMessage response = await client.GetAsync(_gatewayServiceUrl.GetValueOrDefault(service) + param);
 
@@ -78,6 +65,31 @@ namespace ROH.Utils.ApiConfiguration
             }
 
             return new DefaultResponse(message: "Error, the connection has failed!");
+        }
+
+        private static string GetParams<T>(T parametersObject)
+        {
+            StringBuilder parameters = new StringBuilder();
+            string param = "";
+
+            if (parametersObject != null)
+            {
+                var properties = typeof(T).GetProperties();
+
+                for (int i = 0; i < properties.Length; i++)
+                {
+                    var value = properties[i].GetValue(parametersObject);
+                    var encodedValue = Uri.EscapeDataString(value?.ToString() ?? "");
+
+                    _ = i == 0
+                        ? parameters.Append($"?{properties[i].Name}={encodedValue}")
+                        : parameters.Append($"&{properties[i].Name}={encodedValue}");
+                }
+
+                param = parameters.ToString();
+            }
+
+            return param;
         }
 
         public async Task<DefaultResponse?> Post(Services service, object objectToSend)
@@ -118,26 +130,11 @@ namespace ROH.Utils.ApiConfiguration
             return new DefaultResponse(message: "Error, the connection has failed!");
         }
 
-        public async Task<DefaultResponse?> Delete(Services service, List<ApiParameters> apiParameters)
+        public async Task<DefaultResponse?> Delete<T>(Services service, T parametersObject)
         {
             using HttpClient client = new HttpClient();
 
-            StringBuilder parameters = new StringBuilder();
-            string param = "";
-
-            if (apiParameters.Count > 0)
-            {
-                _ = parameters.Append("?");
-
-                for (int i = 0; i < apiParameters.Count; i++)
-                {
-                    _ = i == 0
-                        ? parameters.Append($"{apiParameters[i].Name}={apiParameters[i].Value}")
-                        : parameters.Append($"&{apiParameters[i].Name}={apiParameters[i].Value}");
-                }
-
-                param = parameters.ToString();
-            }
+            string param = GetParams(parametersObject);        
 
             HttpResponseMessage response = await client.DeleteAsync(_gatewayServiceUrl.GetValueOrDefault(service) + param);
 

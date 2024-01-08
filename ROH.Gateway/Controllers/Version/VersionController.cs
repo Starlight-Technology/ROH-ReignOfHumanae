@@ -11,41 +11,18 @@ namespace ROH.Gateway.Controllers.Version
         private readonly Utils.ApiConfiguration.Api _api = new();
 
         [HttpGet("GetCurrentVersion")]
-        public async Task<IActionResult> GetCurrentVersion()
-        {
-            return Ok(await _api.Get(Utils.ApiConfiguration.Api.Services.GetCurrentVersion, []));
-        }
+        public async Task<IActionResult> GetCurrentVersion() => Ok(await _api.Get<object?>(Utils.ApiConfiguration.Api.Services.GetCurrentVersion, null));
 
         [HttpGet("GetAllVersionsPaginated")]
-        public async Task<IActionResult> GetAllVersionsPaginated(int page = 1, int take = 10)
-        {
-            return Ok(await _api.Get(Utils.ApiConfiguration.Api.Services.GetAllVersionsPaginated, [
-            new Utils.ApiConfiguration.ApiParameters() { Name = "page", Value = page.ToString() },
-                new Utils.ApiConfiguration.ApiParameters() { Name = "take", Value = take.ToString() },
-            ]));
-        }
+        public async Task<IActionResult> GetAllVersionsPaginated(int page = 1, int take = 10) => Ok(await _api.Get<object>(Utils.ApiConfiguration.Api.Services.GetAllVersionsPaginated, new { Page = page, Take = take }));
 
         [HttpGet("GetAllReleasedVersionsPaginated")]
-        public async Task<IActionResult> GetAllReleasedVersionsPaginated(int page = 1, int take = 10)
-        {
-            return Ok(await _api.Get(Utils.ApiConfiguration.Api.Services.GetAllReleasedVersionsPaginated, [
-            new Utils.ApiConfiguration.ApiParameters() { Name = "page", Value = page.ToString() },
-                new Utils.ApiConfiguration.ApiParameters() { Name = "take", Value = take.ToString() },
-            ]));
-        }
+        public async Task<IActionResult> GetAllReleasedVersionsPaginated(int page = 1, int take = 10) => Ok(await _api.Get(Utils.ApiConfiguration.Api.Services.GetAllReleasedVersionsPaginated, new { Page = page, Take = take }));
 
         [HttpGet("GetVersionDetails")]
-        public async Task<IActionResult> GetVersionDetails(Guid guid)
-        {
-            return Ok(await _api.Get(Utils.ApiConfiguration.Api.Services.GetVersionDetails, [
-            new Utils.ApiConfiguration.ApiParameters() { Name = "guid", Value = guid.ToString() },
-            ]));
-        }
+        public async Task<IActionResult> GetVersionDetails(Guid guid) => Ok(await _api.Get(Utils.ApiConfiguration.Api.Services.GetVersionDetails, new { Guid = guid }));
 
         [HttpPost("CreateNewVersion")]
-        public async Task<IActionResult> CreateNewVersion(GameVersionModel model)
-        {
-            return Ok(await _api.Post(Utils.ApiConfiguration.Api.Services.CreateNewVersion, model));
-        }
+        public async Task<IActionResult> CreateNewVersion(GameVersionModel model) => Ok(await _api.Post(Utils.ApiConfiguration.Api.Services.CreateNewVersion, model));
     }
 }
