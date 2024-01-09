@@ -51,20 +51,27 @@ namespace ROH.Utils.ApiConfiguration
 
         public async Task<DefaultResponse?> Get<T>(Services service, T parametersObject)
         {
-            using HttpClient client = new HttpClient();
-
-            string param = GetParams(parametersObject);
-
-            HttpResponseMessage response = await client.GetAsync(_gatewayServiceUrl.GetValueOrDefault(service) + param);
-
-            if (response != null)
+            try
             {
-                string responseJson = await response.Content.ReadAsStringAsync();
+                using HttpClient client = new HttpClient();
 
-                return JsonConvert.DeserializeObject<DefaultResponse>(responseJson);
+                string param = GetParams(parametersObject);
+
+                HttpResponseMessage response = await client.GetAsync(_gatewayServiceUrl.GetValueOrDefault(service) + param);
+
+                if (response != null)
+                {
+                    string responseJson = await response.Content.ReadAsStringAsync();
+
+                    return JsonConvert.DeserializeObject<DefaultResponse>(responseJson);
+                }
+
+                return new DefaultResponse(message: "Error, the connection has failed!");
             }
-
-            return new DefaultResponse(message: "Error, the connection has failed!");
+            catch (Exception e)
+            {
+                return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.InternalServerError, message: e.Message);
+            }
         }
 
         private static string GetParams<T>(T parametersObject)
@@ -74,22 +81,32 @@ namespace ROH.Utils.ApiConfiguration
 
             if (parametersObject != null)
             {
-                var properties = typeof(T).GetProperties();
+                var propertyValues = parametersObject.GetType().GetProperties();
 
-                for (int i = 0; i < properties.Length; i++)
+                foreach (var property in propertyValues)
                 {
-                    var value = properties[i].GetValue(parametersObject);
-                    var encodedValue = Uri.EscapeDataString(value?.ToString() ?? "");
-
-                    _ = i == 0
-                        ? parameters.Append($"?{properties[i].Name}={encodedValue}")
-                        : parameters.Append($"&{properties[i].Name}={encodedValue}");
+                    var value = property.GetValue(parametersObject);
+                    if (value != null && IsSimpleType(value.GetType()))
+                    {
+                        var encodedValue = Uri.EscapeDataString(value.ToString());
+                        parameters.Append(parameters.Length == 0 ? "?" : "&");
+                        parameters.Append($"{property.Name}={encodedValue}");
+                    }
+                    else
+                    {
+                        parameters.Append(GetParams(value));
+                    }
                 }
 
                 param = parameters.ToString();
             }
 
             return param;
+        }
+
+        private static bool IsSimpleType(Type type)
+        {
+            return type.IsPrimitive || type.IsEnum || type == typeof(string) || type == typeof(decimal) || type == typeof(DateTime);
         }
 
         public async Task<DefaultResponse?> Post(Services service, object objectToSend)

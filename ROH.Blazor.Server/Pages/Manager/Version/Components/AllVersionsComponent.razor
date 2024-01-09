@@ -2,13 +2,16 @@
 @using Newtonsoft.Json;
 @using Newtonsoft.Json.Linq;
 @using ROH.Blazor.Server.Interfaces.Api;
+@using ROH.Blazor.Server.Api;
+@using ROH.Blazor.Server.Interfaces.Helpers
 @using ROH.StandardModels.Paginator;
 @using ROH.StandardModels.Response;
 @using ROH.StandardModels.Version
-@using ROH.Blazor.Server.Api;
+@using ROH.Utils.Helpers;
 @using Pages.Components;
 
 @inject IVersionService _versionService;
+@inject ISweetAlertService _sweetAlert;
 
 <CardComponent Header="Versions">
     <div class="row">
@@ -96,7 +99,7 @@
     private bool IsFirstPage => CurrentPage == 1;
     private bool IsLastPage => (CurrentPage * PageSize) >= TotalPages;
 
-    private DefaultResponse? currentVersionResponse = null;
+    private DefaultResponse? apiResponse = null;
 
     private async Task PreviousPage()
     {
@@ -136,15 +139,20 @@
     {
         isLoadingCurrentVersion = true;
         PagedGameVersions = new List<GameVersionModel>();
-        currentVersionResponse = null;
+        apiResponse = null;
         if (selectedVersionType == "All Versions")
-            currentVersionResponse = await _versionService.GetAllVersionsPaginated(page, take);
+            apiResponse = await _versionService.GetAllVersionsPaginated(page, take);
         else if (selectedVersionType == "Released Versions")
-            currentVersionResponse = await _versionService.GetAllReleasedVersionsPaginated(page, take);
+            apiResponse = await _versionService.GetAllReleasedVersionsPaginated(page, take);
 
-        if (currentVersionResponse != null && currentVersionResponse.ObjectResponse != null)
+        if (apiResponse != null && !apiResponse.HttpStatus.IsSuccessStatusCode())
         {
-            var result = JsonConvert.DeserializeObject<PaginatedModel>(currentVersionResponse.ObjectResponse.ToString()!);
+            await _sweetAlert.ShowResponse(apiResponse);
+        }
+
+        else if (apiResponse != null && apiResponse.ObjectResponse != null && apiResponse.HttpStatus.IsSuccessStatusCode())
+        {
+            var result = JsonConvert.DeserializeObject<PaginatedModel>(apiResponse.ObjectResponse.ToString()!);
 
             if (result != null)
             {
@@ -169,5 +177,6 @@
 
         isLoadingCurrentVersion = false;
         StateHasChanged();
+
     }
 }

@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -66,22 +67,32 @@ namespace ROH.Utils.ApiConfiguration
 
             if (parametersObject != null)
             {
-                var properties = typeof(T).GetProperties();
+                var propertyValues = parametersObject.GetType().GetProperties();
 
-                for (int i = 0; i < properties.Length; i++)
+                foreach (var property in propertyValues)
                 {
-                    var value = properties[i].GetValue(parametersObject);
-                    var encodedValue = Uri.EscapeDataString(value?.ToString() ?? "");
-
-                    _ = i == 0
-                        ? parameters.Append($"?{properties[i].Name}={encodedValue}")
-                        : parameters.Append($"&{properties[i].Name}={encodedValue}");
+                    var value = property.GetValue(parametersObject);
+                    if (value != null && IsSimpleType(value.GetType()))
+                    {
+                        var encodedValue = Uri.EscapeDataString(value.ToString());
+                        parameters.Append(parameters.Length == 0 ? "?" : "&");
+                        parameters.Append($"{property.Name}={encodedValue}");
+                    }
+                    else
+                    {
+                        parameters.Append(GetParams(value));
+                    }
                 }
 
                 param = parameters.ToString();
             }
 
             return param;
+        }
+
+        private static bool IsSimpleType(Type type)
+        {
+            return type.IsPrimitive || type.IsEnum || type == typeof(string) || type == typeof(decimal) || type == typeof(DateTime);
         }
 
         public async Task<string> Post(Services service, object objectToSend)
