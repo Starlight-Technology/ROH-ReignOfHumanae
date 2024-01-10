@@ -20,6 +20,8 @@ namespace ROH.Utils.ApiConfiguration
 
         private static readonly Dictionary<ApiUrl, Uri> _apiUrl = _apiConfig.GetApiUrl();
 
+        private readonly Api _api = new Api();
+
         public enum Services
         {
             GetCurrentVersion,
@@ -55,7 +57,12 @@ namespace ROH.Utils.ApiConfiguration
             {
                 using HttpClient client = new HttpClient();
 
-                string param = GetParams(parametersObject);
+                string param = string.Empty;
+
+                if (parametersObject != null)
+                {
+                    param = _api.GetParams(parametersObject);
+                }
 
                 HttpResponseMessage response = await client.GetAsync(_gatewayServiceUrl.GetValueOrDefault(service) + param);
 
@@ -72,41 +79,6 @@ namespace ROH.Utils.ApiConfiguration
             {
                 return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.InternalServerError, message: e.Message);
             }
-        }
-
-        private static string GetParams<T>(T parametersObject)
-        {
-            StringBuilder parameters = new StringBuilder();
-            string param = "";
-
-            if (parametersObject != null)
-            {
-                var propertyValues = parametersObject.GetType().GetProperties();
-
-                foreach (var property in propertyValues)
-                {
-                    var value = property.GetValue(parametersObject);
-                    if (value != null && IsSimpleType(value.GetType()))
-                    {
-                        var encodedValue = Uri.EscapeDataString(value.ToString());
-                        parameters.Append(parameters.Length == 0 ? "?" : "&");
-                        parameters.Append($"{property.Name}={encodedValue}");
-                    }
-                    else
-                    {
-                        parameters.Append(GetParams(value));
-                    }
-                }
-
-                param = parameters.ToString();
-            }
-
-            return param;
-        }
-
-        private static bool IsSimpleType(Type type)
-        {
-            return type.IsPrimitive || type.IsEnum || type == typeof(string) || type == typeof(decimal) || type == typeof(DateTime);
         }
 
         public async Task<DefaultResponse?> Post(Services service, object objectToSend)
@@ -151,7 +123,12 @@ namespace ROH.Utils.ApiConfiguration
         {
             using HttpClient client = new HttpClient();
 
-            string param = GetParams(parametersObject);
+            string param = string.Empty;
+
+            if (parametersObject != null)
+            {
+                param = _api.GetParams(parametersObject);
+            }
 
             HttpResponseMessage response = await client.DeleteAsync(_gatewayServiceUrl.GetValueOrDefault(service) + param);
 

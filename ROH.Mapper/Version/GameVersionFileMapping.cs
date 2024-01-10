@@ -9,7 +9,7 @@ namespace ROH.Mapper.Version
     {
         public GameVersionFileMapping()
         {
-            _ = CreateMap<GameVersionFile, GameVersionFileModel>().ReverseMap().ForMember(src => src.GameVersion, dest => dest.Ignore());
+            _ = CreateMap<GameVersionFile, GameVersionFileModel>().ReverseMap();
         }
     }
 }

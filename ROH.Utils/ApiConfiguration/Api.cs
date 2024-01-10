@@ -1,11 +1,11 @@
 ﻿// Ignore Spelling: Api Utils
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -52,47 +52,52 @@ namespace ROH.Utils.ApiConfiguration
         public async Task<string> Get<T>(Services service, T parametersObject)
         {
             using HttpClient client = new HttpClient();
+            string param = string.Empty;
 
-            string param = GetParams(parametersObject);
+            if (parametersObject != null)
+            {
+                param = GetParams(parametersObject);
+            }
 
             HttpResponseMessage response = await client.GetAsync(_servicesUrl.GetValueOrDefault(service) + param);
 
             return await response.Content.ReadAsStringAsync();
         }
 
-        private static string GetParams<T>(T parametersObject)
+        public string GetParams(object parametersObject)
         {
-            StringBuilder parameters = new StringBuilder();
-            string param = "";
-
-            if (parametersObject != null)
+            if (parametersObject == null)
             {
-                var propertyValues = parametersObject.GetType().GetProperties();
-
-                foreach (var property in propertyValues)
-                {
-                    var value = property.GetValue(parametersObject);
-                    if (value != null && IsSimpleType(value.GetType()))
-                    {
-                        var encodedValue = Uri.EscapeDataString(value.ToString());
-                        parameters.Append(parameters.Length == 0 ? "?" : "&");
-                        parameters.Append($"{property.Name}={encodedValue}");
-                    }
-                    else
-                    {
-                        parameters.Append(GetParams(value));
-                    }
-                }
-
-                param = parameters.ToString();
+                return string.Empty;
             }
 
-            return param;
+            string json = JsonConvert.SerializeObject(parametersObject);
+            var jObject = JObject.Parse(json);
+
+            StringBuilder parameters = new StringBuilder();
+
+            foreach (var property in jObject.Properties())
+            {
+                var value = property.Value;
+                if (value != null && IsSimpleType(value.Type))
+                {
+                    var encodedValue = Uri.EscapeDataString(value.ToString());
+                    parameters.Append(parameters.Length == 0 ? "?" : "&");
+                    parameters.Append($"{property.Name}={encodedValue}");
+                }
+                else
+                {
+                    throw new InvalidOperationException("Can't convert object to query string.");
+                }
+            }
+
+            return parameters.ToString();
         }
 
-        private static bool IsSimpleType(Type type)
+        private static bool IsSimpleType(JTokenType type)
         {
-            return type.IsPrimitive || type.IsEnum || type == typeof(string) || type == typeof(decimal) || type == typeof(DateTime);
+            return type == JTokenType.String || type == JTokenType.Integer || type == JTokenType.Float ||
+                   type == JTokenType.Boolean || type == JTokenType.Date || type == JTokenType.Guid;
         }
 
         public async Task<string> Post(Services service, object objectToSend)
@@ -123,7 +128,12 @@ namespace ROH.Utils.ApiConfiguration
         {
             using HttpClient client = new HttpClient();
 
-            string param = GetParams(parametersObject);
+            string param = string.Empty;
+
+            if (parametersObject != null)
+            {
+                param = GetParams(parametersObject);
+            }
 
             HttpResponseMessage response = await client.DeleteAsync(_servicesUrl.GetValueOrDefault(service) + param);
 
