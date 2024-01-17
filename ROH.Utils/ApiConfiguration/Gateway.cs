@@ -30,7 +30,8 @@ namespace ROH.Utils.ApiConfiguration
             GetAllReleasedVersionsPaginated,
             GetVersionDetails,
             UploadFile,
-            GetAllVersionFiles
+            GetAllVersionFiles,
+            DownloadFile
         }
 
         private static readonly Dictionary<Services, Uri> _gatewayServiceUrl = new Dictionary<Services, Uri>
@@ -47,7 +48,8 @@ namespace ROH.Utils.ApiConfiguration
             #region FILES
 
              {Services.UploadFile, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/VersionFile/UploadFile" ) },
-             {Services.GetAllVersionFiles, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/VersionFile/GetAllVersionFiles" ) }
+             {Services.GetAllVersionFiles, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/VersionFile/GetAllVersionFiles" ) },
+             {Services.DownloadFile, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/VersionFile/DownloadFile" ) }
             #endregion FILES
         };
 

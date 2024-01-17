@@ -28,7 +28,8 @@ namespace ROH.Utils.ApiConfiguration
             GetVersionDetails,
 
             UploadVersionFile,
-            GetAllVersionFiles
+            GetAllVersionFiles,
+            DownloadFile
         }
 
         private static readonly Dictionary<Services, Uri> _servicesUrl = new Dictionary<Services, Uri>
@@ -45,7 +46,8 @@ namespace ROH.Utils.ApiConfiguration
             #region FILES
 
              {Services.UploadVersionFile, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.VersionFile),"UploadFile" ) },
-             {Services.GetAllVersionFiles, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.VersionFile),"GetAllVersionFiles" ) }
+             {Services.GetAllVersionFiles, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.VersionFile),"GetAllVersionFiles" ) },
+             {Services.DownloadFile, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.VersionFile),"DownloadFile" ) }
             #endregion FILES
         };
 
