@@ -6,6 +6,8 @@ namespace ROH.Interfaces.Repository.Version
     {
         Task<GameVersionFile?> GetFile(long id);
 
+        Task<GameVersionFile?> GetFile(Guid fileGuid);
+
         Task<List<GameVersionFile>> GetFiles(GameVersion version);
 
         Task<List<GameVersionFile>> GetFiles(Guid versionGuid);

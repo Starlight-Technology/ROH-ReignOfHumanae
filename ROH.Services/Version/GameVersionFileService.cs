@@ -17,12 +17,23 @@ namespace ROH.Services.Version
 {
     public class GameVersionFileService(IGameVersionFileRepository gameVersionFileRepository, IValidator<GameVersionFileModel> validator, IGameVersionService gameVersion, IMapper mapper) : IGameVersionFileService
     {
+        public async Task<DefaultResponse> DownloadFile(Guid fileGuid)
+        {
+            GameVersionFile? file = await gameVersionFileRepository.GetFile(fileGuid);
+
+            return file is null ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "Game Version Not Found.") : await GetFile(file);
+        }
         public async Task<DefaultResponse> DownloadFile(long id)
+        {
+            GameVersionFile? file = await gameVersionFileRepository.GetFile(id);
+
+            return file is null ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "Game Version Not Found.") : await GetFile(file);
+        }
+
+        private async Task<DefaultResponse> GetFile(GameVersionFile file)
         {
             try
             {
-                GameVersionFile? file = await gameVersionFileRepository.GetFile(id);
-
                 if (file != null)
                 {
                     file = file with
@@ -30,42 +41,10 @@ namespace ROH.Services.Version
                         GameVersion = mapper.Map<GameVersion>(gameVersion.GetVersionByGuid(file.Guid.ToString()).Result
                             ?.ObjectResponse)
                     };
-                    GameVersionFileModel fileModel = mapper.Map<GameVersionFileModel>(file);
-                    FluentValidation.Results.ValidationResult validation = await validator.ValidateAsync(fileModel);
-                    if (validation.IsValid)
-                    {
-                        if (file.GameVersion != null &&
-                            await gameVersion.VerifyIfVersionExist(mapper.Map<GameVersionModel>(file.GameVersion)))
-                        {
-                            string path = string.Empty;
-#if DEBUG
-                            path =
-                                @$"C:\ROHUpdateFiles\{file.GameVersion.Version}.{file.GameVersion.Release}.{file.GameVersion.Review}\"; // path to file on Windows
-#else
-                         path = @$"\app\data\ROH\ROHUpdateFiles\{file.GameVersion.Version}.{file.GameVersion.Release}.{file.GameVersion.Review}\"; //path to file on Linux
-#endif
-                            string[] fileContent = await File.ReadAllLinesAsync(path + file.Name);
 
-                            return new DefaultResponse(fileContent[0], HttpStatusCode.OK);
-                        }
-                        else
-                        {
-                            return new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound,
-                                message: "Game Version Not Found.");
-                        }
-                    }
-                    else
-                    {
-                        StringBuilder errors = new();
-                        foreach (FluentValidation.Results.ValidationFailure? error in validation.Errors)
-                        {
-                            errors.Append($"{error};");
-                        }
+                    string[] fileContent = await File.ReadAllLinesAsync(file.Path + file.Name);
 
-                        string errorString = errors.ToString();
-
-                        throw new Exception(errorString);
-                    }
+                    return new DefaultResponse(fileContent[0], HttpStatusCode.OK);
                 }
                 else
                 {
@@ -86,6 +65,10 @@ namespace ROH.Services.Version
             {
                 List<GameVersionFile> files = await gameVersionFileRepository.GetFiles(guid);
 
+                foreach (var item in files)
+                {
+                    item.GameVersion = null;
+                }
                 return new DefaultResponse(objectResponse: files);
             }
 
@@ -187,6 +170,7 @@ namespace ROH.Services.Version
             }
 
             GameVersionFile entity = mapper.Map<GameVersionFile>(file);
+            entity = entity with { Path = path };
 
             await gameVersionFileRepository.SaveFile(entity);
         }

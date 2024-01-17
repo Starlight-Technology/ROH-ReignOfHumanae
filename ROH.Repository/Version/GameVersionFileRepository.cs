@@ -13,6 +13,10 @@ namespace ROH.Repository.Version
             return await context.GameVersionFiles.FindAsync(id);
         }
 
+        public async Task<GameVersionFile?> GetFile(Guid fileGuid)
+        {
+            return await context.GameVersionFiles.FirstOrDefaultAsync(v => v.Guid == fileGuid);
+        }
         public async Task<List<GameVersionFile>> GetFiles(GameVersion version)
         {
             long versionId = context.GameVersions.FirstAsync(v => v.Guid == version.Guid).Result.Id;
