@@ -1,0 +1,86 @@
+﻿@namespace Pages.Components
+@typeparam T where T : class
+
+@if (Items != null && Items.Count > 0)
+{
+    <div style="overflow-y:auto">
+        <table class="table">
+            <thead>
+                <tr>
+                    @foreach (var property in GetProperties().Where(p => !string.Equals(p, DETAILS_LINK, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        <th>@property</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Items)
+                {
+                    <tr>
+                        @foreach (var property in GetProperties())
+                        {
+                            if (string.Equals(property, DETAILS_LINK, StringComparison.OrdinalIgnoreCase))
+                            {
+                                string detailsLink = GetPropertyValue(item, property);
+                                @if (!string.IsNullOrEmpty(detailsLink))
+                                {
+                                    <td>
+                                        <a href=@detailsLink>
+                                            <i class="fa fa-solid fa-eye">DETAILS</i>
+                                        </a>
+                                    </td>
+                                }
+
+                                continue;
+                            }
+                            <td>@GetPropertyValue(item, property)</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <button @onclick="PreviousPage" disabled="@IsFirstPage">Previous</button>
+        </div>
+        <div class="col-sm-6">
+            <button @onclick="NextPage" disabled="@IsLastPage">Next</button>
+        </div>
+    </div>
+}
+@code {
+    [Parameter]
+    public List<T>? Items { get; set; }
+
+    [Parameter]
+    public bool IsFirstPage { get; set; }
+
+    [Parameter]
+    public bool IsLastPage { get; set; }
+
+    [Parameter]
+    public EventCallback PreviousPage { get; set; }
+
+    [Parameter]
+    public EventCallback NextPage { get; set; }
+
+    const string DETAILS_LINK = "DetailsLink";
+
+    private IEnumerable<string> GetProperties()
+    {
+        if (Items != null && Items.Any())
+        {
+            var firstItem = Items.First();
+            return firstItem?.GetType().GetProperties().Select(p => p.Name) ?? Enumerable.Empty<string>();
+        }
+
+        return Enumerable.Empty<string>();
+    }
+
+    private string GetPropertyValue(T item, string propertyName)
+    {
+        var propertyValue = typeof(T).GetProperty(propertyName)?.GetValue(item);
+        return propertyValue?.ToString() ?? string.Empty;
+    }
+}
