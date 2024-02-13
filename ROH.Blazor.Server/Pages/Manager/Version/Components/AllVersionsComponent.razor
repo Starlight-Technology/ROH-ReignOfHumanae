@@ -1,6 +1,7 @@
 ﻿@namespace Manager.Version.Components
 @using Newtonsoft.Json;
 @using Newtonsoft.Json.Linq;
+@using ROH.Blazor.Server.Helpers.Extensions
 @using ROH.Blazor.Server.Interfaces.Api;
 @using ROH.Blazor.Server.Api;
 @using ROH.Blazor.Server.Interfaces.Helpers
@@ -37,47 +38,12 @@
 
     else
     {
-        @if (PagedGameVersions?.Count > 0)
-        {
-            <div style="overflow-y:auto">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Version</th>
-                            <th>Release</th>
-                            <th>Review</th>
-                            <th>Released Date</th>
-                            <th>Version Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (GameVersionModel gameVersion in PagedGameVersions)
-                        {
-                            <tr>
-                                <td>@gameVersion.Version</td>
-                                <td>@gameVersion.Release</td>
-                                <td>@gameVersion.Review</td>
-                                <td>@gameVersion.ReleaseDate</td>
-                                <td>@gameVersion.VersionDate</td>
-                                <td>
-                                    <a href="/Manager/Version/VersionDetails/@gameVersion.Guid">
-                                        <i class="fa fa-solid fa-eye">DETAILS</i>
-                                    </a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <div class="row">
-                <div class="col-sm-6">
-                    <button @onclick="PreviousPage" disabled="@IsFirstPage">Previous</button>
-                </div>
-                <div class="col-sm-6">
-                    <button @onclick="NextPage" disabled="@IsLastPage">Next</button>
-                </div>
-            </div>
-        }
+        <PaginatedListComponent IsFirstPage="@IsFirstPage"
+                                IsLastPage="@IsLastPage"
+                                Items="@PagedGameVersions?.ToListModel()"
+                                NextPage="@NextPage"
+                                PreviousPage="@PreviousPage"
+                                T="@GameVersionListModel" />
     }
 
 </CardComponent>
@@ -95,10 +61,8 @@
     private int? TotalPages = 0;
     private int PageSize = 10;
     private int CurrentPage = 1;
-
     private bool IsFirstPage => CurrentPage == 1;
     private bool IsLastPage => (CurrentPage * PageSize) >= TotalPages;
-
     private DefaultResponse? apiResponse = null;
 
     private async Task PreviousPage()
@@ -128,7 +92,6 @@
         await GetAllVersion();
     }
 
-
     protected override async void OnInitialized()
     {
         base.OnInitialized();
@@ -152,7 +115,7 @@
 
         else if (apiResponse != null && apiResponse.ObjectResponse != null && apiResponse.HttpStatus.IsSuccessStatusCode())
         {
-            var result = JsonConvert.DeserializeObject<PaginatedModel>(apiResponse.ObjectResponse.ToString()!);
+            var result = JsonConvert.DeserializeObject<PaginatedModel>(apiResponse.ObjectResponse.ToString() ?? "");
 
             if (result != null)
             {

@@ -17,12 +17,23 @@ namespace ROH.Services.Version
 {
     public class GameVersionFileService(IGameVersionFileRepository gameVersionFileRepository, IValidator<GameVersionFileModel> validator, IGameVersionService gameVersion, IMapper mapper) : IGameVersionFileService
     {
+        public async Task<DefaultResponse> DownloadFile(Guid fileGuid)
+        {
+            GameVersionFile? file = await gameVersionFileRepository.GetFile(fileGuid);
+
+            return file is null ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "Game Version Not Found.") : await GetFile(file);
+        }
         public async Task<DefaultResponse> DownloadFile(long id)
+        {
+            GameVersionFile? file = await gameVersionFileRepository.GetFile(id);
+
+            return file is null ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "Game Version Not Found.") : await GetFile(file);
+        }
+
+        private async Task<DefaultResponse> GetFile(GameVersionFile file)
         {
             try
             {
-                GameVersionFile? file = await gameVersionFileRepository.GetFile(id);
-
                 if (file != null)
                 {
                     file = file with
@@ -30,42 +41,14 @@ namespace ROH.Services.Version
                         GameVersion = mapper.Map<GameVersion>(gameVersion.GetVersionByGuid(file.Guid.ToString()).Result
                             ?.ObjectResponse)
                     };
-                    GameVersionFileModel fileModel = mapper.Map<GameVersionFileModel>(file);
-                    FluentValidation.Results.ValidationResult validation = await validator.ValidateAsync(fileModel);
-                    if (validation.IsValid)
-                    {
-                        if (file.GameVersion != null &&
-                            await gameVersion.VerifyIfVersionExist(mapper.Map<GameVersionModel>(file.GameVersion)))
-                        {
-                            string path = string.Empty;
-#if DEBUG
-                            path =
-                                @$"C:\ROHUpdateFiles\{file.GameVersion.Version}.{file.GameVersion.Release}.{file.GameVersion.Review}\"; // path to file on Windows
-#else
-                         path = @$"\app\data\ROH\ROHUpdateFiles\{file.GameVersion.Version}.{file.GameVersion.Release}.{file.GameVersion.Review}\"; //path to file on Linux
-#endif
-                            string[] fileContent = await File.ReadAllLinesAsync(path + file.Name);
 
-                            return new DefaultResponse(fileContent[0], HttpStatusCode.OK);
-                        }
-                        else
-                        {
-                            return new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound,
-                                message: "Game Version Not Found.");
-                        }
-                    }
-                    else
-                    {
-                        StringBuilder errors = new();
-                        foreach (FluentValidation.Results.ValidationFailure? error in validation.Errors)
-                        {
-                            errors.Append($"{error};");
-                        }
+                    byte[] fileContent = await File.ReadAllBytesAsync(file.Path + file.Name);
+                    string fileContentString = Convert.ToBase64String(fileContent);
 
-                        string errorString = errors.ToString();
-
-                        throw new Exception(errorString);
-                    }
+                    return new DefaultResponse(new GameVersionFileModel(name: file.Name,
+                                                                        format: file.Format,
+                                                                        content: fileContentString).ToFileModel(), 
+                                                HttpStatusCode.OK);
                 }
                 else
                 {
@@ -86,6 +69,10 @@ namespace ROH.Services.Version
             {
                 List<GameVersionFile> files = await gameVersionFileRepository.GetFiles(guid);
 
+                foreach (GameVersionFile item in files)
+                {
+                    item.GameVersion = null;
+                }
                 return new DefaultResponse(objectResponse: files);
             }
 
@@ -121,7 +108,7 @@ namespace ROH.Services.Version
                 }
                 else
                 {
-                    throw new Exception("Game Version Not Found.");
+                    return new DefaultResponse(null, HttpStatusCode.BadRequest, "Game Version Not Found.");
                 }
             }
             catch (Exception ex)
@@ -130,36 +117,23 @@ namespace ROH.Services.Version
             }
         }
 
-        private async Task<FluentValidation.Results.ValidationResult> ValidateFileAsync(GameVersionFileModel file)
-        {
-            return await validator.ValidateAsync(file);
-        }
+        private async Task<FluentValidation.Results.ValidationResult> ValidateFileAsync(GameVersionFileModel file) => await validator.ValidateAsync(file);
 
-        private async Task<GameVersion?> GetCurrentVersionAsync()
-        {
-            return (await gameVersion.GetCurrentVersion()).ObjectResponse as GameVersion;
-        }
+        private async Task<GameVersion?> GetCurrentVersionAsync() => (await gameVersion.GetCurrentVersion()).ObjectResponse as GameVersion;
 
-        private static Task<bool> ShouldRejectFileUpload(GameVersion gameVersion, GameVersion? currentVersion)
-        {
-            return Task.FromResult(gameVersion.Released || (gameVersion.VersionDate < currentVersion?.VersionDate));
-        }
+        private static Task<bool> ShouldRejectFileUpload(GameVersion gameVersion, GameVersion? currentVersion) => Task.FromResult(gameVersion.Released || (gameVersion.VersionDate < currentVersion?.VersionDate));
 
-        private static string GetRejectionMessage(GameVersion gameVersion)
-        {
-            return gameVersion.Released
+        private static string GetRejectionMessage(GameVersion gameVersion) => gameVersion.Released
                 ? "File Upload Failed: This version has already been released. You cannot upload new files for a released version."
                 : "File Upload Failed: This version has already been released with a yearly schedule. Uploading new files is not allowed for past versions.";
-        }
 
-        private static string GetFilePath(GameVersion gameVersion)
-        {
+        private static string GetFilePath(GameVersion gameVersion) =>
 #if DEBUG
-            return @$"C:\ROHUpdateFiles\{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}\";
+            @$"C:\ROHUpdateFiles\{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}\";
 #else
     return @$"\app\data\ROH\ROHUpdateFiles\{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}\";
 #endif
-        }
+
 
         private static Task EnsureDirectoryExists(string path)
         {
@@ -182,11 +156,12 @@ namespace ROH.Services.Version
 
             using (FileStream fs = File.Create(filePath))
             {
-                byte[] info = new UTF8Encoding(true).GetBytes(file.Content);
+                byte[] info = Convert.FromBase64String(file.Content);
                 await fs.WriteAsync(info);
             }
 
             GameVersionFile entity = mapper.Map<GameVersionFile>(file);
+            entity = entity with { Path = path };
 
             await gameVersionFileRepository.SaveFile(entity);
         }

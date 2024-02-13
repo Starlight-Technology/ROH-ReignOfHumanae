@@ -15,9 +15,6 @@ namespace ROH.Blazor.Server.Pages
 
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 
-        public void OnGet()
-        {
-            RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
-        }
+        public void OnGet() => RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
     }
 }

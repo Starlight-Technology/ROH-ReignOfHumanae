@@ -3,6 +3,7 @@
 using ROH.StandardModels.Response;
 
 using System;
+using System.Linq;
 
 namespace ROH.Utils.Helpers
 {
@@ -28,8 +29,8 @@ namespace ROH.Utils.Helpers
             {
                 if (response.ObjectResponse != null)
                 {
-                    var objectJson = JsonConvert.SerializeObject(response.ObjectResponse);
-                    var model = JsonConvert.DeserializeObject<T>(objectJson);
+                    string objectJson = JsonConvert.SerializeObject(response.ObjectResponse);
+                    T model = JsonConvert.DeserializeObject<T>(objectJson);
                     return new DefaultResponse(model, response.HttpStatus, response.Message);
                 }
 
