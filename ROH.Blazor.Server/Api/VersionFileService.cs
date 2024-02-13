@@ -10,6 +10,7 @@ namespace ROH.Blazor.Server.Api
 
         public async Task<DefaultResponse?> UploadVersionFile(GameVersionFileModel Model) => await _gateway.Post(Utils.ApiConfiguration.Gateway.Services.UploadFile, Model);
 
-        public async Task<DefaultResponse?> GetAllVersionFiles(string VersionGuid) => await _gateway.Get(Utils.ApiConfiguration.Gateway.Services.UploadFile, new { VersionGuid });
+        public async Task<DefaultResponse?> GetAllVersionFiles(string VersionGuid) => await _gateway.Get(Utils.ApiConfiguration.Gateway.Services.GetAllVersionFiles, new { VersionGuid });
+        public async Task<DefaultResponse?> DownloadVersionFile(string FileGuid) => await _gateway.Get(Utils.ApiConfiguration.Gateway.Services.DownloadFile, new { FileGuid });
     }
 }

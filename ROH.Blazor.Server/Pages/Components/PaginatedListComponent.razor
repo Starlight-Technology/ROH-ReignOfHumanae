@@ -1,5 +1,12 @@
 ﻿@namespace Pages.Components
+@using ROH.Blazor.Server.Interfaces.Helpers
+@using ROH.StandardModels.File
+@using ROH.StandardModels.Response
+@using ROH.Utils.Helpers
 @typeparam T where T : class
+
+@inject ISweetAlertService _sweetAlert;
+@inject IDownloadFileService _downloadFile;
 
 @if (Items != null && Items.Count > 0)
 {
@@ -7,45 +14,72 @@
         <table class="table">
             <thead>
                 <tr>
-                    @foreach (var property in GetProperties().Where(p => !string.Equals(p, DETAILS_LINK, StringComparison.OrdinalIgnoreCase)))
+                    @foreach (var property in GetProperties().Where(p =>
+                   !p.Contains(DETAILS_LINK, StringComparison.OrdinalIgnoreCase) &&
+                   !p.Contains(DOWNLOAD_FILE, StringComparison.OrdinalIgnoreCase) &&
+                   !p.Contains(GUID_ITEM, StringComparison.OrdinalIgnoreCase)))
                     {
                         <th>@property</th>
                     }
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Items)
+                @if (Items is not null && Items.Count > 0)
                 {
-                    <tr>
-                        @foreach (var property in GetProperties())
-                        {
-                            if (string.Equals(property, DETAILS_LINK, StringComparison.OrdinalIgnoreCase))
+                    @foreach (T item in Items)
+                    {
+                        <tr>
+                            @foreach (string property in GetProperties())
                             {
-                                string detailsLink = GetPropertyValue(item, property);
-                                @if (!string.IsNullOrEmpty(detailsLink))
+                                if (property.Contains(GUID_ITEM, StringComparison.OrdinalIgnoreCase)) continue;
+
+                                if (property.Contains(DETAILS_LINK, StringComparison.OrdinalIgnoreCase))
                                 {
-                                    <td>
-                                        <a href=@detailsLink>
-                                            <i class="fa fa-solid fa-eye">DETAILS</i>
-                                        </a>
-                                    </td>
+                                    string detailsLink = GetPropertyValue<string>(item, property);
+                                    if (!string.IsNullOrEmpty(detailsLink))
+                                    {
+                                        <td>
+                                            <a href=@detailsLink>
+                                                <i class="fa fa-solid fa-eye">DETAILS</i>
+                                            </a>
+                                        </td>
+                                    }
+
+                                    continue;
                                 }
 
-                                continue;
+                                if (property.Contains(DOWNLOAD_FILE, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    var downloadLinkFunc = GetPropertyValue<Func<Task<DefaultResponse?>>>(item, property);
+                                    if (downloadLinkFunc != null)
+                                    {
+                                        <td>
+                                            <button @onclick="() => GetResponse(downloadLinkFunc)">
+                                                <i class="fa fa-download">DOWNLOAD</i>
+                                            </button>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+
+                                    continue;
+                                }
+                                <td>@(GetPropertyValue<string>(item, property))</td>
                             }
-                            <td>@GetPropertyValue(item, property)</td>
-                        }
-                    </tr>
+                        </tr>
+                    }
                 }
             </tbody>
         </table>
     </div>
     <div class="row">
         <div class="col-sm-6">
-            <button @onclick="PreviousPage" disabled="@IsFirstPage">Previous</button>
+            <button @onclick="PreviousPage" disabled="@IsFirstPage" class="btn btn-outline-primary">Previous</button>
         </div>
         <div class="col-sm-6">
-            <button @onclick="NextPage" disabled="@IsLastPage">Next</button>
+            <button @onclick="NextPage" disabled="@IsLastPage" class="btn btn-outline-primary">Next</button>
         </div>
     </div>
 }
@@ -54,10 +88,10 @@
     public List<T>? Items { get; set; }
 
     [Parameter]
-    public bool IsFirstPage { get; set; }
+    public bool IsFirstPage { get; set; } = true;
 
     [Parameter]
-    public bool IsLastPage { get; set; }
+    public bool IsLastPage { get; set; } = true;
 
     [Parameter]
     public EventCallback PreviousPage { get; set; }
@@ -66,6 +100,8 @@
     public EventCallback NextPage { get; set; }
 
     const string DETAILS_LINK = "DetailsLink";
+    const string GUID_ITEM = "guid";
+    const string DOWNLOAD_FILE = "DownloadFile";
 
     private IEnumerable<string> GetProperties()
     {
@@ -78,9 +114,45 @@
         return Enumerable.Empty<string>();
     }
 
-    private string GetPropertyValue(T item, string propertyName)
+    private TProperty GetPropertyValue<TProperty>(T item, string propertyName)
     {
-        var propertyValue = typeof(T).GetProperty(propertyName)?.GetValue(item);
-        return propertyValue?.ToString() ?? string.Empty;
+        var propertyInfo = item.GetType().GetProperty(propertyName);
+
+        if (propertyInfo is not null)
+        {
+            object? propertyValue = propertyInfo.GetValue(item);
+            if (propertyValue is not null)
+            {
+                if (typeof(string).IsAssignableFrom(typeof(TProperty)))
+                {
+                    return (TProperty)Convert.ChangeType(propertyValue?.ToString()!, typeof(TProperty));
+                }
+                else
+                    return (TProperty)propertyValue;
+            }
+            return default!;
+        }
+
+        return default!;
     }
+
+    private async Task GetResponse(Func<Task<DefaultResponse?>> task)
+    {
+        var response = await task.Invoke();
+
+        if (response is not null)
+        {
+            if (response.ObjectResponse is not null)
+            {
+                FileModel fileModel = response.ResponseToModel<FileModel>();
+                await _downloadFile.Download(fileModel);
+            }
+            else
+                await _sweetAlert.ShowResponse(response);
+        }
+
+        else
+            await _sweetAlert.Show("Error", "Cannot get any response from server.", ROH.Blazor.Server.Helpers.Types.SweetAlertType.Error);
+    }
+
 }

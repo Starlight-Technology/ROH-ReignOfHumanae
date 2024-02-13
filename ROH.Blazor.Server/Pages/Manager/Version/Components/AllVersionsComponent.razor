@@ -115,7 +115,7 @@
 
         else if (apiResponse != null && apiResponse.ObjectResponse != null && apiResponse.HttpStatus.IsSuccessStatusCode())
         {
-            var result = JsonConvert.DeserializeObject<PaginatedModel>(apiResponse.ObjectResponse.ToString()!);
+            var result = JsonConvert.DeserializeObject<PaginatedModel>(apiResponse.ObjectResponse.ToString() ?? "");
 
             if (result != null)
             {

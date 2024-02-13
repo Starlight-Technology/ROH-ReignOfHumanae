@@ -11,6 +11,7 @@ namespace ROH.Blazor.Server.Helpers
             _ = services.AddScoped<IVersionService, VersionService>();
             _ = services.AddScoped<IVersionFileService, VersionFileService>();
             _ = services.AddScoped<ISweetAlertService, SweetAlertService>();
+            _ = services.AddScoped<IDownloadFileService, DownloadFileService>();
         }
     }
 }

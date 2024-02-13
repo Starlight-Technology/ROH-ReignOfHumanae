@@ -42,9 +42,13 @@ namespace ROH.Services.Version
                             ?.ObjectResponse)
                     };
 
-                    string[] fileContent = await File.ReadAllLinesAsync(file.Path + file.Name);
+                    byte[] fileContent = await File.ReadAllBytesAsync(file.Path + file.Name);
+                    string fileContentString = Convert.ToBase64String(fileContent);
 
-                    return new DefaultResponse(fileContent[0], HttpStatusCode.OK);
+                    return new DefaultResponse(new GameVersionFileModel(name: file.Name,
+                                                                        format: file.Format,
+                                                                        content: fileContentString).ToFileModel(), 
+                                                HttpStatusCode.OK);
                 }
                 else
                 {
@@ -65,7 +69,7 @@ namespace ROH.Services.Version
             {
                 List<GameVersionFile> files = await gameVersionFileRepository.GetFiles(guid);
 
-                foreach (var item in files)
+                foreach (GameVersionFile item in files)
                 {
                     item.GameVersion = null;
                 }
@@ -104,7 +108,7 @@ namespace ROH.Services.Version
                 }
                 else
                 {
-                    throw new Exception("Game Version Not Found.");
+                    return new DefaultResponse(null, HttpStatusCode.BadRequest, "Game Version Not Found.");
                 }
             }
             catch (Exception ex)
@@ -113,36 +117,23 @@ namespace ROH.Services.Version
             }
         }
 
-        private async Task<FluentValidation.Results.ValidationResult> ValidateFileAsync(GameVersionFileModel file)
-        {
-            return await validator.ValidateAsync(file);
-        }
+        private async Task<FluentValidation.Results.ValidationResult> ValidateFileAsync(GameVersionFileModel file) => await validator.ValidateAsync(file);
 
-        private async Task<GameVersion?> GetCurrentVersionAsync()
-        {
-            return (await gameVersion.GetCurrentVersion()).ObjectResponse as GameVersion;
-        }
+        private async Task<GameVersion?> GetCurrentVersionAsync() => (await gameVersion.GetCurrentVersion()).ObjectResponse as GameVersion;
 
-        private static Task<bool> ShouldRejectFileUpload(GameVersion gameVersion, GameVersion? currentVersion)
-        {
-            return Task.FromResult(gameVersion.Released || (gameVersion.VersionDate < currentVersion?.VersionDate));
-        }
+        private static Task<bool> ShouldRejectFileUpload(GameVersion gameVersion, GameVersion? currentVersion) => Task.FromResult(gameVersion.Released || (gameVersion.VersionDate < currentVersion?.VersionDate));
 
-        private static string GetRejectionMessage(GameVersion gameVersion)
-        {
-            return gameVersion.Released
+        private static string GetRejectionMessage(GameVersion gameVersion) => gameVersion.Released
                 ? "File Upload Failed: This version has already been released. You cannot upload new files for a released version."
                 : "File Upload Failed: This version has already been released with a yearly schedule. Uploading new files is not allowed for past versions.";
-        }
 
-        private static string GetFilePath(GameVersion gameVersion)
-        {
+        private static string GetFilePath(GameVersion gameVersion) =>
 #if DEBUG
-            return @$"C:\ROHUpdateFiles\{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}\";
+            @$"C:\ROHUpdateFiles\{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}\";
 #else
     return @$"\app\data\ROH\ROHUpdateFiles\{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}\";
 #endif
-        }
+
 
         private static Task EnsureDirectoryExists(string path)
         {
@@ -165,7 +156,7 @@ namespace ROH.Services.Version
 
             using (FileStream fs = File.Create(filePath))
             {
-                byte[] info = new UTF8Encoding(true).GetBytes(file.Content);
+                byte[] info = Convert.FromBase64String(file.Content);
                 await fs.WriteAsync(info);
             }
 

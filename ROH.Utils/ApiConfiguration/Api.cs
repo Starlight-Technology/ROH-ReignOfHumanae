@@ -74,18 +74,18 @@ namespace ROH.Utils.ApiConfiguration
             }
 
             string json = JsonConvert.SerializeObject(parametersObject);
-            var jObject = JObject.Parse(json);
+            JObject jObject = JObject.Parse(json);
 
             StringBuilder parameters = new StringBuilder();
 
-            foreach (var property in jObject.Properties())
+            foreach (JProperty property in jObject.Properties())
             {
-                var value = property.Value;
+                JToken value = property.Value;
                 if (value != null && IsSimpleType(value.Type))
                 {
-                    var encodedValue = Uri.EscapeDataString(value.ToString());
-                    parameters.Append(parameters.Length == 0 ? "?" : "&");
-                    parameters.Append($"{property.Name}={encodedValue}");
+                    string encodedValue = Uri.EscapeDataString(value.ToString());
+                    _ = parameters.Append(parameters.Length == 0 ? "?" : "&");
+                    _ = parameters.Append($"{property.Name}={encodedValue}");
                 }
                 else
                 {
@@ -96,11 +96,8 @@ namespace ROH.Utils.ApiConfiguration
             return parameters.ToString();
         }
 
-        private static bool IsSimpleType(JTokenType type)
-        {
-            return type == JTokenType.String || type == JTokenType.Integer || type == JTokenType.Float ||
+        private static bool IsSimpleType(JTokenType type) => type == JTokenType.String || type == JTokenType.Integer || type == JTokenType.Float ||
                    type == JTokenType.Boolean || type == JTokenType.Date || type == JTokenType.Guid;
-        }
 
         public async Task<string> Post(Services service, object objectToSend)
         {

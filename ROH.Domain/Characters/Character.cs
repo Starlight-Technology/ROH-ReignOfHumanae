@@ -14,10 +14,7 @@ namespace ROH.Domain.Characters
     {
         private DateTime dateCreated;
 
-        public Character(long id, long idAccount, long? idGuild, long idKingdom, Guid guid, string? name, Race race, DateTime dateCreated) : this(id, idAccount, idGuild, idKingdom, guid, name, race)
-        {
-            this.dateCreated = dateCreated;
-        }
+        public Character(long id, long idAccount, long? idGuild, long idKingdom, Guid guid, string? name, Race race, DateTime dateCreated) : this(id, idAccount, idGuild, idKingdom, guid, name, race) => this.dateCreated = dateCreated;
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Blocker Code Smell", "S3237:\"value\" parameters should be used", Justification = "<Is defined on set.>")]
         public DateTime DateCreated { get => dateCreated; private set => dateCreated = DateTime.Now; }
