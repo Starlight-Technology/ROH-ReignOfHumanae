@@ -40,6 +40,12 @@ MapperConfiguration mappingConfig = new(mc =>
 
 IMapper mapper = mappingConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = null;
+});
+
 WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.

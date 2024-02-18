@@ -38,17 +38,25 @@ namespace ROH.Services.Version
                 {
                     file = file with
                     {
-                        GameVersion = mapper.Map<GameVersion>(gameVersion.GetVersionByGuid(file.Guid.ToString()).Result
-                            ?.ObjectResponse)
+                        GameVersion = mapper.Map<GameVersion>(gameVersion.GetVersionByGuid(file.Guid.ToString()).Result?.ObjectResponse)
                     };
 
-                    byte[] fileContent = await File.ReadAllBytesAsync(file.Path + file.Name);
-                    string fileContentString = Convert.ToBase64String(fileContent);
+                    string filePath = Path.Combine(file.Path, file.Name);
 
-                    return new DefaultResponse(new GameVersionFileModel(name: file.Name,
-                                                                        format: file.Format,
-                                                                        content: fileContentString).ToFileModel(), 
-                                                HttpStatusCode.OK);
+                    if (File.Exists(filePath))
+                    {
+                        byte[] fileContent = await File.ReadAllBytesAsync(filePath);
+                        string fileContentString = Convert.ToBase64String(fileContent, 0, fileContent.Length);
+
+                        return new DefaultResponse(new GameVersionFileModel(
+                            name: file.Name,
+                            format: file.Format,
+                            content: fileContentString).ToFileModel(), HttpStatusCode.OK);
+                    }
+                    else
+                    {
+                        return new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File Not Found.");
+                    }
                 }
                 else
                 {
@@ -156,8 +164,8 @@ namespace ROH.Services.Version
 
             using (FileStream fs = File.Create(filePath))
             {
-                byte[] info = Convert.FromBase64String(file.Content);
-                await fs.WriteAsync(info);
+                byte[] buffer = Convert.FromBase64String(file.Content);
+                await fs.WriteAsync(buffer.AsMemory(), CancellationToken.None);
             }
 
             GameVersionFile entity = mapper.Map<GameVersionFile>(file);

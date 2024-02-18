@@ -8,7 +8,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Configure Kestrel to listen on a specific port
-builder.WebHost.ConfigureKestrel(options => options.ListenAnyIP(9001));
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(9001);
+    options.Limits.MaxRequestBodySize = null;
+});
 
 WebApplication app = builder.Build();
 

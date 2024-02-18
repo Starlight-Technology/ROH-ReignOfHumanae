@@ -12,8 +12,11 @@ builder.Services.AddServerSideBlazor().AddCircuitOptions(options => { options.De
 
 servicesManager.ConfigureServices(builder.Services);
 
-// Configure Kestrel to listen on a specific port
-builder.WebHost.ConfigureKestrel(options => options.ListenAnyIP(9010));
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(9010);
+    options.Limits.MaxRequestBodySize = null;
+});
 
 WebApplication app = builder.Build();
 
