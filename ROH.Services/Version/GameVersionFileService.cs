@@ -139,7 +139,7 @@ namespace ROH.Services.Version
 #if DEBUG
             @$"C:\ROHUpdateFiles\{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}\";
 #else
-    return @$"\app\data\ROH\ROHUpdateFiles\{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}\";
+            @$"\app\data\ROH\ROHUpdateFiles\{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}\";
 #endif
 
 
