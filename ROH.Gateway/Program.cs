@@ -16,10 +16,8 @@ builder.WebHost.ConfigureKestrel(options =>
 
 WebApplication app = builder.Build();
 
-
-_ = app.UseSwagger();
-_ = app.UseSwaggerUI();
-
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseAuthorization();
 

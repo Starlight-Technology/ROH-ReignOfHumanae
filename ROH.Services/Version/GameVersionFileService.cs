@@ -168,7 +168,7 @@ namespace ROH.Services.Version
         {
             if (!Directory.Exists(Path.GetDirectoryName(path)))
             {
-                _ = Directory.CreateDirectory(Path.GetDirectoryName(path) ?? Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\ROHFiles");
+                 Directory.CreateDirectory(Path.GetDirectoryName(path) ?? Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\ROHFiles");
             }
 
             return Task.CompletedTask;

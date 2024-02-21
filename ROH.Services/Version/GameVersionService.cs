@@ -101,7 +101,7 @@ namespace ROH.Services.Version
                                                message: "This version already exist.");
                 }
 
-                _ = await versionRepository.SetNewGameVersion(mapper.Map<GameVersion>(version));
+                 await versionRepository.SetNewGameVersion(mapper.Map<GameVersion>(version));
 
                 return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.Created, message: "New game version created.");
             }

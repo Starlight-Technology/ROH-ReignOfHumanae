@@ -84,8 +84,8 @@ namespace ROH.Utils.ApiConfiguration
                 if (value != null && IsSimpleType(value.Type))
                 {
                     string encodedValue = Uri.EscapeDataString(value.ToString());
-                    _ = parameters.Append(parameters.Length == 0 ? "?" : "&");
-                    _ = parameters.Append($"{property.Name}={encodedValue}");
+                     parameters.Append(parameters.Length == 0 ? "?" : "&");
+                     parameters.Append($"{property.Name}={encodedValue}");
                 }
                 else
                 {

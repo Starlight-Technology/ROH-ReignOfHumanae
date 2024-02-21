@@ -9,11 +9,11 @@ namespace ROH.Context.TypeConfiguration.Accounts
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            _ = builder.HasKey(u => u.Id);
+             builder.HasKey(u => u.Id);
 
-            _ = builder.Property(g => g.Guid).HasDefaultValueSql("gen_random_uuid()");
+             builder.Property(g => g.Guid).HasDefaultValueSql("gen_random_uuid()");
 
-            _ = builder.HasOne(u => u.Account).WithOne(a => a.User).HasForeignKey<User>(u => u.IdAccount);
+             builder.HasOne(u => u.Account).WithOne(a => a.User).HasForeignKey<User>(u => u.IdAccount);
         }
     }
 }

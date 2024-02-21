@@ -43,16 +43,16 @@ namespace ROH.Repository.Version
         public async Task<GameVersion> SetNewGameVersion(GameVersion version)
         {
             version = version with { VersionDate = DateTime.UtcNow };
-            _ = await context.GameVersions.AddAsync(version);
-            _ = await context.SaveChangesAsync();
+             await context.GameVersions.AddAsync(version);
+             await context.SaveChangesAsync();
 
             return version;
         }
 
         public async Task<GameVersion> UpdateGameVersion(GameVersion version)
         {
-            _ = context.GameVersions.Update(version);
-            _ = await context.SaveChangesAsync();
+             context.GameVersions.Update(version);
+             await context.SaveChangesAsync();
 
             return version;
         }

@@ -23,7 +23,7 @@ docker run -d --name blazor --network $NETWORK_NAME -p 9010:9010 roh.blazor.serv
 # Iterate through other projects and build/run their Dockerfiles
 for project in $(find . -type f -name "Dockerfile" -not -path "./ROH.Gateway*" -not -path "./ROH.Blazor.Server*"); do
   project_name=$(dirname $project)
-  image_name="roh.$(basename $project_name | tr '[:upper:]' '[:lower:]')"  # Ensure lowercase image name
+  image_name="$(basename $project_name | tr '[:upper:]' '[:lower:]')"  # Ensure lowercase image name
   docker build -t $image_name -f $project .
   docker run -d --name $(basename $project_name) --network $NETWORK_NAME $image_name
 done

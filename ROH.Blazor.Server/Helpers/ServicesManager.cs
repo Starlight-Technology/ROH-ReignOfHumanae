@@ -8,10 +8,10 @@ namespace ROH.Blazor.Server.Helpers
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            _ = services.AddScoped<IVersionService, VersionService>();
-            _ = services.AddScoped<IVersionFileService, VersionFileService>();
-            _ = services.AddScoped<ISweetAlertService, SweetAlertService>();
-            _ = services.AddScoped<IDownloadFileService, DownloadFileService>();
+             services.AddScoped<IVersionService, VersionService>();
+             services.AddScoped<IVersionFileService, VersionFileService>();
+             services.AddScoped<ISweetAlertService, SweetAlertService>();
+             services.AddScoped<IDownloadFileService, DownloadFileService>();
         }
     }
 }

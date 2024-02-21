@@ -9,12 +9,12 @@ namespace ROH.Context.TypeConfiguration.Guilds
     {
         public void Configure(EntityTypeBuilder<Guild> builder)
         {
-            _ = builder.HasKey(g => g.Id);
+             builder.HasKey(g => g.Id);
 
-            _ = builder.Property(g => g.Guid).HasDefaultValueSql("gen_random_uuid()");
+             builder.Property(g => g.Guid).HasDefaultValueSql("gen_random_uuid()");
 
-            _ = builder.HasMany(g => g.Characters).WithOne(c => c.Guild).HasForeignKey(c => c.IdGuild);
-            _ = builder.HasMany(g => g.MembersPositions).WithOne(p => p.Guild).HasForeignKey(p => p.IdGuild);
+             builder.HasMany(g => g.Characters).WithOne(c => c.Guild).HasForeignKey(c => c.IdGuild);
+             builder.HasMany(g => g.MembersPositions).WithOne(p => p.Guild).HasForeignKey(p => p.IdGuild);
         }
     }
 }

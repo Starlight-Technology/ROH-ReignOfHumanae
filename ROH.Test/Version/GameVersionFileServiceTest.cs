@@ -33,8 +33,8 @@ namespace ROH.Test.Version
             MapperConfiguration config = new(cfg =>
             {
                 // Configure your mappings here
-                _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
-                _ = cfg.CreateMap<GameVersionFile, GameVersionFileModel>().ReverseMap();
+                 cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
+                 cfg.CreateMap<GameVersionFile, GameVersionFileModel>().ReverseMap();
             });
 
             Mapper mapper = new(config);
@@ -42,10 +42,10 @@ namespace ROH.Test.Version
             List<GameVersionFile> files = [_file];
 
             Mock<IGameVersionFileRepository> mockRepository = new();
-            _ = mockRepository.Setup(x => x.GetFiles(It.IsAny<Guid>())).ReturnsAsync(files);
+             mockRepository.Setup(x => x.GetFiles(It.IsAny<Guid>())).ReturnsAsync(files);
 
             Mock<IGameVersionService> mockVersionService = new();
-            _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<string>())).ReturnsAsync(true);
+             mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<string>())).ReturnsAsync(true);
 
             Mock<IValidator<GameVersionFileModel>> mockValidator = new();
             GameVersionFileService service = new(mockRepository.Object, mockValidator.Object, mockVersionService.Object, mapper);
@@ -64,21 +64,21 @@ namespace ROH.Test.Version
             MapperConfiguration config = new(cfg =>
             {
                 // Configure your mappings here
-                _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
-                _ = cfg.CreateMap<GameVersionFile, GameVersionFileModel>().ReverseMap();
+                 cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
+                 cfg.CreateMap<GameVersionFile, GameVersionFileModel>().ReverseMap();
             });
 
             Mapper mapper = new(config);
 
             _fileModel.GameVersion = _versionModel;
             Mock<IValidator<GameVersionFileModel>> mockValidator = new();
-            _ = mockValidator.Setup(x => x.ValidateAsync(_fileModel, CancellationToken.None)).ReturnsAsync(new ValidationResult());
+             mockValidator.Setup(x => x.ValidateAsync(_fileModel, CancellationToken.None)).ReturnsAsync(new ValidationResult());
 
             Mock<IGameVersionFileRepository> mockRepository = new();
-            _ = mockRepository.Setup(x => x.SaveFile(It.IsAny<GameVersionFile>())).Returns(Task.CompletedTask);
+             mockRepository.Setup(x => x.SaveFile(It.IsAny<GameVersionFile>())).Returns(Task.CompletedTask);
 
             Mock<IGameVersionService> mockVersionService = new();
-            _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(true);
+             mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(true);
 
             GameVersionFileService service = new(mockRepository.Object, mockValidator.Object, mockVersionService.Object, mapper);
 
@@ -98,15 +98,15 @@ namespace ROH.Test.Version
             MapperConfiguration config = new(cfg =>
             {
                 // Configure your mappings here
-                _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
-                _ = cfg.CreateMap<GameVersionFile, GameVersionFileModel>().ReverseMap();
+                 cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
+                 cfg.CreateMap<GameVersionFile, GameVersionFileModel>().ReverseMap();
             });
 
             Mapper mapper = new(config);
 
             _fileModel.GameVersion = _versionModel;
             Mock<IValidator<GameVersionFileModel>> mockValidator = new();
-            _ = mockValidator.Setup(x => x.ValidateAsync(_fileModel, CancellationToken.None))
+             mockValidator.Setup(x => x.ValidateAsync(_fileModel, CancellationToken.None))
                 .ReturnsAsync(new ValidationResult(
                     new List<ValidationFailure>
                         {
@@ -115,10 +115,10 @@ namespace ROH.Test.Version
                     );
 
             Mock<IGameVersionFileRepository> mockRepository = new();
-            _ = mockRepository.Setup(x => x.SaveFile(It.IsAny<GameVersionFile>())).Returns(Task.CompletedTask);
+             mockRepository.Setup(x => x.SaveFile(It.IsAny<GameVersionFile>())).Returns(Task.CompletedTask);
 
             Mock<IGameVersionService> mockVersionService = new();
-            _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(true);
+             mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(true);
 
             GameVersionFileService service = new(mockRepository.Object, mockValidator.Object, mockVersionService.Object, mapper);
 
@@ -138,22 +138,22 @@ namespace ROH.Test.Version
             MapperConfiguration config = new(cfg =>
             {
                 // Configure your mappings here
-                _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
-                _ = cfg.CreateMap<GameVersionFile, GameVersionFileModel>().ReverseMap();
+                 cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
+                 cfg.CreateMap<GameVersionFile, GameVersionFileModel>().ReverseMap();
             });
 
             Mapper mapper = new(config);
 
             _fileModel.GameVersion = _versionModel;
             Mock<IValidator<GameVersionFileModel>> mockValidator = new();
-            _ = mockValidator.Setup(x => x.ValidateAsync(_fileModel, CancellationToken.None))
+             mockValidator.Setup(x => x.ValidateAsync(_fileModel, CancellationToken.None))
                 .ReturnsAsync(new ValidationResult());
 
             Mock<IGameVersionFileRepository> mockRepository = new();
-            _ = mockRepository.Setup(x => x.SaveFile(It.IsAny<GameVersionFile>())).Returns(Task.CompletedTask);
+             mockRepository.Setup(x => x.SaveFile(It.IsAny<GameVersionFile>())).Returns(Task.CompletedTask);
 
             Mock<IGameVersionService> mockVersionService = new();
-            _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(false);
+             mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(false);
 
             GameVersionFileService service = new(mockRepository.Object, mockValidator.Object, mockVersionService.Object, mapper);
 
@@ -172,8 +172,8 @@ namespace ROH.Test.Version
             MapperConfiguration config = new(cfg =>
             {
                 // Configure your mappings here
-                _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
-                _ = cfg.CreateMap<GameVersionFile, GameVersionFileModel>().ReverseMap();
+                 cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
+                 cfg.CreateMap<GameVersionFile, GameVersionFileModel>().ReverseMap();
             });
 
             Mapper mapper = new(config);
@@ -181,14 +181,14 @@ namespace ROH.Test.Version
             _fileModel.GameVersion = _versionModel;
 
             Mock<IGameVersionFileRepository> mockRepository = new();
-            _ = mockRepository.Setup(x => x.GetFile(It.IsAny<long>())).ReturnsAsync(value: null);
+             mockRepository.Setup(x => x.GetFile(It.IsAny<long>())).ReturnsAsync(value: null);
 
             Mock<IGameVersionService> mockVersionService = new();
-            _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(true);
-            _ = mockVersionService.Setup(x => x.GetVersionByGuid(It.IsAny<string>())).Returns(Task.FromResult<DefaultResponse>(new DefaultResponse(objectResponse: _version)));
+             mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(true);
+             mockVersionService.Setup(x => x.GetVersionByGuid(It.IsAny<string>())).Returns(Task.FromResult<DefaultResponse>(new DefaultResponse(objectResponse: _version)));
 
             Mock<IValidator<GameVersionFileModel>> mockValidator = new();
-            _ = mockValidator.Setup(x => x.ValidateAsync(It.IsAny<GameVersionFileModel>(), CancellationToken.None)).ReturnsAsync(new ValidationResult());
+             mockValidator.Setup(x => x.ValidateAsync(It.IsAny<GameVersionFileModel>(), CancellationToken.None)).ReturnsAsync(new ValidationResult());
 
             GameVersionFileService service = new(mockRepository.Object, mockValidator.Object, mockVersionService.Object, mapper);
 
@@ -206,8 +206,8 @@ namespace ROH.Test.Version
             MapperConfiguration config = new(cfg =>
             {
                 // Configure your mappings here
-                _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
-                _ = cfg.CreateMap<GameVersionFile, GameVersionFileModel>().ReverseMap();
+                 cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
+                 cfg.CreateMap<GameVersionFile, GameVersionFileModel>().ReverseMap();
             });
 
             Mapper mapper = new(config);
@@ -215,14 +215,14 @@ namespace ROH.Test.Version
             _fileModel.GameVersion = _versionModel;
 
             Mock<IGameVersionFileRepository> mockRepository = new();
-            _ = mockRepository.Setup(x => x.GetFile(It.IsAny<long>())).ReturnsAsync(_file with { Name = "" });
+             mockRepository.Setup(x => x.GetFile(It.IsAny<long>())).ReturnsAsync(_file with { Name = "" });
 
             Mock<IGameVersionService> mockVersionService = new();
-            _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(true);
-            _ = mockVersionService.Setup(x => x.GetVersionByGuid(It.IsAny<string>())).Returns(Task.FromResult<DefaultResponse>(new DefaultResponse(objectResponse: _version)));
+             mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(true);
+             mockVersionService.Setup(x => x.GetVersionByGuid(It.IsAny<string>())).Returns(Task.FromResult<DefaultResponse>(new DefaultResponse(objectResponse: _version)));
 
             Mock<IValidator<GameVersionFileModel>> mockValidator = new();
-            _ = mockValidator.Setup(x => x.ValidateAsync(It.IsAny<GameVersionFileModel>(), CancellationToken.None)).ReturnsAsync(new ValidationResult());
+             mockValidator.Setup(x => x.ValidateAsync(It.IsAny<GameVersionFileModel>(), CancellationToken.None)).ReturnsAsync(new ValidationResult());
 
             GameVersionFileService service = new(mockRepository.Object, mockValidator.Object, mockVersionService.Object, mapper);
 
@@ -241,8 +241,8 @@ namespace ROH.Test.Version
             MapperConfiguration config = new(cfg =>
             {
                 // Configure your mappings here
-                _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
-                _ = cfg.CreateMap<GameVersionFile, GameVersionFileModel>().ReverseMap();
+                 cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
+                 cfg.CreateMap<GameVersionFile, GameVersionFileModel>().ReverseMap();
             });
 
             Mapper mapper = new(config);
@@ -250,14 +250,14 @@ namespace ROH.Test.Version
             _fileModel.GameVersion = _versionModel;
 
             Mock<IGameVersionFileRepository> mockRepository = new();
-            _ = mockRepository.Setup(x => x.GetFile(It.IsAny<long>())).ReturnsAsync(_file with { Name = "" });
+             mockRepository.Setup(x => x.GetFile(It.IsAny<long>())).ReturnsAsync(_file with { Name = "" });
 
             Mock<IGameVersionService> mockVersionService = new();
-            _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(true);
-            _ = mockVersionService.Setup(x => x.GetVersionByGuid(It.IsAny<string>())).Returns(Task.FromResult<DefaultResponse>(new DefaultResponse(objectResponse: _version)));
+             mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(true);
+             mockVersionService.Setup(x => x.GetVersionByGuid(It.IsAny<string>())).Returns(Task.FromResult<DefaultResponse>(new DefaultResponse(objectResponse: _version)));
 
             Mock<IValidator<GameVersionFileModel>> mockValidator = new();
-            _ = mockValidator.Setup(x => x.ValidateAsync(It.IsAny<GameVersionFileModel>(), CancellationToken.None)).ReturnsAsync(new ValidationResult(new List<ValidationFailure>
+             mockValidator.Setup(x => x.ValidateAsync(It.IsAny<GameVersionFileModel>(), CancellationToken.None)).ReturnsAsync(new ValidationResult(new List<ValidationFailure>
                     {new("Name", "Name cannot be empty")}));
 
             GameVersionFileService service = new(mockRepository.Object, mockValidator.Object, mockVersionService.Object, mapper);

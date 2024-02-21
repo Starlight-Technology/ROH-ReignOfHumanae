@@ -23,7 +23,7 @@ docker run -d --name blazor --network $NETWORK_NAME -p 9010:9010 roh.blazor.serv
 $projects = Get-ChildItem -Path . -Filter Dockerfile -Recurse | Where-Object { $_.FullName -notlike "*ROH.Gateway*" -and $_.FullName -notlike "*ROH.Blazor.Server*" }
 foreach ($project in $projects) {
   $project_name = Split-Path $project -Parent
-  $image_name = "roh." + (Split-Path $project -Leaf).ToLower()
+  $image_name = (Split-Path $project -Leaf).ToLower()
   docker build -t $image_name -f $project.FullName .
   docker run -d --name (Split-Path $project -Leaf) --network $NETWORK_NAME $image_name
 }

@@ -9,10 +9,10 @@ namespace ROH.Context.TypeConfiguration.Characters
     {
         public void Configure(EntityTypeBuilder<CharacterInventory> builder)
         {
-            _ = builder.HasKey(ci => ci.Id);
+             builder.HasKey(ci => ci.Id);
 
-            _ = builder.HasOne(ci => ci.Item).WithMany().HasForeignKey(ci => ci.IdItem);
-            _ = builder.HasOne(ci => ci.Character).WithMany(c => c.Inventory).HasForeignKey(ci => ci.IdCharacter);
+             builder.HasOne(ci => ci.Item).WithMany().HasForeignKey(ci => ci.IdItem);
+             builder.HasOne(ci => ci.Character).WithMany(c => c.Inventory).HasForeignKey(ci => ci.IdCharacter);
         }
     }
 }

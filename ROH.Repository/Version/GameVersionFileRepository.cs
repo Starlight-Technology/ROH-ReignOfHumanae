@@ -30,8 +30,8 @@ namespace ROH.Repository.Version
         {
             file.GameVersion = await context.GameVersions.FirstAsync(v => v.Guid == file.GameVersion!.Guid);
 
-            _ = await context.GameVersionFiles.AddAsync(file);
-            _ = await context.SaveChangesAsync();
+             await context.GameVersionFiles.AddAsync(file);
+             await context.SaveChangesAsync();
         }
     }
 }
