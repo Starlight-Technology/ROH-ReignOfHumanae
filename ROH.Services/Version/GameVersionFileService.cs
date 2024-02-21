@@ -11,7 +11,6 @@ using ROH.StandardModels.Response;
 using ROH.StandardModels.Version;
 
 using System.Net;
-using System.Text;
 
 namespace ROH.Services.Version
 {
@@ -19,15 +18,30 @@ namespace ROH.Services.Version
     {
         public async Task<DefaultResponse> DownloadFile(Guid fileGuid)
         {
-            GameVersionFile? file = await gameVersionFileRepository.GetFile(fileGuid);
+            try
+            {
+                GameVersionFile? file = await gameVersionFileRepository.GetFile(fileGuid);
 
-            return file is null ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "Game Version Not Found.") : await GetFile(file);
+                return file is null ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "Game Version Not Found.") : await GetFile(file);
+            }
+            catch (Exception e)
+            {
+                return new DefaultResponse(null, httpStatus: HttpStatusCode.BadRequest, message: e.Message);
+            }
         }
+
         public async Task<DefaultResponse> DownloadFile(long id)
         {
-            GameVersionFile? file = await gameVersionFileRepository.GetFile(id);
+            try
+            {
+                GameVersionFile? file = await gameVersionFileRepository.GetFile(id);
 
-            return file is null ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "Game Version Not Found.") : await GetFile(file);
+                return file is null ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "Game Version Not Found.") : await GetFile(file);
+            }
+            catch (Exception e)
+            {
+                return new DefaultResponse(null, httpStatus: HttpStatusCode.BadRequest, message: e.Message);
+            }
         }
 
         private async Task<DefaultResponse> GetFile(GameVersionFile file)
@@ -71,20 +85,27 @@ namespace ROH.Services.Version
 
         public async Task<DefaultResponse> GetFiles(string versionGuid)
         {
-            bool response = await gameVersion.VerifyIfVersionExist(versionGuid);
-
-            if (response && Guid.TryParse(versionGuid, out Guid guid))
+            try
             {
-                List<GameVersionFile> files = await gameVersionFileRepository.GetFiles(guid);
+                bool response = await gameVersion.VerifyIfVersionExist(versionGuid);
 
-                foreach (GameVersionFile item in files)
+                if (response && Guid.TryParse(versionGuid, out Guid guid))
                 {
-                    item.GameVersion = null;
-                }
-                return new DefaultResponse(objectResponse: files);
-            }
+                    List<GameVersionFile> files = await gameVersionFileRepository.GetFiles(guid);
 
-            return new DefaultResponse(httpStatus: HttpStatusCode.NotFound);
+                    foreach (GameVersionFile item in files)
+                    {
+                        item.GameVersion = null;
+                    }
+                    return new DefaultResponse(objectResponse: files);
+                }
+
+                return new DefaultResponse(httpStatus: HttpStatusCode.NotFound);
+            }
+            catch (Exception e)
+            {
+                return new DefaultResponse(null, httpStatus: HttpStatusCode.BadRequest, message: e.Message);
+            }
         }
 
         public async Task<DefaultResponse> NewFile(GameVersionFileModel fileModel)
@@ -140,8 +161,8 @@ namespace ROH.Services.Version
             @$"C:\ROHUpdateFiles\{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}\";
 #else
             @$"\app\data\ROH\ROHUpdateFiles\{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}\";
-#endif
 
+#endif
 
         private static Task EnsureDirectoryExists(string path)
         {

@@ -9,7 +9,6 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
 
-
 servicesManager.ConfigureServices(builder.Services);
 
 builder.WebHost.ConfigureKestrel(options =>

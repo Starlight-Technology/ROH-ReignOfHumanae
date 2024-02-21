@@ -27,6 +27,7 @@ namespace ROH.StandardModels.Version
         }
 
         public FileModel ToFileModel() => new FileModel(Name, Format, Content);
+
         public GameVersionFileListModel ToListModel() => new GameVersionFileListModel(Name, Size, Guid);
     }
 

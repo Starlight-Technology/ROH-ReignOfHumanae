@@ -1,6 +1,4 @@
-﻿using ROH.StandardModels.File;
-
-using System;
+﻿using System;
 
 namespace ROH.StandardModels.Version
 {
@@ -17,7 +15,7 @@ namespace ROH.StandardModels.Version
         public GameVersionModel()
         {
         }
-      
+
         public GameVersionListModel ToListModel() => new GameVersionListModel(Version, Release, Review, ReleaseDate, VersionDate, Guid);
     }
 
