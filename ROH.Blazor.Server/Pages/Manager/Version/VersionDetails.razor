@@ -130,7 +130,6 @@
             {
                 string fileName;
                 string fileExtension;
-                string fileContent;
                 long fileSize = 0;
                 bool uploaded = false;
                 isUploading = true;
@@ -143,32 +142,32 @@
                     fileExtension = Path.GetExtension(fileName);
                     fileSize = file.Size;
 
-                    using (var stream = file.OpenReadStream(10737418240))
+                    using (var stream = file.OpenReadStream())
+                    using (var ms = new MemoryStream())
                     {
-                        byte[] buffer = new byte[stream.Length];
-                        await stream.ReadAsync(buffer, 0, buffer.Length);
-                        fileContent = Convert.ToBase64String(buffer);
-                    }
+                        await stream.CopyToAsync(ms);
+                        var fileContent = ms.ToArray();
 
-                    filesUploaded++;
-                    uploadProgress = ((double)filesUploaded / totalFiles * 100);
-                    StateHasChanged();
+                        filesUploaded++;
+                        uploadProgress = ((double)filesUploaded / totalFiles * 100);
+                        StateHasChanged();
 
-                    var responseUpload = await _versionFileService.UploadVersionFile(
-                        new GameVersionFileModel(
-                            fileName,
-                            "",
-                            fileExtension,
-                            fileContent,
-                            fileSize,
-                            gameVersion
-                        )
-                    );
+                        var responseUpload = await _versionFileService.UploadVersionFile(
+                            new GameVersionFileModel(
+                                fileName,
+                                "",
+                                fileExtension,
+                                fileContent,
+                                fileSize,
+                                gameVersion
+                            )
+                        );
 
                     if (responseUpload != null && !responseUpload.HttpStatus.IsSuccessStatusCode())
                         await _sweetAlert.ShowResponse(responseUpload);
                     else if (responseUpload != null && responseUpload.HttpStatus.IsSuccessStatusCode())
                         uploaded = true;
+                    }
 
                 }
 

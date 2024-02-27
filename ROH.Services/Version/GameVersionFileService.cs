@@ -60,12 +60,11 @@ namespace ROH.Services.Version
                     if (File.Exists(filePath))
                     {
                         byte[] fileContent = await File.ReadAllBytesAsync(filePath);
-                        string fileContentString = Convert.ToBase64String(fileContent, 0, fileContent.Length);
 
                         return new DefaultResponse(new GameVersionFileModel(
                             name: file.Name,
                             format: file.Format,
-                            content: fileContentString).ToFileModel(), HttpStatusCode.OK);
+                            content: fileContent).ToFileModel(), HttpStatusCode.OK);
                     }
                     else
                     {
@@ -157,18 +156,18 @@ namespace ROH.Services.Version
                 : "File Upload Failed: This version has already been released with a yearly schedule. Uploading new files is not allowed for past versions.";
 
         private static string GetFilePath(GameVersion gameVersion) =>
+            
 #if DEBUG
-            @$"C:\ROHUpdateFiles\{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}\";
+            @$".\ROHUpdateFiles\{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}\";
 #else
-            @$"\app\data\ROH\ROHUpdateFiles\{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}\";
-
+            @$"/app/ROH/updateFiles/{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}/";           
 #endif
 
         private static Task EnsureDirectoryExists(string path)
         {
             if (!Directory.Exists(Path.GetDirectoryName(path)))
             {
-                 Directory.CreateDirectory(Path.GetDirectoryName(path) ?? Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\ROHFiles");
+                Directory.CreateDirectory(Path.GetDirectoryName(path) ?? Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\ROHFiles");
             }
 
             return Task.CompletedTask;
@@ -185,8 +184,7 @@ namespace ROH.Services.Version
 
             using (FileStream fs = File.Create(filePath))
             {
-                byte[] buffer = Convert.FromBase64String(file.Content);
-                await fs.WriteAsync(buffer.AsMemory(), CancellationToken.None);
+                await fs.WriteAsync(file.Content.AsMemory(), CancellationToken.None);
             }
 
             GameVersionFile entity = mapper.Map<GameVersionFile>(file);

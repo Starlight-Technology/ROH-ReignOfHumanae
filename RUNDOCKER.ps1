@@ -19,8 +19,12 @@ docker run -d --name gateway --network $NETWORK_NAME -p 9001:9001 roh.gateway
 docker build -t roh.blazor.server -f ./ROH.Blazor.Server/Dockerfile .
 docker run -d --name blazor --network $NETWORK_NAME -p 9010:9010 roh.blazor.server
 
+# Build and run the ROH.Api.VersionFiles Dockerfile
+docker build -t roh.api.versionfiles -f ./ROH.Api.VersionFiles/Dockerfile .
+docker run -d --name api_versionfiles --network $NETWORK_NAME -v c:/ROH:/app/files roh.api.versionfiles
+
 # Iterate through other projects and build/run their Dockerfiles
-$projects = Get-ChildItem -Path . -Filter Dockerfile -Recurse | Where-Object { $_.FullName -notlike "*ROH.Gateway*" -and $_.FullName -notlike "*ROH.Blazor.Server*" }
+$projects = Get-ChildItem -Path . -Filter Dockerfile -Recurse | Where-Object { $_.FullName -notlike "*ROH.Gateway*" -and $_.FullName -notlike "*ROH.Blazor.Server*" -and $_.FullName -notlike "*ROH.Api.VersionFiles*"}
 foreach ($project in $projects) {
   $project_name = Split-Path $project -Parent
   $image_name = (Split-Path $project -Leaf).ToLower()

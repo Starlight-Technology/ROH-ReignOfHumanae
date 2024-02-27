@@ -6,13 +6,13 @@ namespace ROH.StandardModels.File
     {
         public string Name { get; set; }
         public string Format { get; set; }
-        public byte[] Content { get; set; }
+        public byte[]? Content { get; set; }
 
-        public FileModel(string name, string format, string content)
+        public FileModel(string name, string format, byte[]? content)
         {
             Name = name;
             Format = format;
-            Content = Convert.FromBase64String(content);
+            Content = content;
         }
     }
 }
