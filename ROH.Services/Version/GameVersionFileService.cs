@@ -6,6 +6,7 @@ using FluentValidation;
 
 using ROH.Domain.Version;
 using ROH.Interfaces.Repository.Version;
+using ROH.Interfaces.Services.ExceptionService;
 using ROH.Interfaces.Services.Version;
 using ROH.StandardModels.Response;
 using ROH.StandardModels.Version;
@@ -14,7 +15,7 @@ using System.Net;
 
 namespace ROH.Services.Version
 {
-    public class GameVersionFileService(IGameVersionFileRepository gameVersionFileRepository, IValidator<GameVersionFileModel> validator, IGameVersionService gameVersion, IMapper mapper) : IGameVersionFileService
+    public class GameVersionFileService(IGameVersionFileRepository gameVersionFileRepository, IValidator<GameVersionFileModel> validator, IGameVersionService gameVersion, IMapper mapper, IExceptionHandler exceptionHandler) : IGameVersionFileService
     {
         public async Task<DefaultResponse> DownloadFile(Guid fileGuid)
         {
@@ -156,7 +157,7 @@ namespace ROH.Services.Version
                 : "File Upload Failed: This version has already been released with a yearly schedule. Uploading new files is not allowed for past versions.";
 
         private static string GetFilePath(GameVersion gameVersion) =>
-            
+
 #if DEBUG
             @$".\ROHUpdateFiles\{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}\";
 #else
@@ -175,22 +176,29 @@ namespace ROH.Services.Version
 
         private async Task SaveFileAsync(string path, GameVersionFileModel file)
         {
-            string filePath = Path.Combine(path, file.Name);
-
-            if (File.Exists(filePath))
+            try
             {
-                File.Delete(filePath);
-            }
+                string filePath = Path.Combine(path, file.Name);
 
-            using (FileStream fs = File.Create(filePath))
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+
+                using (FileStream fs = File.Create(filePath))
+                {
+                    await fs.WriteAsync(file.Content.AsMemory(), CancellationToken.None);
+                }
+
+                GameVersionFile entity = mapper.Map<GameVersionFile>(file);
+                entity = entity with { Path = path };
+
+                await gameVersionFileRepository.SaveFile(entity);
+            }
+            catch (Exception ex)
             {
-                await fs.WriteAsync(file.Content.AsMemory(), CancellationToken.None);
+                exceptionHandler.HandleException(ex);
             }
-
-            GameVersionFile entity = mapper.Map<GameVersionFile>(file);
-            entity = entity with { Path = path };
-
-            await gameVersionFileRepository.SaveFile(entity);
         }
     }
 }

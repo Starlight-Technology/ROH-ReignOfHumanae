@@ -5,9 +5,11 @@ using FluentValidation;
 using ROH.Context.PostgreSQLContext;
 using ROH.Interfaces;
 using ROH.Interfaces.Repository.Version;
+using ROH.Interfaces.Services.ExceptionService;
 using ROH.Interfaces.Services.Version;
 using ROH.Mapper.Version;
 using ROH.Repository.Version;
+using ROH.Services.ExceptionService;
 using ROH.Services.Version;
 using ROH.StandardModels.Version;
 using ROH.Utils.Helpers;
@@ -30,6 +32,8 @@ builder.Services.AddScoped<IGameVersionFileService, GameVersionFileService>();
 
 builder.Services.AddScoped<IValidator<GameVersionModel>, GameVersionModelValidation>();
 builder.Services.AddScoped<IValidator<GameVersionFileModel>, GameVersionFileModelValidation>();
+
+builder.Services.AddScoped<IExceptionHandler, ExceptionHandler>();
 
 // Auto Mapper Configurations
 MapperConfiguration mappingConfig = new(mc =>

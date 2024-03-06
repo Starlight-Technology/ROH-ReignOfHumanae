@@ -7,12 +7,14 @@ using ROH.Context.TypeConfiguration.Characters;
 using ROH.Context.TypeConfiguration.Guilds;
 using ROH.Context.TypeConfiguration.Items;
 using ROH.Context.TypeConfiguration.Kingdoms;
+using ROH.Context.TypeConfiguration.Logs;
 using ROH.Context.TypeConfiguration.Version;
 using ROH.Domain.Accounts;
 using ROH.Domain.Characters;
 using ROH.Domain.Guilds;
 using ROH.Domain.items;
 using ROH.Domain.Kingdoms;
+using ROH.Domain.Logging;
 using ROH.Domain.Version;
 using ROH.Interfaces;
 
@@ -62,6 +64,8 @@ namespace ROH.Context.PostgreSQLContext
 
         public DbSet<GameVersionFile> GameVersionFiles { get; set; }
 
+        public DbSet<Log> Logs { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
 #if DEBUG
              optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=ROH;Username=postgres;Password=123;");
@@ -95,6 +99,7 @@ namespace ROH.Context.PostgreSQLContext
              modelBuilder.ApplyConfiguration(new RelationTypeConfiguration());
              modelBuilder.ApplyConfiguration(new GameVersionTypeConfiguration());
              modelBuilder.ApplyConfiguration(new GameVersionFileTypeConfiguration());
+             modelBuilder.ApplyConfiguration(new LogTypeConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

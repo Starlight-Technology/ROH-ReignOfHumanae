@@ -5,6 +5,7 @@ using ROH.Domain.Characters;
 using ROH.Domain.Guilds;
 using ROH.Domain.items;
 using ROH.Domain.Kingdoms;
+using ROH.Domain.Logging;
 using ROH.Domain.Version;
 
 namespace ROH.Interfaces
@@ -32,6 +33,7 @@ namespace ROH.Interfaces
         DbSet<KingdomRelation> KingdomRelations { get; }
         DbSet<GameVersion> GameVersions { get; }
         DbSet<GameVersionFile> GameVersionFiles { get; }
+        DbSet<Log> Logs { get; }
 
         int SaveChanges();
 
