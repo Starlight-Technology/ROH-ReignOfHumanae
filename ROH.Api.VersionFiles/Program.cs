@@ -4,10 +4,12 @@ using FluentValidation;
 
 using ROH.Context.PostgreSQLContext;
 using ROH.Interfaces;
+using ROH.Interfaces.Repository.Log;
 using ROH.Interfaces.Repository.Version;
 using ROH.Interfaces.Services.ExceptionService;
 using ROH.Interfaces.Services.Version;
 using ROH.Mapper.Version;
+using ROH.Repository.Log;
 using ROH.Repository.Version;
 using ROH.Services.ExceptionService;
 using ROH.Services.Version;
@@ -26,6 +28,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ISqlContext, SqlContext>();
 builder.Services.AddScoped<IGameVersionFileRepository, GameVersionFileRepository>();
 builder.Services.AddScoped<IGameVersionRepository, GameVersionRepository>();
+builder.Services.AddScoped<ILogRepository, LogRepository>();
 
 builder.Services.AddScoped<IGameVersionService, GameVersionService>();
 builder.Services.AddScoped<IGameVersionFileService, GameVersionFileService>();
