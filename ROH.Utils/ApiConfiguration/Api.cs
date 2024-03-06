@@ -50,8 +50,38 @@ namespace ROH.Utils.ApiConfiguration
              {Services.DownloadFile, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.VersionFile),"DownloadFile" ) }
             #endregion FILES
         };
+/*
+public async Task<string> Get<T>(Services service, T obj)
+{
+    using HttpClient client = new HttpClient();
 
+    StringBuilder parameters = new StringBuilder();
+    string param = "";
+
+    PropertyInfo[] properties = typeof(T).GetProperties();
+
+    if (properties.Length > 0)
+    {
+        for (int i = 0; i < properties.Length; i++)
+        {
+            string name = properties[i].Name;
+            object value = properties[i].GetValue(obj);
+
+            _ = i == 0
+                ? parameters.Append($"?{name}={value}")
+                : parameters.Append($"&{name}={value}");
+        }
+
+        param = parameters.ToString();
+    }
+
+    HttpResponseMessage response = await client.GetAsync(_servicesUrl.GetValueOrDefault(service) + param);
+
+    return await response.Content.ReadAsStringAsync();
+}
+*/
         public async Task<string> Get<T>(Services service, T parametersObject)
+
         {
             using HttpClient client = new HttpClient();
             string param = string.Empty;
