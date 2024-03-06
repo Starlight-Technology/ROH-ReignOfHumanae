@@ -14,15 +14,15 @@ docker rmi -f $(docker images -q --filter="reference=roh.*") 2>/dev/null
 
 # Build and run the Gateway Dockerfile
 docker build -t roh.gateway -f ./ROH.Gateway/Dockerfile .
-docker run -d --name roh.gateway --network $NETWORK_NAME -p 9001:9001 roh.gateway
+docker run -d --name ROH.Gateway --network $NETWORK_NAME -p 9001:9001 roh.gateway
 
 # Build and run the ROH.Docker.Server Dockerfile
 docker build -t roh.blazor.server -f ./ROH.Blazor.Server/Dockerfile .
-docker run -d --name roh.blazor --network $NETWORK_NAME -p 9010:9010 roh.blazor.server
+docker run -d --name ROH.Blazor --network $NETWORK_NAME -p 9010:9010 roh.blazor.server
 
 # Build and run the ROH.Api.VersionFiles Dockerfile
 docker build -t roh.api.versionfiles -f ./ROH.Api.VersionFiles/Dockerfile .
-docker run -d --name roh.api.versionfiles --network $NETWORK_NAME -v /home/ROH:/app/files roh.api.versionfiles
+docker run -d --name ROH.Api.VersionFiles --network $NETWORK_NAME -v /home/ROH:/app/files roh.api.versionfiles
 
 
 # Iterate through other projects and build/run their Dockerfiles

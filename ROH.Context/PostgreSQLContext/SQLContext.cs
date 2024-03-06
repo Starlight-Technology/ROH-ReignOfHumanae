@@ -7,7 +7,7 @@ using ROH.Context.TypeConfiguration.Characters;
 using ROH.Context.TypeConfiguration.Guilds;
 using ROH.Context.TypeConfiguration.Items;
 using ROH.Context.TypeConfiguration.Kingdoms;
-using ROH.Context.TypeConfiguration.Logs;
+using ROH.Context.TypeConfiguration.Log;
 using ROH.Context.TypeConfiguration.Version;
 using ROH.Domain.Accounts;
 using ROH.Domain.Characters;
