@@ -7,6 +7,7 @@ using Moq;
 using ROH.Domain.Paginator;
 using ROH.Domain.Version;
 using ROH.Interfaces.Repository.Version;
+using ROH.Interfaces.Services.ExceptionService;
 using ROH.Services.Version;
 using ROH.StandardModels.Paginator;
 using ROH.StandardModels.Response;
@@ -41,7 +42,9 @@ namespace ROH.Test.Version
             Mock<IGameVersionRepository> mockRepository = new();
             _ = mockRepository.Setup(x => x.GetVersionByGuid(It.IsAny<Guid>())).ReturnsAsync(_version);
 
-            GameVersionService service = new(mockRepository.Object, mapper);
+            Mock<IExceptionHandler> mockExceptionHandler = new();
+
+            GameVersionService service = new(mockRepository.Object, mapper, mockExceptionHandler.Object);
 
             // Act
             DefaultResponse? result = await service.GetVersionByGuid(_guidGenerated.ToString());
@@ -76,7 +79,9 @@ namespace ROH.Test.Version
             Mock<IGameVersionRepository> mockRepository = new();
             _ = mockRepository.Setup(x => x.GetAllVersions(10, 0)).ReturnsAsync(paginatedVersions);
 
-            GameVersionService service = new(mockRepository.Object, mapper);
+            Mock<IExceptionHandler> mockExceptionHandler = new();
+
+            GameVersionService service = new(mockRepository.Object, mapper, mockExceptionHandler.Object);
 
             // Act
             DefaultResponse? result = await service.GetAllVersions();
@@ -112,7 +117,9 @@ namespace ROH.Test.Version
             Mock<IGameVersionRepository> mockRepository = new();
             _ = mockRepository.Setup(x => x.GetAllVersions(5, 0)).ReturnsAsync(paginatedVersions);
 
-            GameVersionService service = new(mockRepository.Object, mapper);
+            Mock<IExceptionHandler> mockExceptionHandler = new();
+
+            GameVersionService service = new(mockRepository.Object, mapper, mockExceptionHandler.Object);
 
             // Act
             DefaultResponse? result = await service.GetAllVersions(5, 1);
@@ -148,7 +155,9 @@ namespace ROH.Test.Version
             Mock<IGameVersionRepository> mockRepository = new();
             _ = mockRepository.Setup(x => x.GetAllVersions(5, 5)).ReturnsAsync(paginatedVersions);
 
-            GameVersionService service = new(mockRepository.Object, mapper);
+            Mock<IExceptionHandler> mockExceptionHandler = new();
+
+            GameVersionService service = new(mockRepository.Object, mapper, mockExceptionHandler.Object);
 
             // Act
             DefaultResponse? result = await service.GetAllVersions(5, 2);
@@ -186,7 +195,9 @@ namespace ROH.Test.Version
             Mock<IGameVersionRepository> mockRepository = new();
             _ = mockRepository.Setup(x => x.GetAllReleasedVersions(10, 0)).ReturnsAsync(paginatedVersions);
 
-            GameVersionService service = new(mockRepository.Object, mapper);
+            Mock<IExceptionHandler> mockExceptionHandler = new();
+
+            GameVersionService service = new(mockRepository.Object, mapper, mockExceptionHandler.Object);
 
             // Act
             DefaultResponse? result = await service.GetAllReleasedVersions();
@@ -215,7 +226,9 @@ namespace ROH.Test.Version
             Mock<IGameVersionRepository> mockRepository = new();
             _ = mockRepository.Setup(x => x.GetAllReleasedVersions(10, 0)).ReturnsAsync(paginatedVersions);
 
-            GameVersionService service = new(mockRepository.Object, mapper);
+            Mock<IExceptionHandler> mockExceptionHandler = new();
+
+            GameVersionService service = new(mockRepository.Object, mapper, mockExceptionHandler.Object);
 
             // Act
             DefaultResponse? result = await service.GetAllReleasedVersions();
@@ -240,7 +253,9 @@ namespace ROH.Test.Version
             Mock<IGameVersionRepository> mockRepository = new();
             _ = mockRepository.Setup(x => x.SetNewGameVersion(_version)).ReturnsAsync(_version);
 
-            GameVersionService service = new(mockRepository.Object, mapper);
+            Mock<IExceptionHandler> mockExceptionHandler = new();
+
+            GameVersionService service = new(mockRepository.Object, mapper, mockExceptionHandler.Object);
 
             // Act
             DefaultResponse result = await service.NewVersion(_versionModel);
@@ -265,7 +280,9 @@ namespace ROH.Test.Version
             _ = mockRepository.Setup(x => x.SetNewGameVersion(It.IsAny<GameVersion>())).ReturnsAsync(_version);
             _ = mockRepository.Setup(x => x.VerifyIfExist(It.IsAny<GameVersion>())).ReturnsAsync(true);
 
-            GameVersionService service = new(mockRepository.Object, mapper);
+            Mock<IExceptionHandler> mockExceptionHandler = new();
+
+            GameVersionService service = new(mockRepository.Object, mapper, mockExceptionHandler.Object);
 
             // Act
             DefaultResponse result = await service.NewVersion(_versionModel);
