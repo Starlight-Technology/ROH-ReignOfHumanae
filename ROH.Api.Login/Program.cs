@@ -10,11 +10,10 @@ WebApplication app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    _ = app.UseSwagger();
-    _ = app.UseSwaggerUI();
+     app.UseSwagger();
+     app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 
 app.Run();
-

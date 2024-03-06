@@ -9,15 +9,9 @@ namespace ROH.Repository.Version
 {
     public class GameVersionRepository(ISqlContext context) : IGameVersionRepository
     {
-        public async Task<GameVersion?> GetVersionByGuid(Guid versionGuid)
-        {
-            return await context.GameVersions.FirstOrDefaultAsync(v => v.Guid == versionGuid);
-        }
+        public async Task<GameVersion?> GetVersionByGuid(Guid versionGuid) => await context.GameVersions.FirstOrDefaultAsync(v => v.Guid == versionGuid);
 
-        public async Task<GameVersion?> GetCurrentGameVersion()
-        {
-            return await context.GameVersions.Where(v => v.Released).OrderByDescending(v => v.ReleaseDate).FirstOrDefaultAsync();
-        }
+        public async Task<GameVersion?> GetCurrentGameVersion() => await context.GameVersions.Where(v => v.Released).OrderByDescending(v => v.ReleaseDate).FirstOrDefaultAsync();
 
         public async Task<Paginated> GetAllVersions(int take = 10, int skip = 0)
         {
@@ -49,28 +43,22 @@ namespace ROH.Repository.Version
         public async Task<GameVersion> SetNewGameVersion(GameVersion version)
         {
             version = version with { VersionDate = DateTime.UtcNow };
-            _ = await context.GameVersions.AddAsync(version);
-            _ = await context.SaveChangesAsync();
+             await context.GameVersions.AddAsync(version);
+             await context.SaveChangesAsync();
 
             return version;
         }
 
         public async Task<GameVersion> UpdateGameVersion(GameVersion version)
         {
-            _ = context.GameVersions.Update(version);
-            _ = await context.SaveChangesAsync();
+             context.GameVersions.Update(version);
+             await context.SaveChangesAsync();
 
             return version;
         }
 
-        public async Task<bool> VerifyIfExist(GameVersion version)
-        {
-            return await context.GameVersions.AnyAsync(v => v.Release == version.Release && v.Review == version.Review && v.Version == version.Version);
-        }
+        public async Task<bool> VerifyIfExist(GameVersion version) => await context.GameVersions.AnyAsync(v => v.Release == version.Release && v.Review == version.Review && v.Version == version.Version);
 
-        public async Task<bool> VerifyIfExist(Guid versionGuid)
-        {
-            return await context.GameVersions.AnyAsync(v => v.Guid == versionGuid);
-        }
+        public async Task<bool> VerifyIfExist(Guid versionGuid) => await context.GameVersions.AnyAsync(v => v.Guid == versionGuid);
     }
 }

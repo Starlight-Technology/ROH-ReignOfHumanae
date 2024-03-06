@@ -8,10 +8,9 @@ namespace ROH.Repository.Version
 {
     public class GameVersionFileRepository(ISqlContext context) : IGameVersionFileRepository
     {
-        public async Task<GameVersionFile?> GetFile(long id)
-        {
-            return await context.GameVersionFiles.FindAsync(id);
-        }
+        public async Task<GameVersionFile?> GetFile(long id) => await context.GameVersionFiles.FindAsync(id);
+
+        public async Task<GameVersionFile?> GetFile(Guid fileGuid) => await context.GameVersionFiles.FirstOrDefaultAsync(v => v.Guid == fileGuid);
 
         public async Task<List<GameVersionFile>> GetFiles(GameVersion version)
         {
@@ -31,8 +30,8 @@ namespace ROH.Repository.Version
         {
             file.GameVersion = await context.GameVersions.FirstAsync(v => v.Guid == file.GameVersion!.Guid);
 
-            _ = await context.GameVersionFiles.AddAsync(file);
-            _ = await context.SaveChangesAsync();
+             await context.GameVersionFiles.AddAsync(file);
+             await context.SaveChangesAsync();
         }
     }
 }

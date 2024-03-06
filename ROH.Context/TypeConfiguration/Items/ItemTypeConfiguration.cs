@@ -9,11 +9,11 @@ namespace ROH.Context.TypeConfiguration.Items
     {
         public void Configure(EntityTypeBuilder<Item> builder)
         {
-            _ = builder.HasKey(i => i.Id);
+             builder.HasKey(i => i.Id);
 
-            _ = builder.Property(g => g.Guid).HasDefaultValueSql("gen_random_uuid()");
+             builder.Property(g => g.Guid).HasDefaultValueSql("gen_random_uuid()");
 
-            _ = builder.HasMany(i => i.Enchantments).WithOne(e => e.Item).HasForeignKey(i => i.IdItem);
+             builder.HasMany(i => i.Enchantments).WithOne(e => e.Item).HasForeignKey(i => i.IdItem);
         }
     }
 }

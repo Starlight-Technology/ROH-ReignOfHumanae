@@ -9,12 +9,12 @@ namespace ROH.Context.TypeConfiguration.Kingdoms
     {
         public void Configure(EntityTypeBuilder<Kingdom> builder)
         {
-            _ = builder.HasKey(k => k.Id);
+             builder.HasKey(k => k.Id);
 
-            _ = builder.HasMany(k => k.Citizens).WithOne(c => c.Kingdom).HasForeignKey(c => c.IdKingdom);
-            _ = builder.HasMany(k => k.Champions).WithOne(c => c.Kingdom).HasForeignKey(c => c.IdKingdom);
+             builder.HasMany(k => k.Citizens).WithOne(c => c.Kingdom).HasForeignKey(c => c.IdKingdom);
+             builder.HasMany(k => k.Champions).WithOne(c => c.Kingdom).HasForeignKey(c => c.IdKingdom);
 
-            _ = builder.HasOne(k => k.Ruler).WithOne().HasForeignKey<Kingdom>(k => k.IdRuler);
+             builder.HasOne(k => k.Ruler).WithOne().HasForeignKey<Kingdom>(k => k.IdRuler);
         }
     }
 }

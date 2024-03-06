@@ -11,16 +11,13 @@ namespace ROH.Gateway.Controllers.Version
     {
         private readonly Utils.ApiConfiguration.Api _api = new();
 
-        [HttpPost("UploadFile")]
-        public async Task<IActionResult> UploadFile(GameVersionFileModel file)
-        {
-            return Ok(await _api.Post(Utils.ApiConfiguration.Api.Services.UploadVersionFile, file));
-        }
+        [HttpGet("DownloadFile")]
+        public async Task<IActionResult> DownloadFile(string fileGuid) => Ok(await _api.Get(Api.Services.DownloadFile, new { FileGuid = fileGuid }));
 
-        [HttpPost("GetAllVersionFiles")]
-        public async Task<IActionResult> GetAllVersionFiles(string versionGuid)
-        {
-            return Ok(await _api.Get(Utils.ApiConfiguration.Api.Services.GetAllVersionFiles, [new ApiParameters { Name = "versionGuid", Value = versionGuid }]));
-        }
+        [HttpPost("UploadFile")]
+        public async Task<IActionResult> UploadFile(GameVersionFileModel file) => Ok(await _api.Post(Api.Services.UploadVersionFile, file));
+
+        [HttpGet("GetAllVersionFiles")]
+        public async Task<IActionResult> GetAllVersionFiles(string versionGuid) => Ok(await _api.Get(Api.Services.GetAllVersionFiles, new { VersionGuid = versionGuid }));
     }
 }

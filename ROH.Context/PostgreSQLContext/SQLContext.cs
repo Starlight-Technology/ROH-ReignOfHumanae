@@ -62,47 +62,43 @@ namespace ROH.Context.PostgreSQLContext
 
         public DbSet<GameVersionFile> GameVersionFiles { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
 #if DEBUG
-            _ = optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=ROH;Username=postgres;Password=123;");
+             optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=ROH;Username=postgres;Password=123;");
 #elif TEST
-            _ = optionsBuilder.UseNpgsql("Host=192.168.0.37;Port=5432;Database=ROH;Username=teste;Password=Teste123;");
+             optionsBuilder.UseNpgsql("Host=192.168.0.37;Port=5432;Database=ROH;Username=teste;Password=Teste123;");
+
 #else
-            _ = optionsBuilder.UseNpgsql("Host=192.168.0.37;Port=5432;Database=ROH;Username=teste;Password=Teste123;");
+             optionsBuilder.UseNpgsql("Host=192.168.0.37;Port=5432;Database=ROH;Username=teste;Password=Teste123;");
 #endif
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            _ = modelBuilder.ApplyConfiguration(new AccountTypeConfiguration());
-            _ = modelBuilder.ApplyConfiguration(new UserTypeConfiguration());
-            _ = modelBuilder.ApplyConfiguration(new AttackStatusTypeConfiguration());
-            _ = modelBuilder.ApplyConfiguration(new CharacterSkillTypeConfiguration());
-            _ = modelBuilder.ApplyConfiguration(new CharacterTypeConfiguration());
-            _ = modelBuilder.ApplyConfiguration(new DefenseStatusTypeConfiguration());
-            _ = modelBuilder.ApplyConfiguration(new EquippedItemsTypeConfiguration());
-            _ = modelBuilder.ApplyConfiguration(new HandRingTypeConfiguration());
-            _ = modelBuilder.ApplyConfiguration(new InventoryTypeConfiguration());
-            _ = modelBuilder.ApplyConfiguration(new SkillTypeConfiguration());
-            _ = modelBuilder.ApplyConfiguration(new StatusTypeConfiguration());
-            _ = modelBuilder.ApplyConfiguration(new GuildTypeConfiguration());
-            _ = modelBuilder.ApplyConfiguration(new MembersPositionTypeConfiguration());
-            _ = modelBuilder.ApplyConfiguration(new EnchantmentsTypeConfiguration());
-            _ = modelBuilder.ApplyConfiguration(new ItemEnchantmentsTypeConfiguration());
-            _ = modelBuilder.ApplyConfiguration(new ItemTypeConfiguration());
-            _ = modelBuilder.ApplyConfiguration(new ChampionTypeConfiguration());
-            _ = modelBuilder.ApplyConfiguration(new KingdomTypeConfiguration());
-            _ = modelBuilder.ApplyConfiguration(new RelationTypeConfiguration());
-            _ = modelBuilder.ApplyConfiguration(new GameVersionTypeConfiguration());
-            _ = modelBuilder.ApplyConfiguration(new GameVersionFileTypeConfiguration());
+             modelBuilder.ApplyConfiguration(new AccountTypeConfiguration());
+             modelBuilder.ApplyConfiguration(new UserTypeConfiguration());
+             modelBuilder.ApplyConfiguration(new AttackStatusTypeConfiguration());
+             modelBuilder.ApplyConfiguration(new CharacterSkillTypeConfiguration());
+             modelBuilder.ApplyConfiguration(new CharacterTypeConfiguration());
+             modelBuilder.ApplyConfiguration(new DefenseStatusTypeConfiguration());
+             modelBuilder.ApplyConfiguration(new EquippedItemsTypeConfiguration());
+             modelBuilder.ApplyConfiguration(new HandRingTypeConfiguration());
+             modelBuilder.ApplyConfiguration(new InventoryTypeConfiguration());
+             modelBuilder.ApplyConfiguration(new SkillTypeConfiguration());
+             modelBuilder.ApplyConfiguration(new StatusTypeConfiguration());
+             modelBuilder.ApplyConfiguration(new GuildTypeConfiguration());
+             modelBuilder.ApplyConfiguration(new MembersPositionTypeConfiguration());
+             modelBuilder.ApplyConfiguration(new EnchantmentsTypeConfiguration());
+             modelBuilder.ApplyConfiguration(new ItemEnchantmentsTypeConfiguration());
+             modelBuilder.ApplyConfiguration(new ItemTypeConfiguration());
+             modelBuilder.ApplyConfiguration(new ChampionTypeConfiguration());
+             modelBuilder.ApplyConfiguration(new KingdomTypeConfiguration());
+             modelBuilder.ApplyConfiguration(new RelationTypeConfiguration());
+             modelBuilder.ApplyConfiguration(new GameVersionTypeConfiguration());
+             modelBuilder.ApplyConfiguration(new GameVersionFileTypeConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
 
-        public async Task<int> SaveChangesAsync()
-        {
-            return await base.SaveChangesAsync();
-        }
+        public async Task<int> SaveChangesAsync() => await base.SaveChangesAsync();
     }
 }

@@ -10,6 +10,7 @@ using ROH.Mapper.Version;
 using ROH.Repository.Version;
 using ROH.Services.Version;
 using ROH.StandardModels.Version;
+using ROH.Utils.Helpers;
 using ROH.Validations.Version;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -39,26 +40,39 @@ MapperConfiguration mappingConfig = new(mc =>
 
 IMapper mapper = mappingConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = null;
+});
+
 WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    _ = app.UseSwagger();
-    _ = app.UseSwaggerUI();
+     app.UseSwagger();
+     app.UseSwaggerUI();
 }
 
-app.MapPost("UploadFile", async (IGameVersionFileService _gameVersionFileService, GameVersionFileModel file) =>
+app.MapPost("UploadFile", async (IGameVersionFileService _gameVersionFileService, GameVersionFileModel File) =>
 {
-    return await _gameVersionFileService.NewFile(file);
+    return await _gameVersionFileService.NewFile(File);
 }).WithName("UploadFile")
   .WithOpenApi();
 
-app.MapGet("GetAllVersionFiles", async (IGameVersionFileService _gameVersionFileService, string versionGuid) =>
+app.MapGet("GetAllVersionFiles", async (IGameVersionFileService _gameVersionFileService, string VersionGuid) =>
 {
-    return await _gameVersionFileService.GetFiles(versionGuid);
+    return await Task.FromResult(_gameVersionFileService.GetFiles(VersionGuid).Result.MapObjectResponse<ICollection<GameVersionFileModel>>());
 }
 ).WithName("GetAllVersionFiles")
+.WithOpenApi();
+
+app.MapGet("DownloadFile", async (IGameVersionFileService _gameVersionFileService, string FileGuid) =>
+{
+    return await _gameVersionFileService.DownloadFile(new Guid(FileGuid));
+}
+).WithName("DownloadFile")
 .WithOpenApi();
 
 app.Run();

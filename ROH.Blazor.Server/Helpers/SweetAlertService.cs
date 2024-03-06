@@ -11,11 +11,7 @@ namespace ROH.Blazor.Server.Helpers
 {
     public class SweetAlertService(IJSRuntime _jsRuntime) : ISweetAlertService
     {
-
-        public async Task Show(string title, string message, SweetAlertType type)
-        {
-            await _jsRuntime.InvokeVoidAsync("window.sweetalertInterop.showSweetAlert", title, message, type.ToString().ToLower());
-        }
+        public async Task Show(string title, string message, SweetAlertType type) => await _jsRuntime.InvokeVoidAsync("window.sweetalertInterop.showSweetAlert", title, message, type.ToString().ToLower());
 
         public async Task ShowResponse(DefaultResponse response)
         {

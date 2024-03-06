@@ -7,9 +7,6 @@ namespace ROH.Mapper.Version
 {
     public class GameVersionMapping : Profile
     {
-        public GameVersionMapping()
-        {
-            _ = CreateMap<GameVersion, GameVersionModel>().ReverseMap();
-        }
+        public GameVersionMapping() =>  CreateMap<GameVersion, GameVersionModel>().ReverseMap();
     }
 }

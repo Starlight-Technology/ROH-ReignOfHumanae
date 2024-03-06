@@ -1,6 +1,7 @@
 ﻿// Ignore Spelling: Api Utils
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,8 @@ namespace ROH.Utils.ApiConfiguration
             GetVersionDetails,
 
             UploadVersionFile,
-            GetAllVersionFiles
+            GetAllVersionFiles,
+            DownloadFile
         }
 
         private static readonly Dictionary<Services, Uri> _servicesUrl = new Dictionary<Services, Uri>
@@ -44,7 +46,8 @@ namespace ROH.Utils.ApiConfiguration
             #region FILES
 
              {Services.UploadVersionFile, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.VersionFile),"UploadFile" ) },
-             {Services.GetAllVersionFiles, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.VersionFile),"GetAllVersionFiles" ) }
+             {Services.GetAllVersionFiles, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.VersionFile),"GetAllVersionFiles" ) },
+             {Services.DownloadFile, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.VersionFile),"DownloadFile" ) }
             #endregion FILES
         };
 /*
@@ -77,29 +80,54 @@ public async Task<string> Get<T>(Services service, T obj)
     return await response.Content.ReadAsStringAsync();
 }
 */
-        public async Task<string> Get(Services service, List<ApiParameters> apiParameters)
+        public async Task<string> Get<T>(Services service, T parametersObject)
+
         {
             using HttpClient client = new HttpClient();
+            string param = string.Empty;
 
-            StringBuilder parameters = new StringBuilder();
-            string param = "";
-
-            if (apiParameters.Count > 0)
+            if (parametersObject != null)
             {
-                for (int i = 0; i < apiParameters.Count; i++)
-                {
-                    _ = i == 0
-                        ? parameters.Append($"?{apiParameters[i].Name}={apiParameters[i].Value}")
-                        : parameters.Append($"&{apiParameters[i].Name}={apiParameters[i].Value}");
-                }
-
-                param = parameters.ToString();
+                param = GetParams(parametersObject);
             }
 
             HttpResponseMessage response = await client.GetAsync(_servicesUrl.GetValueOrDefault(service) + param);
 
             return await response.Content.ReadAsStringAsync();
         }
+
+        public string GetParams(object parametersObject)
+        {
+            if (parametersObject == null)
+            {
+                return string.Empty;
+            }
+
+            string json = JsonConvert.SerializeObject(parametersObject);
+            JObject jObject = JObject.Parse(json);
+
+            StringBuilder parameters = new StringBuilder();
+
+            foreach (JProperty property in jObject.Properties())
+            {
+                JToken value = property.Value;
+                if (value != null && IsSimpleType(value.Type))
+                {
+                    string encodedValue = Uri.EscapeDataString(value.ToString());
+                     parameters.Append(parameters.Length == 0 ? "?" : "&");
+                     parameters.Append($"{property.Name}={encodedValue}");
+                }
+                else
+                {
+                    throw new InvalidOperationException("Can't convert object to query string.");
+                }
+            }
+
+            return parameters.ToString();
+        }
+
+        private static bool IsSimpleType(JTokenType type) => type == JTokenType.String || type == JTokenType.Integer || type == JTokenType.Float ||
+                   type == JTokenType.Boolean || type == JTokenType.Date || type == JTokenType.Guid;
 
         public async Task<string> Post(Services service, object objectToSend)
         {
@@ -125,25 +153,15 @@ public async Task<string> Get<T>(Services service, T obj)
             return await response.Content.ReadAsStringAsync();
         }
 
-        public async Task<string> Delete(Services service, List<ApiParameters> apiParameters)
+        public async Task<string> Delete<T>(Services service, T parametersObject)
         {
             using HttpClient client = new HttpClient();
 
-            StringBuilder parameters = new StringBuilder();
-            string param = "";
+            string param = string.Empty;
 
-            if (apiParameters.Count > 0)
+            if (parametersObject != null)
             {
-                _ = parameters.Append("?");
-
-                for (int i = 0; i < apiParameters.Count; i++)
-                {
-                    _ = i == 0
-                        ? parameters.Append($"{apiParameters[i].Name}={apiParameters[i].Value}")
-                        : parameters.Append($"&{apiParameters[i].Name}={apiParameters[i].Value}");
-                }
-
-                param = parameters.ToString();
+                param = GetParams(parametersObject);
             }
 
             HttpResponseMessage response = await client.DeleteAsync(_servicesUrl.GetValueOrDefault(service) + param);

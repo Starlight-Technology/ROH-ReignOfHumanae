@@ -9,9 +9,9 @@ namespace ROH.Context.TypeConfiguration.Items
     {
         public void Configure(EntityTypeBuilder<Enchantment> builder)
         {
-            _ = builder.HasKey(e => e.Id);
+             builder.HasKey(e => e.Id);
 
-            _ = builder.HasMany(e => e.Items).WithOne(i => i.Enchantment).HasForeignKey(e => e.IdEnchantment);
+             builder.HasMany(e => e.Items).WithOne(i => i.Enchantment).HasForeignKey(e => e.IdEnchantment);
         }
     }
 }

@@ -12,10 +12,9 @@ namespace ROH.Utils.Helpers
         {
             try
             {
-                if (response != null && response.ObjectResponse != null)
-                    JsonConvert.DeserializeObject<T>(response.ObjectResponse.ToString());
-
-                throw new InvalidCastException();
+                return response != null && response.ObjectResponse != null
+                    ? JsonConvert.DeserializeObject<T>(response.ObjectResponse.ToString()) ?? throw new InvalidCastException()
+                    : throw new InvalidCastException();
             }
             catch (InvalidCastException)
             {
@@ -29,8 +28,8 @@ namespace ROH.Utils.Helpers
             {
                 if (response.ObjectResponse != null)
                 {
-                    var objectJson = JsonConvert.SerializeObject(response.ObjectResponse);
-                    var model = JsonConvert.DeserializeObject<T>(objectJson);
+                    string objectJson = JsonConvert.SerializeObject(response.ObjectResponse);
+                    T model = JsonConvert.DeserializeObject<T>(objectJson);
                     return new DefaultResponse(model, response.HttpStatus, response.Message);
                 }
 

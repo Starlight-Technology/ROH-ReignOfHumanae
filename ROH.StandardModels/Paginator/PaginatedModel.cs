@@ -6,7 +6,7 @@ namespace ROH.StandardModels.Paginator
 {
     public class PaginatedModel
     {
-        public int TotalPages { get; set; }
+        public int? TotalPages { get; set; } = 0;
         public ICollection<dynamic>? ObjectResponse { get; set; }
     }
 }

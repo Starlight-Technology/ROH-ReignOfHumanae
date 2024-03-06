@@ -10,15 +10,15 @@
   <Test>
     <ServiceUrls>
       <Service name="GateWay" url="http://192.168.0.37:9001/" />
-      <Service name="Version" url="http://roh.api.version/" />
-      <Service name="VersionFile" url="http://roh.api.versionfiles/" />
+      <Service name="Version" url="http://roh.api.version:8080/" />
+      <Service name="VersionFile" url="http://roh.api.versionfiles:8080/" />
     </ServiceUrls>
   </Test>
   <Release>
     <ServiceUrls>
       <Service name="GateWay" url="http://gateway:9001/" />
-      <Service name="Version" url="http://roh.api.version/" />
-      <Service name="VersionFile" url="http://roh.api.versionfiles/" />
+      <Service name="Version" url="http://roh.api.version:8080/" />
+      <Service name="VersionFile" url="http://roh.api.versionfiles:8080/" />
     </ServiceUrls>
   </Release>
 </ApiConfig>

@@ -20,6 +20,8 @@ namespace ROH.Utils.ApiConfiguration
 
         private static readonly Dictionary<ApiUrl, Uri> _apiUrl = _apiConfig.GetApiUrl();
 
+        private readonly Api _api = new Api();
+
         public enum Services
         {
             GetCurrentVersion,
@@ -28,7 +30,8 @@ namespace ROH.Utils.ApiConfiguration
             GetAllReleasedVersionsPaginated,
             GetVersionDetails,
             UploadFile,
-            GetAllVersionFiles
+            GetAllVersionFiles,
+            DownloadFile
         }
 
         private static readonly Dictionary<Services, Uri> _gatewayServiceUrl = new Dictionary<Services, Uri>
@@ -45,39 +48,39 @@ namespace ROH.Utils.ApiConfiguration
             #region FILES
 
              {Services.UploadFile, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/VersionFile/UploadFile" ) },
-             {Services.GetAllVersionFiles, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/VersionFile/GetAllVersionFiles" ) }
+             {Services.GetAllVersionFiles, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/VersionFile/GetAllVersionFiles" ) },
+             {Services.DownloadFile, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/VersionFile/DownloadFile" ) }
             #endregion FILES
         };
 
-        public async Task<DefaultResponse?> Get(Services service, List<ApiParameters> apiParameters)
+        public async Task<DefaultResponse?> Get<T>(Services service, T parametersObject)
         {
-            using HttpClient client = new HttpClient();
-
-            StringBuilder parameters = new StringBuilder();
-            string param = "";
-
-            if (apiParameters.Count > 0)
+            try
             {
-                for (int i = 0; i < apiParameters.Count; i++)
+                using HttpClient client = new HttpClient();
+
+                string param = string.Empty;
+
+                if (parametersObject != null)
                 {
-                    _ = i == 0
-                        ? parameters.Append($"?{apiParameters[i].Name}={apiParameters[i].Value}")
-                        : parameters.Append($"&{apiParameters[i].Name}={apiParameters[i].Value}");
+                    param = _api.GetParams(parametersObject);
                 }
 
-                param = parameters.ToString();
+                HttpResponseMessage response = await client.GetAsync(_gatewayServiceUrl.GetValueOrDefault(service) + param);
+
+                if (response != null)
+                {
+                    string responseJson = await response.Content.ReadAsStringAsync();
+
+                    return JsonConvert.DeserializeObject<DefaultResponse>(responseJson);
+                }
+
+                return new DefaultResponse(message: "Error, the connection has failed!");
             }
-
-            HttpResponseMessage response = await client.GetAsync(_gatewayServiceUrl.GetValueOrDefault(service) + param);
-
-            if (response != null)
+            catch (Exception e)
             {
-                string responseJson = await response.Content.ReadAsStringAsync();
-
-                return JsonConvert.DeserializeObject<DefaultResponse>(responseJson);
+                return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.InternalServerError, message: e.Message);
             }
-
-            return new DefaultResponse(message: "Error, the connection has failed!");
         }
 
         public async Task<DefaultResponse?> Post(Services service, object objectToSend)
@@ -118,25 +121,15 @@ namespace ROH.Utils.ApiConfiguration
             return new DefaultResponse(message: "Error, the connection has failed!");
         }
 
-        public async Task<DefaultResponse?> Delete(Services service, List<ApiParameters> apiParameters)
+        public async Task<DefaultResponse?> Delete<T>(Services service, T parametersObject)
         {
             using HttpClient client = new HttpClient();
 
-            StringBuilder parameters = new StringBuilder();
-            string param = "";
+            string param = string.Empty;
 
-            if (apiParameters.Count > 0)
+            if (parametersObject != null)
             {
-                _ = parameters.Append("?");
-
-                for (int i = 0; i < apiParameters.Count; i++)
-                {
-                    _ = i == 0
-                        ? parameters.Append($"{apiParameters[i].Name}={apiParameters[i].Value}")
-                        : parameters.Append($"&{apiParameters[i].Name}={apiParameters[i].Value}");
-                }
-
-                param = parameters.ToString();
+                param = _api.GetParams(parametersObject);
             }
 
             HttpResponseMessage response = await client.DeleteAsync(_gatewayServiceUrl.GetValueOrDefault(service) + param);
