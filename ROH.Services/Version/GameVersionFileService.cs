@@ -25,9 +25,9 @@ namespace ROH.Services.Version
 
                 return file is null ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "Game Version Not Found.") : await GetFile(file);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return new DefaultResponse(null, httpStatus: HttpStatusCode.BadRequest, message: e.Message);
+                return exceptionHandler.HandleException(ex);
             }
         }
 
@@ -39,9 +39,9 @@ namespace ROH.Services.Version
 
                 return file is null ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "Game Version Not Found.") : await GetFile(file);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return new DefaultResponse(null, httpStatus: HttpStatusCode.BadRequest, message: e.Message);
+                return exceptionHandler.HandleException(ex);
             }
         }
 
@@ -79,7 +79,7 @@ namespace ROH.Services.Version
             }
             catch (Exception ex)
             {
-                return new DefaultResponse(httpStatus: HttpStatusCode.BadRequest, message: ex.Message);
+                return exceptionHandler.HandleException(ex);
             }
         }
 
@@ -102,9 +102,9 @@ namespace ROH.Services.Version
 
                 return new DefaultResponse(httpStatus: HttpStatusCode.NotFound);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return new DefaultResponse(null, httpStatus: HttpStatusCode.BadRequest, message: e.Message);
+                return exceptionHandler.HandleException(ex);
             }
         }
 
@@ -142,7 +142,7 @@ namespace ROH.Services.Version
             }
             catch (Exception ex)
             {
-                return new DefaultResponse(null, HttpStatusCode.BadRequest, ex.Message);
+                return exceptionHandler.HandleException(ex);
             }
         }
 
