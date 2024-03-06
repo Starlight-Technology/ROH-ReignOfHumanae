@@ -33,13 +33,13 @@ namespace ROH.Test.Version
             MapperConfiguration config = new(cfg =>
             {
                 // Configure your mappings here
-                 cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
+                _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
             });
 
             Mapper mapper = new(config);
 
             Mock<IGameVersionRepository> mockRepository = new();
-             mockRepository.Setup(x => x.GetVersionByGuid(It.IsAny<Guid>())).ReturnsAsync(_version);
+            _ = mockRepository.Setup(x => x.GetVersionByGuid(It.IsAny<Guid>())).ReturnsAsync(_version);
 
             GameVersionService service = new(mockRepository.Object, mapper);
 
@@ -57,7 +57,7 @@ namespace ROH.Test.Version
             MapperConfiguration config = new(cfg =>
             {
                 // Configure your mappings here
-                 cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
+                _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
             });
 
             Mapper mapper = new(config);
@@ -74,7 +74,7 @@ namespace ROH.Test.Version
             Paginated paginatedVersions = new(listOfVersions.Count, listOfVersions);
 
             Mock<IGameVersionRepository> mockRepository = new();
-             mockRepository.Setup(x => x.GetAllVersions(10, 0)).ReturnsAsync(paginatedVersions);
+            _ = mockRepository.Setup(x => x.GetAllVersions(10, 0)).ReturnsAsync(paginatedVersions);
 
             GameVersionService service = new(mockRepository.Object, mapper);
 
@@ -93,7 +93,7 @@ namespace ROH.Test.Version
             MapperConfiguration config = new(cfg =>
             {
                 // Configure your mappings here
-                 cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
+                _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
             });
 
             Mapper mapper = new(config);
@@ -110,7 +110,7 @@ namespace ROH.Test.Version
             Paginated paginatedVersions = new(5, listOfVersions.Take(5).ToList());
 
             Mock<IGameVersionRepository> mockRepository = new();
-             mockRepository.Setup(x => x.GetAllVersions(5, 0)).ReturnsAsync(paginatedVersions);
+            _ = mockRepository.Setup(x => x.GetAllVersions(5, 0)).ReturnsAsync(paginatedVersions);
 
             GameVersionService service = new(mockRepository.Object, mapper);
 
@@ -129,7 +129,7 @@ namespace ROH.Test.Version
             MapperConfiguration config = new(cfg =>
             {
                 // Configure your mappings here
-                 cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
+                _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
             });
 
             Mapper mapper = new(config);
@@ -146,7 +146,7 @@ namespace ROH.Test.Version
             Paginated paginatedVersions = new(10, listOfVersions.Skip(5).Take(5).ToList());
 
             Mock<IGameVersionRepository> mockRepository = new();
-             mockRepository.Setup(x => x.GetAllVersions(5, 5)).ReturnsAsync(paginatedVersions);
+            _ = mockRepository.Setup(x => x.GetAllVersions(5, 5)).ReturnsAsync(paginatedVersions);
 
             GameVersionService service = new(mockRepository.Object, mapper);
 
@@ -167,7 +167,7 @@ namespace ROH.Test.Version
             MapperConfiguration config = new(cfg =>
             {
                 // Configure your mappings here
-                 cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
+                _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
             });
 
             Mapper mapper = new(config);
@@ -184,7 +184,7 @@ namespace ROH.Test.Version
             Paginated paginatedVersions = new(listOfVersions.Count, listOfVersions);
 
             Mock<IGameVersionRepository> mockRepository = new();
-             mockRepository.Setup(x => x.GetAllReleasedVersions(10, 0)).ReturnsAsync(paginatedVersions);
+            _ = mockRepository.Setup(x => x.GetAllReleasedVersions(10, 0)).ReturnsAsync(paginatedVersions);
 
             GameVersionService service = new(mockRepository.Object, mapper);
 
@@ -203,7 +203,7 @@ namespace ROH.Test.Version
             MapperConfiguration config = new(cfg =>
             {
                 // Configure your mappings here
-                 cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
+                _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
             });
 
             Mapper mapper = new(config);
@@ -213,7 +213,7 @@ namespace ROH.Test.Version
             Paginated paginatedVersions = new(listOfVersions.Count, listOfVersions);
 
             Mock<IGameVersionRepository> mockRepository = new();
-             mockRepository.Setup(x => x.GetAllReleasedVersions(10, 0)).ReturnsAsync(paginatedVersions);
+            _ = mockRepository.Setup(x => x.GetAllReleasedVersions(10, 0)).ReturnsAsync(paginatedVersions);
 
             GameVersionService service = new(mockRepository.Object, mapper);
 
@@ -232,13 +232,13 @@ namespace ROH.Test.Version
             MapperConfiguration config = new(cfg =>
             {
                 // Configure your mappings here
-                 cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
+                _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
             });
 
             Mapper mapper = new(config);
 
             Mock<IGameVersionRepository> mockRepository = new();
-             mockRepository.Setup(x => x.SetNewGameVersion(_version)).ReturnsAsync(_version);
+            _ = mockRepository.Setup(x => x.SetNewGameVersion(_version)).ReturnsAsync(_version);
 
             GameVersionService service = new(mockRepository.Object, mapper);
 
@@ -256,14 +256,14 @@ namespace ROH.Test.Version
             MapperConfiguration config = new(cfg =>
             {
                 // Configure your mappings here
-                 cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
+                _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
             });
 
             Mapper mapper = new(config);
 
             Mock<IGameVersionRepository> mockRepository = new();
-             mockRepository.Setup(x => x.SetNewGameVersion(It.IsAny<GameVersion>())).ReturnsAsync(_version);
-             mockRepository.Setup(x => x.VerifyIfExist(It.IsAny<GameVersion>())).ReturnsAsync(true);
+            _ = mockRepository.Setup(x => x.SetNewGameVersion(It.IsAny<GameVersion>())).ReturnsAsync(_version);
+            _ = mockRepository.Setup(x => x.VerifyIfExist(It.IsAny<GameVersion>())).ReturnsAsync(true);
 
             GameVersionService service = new(mockRepository.Object, mapper);
 

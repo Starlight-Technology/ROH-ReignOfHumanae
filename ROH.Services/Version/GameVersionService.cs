@@ -8,8 +8,6 @@ using ROH.StandardModels.Paginator;
 using ROH.StandardModels.Response;
 using ROH.StandardModels.Version;
 
-using System.Net;
-
 namespace ROH.Services.Version
 {
     public class GameVersionService(IGameVersionRepository versionRepository, IMapper mapper, IExceptionHandler exceptionHandler) : IGameVersionService
@@ -102,7 +100,7 @@ namespace ROH.Services.Version
                                                message: "This version already exist.");
                 }
 
-                 await versionRepository.SetNewGameVersion(mapper.Map<GameVersion>(version));
+                _ = await versionRepository.SetNewGameVersion(mapper.Map<GameVersion>(version));
 
                 return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.Created, message: "New game version created.");
             }

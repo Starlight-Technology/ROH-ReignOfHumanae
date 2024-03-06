@@ -58,8 +58,8 @@ WebApplication app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-     app.UseSwagger();
-     app.UseSwaggerUI();
+    _ = app.UseSwagger();
+    _ = app.UseSwaggerUI();
 }
 
 app.MapPost("UploadFile", async (IGameVersionFileService _gameVersionFileService, GameVersionFileModel File) =>

@@ -8,11 +8,11 @@ namespace ROH.Validations.Version
     {
         public GameVersionFileModelValidation()
         {
-             RuleFor(f => f.GameVersion).NotNull().SetValidator(new GameVersionModelValidation() as IValidator<GameVersionModel?>);
-             RuleFor(f => f.Content).NotEmpty();
-             RuleFor(f => f.Format).NotEmpty();
-             RuleFor(f => f.Name).NotEmpty();
-             RuleFor(f => f.Size).GreaterThan(0);
+            _ = RuleFor(f => f.GameVersion).NotNull().SetValidator(new GameVersionModelValidation() as IValidator<GameVersionModel?>);
+            _ = RuleFor(f => f.Content).NotEmpty();
+            _ = RuleFor(f => f.Format).NotEmpty();
+            _ = RuleFor(f => f.Name).NotEmpty();
+            _ = RuleFor(f => f.Size).GreaterThan(0);
         }
     }
 }

@@ -7,6 +7,6 @@ namespace ROH.Context.TypeConfiguration.Characters
 {
     public class SkillTypeConfiguration : IEntityTypeConfiguration<Skill>
     {
-        public void Configure(EntityTypeBuilder<Skill> builder) =>  builder.HasKey(s => s.Id);
+        public void Configure(EntityTypeBuilder<Skill> builder) => builder.HasKey(s => s.Id);
     }
 }

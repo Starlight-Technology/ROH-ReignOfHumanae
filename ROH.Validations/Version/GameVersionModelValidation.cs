@@ -8,9 +8,9 @@ namespace ROH.Validations.Version
     {
         public GameVersionModelValidation()
         {
-             RuleFor(g => g.Version).GreaterThanOrEqualTo(0);
-             RuleFor(g => g.Release).GreaterThanOrEqualTo(0);
-             RuleFor(g => g.Review).GreaterThanOrEqualTo(0);
+            _ = RuleFor(g => g.Version).GreaterThanOrEqualTo(0);
+            _ = RuleFor(g => g.Release).GreaterThanOrEqualTo(0);
+            _ = RuleFor(g => g.Review).GreaterThanOrEqualTo(0);
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ROH.StandardModels.File
+﻿namespace ROH.StandardModels.File
 {
     public class FileModel
     {

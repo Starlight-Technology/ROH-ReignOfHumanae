@@ -6,7 +6,7 @@ public class LogRepository(ISqlContext context) : ILogRepository
 {
     public async Task SaveLog(Domain.Logging.Log log)
     {
-        await context.Logs.AddAsync(log);
-        await context.SaveChangesAsync();
+        _ = await context.Logs.AddAsync(log);
+        _ = await context.SaveChangesAsync();
     }
 }

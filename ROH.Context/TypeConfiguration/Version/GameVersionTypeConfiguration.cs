@@ -9,9 +9,9 @@ namespace ROH.Context.TypeConfiguration.Version
     {
         public void Configure(EntityTypeBuilder<GameVersion> builder)
         {
-             builder.HasKey(g => g.Id);
+            _ = builder.HasKey(g => g.Id);
 
-             builder.Property(g => g.Guid).HasDefaultValueSql("gen_random_uuid()");
+            _ = builder.Property(g => g.Guid).HasDefaultValueSql("gen_random_uuid()");
         }
     }
 }

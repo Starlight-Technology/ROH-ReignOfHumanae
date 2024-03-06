@@ -27,5 +27,4 @@ namespace ROH.Services.ExceptionService
         private void LogException(string exception) => _logRepository.SaveLog(new Log(0, Domain.Logging.Severity.Error, exception));
 
     }
-
 }

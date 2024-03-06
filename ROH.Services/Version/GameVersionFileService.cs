@@ -168,7 +168,7 @@ namespace ROH.Services.Version
         {
             if (!Directory.Exists(Path.GetDirectoryName(path)))
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(path) ?? Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\ROHFiles");
+                _ = Directory.CreateDirectory(Path.GetDirectoryName(path) ?? Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\ROHFiles");
             }
 
             return Task.CompletedTask;
@@ -197,7 +197,7 @@ namespace ROH.Services.Version
             }
             catch (Exception ex)
             {
-                exceptionHandler.HandleException(ex);
+                _ = exceptionHandler.HandleException(ex);
             }
         }
     }
