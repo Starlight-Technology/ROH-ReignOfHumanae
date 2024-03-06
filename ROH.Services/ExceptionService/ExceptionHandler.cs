@@ -1,4 +1,5 @@
-﻿using ROH.Interfaces.Repository.Log;
+﻿using ROH.Domain.Logging;
+using ROH.Interfaces.Repository.Log;
 using ROH.Interfaces.Services.ExceptionService;
 using ROH.StandardModels.Response;
 
@@ -20,7 +21,7 @@ namespace ROH.Services.ExceptionService
             return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.BadRequest, message: "An error has occurred. Don't be afraid; an email with the error details has been sent to your developers.");
         }
 
-        private void LogException(Exception exception) => _logRepository.SaveLog(new Domain.Logging.Log(0, Domain.Logging.Severity.Error, $@"Source: {exception.Source};Message: {exception.Message}; StackTrace: {exception.StackTrace}"));
+        private void LogException(Exception exception) => _logRepository.SaveLog(new Log(0, Domain.Logging.Severity.Error, $@"Source: {exception.Source};Message: {exception.Message}; StackTrace: {exception.StackTrace}"));
 
         private void SendEmail(Exception exception)
         {
