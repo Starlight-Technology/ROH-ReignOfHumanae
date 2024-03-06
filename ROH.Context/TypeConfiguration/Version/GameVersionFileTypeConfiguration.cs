@@ -9,11 +9,11 @@ namespace ROH.Context.TypeConfiguration.Version
     {
         public void Configure(EntityTypeBuilder<GameVersionFile> builder)
         {
-             builder.HasKey(f => f.Id);
+            _ = builder.HasKey(f => f.Id);
 
-             builder.Property(g => g.Guid).HasDefaultValueSql("gen_random_uuid()");
+            _ = builder.Property(g => g.Guid).HasDefaultValueSql("gen_random_uuid()");
 
-             builder.HasOne(f => f.GameVersion).WithMany(v => v.VersionFiles).HasForeignKey(f => f.IdVersion);
+            _ = builder.HasOne(f => f.GameVersion).WithMany(v => v.VersionFiles).HasForeignKey(f => f.IdVersion);
         }
     }
 }

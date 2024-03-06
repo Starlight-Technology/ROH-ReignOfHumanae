@@ -9,9 +9,9 @@ namespace ROH.Context.TypeConfiguration.Characters
     {
         public void Configure(EntityTypeBuilder<AttackStatus> builder)
         {
-             builder.HasKey(a => a.IdCharacter);
+            _ = builder.HasKey(a => a.IdCharacter);
 
-             builder.HasOne(a => a.Character).WithOne(c => c.AttackStatus).HasForeignKey<AttackStatus>(a => a.IdCharacter);
+            _ = builder.HasOne(a => a.Character).WithOne(c => c.AttackStatus).HasForeignKey<AttackStatus>(a => a.IdCharacter);
         }
     }
 }

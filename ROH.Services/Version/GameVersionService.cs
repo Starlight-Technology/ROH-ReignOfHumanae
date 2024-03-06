@@ -2,16 +2,15 @@
 
 using ROH.Domain.Version;
 using ROH.Interfaces.Repository.Version;
+using ROH.Interfaces.Services.ExceptionService;
 using ROH.Interfaces.Services.Version;
 using ROH.StandardModels.Paginator;
 using ROH.StandardModels.Response;
 using ROH.StandardModels.Version;
 
-using System.Net;
-
 namespace ROH.Services.Version
 {
-    public class GameVersionService(IGameVersionRepository versionRepository, IMapper mapper) : IGameVersionService
+    public class GameVersionService(IGameVersionRepository versionRepository, IMapper mapper, IExceptionHandler exceptionHandler) : IGameVersionService
     {
         public async Task<DefaultResponse> GetVersionByGuid(string versionGuid)
         {
@@ -25,9 +24,9 @@ namespace ROH.Services.Version
 
                 return new DefaultResponse() { HttpStatus = System.Net.HttpStatusCode.ExpectationFailed, Message = "The Guid is invalid!" };
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return new DefaultResponse(null, httpStatus: HttpStatusCode.BadRequest, message: e.Message);
+                return exceptionHandler.HandleException(ex);
             }
         }
 
@@ -55,9 +54,9 @@ namespace ROH.Services.Version
 
                 return new DefaultResponse(objectResponse: paginatedModel);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return new DefaultResponse(null, httpStatus: HttpStatusCode.BadRequest, message: e.Message);
+                return exceptionHandler.HandleException(ex);
             }
         }
 
@@ -85,9 +84,9 @@ namespace ROH.Services.Version
 
                 return new DefaultResponse(objectResponse: paginatedModel, message: "That are all released versions");
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return new DefaultResponse(null, httpStatus: HttpStatusCode.BadRequest, message: e.Message);
+                return exceptionHandler.HandleException(ex);
             }
         }
 
@@ -101,13 +100,13 @@ namespace ROH.Services.Version
                                                message: "This version already exist.");
                 }
 
-                 await versionRepository.SetNewGameVersion(mapper.Map<GameVersion>(version));
+                _ = await versionRepository.SetNewGameVersion(mapper.Map<GameVersion>(version));
 
                 return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.Created, message: "New game version created.");
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return new DefaultResponse(null, httpStatus: HttpStatusCode.BadRequest, message: e.Message);
+                return exceptionHandler.HandleException(ex);
             }
         }
 
@@ -122,9 +121,9 @@ namespace ROH.Services.Version
                 GameVersion? version = await versionRepository.GetCurrentGameVersion();
                 return new DefaultResponse(objectResponse: version);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return new DefaultResponse(null, httpStatus: HttpStatusCode.BadRequest, message: e.Message);
+                return exceptionHandler.HandleException(ex);
             }
         }
     }

@@ -11,24 +11,20 @@ namespace ROH.Services.ExceptionService
 
         public DefaultResponse HandleException(Exception exception)
         {
+            string error = $@"Source: {exception.Source};Message: {exception.Message}; StackTrace: {exception.StackTrace}";
+
             // Log the exception (e.g., to a file or logging service)
-            LogException(exception);
+            LogException(error);
 
-            // Send an email with the exception details
-            SendEmail(exception);
-
-            // Return a friendly message to the user
+            // Return a friendly message to the user unless are in DEBUG
+#if DEBUG
+            return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.BadRequest, message: error);
+#else
             return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.BadRequest, message: "An error has occurred. Don't be afraid; an email with the error details has been sent to your developers.");
+#endif
         }
 
-        private void LogException(Exception exception) => _logRepository.SaveLog(new Log(0, Domain.Logging.Severity.Error, $@"Source: {exception.Source};Message: {exception.Message}; StackTrace: {exception.StackTrace}"));
+        private void LogException(string exception) => _logRepository.SaveLog(new Log(0, Domain.Logging.Severity.Error, exception));
 
-        private void SendEmail(Exception exception)
-        {
-            // Implement your email sending logic here
-            // For example, use an email sending library or service
-            // Send an email to this.emailRecipient with the exception details
-        }
     }
-
 }

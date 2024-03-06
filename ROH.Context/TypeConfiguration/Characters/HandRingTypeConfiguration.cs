@@ -9,9 +9,9 @@ namespace ROH.Context.TypeConfiguration.Characters
     {
         public void Configure(EntityTypeBuilder<HandRing> builder)
         {
-             builder.HasKey(r => r.Id);
+            _ = builder.HasKey(r => r.Id);
 
-             builder.HasOne(r => r.Item).WithMany().HasForeignKey(r => r.IdItem);
+            _ = builder.HasOne(r => r.Item).WithMany().HasForeignKey(r => r.IdItem);
         }
     }
 }
