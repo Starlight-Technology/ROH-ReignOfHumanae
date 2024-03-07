@@ -2,9 +2,9 @@
 <ApiConfig>
   <Develop>
     <ServiceUrls>
-      <Service name="GateWay" url="https://localhost:44305/" />
-      <Service name="Version" url="https://localhost:44389/" />
-      <Service name="VersionFile" url="https://localhost:44318/" />
+      <Service name="GateWay" url="http://localhost:9001/" />
+      <Service name="Version" url="https://localhost:7240/" />
+      <Service name="VersionFile" url="https://localhost:7068/" />
     </ServiceUrls>
   </Develop>
   <Test>
