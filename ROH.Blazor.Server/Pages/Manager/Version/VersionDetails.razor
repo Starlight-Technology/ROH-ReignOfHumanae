@@ -66,7 +66,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="text-center">
-                    <MatProgressBar Class="mb-3" Progress="@(uploadProgress/100)" />
+                    <MatProgressBar Progress="@(uploadProgress/100)" />
                     <p>Uploading... (@uploadProgress%)</p>
                 </div>
             </div>
@@ -131,6 +131,7 @@
                 string fileName;
                 string fileExtension;
                 long fileSize = 0;
+                long maxFileSize = 1000000000;
                 bool uploaded = false;
                 isUploading = true;
                 int totalFiles = selectedFiles.Count; // Total files being uploaded
@@ -141,32 +142,38 @@
                     fileName = file.Name;
                     fileExtension = Path.GetExtension(fileName);
                     fileSize = file.Size;
-
-                    using (var stream = file.OpenReadStream())
-                    using (var ms = new MemoryStream())
+                    if (fileSize > maxFileSize)
                     {
-                        await stream.CopyToAsync(ms);
-                        var fileContent = ms.ToArray();
+                        await _sweetAlert.Show("Upload File", "The file size must be less than 1 Gb.", Helpers.Types.SweetAlertType.Warning);
+                    }
+                    else
+                    {
+                        using (var stream = file.OpenReadStream(maxFileSize))
+                        using (var ms = new MemoryStream())
+                        {
+                            await stream.CopyToAsync(ms);
+                            var fileContent = ms.ToArray();
 
-                        filesUploaded++;
-                        uploadProgress = ((double)filesUploaded / totalFiles * 100);
-                        StateHasChanged();
+                            filesUploaded++;
+                            uploadProgress = ((double)filesUploaded / totalFiles * 100);
+                            StateHasChanged();
 
-                        var responseUpload = await _versionFileService.UploadVersionFile(
-                            new GameVersionFileModel(
-                                fileName,
-                                "",
-                                fileExtension,
-                                fileContent,
-                                fileSize,
-                                gameVersion
-                            )
-                        );
+                            var responseUpload = await _versionFileService.UploadVersionFile(
+                                new GameVersionFileModel(
+                                    fileName,
+                                    "",
+                                    fileExtension,
+                                    fileContent,
+                                    fileSize,
+                                    gameVersion
+                                )
+                            );
 
-                    if (responseUpload != null && !responseUpload.HttpStatus.IsSuccessStatusCode())
-                        await _sweetAlert.ShowResponse(responseUpload);
-                    else if (responseUpload != null && responseUpload.HttpStatus.IsSuccessStatusCode())
-                        uploaded = true;
+                            if (responseUpload != null && !responseUpload.HttpStatus.IsSuccessStatusCode())
+                                await _sweetAlert.ShowResponse(responseUpload);
+                            else if (responseUpload != null && responseUpload.HttpStatus.IsSuccessStatusCode())
+                                uploaded = true;
+                        }
                     }
 
                 }
