@@ -1,7 +1,7 @@
 #See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-RUN addgroup --gid 1000 roh && adduser --uid 1010 --gid 1000 --disabled-password --gecos '' roh
+RUN addgroup --gid 1002 roh && adduser --uid 1010 --gid 1002 --disabled-password --gecos '' roh
 USER roh
 WORKDIR /app
 EXPOSE 8080
