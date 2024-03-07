@@ -2,6 +2,8 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 RUN addgroup --gid 1002 roh && adduser --uid 1010 --gid 1002 --disabled-password --gecos '' roh
+RUN mkdir -p /app/ROH/updateFiles
+RUN chown -R roh:roh /app/ROH/updateFiles
 USER roh
 WORKDIR /app
 EXPOSE 8080
