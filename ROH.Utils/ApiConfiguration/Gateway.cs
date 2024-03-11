@@ -24,14 +24,20 @@ namespace ROH.Utils.ApiConfiguration
 
         public enum Services
         {
+            #region VERSION
             GetCurrentVersion,
             CreateNewVersion,
             GetAllVersionsPaginated,
             GetAllReleasedVersionsPaginated,
             GetVersionDetails,
+            ReleaseVersion,
+            #endregion
+
+            #region VERSIONFILE
             UploadFile,
             GetAllVersionFiles,
             DownloadFile
+            #endregion
         }
 
         private static readonly Dictionary<Services, Uri> _gatewayServiceUrl = new Dictionary<Services, Uri>
@@ -43,6 +49,7 @@ namespace ROH.Utils.ApiConfiguration
             {Services.GetAllVersionsPaginated, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Version/GetAllVersionsPaginated" ) },
             {Services.GetAllReleasedVersionsPaginated, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Version/GetAllReleasedVersionsPaginated" ) },
             {Services.GetVersionDetails, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Version/GetVersionDetails" ) },
+            {Services.ReleaseVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Version/ReleaseVersion" ) },
             #endregion VERSION
 
             #region FILES

@@ -26,6 +26,7 @@ namespace ROH.Utils.ApiConfiguration
             GetAllVersionsPaginated,
             GetAllReleasedVersionsPaginated,
             GetVersionDetails,
+            ReleaseVersion,
 
             UploadVersionFile,
             GetAllVersionFiles,
@@ -41,6 +42,7 @@ namespace ROH.Utils.ApiConfiguration
             {Services.GetAllVersionsPaginated, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"GetAllVersionsPaginated" ) },
             {Services.GetAllReleasedVersionsPaginated, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"GetAllReleasedVersionsPaginated" ) },
             {Services.GetVersionDetails, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"GetVersionDetails" ) },
+            {Services.ReleaseVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"ReleaseVersion" ) },
             #endregion VERSION
 
             #region FILES

@@ -24,5 +24,9 @@ namespace ROH.Gateway.Controllers.Version
 
         [HttpPost("CreateNewVersion")]
         public async Task<IActionResult> CreateNewVersion(GameVersionModel model) => Ok(await _api.Post(Utils.ApiConfiguration.Api.Services.CreateNewVersion, model));
+
+        [HttpPut("ReleaseVersion")]
+        public async Task<IActionResult> ReleaseVersion(string guid) => Ok(await _api.Update(Utils.ApiConfiguration.Api.Services.ReleaseVersion, guid));
+
     }
 }
