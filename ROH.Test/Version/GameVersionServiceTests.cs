@@ -25,7 +25,7 @@ namespace ROH.Test.Version
 
         private readonly GameVersionModel _versionModel = new() { Guid = _guidGenerated, Version = 1, Release = 1, Review = 1, Released = false, ReleaseDate = null, VersionDate = _utcNow };
 
-        private readonly GameVersion _version = new(null, _utcNow, 1, _guidGenerated, 1, 1, 1, false);
+        private readonly GameVersion _version = new( _utcNow, 1, _guidGenerated, 1, 1, 1);
 
         [Fact]
         public async Task GetVersionByGuid_ShouldReturnVersion_WhenVersionExists()

@@ -147,14 +147,27 @@ namespace ROH.Services.Version
 
         private async Task<DefaultResponse> ReleaseVersion(DefaultResponse defaultResponse)
         {
-            if (defaultResponse.ObjectResponse is null)
-                return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.NotFound, message: "The version has not found!");
+            try
+            {
+                if (defaultResponse.ObjectResponse is null)
+                    return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.NotFound, message: "The version has not found!");
 
-            GameVersion version = (GameVersion)defaultResponse.ObjectResponse with { Released = true, ReleaseDate = DateTime.Now };
+                GameVersion? existingVersion = await versionRepository.GetVersionByGuid(((GameVersion)defaultResponse.ObjectResponse).Guid);
 
-            _ = await versionRepository.UpdateGameVersion(version);
+                if (existingVersion is null)
+                    return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.NotFound, message: "The version has not been found!");
 
-            return new DefaultResponse(message: "The version has been set as release.");
+                existingVersion.Released = true;
+                existingVersion.ReleaseDate = DateTime.UtcNow;
+
+                _ = await versionRepository.UpdateGameVersion(existingVersion);
+
+                return new DefaultResponse(message: "The version has been set as release.");
+            }
+            catch (Exception ex)
+            {
+                return exceptionHandler.HandleException(ex);
+            }
         }
         private static Task<DefaultResponse> ReturnGuidInvalid() => Task.FromResult(new DefaultResponse { HttpStatus = System.Net.HttpStatusCode.ExpectationFailed, Message = "The Guid is invalid!" });
     }

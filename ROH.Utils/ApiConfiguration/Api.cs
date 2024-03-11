@@ -119,6 +119,7 @@ namespace ROH.Utils.ApiConfiguration
             using HttpClient client = new HttpClient();
 
             string jsonContent = JsonConvert.SerializeObject(objectToSend);
+
             StringContent httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
             HttpResponseMessage response = await client.PutAsync(_servicesUrl.GetValueOrDefault(service), httpContent);

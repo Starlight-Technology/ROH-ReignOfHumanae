@@ -33,6 +33,13 @@
             <input type="number" id="Review" class="form-control" @bind="gameVersion.Review" readonly />
         </div>
 
+        @if (!gameVersion.Released)
+        {
+            <div class="col-sm-2">
+                <button class="btn btn-outline-primary" @onclick="ReleaseVersion"> Release Version </button>
+            </div>
+        }
+
         @if (gameVersion.ReleaseDate.HasValue)
         {
             <div class="col-sm-1">
@@ -191,5 +198,15 @@
         }
 
         await Task.CompletedTask;
+    }
+
+    private async Task ReleaseVersion(MouseEventArgs e)
+    {
+        var response = await _versionService.ReleaseVersion(gameVersion);
+
+        if (response is not null)
+            await _sweetAlert.ShowResponse(response);
+
+        StateHasChanged();
     }
 }

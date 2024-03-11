@@ -2,6 +2,8 @@ using AutoMapper;
 
 using FluentValidation;
 
+using Microsoft.AspNetCore.Mvc;
+
 using ROH.Context.PostgreSQLContext;
 using ROH.Interfaces;
 using ROH.Interfaces.Repository.Log;
@@ -62,8 +64,8 @@ app.MapPost("CreateNewVersion", async (IGameVersionService _gameVersionService, 
 ).WithName("CreateNewVersion")
 .WithOpenApi();
 
-app.MapPut("ReleaseVersion", async (IGameVersionService _gameVersionService, string guid) =>
-    await _gameVersionService.SetReleased(guid)
+app.MapPut("ReleaseVersion", async (IGameVersionService _gameVersionService, [FromBody] GameVersionModel gameVersion) =>
+    await _gameVersionService.SetReleased(gameVersion.Guid.ToString())
 ).WithName("ReleaseVersion")
 .WithOpenApi();
 

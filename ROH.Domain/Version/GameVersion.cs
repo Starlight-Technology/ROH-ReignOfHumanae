@@ -1,4 +1,6 @@
-﻿namespace ROH.Domain.Version
+﻿using System.Numerics;
+
+namespace ROH.Domain.Version
 {
     /// <summary>
     /// Version is the version of the game, greater changes like something in history
@@ -12,16 +14,18 @@
     /// <param name="Review"></param>
     /// <param name="Released"></param>
     public record GameVersion(
-        DateTime? ReleaseDate,
         DateTime? VersionDate,
         long Id = 0,
         Guid Guid = default,
         int Version = 0,
         int Release = 0,
-        int Review = 0,
-        bool Released = false
+        int Review = 0
         )
     {
         public ICollection<GameVersionFile> VersionFiles { get; init; } = new List<GameVersionFile>();
+
+        public bool Released { get; set; } = false;
+
+        public DateTime? ReleaseDate { get; set; }
     }
 }
