@@ -25,7 +25,7 @@ namespace ROH.Test.Version
 
         private readonly GameVersionModel _versionModel = new() { Guid = _guidGenerated, Version = 1, Release = 1, Review = 1, Released = false, ReleaseDate = null, VersionDate = _utcNow };
 
-        private readonly GameVersion _version = new(null, _utcNow, 1, _guidGenerated, 1, 1, 1, false);
+        private readonly GameVersion _version = new( _utcNow, 1, _guidGenerated, 1, 1, 1);
 
         [Fact]
         public async Task GetVersionByGuid_ShouldReturnVersion_WhenVersionExists()
@@ -289,6 +289,60 @@ namespace ROH.Test.Version
 
             // Assert
             Assert.Equal(HttpStatusCode.Conflict, result.HttpStatus);
+        }
+
+        [Fact]
+        public async Task SetReleased_ShouldReturnStatusOkWithSuccessfullMesage_WhenVersionSetHasReleased()
+        {
+            // Arrange
+            MapperConfiguration config = new(cfg =>
+            {
+                // Configure your mappings here
+                _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
+            });
+            Mapper mapper = new(config);
+
+            Mock<IGameVersionRepository> mockRepository = new();
+            _ = mockRepository.Setup(x => x.GetVersionByGuid(It.IsAny<Guid>())).ReturnsAsync(_version);
+
+            Mock<IExceptionHandler> mockExceptionHandler = new();
+
+            GameVersionService service = new(mockRepository.Object, mapper, mockExceptionHandler.Object);
+
+            DefaultResponse expected = new(message: "The version has been set as release.");
+
+            // Act
+            DefaultResponse result = await service.SetReleased(_guidGenerated.ToString());
+
+            // Assert
+            Assert.Equivalent(result, expected);
+        }
+
+        [Fact]
+        public async Task SetReleased_ShouldReturnError_WhenGuidIsInvalid()
+        {
+            // Arrange
+            MapperConfiguration config = new(cfg =>
+            {
+                // Configure your mappings here
+                _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
+            });
+            Mapper mapper = new(config);
+
+            Mock<IGameVersionRepository> mockRepository = new();
+            _ = mockRepository.Setup(x => x.GetVersionByGuid(It.IsAny<Guid>())).ReturnsAsync((GameVersion?)null);
+
+            Mock<IExceptionHandler> mockExceptionHandler = new();
+
+            GameVersionService service = new(mockRepository.Object, mapper, mockExceptionHandler.Object);
+
+            DefaultResponse expected = new() { HttpStatus = System.Net.HttpStatusCode.ExpectationFailed, Message = "The Guid is invalid!" };
+
+            // Act
+            DefaultResponse result = await service.SetReleased(_guidGenerated.ToString());
+
+            // Assert
+            Assert.Equivalent(result, expected);
         }
     }
 }

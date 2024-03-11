@@ -24,7 +24,7 @@ namespace ROH.Test.Version
         private readonly GameVersionModel _versionModel = new() { Version = 1, Release = 1, Review = 1, Released = false, ReleaseDate = null, VersionDate = DateTime.UtcNow };
         private readonly GameVersionFileModel _fileModel = new() { Name = "testFile", Size = 26354178, Path = "~/testFolder", Format = "format", Guid = _testGuid };
 
-        private readonly GameVersion _version = new(null, null, 1, _testGuid, 1, 1, 1, false);
+        private readonly GameVersion _version = new(null, 1, _testGuid, 1, 1, 1);
         private readonly GameVersionFile _file = new(1, 1, _testGuid, 26354178, "testFile", "~/testFolder", "format");
 
         [Fact]
@@ -162,6 +162,7 @@ namespace ROH.Test.Version
 
             Mock<IGameVersionService> mockVersionService = new();
             _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(false);
+            _ = mockVersionService.Setup(x => x.GetCurrentVersion()).ReturnsAsync(new DefaultResponse());
 
             Mock<IExceptionHandler> mockExceptionHandler = new();
 

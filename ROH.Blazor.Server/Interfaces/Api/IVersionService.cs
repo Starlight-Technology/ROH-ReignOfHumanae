@@ -16,5 +16,7 @@ namespace ROH.Blazor.Server.Interfaces.Api
         Task<DefaultResponse?> GetCurrentVersion();
 
         Task<DefaultResponse?> GetVersionDetails(Guid guid);
+
+        Task<DefaultResponse?> ReleaseVersion(GameVersionModel model);
     }
 }

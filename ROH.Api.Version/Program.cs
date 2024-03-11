@@ -2,6 +2,8 @@ using AutoMapper;
 
 using FluentValidation;
 
+using Microsoft.AspNetCore.Mvc;
+
 using ROH.Context.PostgreSQLContext;
 using ROH.Interfaces;
 using ROH.Interfaces.Repository.Log;
@@ -58,33 +60,33 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapPost("CreateNewVersion", async (IGameVersionService _gameVersionService, GameVersionModel model) =>
-{
-    return await _gameVersionService.NewVersion(model);
-}).WithName("CreateNewVersion")
-  .WithOpenApi();
+    await _gameVersionService.NewVersion(model)
+).WithName("CreateNewVersion")
+.WithOpenApi();
+
+app.MapPut("ReleaseVersion", async (IGameVersionService _gameVersionService, [FromBody] GameVersionModel gameVersion) =>
+    await _gameVersionService.SetReleased(gameVersion.Guid.ToString())
+).WithName("ReleaseVersion")
+.WithOpenApi();
 
 app.MapGet("GetCurrentVersion", (IGameVersionService _gameVersionService) =>
-{
-    return _gameVersionService.GetCurrentVersion().Result.MapObjectResponse<GameVersionModel>();
-}).WithName("GetCurrentVersion")
-  .WithOpenApi();
+    _gameVersionService.GetCurrentVersion().Result.MapObjectResponse<GameVersionModel>()
+).WithName("GetCurrentVersion")
+.WithOpenApi();
 
 app.MapGet("GetAllVersionsPaginated", async (IGameVersionService _gameVersionService, int page, int take) =>
-{
-    return await _gameVersionService.GetAllVersions(page: page, take: take);
-}).WithName("GetAllVersionsPaginated")
-  .WithOpenApi();
+    await _gameVersionService.GetAllVersions(page: page, take: take)
+).WithName("GetAllVersionsPaginated")
+.WithOpenApi();
 
 app.MapGet("GetAllReleasedVersionsPaginated", async (IGameVersionService _gameVersionService, int page, int take) =>
-{
-    return await _gameVersionService.GetAllReleasedVersions(page: page, take: take);
-}).WithName("GetAllReleasedVersionsPaginated")
-  .WithOpenApi();
+    await _gameVersionService.GetAllReleasedVersions(page: page, take: take)
+).WithName("GetAllReleasedVersionsPaginated")
+.WithOpenApi();
 
 app.MapGet("GetVersionDetails", async (IGameVersionService _gameVersionService, string guid) =>
-{
-    return await _gameVersionService.GetVersionByGuid(guid);
-}).WithName("GetVersionDetails")
-  .WithOpenApi();
+    await _gameVersionService.GetVersionByGuid(guid)
+).WithName("GetVersionDetails")
+.WithOpenApi();
 
 app.Run();

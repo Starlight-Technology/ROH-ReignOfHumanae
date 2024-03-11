@@ -19,5 +19,7 @@ namespace ROH.Blazor.Server.Api
         public async Task<DefaultResponse?> GetAllReleasedVersionsPaginated(int page = 1, int take = 10) => await _gateway.Get(Utils.ApiConfiguration.Gateway.Services.GetAllReleasedVersionsPaginated, new { Page = page, Take = take });
 
         public async Task<DefaultResponse?> GetVersionDetails(Guid guid) => await _gateway.Get(Utils.ApiConfiguration.Gateway.Services.GetVersionDetails, new { Guid = guid });
+
+        public async Task<DefaultResponse?> ReleaseVersion(GameVersionModel model) => await _gateway.Update(Utils.ApiConfiguration.Gateway.Services.ReleaseVersion, model);
     }
 }

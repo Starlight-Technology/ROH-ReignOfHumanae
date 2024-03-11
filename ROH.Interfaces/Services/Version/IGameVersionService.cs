@@ -18,5 +18,7 @@ namespace ROH.Interfaces.Services.Version
         Task<bool> VerifyIfVersionExist(GameVersionModel version);
 
         Task<bool> VerifyIfVersionExist(string versionGuid);
+
+        Task<DefaultResponse> SetReleased(string versionGuid);
     }
 }
