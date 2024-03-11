@@ -303,13 +303,13 @@ namespace ROH.Test.Version
             Mapper mapper = new(config);
 
             Mock<IGameVersionRepository> mockRepository = new();
-            mockRepository.Setup(x=>x.GetVersionByGuid(It.IsAny<Guid>())).ReturnsAsync(_version);
+            _ = mockRepository.Setup(x => x.GetVersionByGuid(It.IsAny<Guid>())).ReturnsAsync(_version);
 
             Mock<IExceptionHandler> mockExceptionHandler = new();
 
             GameVersionService service = new(mockRepository.Object, mapper, mockExceptionHandler.Object);
 
-            DefaultResponse expected = new (message: "The version has been set as release.");
+            DefaultResponse expected = new(message: "The version has been set as release.");
 
             // Act
             DefaultResponse result = await service.SetReleased(_guidGenerated.ToString());
@@ -330,13 +330,13 @@ namespace ROH.Test.Version
             Mapper mapper = new(config);
 
             Mock<IGameVersionRepository> mockRepository = new();
-            mockRepository.Setup(x=>x.GetVersionByGuid(It.IsAny<Guid>())).ReturnsAsync((GameVersion?)null);
+            _ = mockRepository.Setup(x => x.GetVersionByGuid(It.IsAny<Guid>())).ReturnsAsync((GameVersion?)null);
 
             Mock<IExceptionHandler> mockExceptionHandler = new();
 
             GameVersionService service = new(mockRepository.Object, mapper, mockExceptionHandler.Object);
 
-            DefaultResponse expected = new (){ HttpStatus = System.Net.HttpStatusCode.ExpectationFailed, Message = "The Guid is invalid!" };
+            DefaultResponse expected = new() { HttpStatus = System.Net.HttpStatusCode.ExpectationFailed, Message = "The Guid is invalid!" };
 
             // Act
             DefaultResponse result = await service.SetReleased(_guidGenerated.ToString());
