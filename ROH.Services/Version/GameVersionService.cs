@@ -7,6 +7,7 @@ using ROH.Interfaces.Services.Version;
 using ROH.StandardModels.Paginator;
 using ROH.StandardModels.Response;
 using ROH.StandardModels.Version;
+using ROH.Utils.Helpers;
 
 namespace ROH.Services.Version
 {
@@ -19,10 +20,12 @@ namespace ROH.Services.Version
                 if (Guid.TryParse(versionGuid, out Guid guid))
                 {
                     GameVersion? version = await versionRepository.GetVersionByGuid(guid);
-                    return new DefaultResponse() { ObjectResponse = version };
+
+                    if (version != null)
+                        return new DefaultResponse() { ObjectResponse = version };
                 }
 
-                return new DefaultResponse() { HttpStatus = System.Net.HttpStatusCode.ExpectationFailed, Message = "The Guid is invalid!" };
+                return await ReturnGuidInvalid();
             }
             catch (Exception ex)
             {
@@ -126,5 +129,33 @@ namespace ROH.Services.Version
                 return exceptionHandler.HandleException(ex);
             }
         }
+
+        public async Task<DefaultResponse> SetReleased(string versionGuid)
+        {
+            try
+            {
+                var versionResponse = await GetVersionByGuid(versionGuid);
+
+                return versionResponse.HttpStatus.IsSuccessStatusCode() ? await ReleaseVersion(versionResponse) : await ReturnGuidInvalid();
+
+            }
+            catch (Exception ex)
+            {
+                return exceptionHandler.HandleException(ex);
+            }
+        }
+
+        private async Task<DefaultResponse> ReleaseVersion(DefaultResponse defaultResponse)
+        {
+            if(defaultResponse.ObjectResponse is null)
+                return new DefaultResponse(httpStatus:System.Net.HttpStatusCode.NotFound, message:"The version has not found!");
+
+            GameVersion version = (GameVersion)defaultResponse.ObjectResponse with { Released = true, ReleaseDate = DateTime.Now };
+
+            await versionRepository.UpdateGameVersion(version);
+
+            return new DefaultResponse(message:"The version has been set as release.");
+        }
+        private static Task<DefaultResponse> ReturnGuidInvalid() => Task.FromResult(new DefaultResponse { HttpStatus = System.Net.HttpStatusCode.ExpectationFailed, Message = "The Guid is invalid!" });
     }
 }

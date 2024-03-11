@@ -162,6 +162,7 @@ namespace ROH.Test.Version
 
             Mock<IGameVersionService> mockVersionService = new();
             _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(false);
+            _ = mockVersionService.Setup(x => x.GetCurrentVersion()).ReturnsAsync(new DefaultResponse());
 
             Mock<IExceptionHandler> mockExceptionHandler = new();
 
