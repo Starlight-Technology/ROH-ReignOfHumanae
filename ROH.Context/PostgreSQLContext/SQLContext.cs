@@ -69,6 +69,7 @@ namespace ROH.Context.PostgreSQLContext
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
 #if DEBUG
              optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=ROH;Username=postgres;Password=123;");
+
 #elif TEST
              optionsBuilder.UseNpgsql("Host=192.168.0.37;Port=5432;Database=ROH;Username=teste;Password=Teste123;");
 

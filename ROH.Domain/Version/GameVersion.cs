@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-
-namespace ROH.Domain.Version
+﻿namespace ROH.Domain.Version
 {
     /// <summary>
     /// Version is the version of the game, greater changes like something in history

@@ -1,4 +1,5 @@
 ﻿namespace ROH.Domain.Logging;
+
 public enum Severity
 {
     Error = 100,

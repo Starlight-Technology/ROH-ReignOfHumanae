@@ -10,6 +10,7 @@ using ROH.Interfaces.Services.ExceptionService;
 using ROH.Interfaces.Services.Version;
 using ROH.StandardModels.Response;
 using ROH.StandardModels.Version;
+using ROH.Utils.Helpers;
 
 using System.Net;
 
@@ -148,7 +149,16 @@ namespace ROH.Services.Version
 
         private async Task<FluentValidation.Results.ValidationResult> ValidateFileAsync(GameVersionFileModel file) => await validator.ValidateAsync(file);
 
-        private async Task<GameVersion?> GetCurrentVersionAsync() => (await gameVersion.GetCurrentVersion()).ObjectResponse as GameVersion;
+        private async Task<GameVersion?> GetCurrentVersionAsync()
+        {
+            var response = await gameVersion.GetCurrentVersion();
+
+            if (response is null)
+                return null;
+
+            var version = response.MapObjectResponse<GameVersion>().ObjectResponse as GameVersion;
+            return version;
+        }
 
         private static Task<bool> ShouldRejectFileUpload(GameVersion gameVersion, GameVersion? currentVersion) => Task.FromResult(gameVersion.Released || (gameVersion.VersionDate < currentVersion?.VersionDate));
 
@@ -160,8 +170,9 @@ namespace ROH.Services.Version
 
 #if DEBUG
             @$".\ROHUpdateFiles\{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}\";
+
 #else
-            @$"/app/ROH/updateFiles/{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}/";           
+            @$"/app/ROH/updateFiles/{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}/";
 #endif
 
         private static Task EnsureDirectoryExists(string path)

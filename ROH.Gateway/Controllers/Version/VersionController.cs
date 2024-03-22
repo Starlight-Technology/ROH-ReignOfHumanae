@@ -27,6 +27,5 @@ namespace ROH.Gateway.Controllers.Version
 
         [HttpPut("ReleaseVersion")]
         public async Task<IActionResult> ReleaseVersion([FromBody] GameVersionModel gameVersion) => Ok(await _api.Update(Utils.ApiConfiguration.Api.Services.ReleaseVersion, gameVersion));
-
     }
 }

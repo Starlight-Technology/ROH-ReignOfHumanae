@@ -137,7 +137,6 @@ namespace ROH.Services.Version
                 DefaultResponse versionResponse = await GetVersionByGuid(versionGuid);
 
                 return versionResponse.HttpStatus.IsSuccessStatusCode() ? await ReleaseVersion(versionResponse) : await ReturnGuidInvalid();
-
             }
             catch (Exception ex)
             {
@@ -169,6 +168,7 @@ namespace ROH.Services.Version
                 return exceptionHandler.HandleException(ex);
             }
         }
+
         private static Task<DefaultResponse> ReturnGuidInvalid() => Task.FromResult(new DefaultResponse { HttpStatus = System.Net.HttpStatusCode.ExpectationFailed, Message = "The Guid is invalid!" });
     }
 }
