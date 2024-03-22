@@ -83,6 +83,7 @@ namespace ROH.Test.Version
 
             Mock<IGameVersionService> mockVersionService = new();
             _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(true);
+            _ = mockVersionService.Setup(x => x.GetCurrentVersion()).ReturnsAsync(new DefaultResponse());
 
             Mock<IExceptionHandler> mockExceptionHandler = new();
 
@@ -163,6 +164,45 @@ namespace ROH.Test.Version
             Mock<IGameVersionService> mockVersionService = new();
             _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(false);
             _ = mockVersionService.Setup(x => x.GetCurrentVersion()).ReturnsAsync(new DefaultResponse());
+
+            Mock<IExceptionHandler> mockExceptionHandler = new();
+
+            GameVersionFileService service = new(mockRepository.Object, mockValidator.Object, mockVersionService.Object, mapper, mockExceptionHandler.Object);
+
+            // Act
+            DefaultResponse result = await service.NewFile(_fileModel);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.BadRequest, result.HttpStatus);
+            Assert.False(string.IsNullOrWhiteSpace(result.Message));
+        }
+
+        [Fact]
+        public async Task NewFile_With_Released_Version_Returns_Error()
+        {
+            // Arrange
+            MapperConfiguration config = new(cfg =>
+            {
+                // Configure your mappings here
+                _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
+                _ = cfg.CreateMap<GameVersionFile, GameVersionFileModel>().ReverseMap();
+            });
+
+            Mapper mapper = new(config);
+
+            _fileModel.GameVersion = _versionModel;
+            _fileModel.GameVersion.Released = true;
+
+            Mock<IValidator<GameVersionFileModel>> mockValidator = new();
+            _ = mockValidator.Setup(x => x.ValidateAsync(_fileModel, CancellationToken.None))
+              .ReturnsAsync(new ValidationResult());
+
+            Mock<IGameVersionFileRepository> mockRepository = new();
+            _ = mockRepository.Setup(x => x.SaveFile(It.IsAny<GameVersionFile>())).Returns(Task.CompletedTask);
+
+            Mock<IGameVersionService> mockVersionService = new();
+            _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(true);
+            _ = mockVersionService.Setup(x => x.GetCurrentVersion()).ReturnsAsync(new DefaultResponse(objectResponse: new GameVersion(null) { Released = true }));
 
             Mock<IExceptionHandler> mockExceptionHandler = new();
 

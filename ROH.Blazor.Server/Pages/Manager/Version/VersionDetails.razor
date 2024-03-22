@@ -93,7 +93,7 @@
     public string? versionGuid { get; set; }
 
     private GameVersionModel gameVersion = new();
-    private ICollection<GameVersionFileModel> gameVersionFile = new List<GameVersionFileModel>();
+    private readonly ICollection<GameVersionFileModel> gameVersionFile = new List<GameVersionFileModel>();
     private IReadOnlyList<IBrowserFile>? selectedFiles;
     private bool isUploading = false;
     private double uploadProgress = 0;

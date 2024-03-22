@@ -25,19 +25,23 @@ namespace ROH.Utils.ApiConfiguration
         public enum Services
         {
             #region VERSION
+
             GetCurrentVersion,
             CreateNewVersion,
             GetAllVersionsPaginated,
             GetAllReleasedVersionsPaginated,
             GetVersionDetails,
             ReleaseVersion,
-            #endregion
+
+            #endregion VERSION
 
             #region VERSIONFILE
+
             UploadFile,
             GetAllVersionFiles,
             DownloadFile
-            #endregion
+
+            #endregion VERSIONFILE
         }
 
         private static readonly Dictionary<Services, Uri> _gatewayServiceUrl = new Dictionary<Services, Uri>
