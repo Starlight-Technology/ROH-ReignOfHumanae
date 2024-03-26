@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace ROH.Models.Response
+namespace Assets.Scripts.Models.Response
 {
     public class DefaultResponse
     {
