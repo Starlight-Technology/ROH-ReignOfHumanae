@@ -16,6 +16,8 @@ namespace ROH.Services.ExceptionService
             // Log the exception (e.g., to a file or logging service)
             LogException(error);
 
+            Console.WriteLine(error);
+
             // Return a friendly message to the user unless are in DEBUG
 #if DEBUG
             return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.BadRequest, message: error);
