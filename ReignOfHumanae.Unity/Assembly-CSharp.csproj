@@ -77,9 +77,11 @@
     <Compile Include="Assets\Scripts\Connection\ApiConfiguration\ApiService.cs" />
     <Compile Include="Assets\Scripts\Helpers\ObjectPropertyGetter.cs" />
     <Compile Include="Assets\Scripts\Connection\ApiConfiguration\ApiClient.cs" />
+    <Compile Include="Assets\Scripts\Models\Response\PaginatedModel.cs" />
     <Compile Include="Assets\Scripts\Player\CameraMovements.cs" />
     <Compile Include="Assets\Scripts\Models\Response\DefaultResponse.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerMovements.cs" />
+    <Compile Include="Assets\Scripts\Helpers\DataManager.cs" />
     <Compile Include="Assets\Scripts\Models\Version\GameVersionFileModel.cs" />
     <Compile Include="Assets\Scripts\Connection\WebSocket.cs" />
     <Compile Include="Assets\Scripts\Models\Version\GameVersionModel.cs" />

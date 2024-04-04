@@ -2,6 +2,11 @@
 
 namespace Assets.Scripts.Models.Version
 {
+    /// <summary>
+    /// Version is the version of the game, greater changes like something in history
+    /// Release is for changes like events or new items
+    /// Review is for fixes
+    /// </summary>
     public class GameVersionModel
     {
         public int Version { get; set; }
