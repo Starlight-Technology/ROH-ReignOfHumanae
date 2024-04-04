@@ -71,10 +71,10 @@ namespace ROH.Context.PostgreSQLContext
              optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=ROH;Username=postgres;Password=123;");
 
 #elif TEST
-             optionsBuilder.UseNpgsql("Host=192.168.0.37;Port=5432;Database=ROH;Username=teste;Password=Teste123;");
+             optionsBuilder.UseNpgsql("Host=192.168.0.65;Port=5432;Database=ROH;Username=teste;Password=Teste123;");
 
 #else
-             optionsBuilder.UseNpgsql("Host=192.168.0.37;Port=5432;Database=ROH;Username=teste;Password=Teste123;");
+             optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=ROH;Username=teste;Password=Teste123;");
 #endif
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
