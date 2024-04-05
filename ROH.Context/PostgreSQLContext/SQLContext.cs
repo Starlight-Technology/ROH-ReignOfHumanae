@@ -66,16 +66,11 @@ namespace ROH.Context.PostgreSQLContext
 
         public DbSet<Log> Logs { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
-#if DEBUG
-             optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=ROH;Username=postgres;Password=123;");
-
-#elif TEST
-             optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=ROH;Username=teste;Password=Teste123;");
-
-#else
-             optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=ROH;Username=teste;Password=Teste123;");
-#endif
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            var connectionString = Environment.GetEnvironmentVariable("ROH_DATABASE_CONNECTION_STRING");
+            optionsBuilder.UseNpgsql(connectionString);
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
