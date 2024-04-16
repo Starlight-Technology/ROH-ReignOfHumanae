@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 using UnityEngine;
 
@@ -6,10 +7,11 @@ namespace Assets.Scripts.Helpers
 {
     public class DataManager
     {
-        public void SaveData(dynamic data, string filePath)
+        public void SaveData<T>(object data, string filePath)
         {
-            string json = JsonUtility.ToJson(data);
-            File.WriteAllText(filePath, json);
+            T dataToSerialize = (T)Convert.ChangeType(data, typeof(T));
+            string json = JsonUtility.ToJson(dataToSerialize);
+            File.WriteAllText(filePath, json);        
         }
 
         public T LoadData<T>(string filePath)
@@ -22,7 +24,7 @@ namespace Assets.Scripts.Helpers
             }
             else
             {
-                Debug.LogWarning("Version data file does not exist.");
+                Debug.LogWarning("File does not exist.");
                 return default;
             }
         }

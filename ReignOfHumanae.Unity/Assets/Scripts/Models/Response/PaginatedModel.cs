@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace ROH.StandardModels.Paginator
 {
+    [System.Serializable]
     public class PaginatedModel
     {
         public int? TotalPages { get; set; } = 0;

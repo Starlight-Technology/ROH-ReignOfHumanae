@@ -2,6 +2,7 @@
 
 namespace Assets.Scripts.Models.Response
 {
+    [System.Serializable]
     public class DefaultResponse
     {
 #nullable enable

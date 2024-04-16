@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Assets.Scripts.Configurations;
+using Assets.Scripts.Helpers;
+using Assets.Scripts.Models.Configuration;
+
+using System;
 using System.Text;
 
 using UnityEngine;
@@ -8,7 +12,14 @@ namespace Assets.Scripts.Connection.ApiConfiguration
 {
     public class ApiClient : MonoBehaviour
     {
-        private readonly Uri _baseUrl = new("http://localhost:9001/");
+        private readonly Uri _baseUrl;
+        private readonly InitialConfiguration _initialConfiguration = new();
+
+        public ApiClient()
+        {           
+            ConfigurationModel config = _initialConfiguration.GetInitialConfiguration();
+            _baseUrl = new(config.ServerUrl);
+        }
 
         public void Get<T>(string endpoint, Action<T> callback)
         {

@@ -7,6 +7,7 @@ namespace Assets.Scripts.Models.Version
     /// Release is for changes like events or new items
     /// Review is for fixes
     /// </summary>
+    [Serializable]
     public class GameVersionModel
     {
         public int Version { get; set; }

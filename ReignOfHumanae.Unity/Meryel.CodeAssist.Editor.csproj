@@ -94,19 +94,19 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Plugins\CodeAssist\Editor\ExternalReferences\System.Buffers.dll" />
-    <None Include="Assets\Plugins\CodeAssist\Editor\ExternalReferences\System.Threading.Tasks.Extensions.dll" />
-    <None Include="Assets\Plugins\CodeAssist\Editor\csc.rsp" />
-    <None Include="Assets\Plugins\CodeAssist\Editor\ExternalReferences\NetMQ.dll" />
-    <None Include="Assets\Plugins\CodeAssist\Editor\ExternalReferences\Meryel.UnityCodeAssist.SynchronizerModel.dll" />
-    <None Include="Assets\Plugins\CodeAssist\Editor\ExternalReferences\AsyncIO.dll" />
-    <None Include="Assets\Plugins\CodeAssist\Editor\ExternalReferences\System.Runtime.CompilerServices.Unsafe.dll" />
-    <None Include="Assets\Plugins\CodeAssist\Editor\ExternalReferences\System.Memory.dll" />
-    <None Include="Assets\Plugins\CodeAssist\Editor\CodeAssistAssembly.asmdef" />
-    <None Include="Assets\Plugins\CodeAssist\Editor\ExternalReferences\Serilog.dll" />
-    <None Include="Assets\Plugins\CodeAssist\Editor\ExternalReferences\Meryel.UnityCodeAssist.YamlDotNet.dll" />
     <None Include="Assets\Plugins\CodeAssist\Editor\ExternalReferences\Meryel.UnityCodeAssist.YamlDotNet.xml" />
-    <None Include="Assets\Plugins\CodeAssist\Editor\ExternalReferences\Serilog.Sinks.PersistentFile.dll" />
+    <None Include="Assets\Plugins\CodeAssist\Editor\csc.rsp" />
     <None Include="Assets\Plugins\CodeAssist\Editor\ExternalReferences\NaCl.dll" />
+    <None Include="Assets\Plugins\CodeAssist\Editor\ExternalReferences\System.Threading.Tasks.Extensions.dll" />
+    <None Include="Assets\Plugins\CodeAssist\Editor\ExternalReferences\Serilog.dll" />
+    <None Include="Assets\Plugins\CodeAssist\Editor\ExternalReferences\AsyncIO.dll" />
+    <None Include="Assets\Plugins\CodeAssist\Editor\ExternalReferences\Meryel.UnityCodeAssist.YamlDotNet.dll" />
+    <None Include="Assets\Plugins\CodeAssist\Editor\CodeAssistAssembly.asmdef" />
+    <None Include="Assets\Plugins\CodeAssist\Editor\ExternalReferences\Serilog.Sinks.PersistentFile.dll" />
+    <None Include="Assets\Plugins\CodeAssist\Editor\ExternalReferences\NetMQ.dll" />
+    <None Include="Assets\Plugins\CodeAssist\Editor\ExternalReferences\System.Memory.dll" />
+    <None Include="Assets\Plugins\CodeAssist\Editor\ExternalReferences\System.Runtime.CompilerServices.Unsafe.dll" />
+    <None Include="Assets\Plugins\CodeAssist\Editor\ExternalReferences\Meryel.UnityCodeAssist.SynchronizerModel.dll" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -465,32 +465,16 @@
       <HintPath>Library\PackageCache\com.unity.testtools.codecoverage@1.2.4\lib\ReportGenerator\ReportGeneratorMerged.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Mono.Cecil">
-      <HintPath>Library\PackageCache\com.unity.nuget.mono-cecil@1.11.4\Mono.Cecil.dll</HintPath>
+    <Reference Include="NaCl">
+      <HintPath>Assets\Plugins\CodeAssist\Editor\ExternalReferences\NaCl.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Serilog">
       <HintPath>Assets\Plugins\CodeAssist\Editor\ExternalReferences\Serilog.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="NaCl">
-      <HintPath>Assets\Plugins\CodeAssist\Editor\ExternalReferences\NaCl.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Meryel.UnityCodeAssist.SynchronizerModel">
-      <HintPath>Assets\Plugins\CodeAssist\Editor\ExternalReferences\Meryel.UnityCodeAssist.SynchronizerModel.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="AsyncIO">
       <HintPath>Assets\Plugins\CodeAssist\Editor\ExternalReferences\AsyncIO.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="NetMQ">
-      <HintPath>Assets\Plugins\CodeAssist\Editor\ExternalReferences\NetMQ.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe">
-      <HintPath>Assets\Plugins\CodeAssist\Editor\ExternalReferences\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Meryel.UnityCodeAssist.YamlDotNet">
@@ -499,6 +483,22 @@
     </Reference>
     <Reference Include="Serilog.Sinks.PersistentFile">
       <HintPath>Assets\Plugins\CodeAssist\Editor\ExternalReferences\Serilog.Sinks.PersistentFile.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NetMQ">
+      <HintPath>Assets\Plugins\CodeAssist\Editor\ExternalReferences\NetMQ.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>Library\PackageCache\com.unity.nuget.mono-cecil@1.11.4\Mono.Cecil.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe">
+      <HintPath>Assets\Plugins\CodeAssist\Editor\ExternalReferences\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Meryel.UnityCodeAssist.SynchronizerModel">
+      <HintPath>Assets\Plugins\CodeAssist\Editor\ExternalReferences\Meryel.UnityCodeAssist.SynchronizerModel.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="nunit.framework">
