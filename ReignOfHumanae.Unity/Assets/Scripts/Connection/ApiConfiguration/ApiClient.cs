@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.Configurations;
-using Assets.Scripts.Helpers;
 using Assets.Scripts.Models.Configuration;
+
+using Newtonsoft.Json;
 
 using System;
 using System.Text;
@@ -33,7 +34,8 @@ namespace Assets.Scripts.Connection.ApiConfiguration
                 }
                 else
                 {
-                    callback(JsonUtility.FromJson<T>(webRequest.downloadHandler.text));
+                    T response = JsonConvert.DeserializeObject<T>(webRequest.downloadHandler.text);
+                    callback(response);
                 }
             };
         }
@@ -52,7 +54,7 @@ namespace Assets.Scripts.Connection.ApiConfiguration
                 Debug.LogError($"POST Error: {webRequest.error}");
                 return default;
             }
-            return JsonUtility.FromJson<T>(webRequest.downloadHandler.text);
+            return JsonConvert.DeserializeObject<T>(webRequest.downloadHandler.text);
         }
 
         public T Put<T>(string endpoint, object data)
@@ -69,7 +71,7 @@ namespace Assets.Scripts.Connection.ApiConfiguration
                 Debug.LogError($"PUT Error: {webRequest.error}");
                 return default;
             }
-            return JsonUtility.FromJson<T>(webRequest.downloadHandler.text);
+            return JsonConvert.DeserializeObject<T>(webRequest.downloadHandler.text);
         }
 
         public bool Delete(string endpoint)

@@ -1,5 +1,7 @@
 ﻿using Assets.Scripts.Models.Response;
 
+using Newtonsoft.Json;
+
 using System;
 
 using UnityEngine;
@@ -13,7 +15,7 @@ namespace Assets.Scripts.Helpers
             try
             {
                 return response != null && response.ObjectResponse != null
-                    ? JsonUtility.FromJson<T>(response.ObjectResponse.ToString()) ?? throw new InvalidCastException()
+                    ? JsonConvert.DeserializeObject<T>(response.ObjectResponse.ToString()) ?? throw new InvalidCastException()
                     : throw new InvalidCastException();
             }
             catch (InvalidCastException)
@@ -28,8 +30,8 @@ namespace Assets.Scripts.Helpers
             {
                 if (response.ObjectResponse != null)
                 {
-                    string objectJson = JsonUtility.ToJson(response.ObjectResponse);
-                    T model = JsonUtility.FromJson<T>(objectJson);
+                    string objectJson = JsonConvert.SerializeObject(response.ObjectResponse);
+                    T model = JsonConvert.DeserializeObject<T>(objectJson);
                     return new DefaultResponse(model, response.HttpStatus, response.Message);
                 }
 
