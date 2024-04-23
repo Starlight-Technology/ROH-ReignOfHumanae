@@ -1,7 +1,8 @@
 ﻿using System.Net;
 
-namespace ROH.Models.Response
+namespace Assets.Scripts.Models.Response
 {
+    [System.Serializable]
     public class DefaultResponse
     {
 #nullable enable

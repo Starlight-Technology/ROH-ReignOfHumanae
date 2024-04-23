@@ -1,9 +1,9 @@
-using Newtonsoft.Json;
-
 using System;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
+
+using UnityEngine;
 
 namespace Assembly_CSharp.Assets.Scripts.Connection
 {
@@ -29,7 +29,7 @@ namespace Assembly_CSharp.Assets.Scripts.Connection
 
         public async Task SendJsonAsync(object payload, CancellationToken cancellationToken)
         {
-            string json = JsonConvert.SerializeObject(payload);
+            string json = JsonUtility.ToJson(payload);
             byte[] buffer = System.Text.Encoding.UTF8.GetBytes(json);
             await _webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, cancellationToken);
         }

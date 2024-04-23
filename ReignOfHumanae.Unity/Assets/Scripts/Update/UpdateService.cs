@@ -1,8 +1,18 @@
+using Assets.Scripts.Connection.ApiConfiguration;
+using Assets.Scripts.Helpers;
 using Assets.Scripts.Models.Version;
 
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
-using TMPro;
+using ROH.Models.Version;
+using ROH.StandardModels.Paginator;
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,27 +21,136 @@ namespace Assets.Scripts.Update
 {
     public class UpdateService : MonoBehaviour
     {
-        public TextMeshProUGUI TxtUpdate { get; set; }
-        public Button BtnLogin { get; set; }
+        private readonly ObjectPropertyGetter<Text> _txtUpdate = new() { ObjectName = "txtUpdate" };
+        private readonly ObjectPropertyGetter<Text> _txtUpdateBackground = new() { ObjectName = "txtUpdateBackground" };
+        private readonly ApiVersionService _apiService = new();
+        private string filePath;
 
-        // Start is called before the first frame update
-        private void Start()
+        private async void Start()
         {
-            TxtUpdate.text = "Looking for updates...";
-            TxtUpdate.color = Color.red;
-            LookForUpdate().Wait();
+            ChangeText("Connecting to server...");
+            filePath = Application.persistentDataPath;
+            await LookForUpdate();
         }
 
-        private Task LookForUpdate()
+        private async Task LookForUpdate()
         {
-            GameVersionModel gameVersion = new ()
+            GameVersionModel gameVersion = new()
             {
                 Version = PlayerPrefs.GetInt("version-version"),
                 Release = PlayerPrefs.GetInt("version-release"),
                 Review = PlayerPrefs.GetInt("version-review")
             };
 
-            return Task.CompletedTask;
+            ChangeText("Verifying version...");
+
+            await _apiService.GetCurrentVersion();
+
+            GameVersionModel currentGameVersion = new()
+            {
+                Version = PlayerPrefs.GetInt("current-version-version"),
+                Release = PlayerPrefs.GetInt("current-version-release"),
+                Review = PlayerPrefs.GetInt("current-version-review")
+            };
+
+            if (HasNewVersion(gameVersion, currentGameVersion))
+                await VerifyFiles();
+        }
+
+        private bool HasNewVersion(GameVersionModel gameVersion, GameVersionModel currentGameVersion) => currentGameVersion.Version > gameVersion.Version || currentGameVersion.Release > gameVersion.Release || currentGameVersion.Review > gameVersion.Review;
+
+        private async Task VerifyFiles()
+        {
+            try
+            {
+                var response = await _apiService.GetReleasedVersions();
+                if (ResponseHasGameVersions(response))
+                {
+                    var json = JsonConvert.SerializeObject(response.ObjectResponse);
+                    var versions = JsonConvert.DeserializeObject<ICollection<GameVersionModel>>(json);
+                    foreach (var version in versions)
+                    {
+                        await VerifyIfFileExist(version);
+                    }
+                }
+                else
+                    ChangeText("A error has occured, please contact the support.");
+            }
+            catch (Exception ex) { Debug.LogException(ex); }
+        }
+
+        private static bool ResponseHasGameVersions(PaginatedModel response) => response != null && response.ObjectResponse != null && response.ObjectResponse.Any();
+
+        private async Task VerifyIfFileExist(GameVersionModel version)
+        {
+            var response = await _apiService.GetVersionFiles(version.Guid.ToString());
+            var json = JsonConvert.SerializeObject(response.ObjectResponse);
+            var files = JsonConvert.DeserializeObject<ICollection<GameVersionFileModel>>(json);
+            foreach (var file in files)
+            {
+                var versionFolder = $@"{filePath}/{version.Version}.{version.Release}.{version.Review}";
+
+                if (!Directory.Exists(versionFolder))
+                {
+                    Directory.CreateDirectory(versionFolder);
+                }
+
+                file.Path = @$"{versionFolder}/{file.Name}";
+
+                if (!File.Exists(file.Path))
+                    await DownloadFile(file);
+            }
+        }
+
+        private async Task DownloadFile(GameVersionFileModel file)
+        {
+            var download = await _apiService.DownloadFile(file.Guid.ToString());
+            if (download != null)
+            {
+                file.Content = download.Content;
+                await SaveFileAsync(file);
+            }
+        }
+
+        private async Task SaveFileAsync(GameVersionFileModel file)
+        {
+            try
+            {
+                if (file.Content is null)
+                {
+                    Debug.LogWarning("File content is null");
+                    return;
+                }
+
+                if (File.Exists(file.Path))
+                {
+                    File.Delete(file.Path);
+                }
+
+                using FileStream fs = File.Create(file.Path);
+                await fs.WriteAsync(file.Content.AsMemory(), CancellationToken.None);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
+        }
+
+        public void SaveVersionData(List<GameVersionModel> data)
+        {
+            string json = JsonUtility.ToJson(data);
+            File.WriteAllText(filePath, json);
+        }
+
+        private void ChangeText(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return;
+            }
+
+            _txtUpdate.SetValue(text);
+            _txtUpdateBackground.SetValue(text);
         }
     }
 }

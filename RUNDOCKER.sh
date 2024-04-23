@@ -22,7 +22,7 @@ docker run -d --name ROH.Blazor --network $NETWORK_NAME -p 9010:9010 roh.blazor.
 
 # Build and run the ROH.Api.VersionFiles Dockerfile
 docker build -t roh.api.versionfiles -f ./ROH.Api.VersionFiles/Dockerfile .
-docker run -d --name ROH.Api.VersionFiles --network $NETWORK_NAME -v /home/ROH:/app/ROH/updateFiles -u roh roh.api.versionfiles 
+docker run -d --name ROH.Api.VersionFiles --network $NETWORK_NAME -v /home/roh:/app/ROH/updateFiles -u roh -e ROH_DATABASE_CONNECTION_STRING="Host=localhost;Port=5432;Database=ROH;Username=postgres;Password=postgres123;" roh.api.versionfiles 
 
 
 # Iterate through other projects and build/run their Dockerfiles
@@ -30,7 +30,7 @@ for project in $(find . -type f -name "Dockerfile" -not -path "./ROH.Gateway*" -
   project_name=$(dirname $project)
   image_name="$(basename $project_name | tr '[:upper:]' '[:lower:]')"  # Ensure lowercase image name
   docker build -t $image_name -f $project .
-  docker run -d --name $(basename $project_name) --network $NETWORK_NAME $image_name
+  docker run -d --name $(basename $project_name) --network $NETWORK_NAME -e ROH_DATABASE_CONNECTION_STRING="Host=localhost;Port=5432;Database=ROH;Username=postgres;Password=postgres123;" $image_name
 done
 
 
