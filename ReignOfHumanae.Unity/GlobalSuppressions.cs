@@ -5,4 +5,4 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Major Bug", "S3168:\"async\" methods should not return \"void\"", Justification = "<Pending>", Scope = "member", Target = "~M:Assets.Scripts.Update.UpdateService.Start")]
+[assembly: SuppressMessage("Major Bug", "S3168:\"async\" methods should not return \"void\"", Justification = "<Unity limitation>", Scope = "member", Target = "~M:Assets.Scripts.Update.UpdateService.Start")]
