@@ -11,7 +11,7 @@ namespace Assets.Scripts.Helpers
         {
             T dataToSerialize = (T)Convert.ChangeType(data, typeof(T));
             string json = JsonUtility.ToJson(dataToSerialize);
-            File.WriteAllText(filePath, json);        
+            File.WriteAllText(filePath, json);
         }
 
         public T LoadData<T>(string filePath)

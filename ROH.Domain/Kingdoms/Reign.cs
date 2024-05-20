@@ -1,12 +1,11 @@
-﻿namespace ROH.Domain.Kingdoms
+﻿namespace ROH.Domain.Kingdoms;
+
+public enum Reign
 {
-    public enum Reign
-    {
-        Undefined = 0,
-        Demon,
-        Dwarf,
-        Elf,
-        Human,
-        God = 100
-    }
+    Undefined = 0,
+    Demon,
+    Dwarf,
+    Elf,
+    Human,
+    God = 100
 }

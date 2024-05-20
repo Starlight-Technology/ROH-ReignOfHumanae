@@ -7,7 +7,7 @@ public class UserModelValidation : AbstractValidator<UserModel>
 {
     public UserModelValidation()
     {
-        RuleFor(r => r.Email).NotEmpty().NotNull().EmailAddress();
-        RuleFor(r => r.Password).NotEmpty().NotNull();
+        _ = RuleFor(r => r.Email).NotEmpty().NotNull().EmailAddress();
+        _ = RuleFor(r => r.Password).NotEmpty().NotNull();
     }
 }

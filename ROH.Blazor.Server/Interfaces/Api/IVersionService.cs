@@ -3,20 +3,19 @@
 using ROH.StandardModels.Response;
 using ROH.StandardModels.Version;
 
-namespace ROH.Blazor.Server.Interfaces.Api
+namespace ROH.Blazor.Server.Interfaces.Api;
+
+public interface IVersionService
 {
-    public interface IVersionService
-    {
-        Task<DefaultResponse?> CreateNewVersion(GameVersionModel model);
+    Task<DefaultResponse?> CreateNewVersion(GameVersionModel model);
 
-        Task<DefaultResponse?> GetAllReleasedVersionsPaginated(int page = 1, int take = 10);
+    Task<DefaultResponse?> GetAllReleasedVersionsPaginated(int page = 1, int take = 10);
 
-        Task<DefaultResponse?> GetAllVersionsPaginated(int page = 1, int take = 10);
+    Task<DefaultResponse?> GetAllVersionsPaginated(int page = 1, int take = 10);
 
-        Task<DefaultResponse?> GetCurrentVersion();
+    Task<DefaultResponse?> GetCurrentVersion();
 
-        Task<DefaultResponse?> GetVersionDetails(Guid guid);
+    Task<DefaultResponse?> GetVersionDetails(Guid guid);
 
-        Task<DefaultResponse?> ReleaseVersion(GameVersionModel model);
-    }
+    Task<DefaultResponse?> ReleaseVersion(GameVersionModel model);
 }

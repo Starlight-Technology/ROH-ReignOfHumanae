@@ -1,12 +1,11 @@
-﻿namespace ROH.Domain.Characters
+﻿namespace ROH.Domain.Characters;
+
+public enum Race
 {
-    public enum Race
-    {
-        Undefined = 0,
-        Demon,
-        Dwarf,
-        Elf,
-        Human,
-        God = 100
-    }
+    Undefined = 0,
+    Demon,
+    Dwarf,
+    Elf,
+    Human,
+    God = 100
 }

@@ -1,10 +1,9 @@
-﻿namespace ROH.Domain.Guilds
+﻿namespace ROH.Domain.Guilds;
+
+public enum Position
 {
-    public enum Position
-    {
-        Member,
-        Master,
-        Deputy,
-        Leader
-    }
+    Member,
+    Master,
+    Deputy,
+    Leader
 }

@@ -17,7 +17,7 @@ namespace Assets.Scripts.Connection.ApiConfiguration
         private readonly InitialConfiguration _initialConfiguration = new();
 
         public ApiClient()
-        {           
+        {
             ConfigurationModel config = _initialConfiguration.GetInitialConfiguration();
             _baseUrl = new(config.ServerUrl);
         }
@@ -48,7 +48,7 @@ namespace Assets.Scripts.Connection.ApiConfiguration
             webRequest.uploadHandler = new UploadHandlerRaw(bodyRaw);
             webRequest.downloadHandler = new DownloadHandlerBuffer();
             webRequest.SetRequestHeader("Content-Type", "application/json");
-            webRequest.SendWebRequest();
+            _ = webRequest.SendWebRequest();
             if (webRequest.result != UnityWebRequest.Result.Success)
             {
                 Debug.LogError($"POST Error: {webRequest.error}");
@@ -65,7 +65,7 @@ namespace Assets.Scripts.Connection.ApiConfiguration
             webRequest.uploadHandler = new UploadHandlerRaw(bodyRaw);
             webRequest.downloadHandler = new DownloadHandlerBuffer();
             webRequest.SetRequestHeader("Content-Type", "application/json");
-            webRequest.SendWebRequest();
+            _ = webRequest.SendWebRequest();
             if (webRequest.result != UnityWebRequest.Result.Success)
             {
                 Debug.LogError($"PUT Error: {webRequest.error}");
@@ -77,7 +77,7 @@ namespace Assets.Scripts.Connection.ApiConfiguration
         public bool Delete(string endpoint)
         {
             using UnityWebRequest webRequest = UnityWebRequest.Delete(new Uri(_baseUrl, endpoint));
-            webRequest.SendWebRequest();
+            _ = webRequest.SendWebRequest();
             if (webRequest.result != UnityWebRequest.Result.Success)
             {
                 Debug.LogError($"DELETE Error: {webRequest.error}");

@@ -72,9 +72,9 @@ namespace ROH.Utils.ApiConfiguration
 
                 string param = string.Empty;
 
-                if (parametersObject != null)
+                if (!Equals(parametersObject, default(T)))
                 {
-                    param = _api.GetParams(parametersObject);
+                    param = _api.GetParams(parametersObject!);
                 }
 
                 HttpResponseMessage response = await client.GetAsync(_gatewayServiceUrl.GetValueOrDefault(service) + param);
@@ -139,9 +139,9 @@ namespace ROH.Utils.ApiConfiguration
 
             string param = string.Empty;
 
-            if (parametersObject != null)
+            if (!object.Equals(parametersObject, default(T)))
             {
-                param = _api.GetParams(parametersObject);
+                param = _api.GetParams(parametersObject!);
             }
 
             HttpResponseMessage response = await client.DeleteAsync(_gatewayServiceUrl.GetValueOrDefault(service) + param);

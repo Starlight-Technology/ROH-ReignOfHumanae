@@ -2,157 +2,156 @@
 
 #nullable disable
 
-namespace ROH.Context.Migrations
+namespace ROH.Context.Migrations;
+
+/// <inheritdoc />
+public partial class FixVersionRelationship : Migration
 {
     /// <inheritdoc />
-    public partial class FixVersionRelationship : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            _ = migrationBuilder.AlterColumn<Guid>(
-              name: "Guid",
-              table: "Users",
-              type: "uuid",
-              nullable: false,
-              defaultValueSql: "gen_random_uuid()",
-              oldClrType: typeof(Guid),
-              oldType: "uuid",
-              oldDefaultValueSql: "uuid-ossp()");
+        _ = migrationBuilder.AlterColumn<Guid>(
+          name: "Guid",
+          table: "Users",
+          type: "uuid",
+          nullable: false,
+          defaultValueSql: "gen_random_uuid()",
+          oldClrType: typeof(Guid),
+          oldType: "uuid",
+          oldDefaultValueSql: "uuid-ossp()");
 
-            _ = migrationBuilder.AlterColumn<Guid>(
-              name: "Guid",
-              table: "Items",
-              type: "uuid",
-              nullable: false,
-              defaultValueSql: "gen_random_uuid()",
-              oldClrType: typeof(Guid),
-              oldType: "uuid",
-              oldDefaultValueSql: "uuid-ossp()");
+        _ = migrationBuilder.AlterColumn<Guid>(
+          name: "Guid",
+          table: "Items",
+          type: "uuid",
+          nullable: false,
+          defaultValueSql: "gen_random_uuid()",
+          oldClrType: typeof(Guid),
+          oldType: "uuid",
+          oldDefaultValueSql: "uuid-ossp()");
 
-            _ = migrationBuilder.AlterColumn<Guid>(
-              name: "Guid",
-              table: "Guilds",
-              type: "uuid",
-              nullable: false,
-              defaultValueSql: "gen_random_uuid()",
-              oldClrType: typeof(Guid),
-              oldType: "uuid",
-              oldDefaultValueSql: "uuid-ossp()");
+        _ = migrationBuilder.AlterColumn<Guid>(
+          name: "Guid",
+          table: "Guilds",
+          type: "uuid",
+          nullable: false,
+          defaultValueSql: "gen_random_uuid()",
+          oldClrType: typeof(Guid),
+          oldType: "uuid",
+          oldDefaultValueSql: "uuid-ossp()");
 
-            _ = migrationBuilder.AlterColumn<Guid>(
-              name: "Guid",
-              table: "GameVersions",
-              type: "uuid",
-              nullable: false,
-              defaultValueSql: "gen_random_uuid()",
-              oldClrType: typeof(Guid),
-              oldType: "uuid",
-              oldDefaultValueSql: "uuid-ossp()");
+        _ = migrationBuilder.AlterColumn<Guid>(
+          name: "Guid",
+          table: "GameVersions",
+          type: "uuid",
+          nullable: false,
+          defaultValueSql: "gen_random_uuid()",
+          oldClrType: typeof(Guid),
+          oldType: "uuid",
+          oldDefaultValueSql: "uuid-ossp()");
 
-            _ = migrationBuilder.AlterColumn<Guid>(
-              name: "Guid",
-              table: "GameVersionFiles",
-              type: "uuid",
-              nullable: false,
-              defaultValueSql: "gen_random_uuid()",
-              oldClrType: typeof(Guid),
-              oldType: "uuid",
-              oldDefaultValueSql: "uuid-ossp()");
+        _ = migrationBuilder.AlterColumn<Guid>(
+          name: "Guid",
+          table: "GameVersionFiles",
+          type: "uuid",
+          nullable: false,
+          defaultValueSql: "gen_random_uuid()",
+          oldClrType: typeof(Guid),
+          oldType: "uuid",
+          oldDefaultValueSql: "uuid-ossp()");
 
-            _ = migrationBuilder.AlterColumn<Guid>(
-              name: "Guid",
-              table: "Characters",
-              type: "uuid",
-              nullable: false,
-              defaultValueSql: "gen_random_uuid()",
-              oldClrType: typeof(Guid),
-              oldType: "uuid",
-              oldDefaultValueSql: "uuid-ossp()");
+        _ = migrationBuilder.AlterColumn<Guid>(
+          name: "Guid",
+          table: "Characters",
+          type: "uuid",
+          nullable: false,
+          defaultValueSql: "gen_random_uuid()",
+          oldClrType: typeof(Guid),
+          oldType: "uuid",
+          oldDefaultValueSql: "uuid-ossp()");
 
-            _ = migrationBuilder.AlterColumn<Guid>(
-              name: "Guid",
-              table: "Accounts",
-              type: "uuid",
-              nullable: false,
-              defaultValueSql: "gen_random_uuid()",
-              oldClrType: typeof(Guid),
-              oldType: "uuid",
-              oldDefaultValueSql: "uuid-ossp()");
-        }
+        _ = migrationBuilder.AlterColumn<Guid>(
+          name: "Guid",
+          table: "Accounts",
+          type: "uuid",
+          nullable: false,
+          defaultValueSql: "gen_random_uuid()",
+          oldClrType: typeof(Guid),
+          oldType: "uuid",
+          oldDefaultValueSql: "uuid-ossp()");
+    }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            _ = migrationBuilder.AlterColumn<Guid>(
-              name: "Guid",
-              table: "Users",
-              type: "uuid",
-              nullable: false,
-              defaultValueSql: "uuid-ossp()",
-              oldClrType: typeof(Guid),
-              oldType: "uuid",
-              oldDefaultValueSql: "gen_random_uuid()");
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        _ = migrationBuilder.AlterColumn<Guid>(
+          name: "Guid",
+          table: "Users",
+          type: "uuid",
+          nullable: false,
+          defaultValueSql: "uuid-ossp()",
+          oldClrType: typeof(Guid),
+          oldType: "uuid",
+          oldDefaultValueSql: "gen_random_uuid()");
 
-            _ = migrationBuilder.AlterColumn<Guid>(
-              name: "Guid",
-              table: "Items",
-              type: "uuid",
-              nullable: false,
-              defaultValueSql: "uuid-ossp()",
-              oldClrType: typeof(Guid),
-              oldType: "uuid",
-              oldDefaultValueSql: "gen_random_uuid()");
+        _ = migrationBuilder.AlterColumn<Guid>(
+          name: "Guid",
+          table: "Items",
+          type: "uuid",
+          nullable: false,
+          defaultValueSql: "uuid-ossp()",
+          oldClrType: typeof(Guid),
+          oldType: "uuid",
+          oldDefaultValueSql: "gen_random_uuid()");
 
-            _ = migrationBuilder.AlterColumn<Guid>(
-              name: "Guid",
-              table: "Guilds",
-              type: "uuid",
-              nullable: false,
-              defaultValueSql: "uuid-ossp()",
-              oldClrType: typeof(Guid),
-              oldType: "uuid",
-              oldDefaultValueSql: "gen_random_uuid()");
+        _ = migrationBuilder.AlterColumn<Guid>(
+          name: "Guid",
+          table: "Guilds",
+          type: "uuid",
+          nullable: false,
+          defaultValueSql: "uuid-ossp()",
+          oldClrType: typeof(Guid),
+          oldType: "uuid",
+          oldDefaultValueSql: "gen_random_uuid()");
 
-            _ = migrationBuilder.AlterColumn<Guid>(
-              name: "Guid",
-              table: "GameVersions",
-              type: "uuid",
-              nullable: false,
-              defaultValueSql: "uuid-ossp()",
-              oldClrType: typeof(Guid),
-              oldType: "uuid",
-              oldDefaultValueSql: "gen_random_uuid()");
+        _ = migrationBuilder.AlterColumn<Guid>(
+          name: "Guid",
+          table: "GameVersions",
+          type: "uuid",
+          nullable: false,
+          defaultValueSql: "uuid-ossp()",
+          oldClrType: typeof(Guid),
+          oldType: "uuid",
+          oldDefaultValueSql: "gen_random_uuid()");
 
-            _ = migrationBuilder.AlterColumn<Guid>(
-              name: "Guid",
-              table: "GameVersionFiles",
-              type: "uuid",
-              nullable: false,
-              defaultValueSql: "uuid-ossp()",
-              oldClrType: typeof(Guid),
-              oldType: "uuid",
-              oldDefaultValueSql: "gen_random_uuid()");
+        _ = migrationBuilder.AlterColumn<Guid>(
+          name: "Guid",
+          table: "GameVersionFiles",
+          type: "uuid",
+          nullable: false,
+          defaultValueSql: "uuid-ossp()",
+          oldClrType: typeof(Guid),
+          oldType: "uuid",
+          oldDefaultValueSql: "gen_random_uuid()");
 
-            _ = migrationBuilder.AlterColumn<Guid>(
-              name: "Guid",
-              table: "Characters",
-              type: "uuid",
-              nullable: false,
-              defaultValueSql: "uuid-ossp()",
-              oldClrType: typeof(Guid),
-              oldType: "uuid",
-              oldDefaultValueSql: "gen_random_uuid()");
+        _ = migrationBuilder.AlterColumn<Guid>(
+          name: "Guid",
+          table: "Characters",
+          type: "uuid",
+          nullable: false,
+          defaultValueSql: "uuid-ossp()",
+          oldClrType: typeof(Guid),
+          oldType: "uuid",
+          oldDefaultValueSql: "gen_random_uuid()");
 
-            _ = migrationBuilder.AlterColumn<Guid>(
-              name: "Guid",
-              table: "Accounts",
-              type: "uuid",
-              nullable: false,
-              defaultValueSql: "uuid-ossp()",
-              oldClrType: typeof(Guid),
-              oldType: "uuid",
-              oldDefaultValueSql: "gen_random_uuid()");
-        }
+        _ = migrationBuilder.AlterColumn<Guid>(
+          name: "Guid",
+          table: "Accounts",
+          type: "uuid",
+          nullable: false,
+          defaultValueSql: "uuid-ossp()",
+          oldClrType: typeof(Guid),
+          oldType: "uuid",
+          oldDefaultValueSql: "gen_random_uuid()");
     }
 }

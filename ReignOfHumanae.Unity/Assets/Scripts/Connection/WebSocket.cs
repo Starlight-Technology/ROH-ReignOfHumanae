@@ -11,10 +11,7 @@ namespace Assembly_CSharp.Assets.Scripts.Connection
     {
         private readonly ClientWebSocket _webSocket;
 
-        public WebSocket()
-        {
-            _webSocket = new();
-        }
+        public WebSocket() => _webSocket = new();
 
         /// <summary>
         /// Connect to WebSocket
@@ -22,10 +19,7 @@ namespace Assembly_CSharp.Assets.Scripts.Connection
         /// <param name="uri"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task ConnectAsync(Uri uri, CancellationToken cancellationToken)
-        {
-            await _webSocket.ConnectAsync(uri, cancellationToken);
-        }
+        public async Task ConnectAsync(Uri uri, CancellationToken cancellationToken) => await _webSocket.ConnectAsync(uri, cancellationToken);
 
         public async Task SendJsonAsync(object payload, CancellationToken cancellationToken)
         {
@@ -34,9 +28,6 @@ namespace Assembly_CSharp.Assets.Scripts.Connection
             await _webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, cancellationToken);
         }
 
-        public async Task CloseAsync(WebSocketCloseStatus closeStatus, string statusDescription, CancellationToken cancellationToken)
-        {
-            await _webSocket.CloseAsync(closeStatus, statusDescription, cancellationToken);
-        }
+        public async Task CloseAsync(WebSocketCloseStatus closeStatus, string statusDescription, CancellationToken cancellationToken) => await _webSocket.CloseAsync(closeStatus, statusDescription, cancellationToken);
     }
 }

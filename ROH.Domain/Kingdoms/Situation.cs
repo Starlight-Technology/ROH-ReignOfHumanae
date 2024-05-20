@@ -1,9 +1,8 @@
-﻿namespace ROH.Domain.Kingdoms
+﻿namespace ROH.Domain.Kingdoms;
+
+public enum Situation
 {
-    public enum Situation
-    {
-        Neutral,
-        Peace,
-        War
-    }
+    Neutral,
+    Peace,
+    War
 }

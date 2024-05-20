@@ -59,9 +59,9 @@ namespace ROH.Utils.ApiConfiguration
             using HttpClient client = new HttpClient();
             string param = string.Empty;
 
-            if (parametersObject != null)
+            if (!Equals(parametersObject, default(T)))
             {
-                param = GetParams(parametersObject);
+                param = GetParams(parametersObject!);
             }
 
             HttpResponseMessage response = await client.GetAsync(_servicesUrl.GetValueOrDefault(service) + param);
@@ -133,9 +133,9 @@ namespace ROH.Utils.ApiConfiguration
 
             string param = string.Empty;
 
-            if (parametersObject != null)
+            if (!Equals(parametersObject, default(T)))
             {
-                param = GetParams(parametersObject);
+                param = GetParams(parametersObject!);
             }
 
             HttpResponseMessage response = await client.DeleteAsync(_servicesUrl.GetValueOrDefault(service) + param);
