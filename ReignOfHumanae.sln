@@ -51,6 +51,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ROH.Gateway", "ROH.Gateway\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ROH.Api.VersionFiles", "ROH.Api.VersionFiles\ROH.Api.VersionFiles.csproj", "{6055A22C-567F-45D9-ABA4-83AF052DF2D8}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ROH.Api.Account", "ROH.Api.Account\ROH.Api.Account.csproj", "{7E8FC15E-FD48-4181-82C2-48352A5F6CB2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -157,6 +159,12 @@ Global
 		{6055A22C-567F-45D9-ABA4-83AF052DF2D8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6055A22C-567F-45D9-ABA4-83AF052DF2D8}.Test|Any CPU.ActiveCfg = Test|Any CPU
 		{6055A22C-567F-45D9-ABA4-83AF052DF2D8}.Test|Any CPU.Build.0 = Test|Any CPU
+		{7E8FC15E-FD48-4181-82C2-48352A5F6CB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E8FC15E-FD48-4181-82C2-48352A5F6CB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E8FC15E-FD48-4181-82C2-48352A5F6CB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E8FC15E-FD48-4181-82C2-48352A5F6CB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E8FC15E-FD48-4181-82C2-48352A5F6CB2}.Test|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E8FC15E-FD48-4181-82C2-48352A5F6CB2}.Test|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

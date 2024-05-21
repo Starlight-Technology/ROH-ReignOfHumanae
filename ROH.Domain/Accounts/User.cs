@@ -16,6 +16,7 @@ public record User(long Id = 0, long IdAccount = 0, Guid Guid = default, string?
         if (string.IsNullOrEmpty(password))
             throw new ArgumentException("Password cannot be null or empty.");
         Salt = new byte[16]; // Generate a 16-byte salt
+        RandomNumberGenerator.Fill(Salt);
 
         // Combine password and salt, then hash
         byte[] combinedBytes = Encoding.UTF8.GetBytes(password + Convert.ToBase64String(Salt));

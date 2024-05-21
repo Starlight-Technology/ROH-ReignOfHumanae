@@ -2,6 +2,7 @@
 
 using ROH.Domain.Accounts;
 using ROH.Interfaces.Repository.Account;
+using ROH.Interfaces.Services.Account;
 using ROH.Interfaces.Services.ExceptionService;
 using ROH.StandardModels.Account;
 using ROH.StandardModels.Response;
@@ -9,7 +10,7 @@ using ROH.StandardModels.Response;
 using System.Net;
 
 namespace ROH.Services.Account;
-public class UserService(IExceptionHandler handler, IValidator<UserModel> userValidator, IUserRepository repository)
+public class UserService(IExceptionHandler handler, IValidator<UserModel> userValidator, IUserRepository repository) : IUserService
 {
     public async Task<DefaultResponse> NewUser(UserModel userModel)
     {
