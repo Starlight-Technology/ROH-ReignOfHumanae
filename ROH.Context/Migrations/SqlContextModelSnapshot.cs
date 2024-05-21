@@ -17,7 +17,7 @@ namespace ROH.Context.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -71,8 +71,11 @@ namespace ROH.Context.Migrations
                     b.Property<long>("IdAccount")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("Password")
-                        .HasColumnType("text");
+                    b.Property<byte[]>("PasswordHash")
+                        .HasColumnType("bytea");
+
+                    b.Property<byte[]>("Salt")
+                        .HasColumnType("bytea");
 
                     b.HasKey("Id");
 

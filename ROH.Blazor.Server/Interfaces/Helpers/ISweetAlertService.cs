@@ -3,12 +3,11 @@
 using ROH.Blazor.Server.Helpers.Types;
 using ROH.StandardModels.Response;
 
-namespace ROH.Blazor.Server.Interfaces.Helpers
-{
-    public interface ISweetAlertService
-    {
-        Task Show(string title, string message, SweetAlertType type);
+namespace ROH.Blazor.Server.Interfaces.Helpers;
 
-        Task ShowResponse(DefaultResponse response);
-    }
+public interface ISweetAlertService
+{
+    Task Show(string title, string message, SweetAlertType type);
+
+    Task ShowResponse(DefaultResponse response);
 }

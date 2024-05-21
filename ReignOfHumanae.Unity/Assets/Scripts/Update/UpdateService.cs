@@ -63,18 +63,20 @@ namespace Assets.Scripts.Update
         {
             try
             {
-                var response = await _apiService.GetReleasedVersions();
+                PaginatedModel response = await _apiService.GetReleasedVersions();
                 if (ResponseHasGameVersions(response))
                 {
-                    var json = JsonConvert.SerializeObject(response.ObjectResponse);
-                    var versions = JsonConvert.DeserializeObject<ICollection<GameVersionModel>>(json);
-                    foreach (var version in versions)
+                    string json = JsonConvert.SerializeObject(response.ObjectResponse);
+                    ICollection<GameVersionModel> versions = JsonConvert.DeserializeObject<ICollection<GameVersionModel>>(json);
+                    foreach (GameVersionModel version in versions)
                     {
                         await VerifyIfFileExist(version);
                     }
                 }
                 else
+                {
                     ChangeText("A error has occured, please contact the support.");
+                }
             }
             catch (Exception ex) { Debug.LogException(ex); }
         }
@@ -83,16 +85,16 @@ namespace Assets.Scripts.Update
 
         private async Task VerifyIfFileExist(GameVersionModel version)
         {
-            var response = await _apiService.GetVersionFiles(version.Guid.ToString());
-            var json = JsonConvert.SerializeObject(response.ObjectResponse);
-            var files = JsonConvert.DeserializeObject<ICollection<GameVersionFileModel>>(json);
-            foreach (var file in files)
+            Models.Response.DefaultResponse response = await _apiService.GetVersionFiles(version.Guid.ToString());
+            string json = JsonConvert.SerializeObject(response.ObjectResponse);
+            ICollection<GameVersionFileModel> files = JsonConvert.DeserializeObject<ICollection<GameVersionFileModel>>(json);
+            foreach (GameVersionFileModel file in files)
             {
-                var versionFolder = $@"{filePath}/{version.Version}.{version.Release}.{version.Review}";
+                string versionFolder = $@"{filePath}/{version.Version}.{version.Release}.{version.Review}";
 
                 if (!Directory.Exists(versionFolder))
                 {
-                    Directory.CreateDirectory(versionFolder);
+                    _ = Directory.CreateDirectory(versionFolder);
                 }
 
                 file.Path = @$"{versionFolder}/{file.Name}";
@@ -104,7 +106,7 @@ namespace Assets.Scripts.Update
 
         private async Task DownloadFile(GameVersionFileModel file)
         {
-            var download = await _apiService.DownloadFile(file.Guid.ToString());
+            Models.File.FileModel download = await _apiService.DownloadFile(file.Guid.ToString());
             if (download != null)
             {
                 file.Content = download.Content;

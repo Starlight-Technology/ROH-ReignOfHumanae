@@ -5,10 +5,8 @@ using Assets.Scripts.Models.Version;
 
 using Newtonsoft.Json;
 
-using ROH.Models.Version;
 using ROH.StandardModels.Paginator;
 
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using UnityEngine;
@@ -92,8 +90,8 @@ namespace Assets.Scripts.Connection.ApiConfiguration
             {
                 if (response != null)
                 {
-                    var json = JsonConvert.SerializeObject(response.ObjectResponse);
-                    var file = JsonConvert.DeserializeObject<FileModel>(json);
+                    string json = JsonConvert.SerializeObject(response.ObjectResponse);
+                    FileModel file = JsonConvert.DeserializeObject<FileModel>(json);
                     tcs.SetResult(file);
                 }
                 else

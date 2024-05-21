@@ -1,8 +1,6 @@
 ﻿using Assets.Scripts.Helpers;
 using Assets.Scripts.Models.Configuration;
 
-using System;
-
 using UnityEngine;
 
 namespace Assets.Scripts.Configurations
@@ -11,10 +9,7 @@ namespace Assets.Scripts.Configurations
     {
         private readonly DataManager _dataManager = new();
 
-        private void Start()
-        {
-            GetInitialConfiguration();
-        }
+        private void Start() => GetInitialConfiguration();
 
         public ConfigurationModel GetInitialConfiguration()
         {
@@ -25,9 +20,9 @@ namespace Assets.Scripts.Configurations
 
             config.ServerUrl ??= "http://192.168.0.65:9001";
 
-            _dataManager.SaveData<ConfigurationModel>(config, configurationPath);            
+            _dataManager.SaveData<ConfigurationModel>(config, configurationPath);
 
             return config;
-        }        
+        }
     }
 }

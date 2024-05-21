@@ -2,15 +2,14 @@
 
 using ROH.StandardModels.Version;
 
-namespace ROH.Validations.Version
+namespace ROH.Validations.Version;
+
+public class GameVersionModelValidation : AbstractValidator<GameVersionModel>
 {
-    public class GameVersionModelValidation : AbstractValidator<GameVersionModel>
+    public GameVersionModelValidation()
     {
-        public GameVersionModelValidation()
-        {
-            _ = RuleFor(g => g.Version).GreaterThanOrEqualTo(0);
-            _ = RuleFor(g => g.Release).GreaterThanOrEqualTo(0);
-            _ = RuleFor(g => g.Review).GreaterThanOrEqualTo(0);
-        }
+        _ = RuleFor(g => g.Version).GreaterThanOrEqualTo(0);
+        _ = RuleFor(g => g.Release).GreaterThanOrEqualTo(0);
+        _ = RuleFor(g => g.Review).GreaterThanOrEqualTo(0);
     }
 }

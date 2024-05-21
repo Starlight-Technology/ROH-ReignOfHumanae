@@ -1,10 +1,9 @@
-﻿namespace ROH.Blazor.Server.Helpers.Types
+﻿namespace ROH.Blazor.Server.Helpers.Types;
+
+public enum SweetAlertType
 {
-    public enum SweetAlertType
-    {
-        Success,
-        Error,
-        Warning,
-        Info
-    }
+    Success,
+    Error,
+    Warning,
+    Info
 }

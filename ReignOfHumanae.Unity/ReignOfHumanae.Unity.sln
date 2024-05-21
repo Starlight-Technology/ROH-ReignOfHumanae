@@ -39,6 +39,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ROH.Validations", "..\ROH.V
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ROH.Test", "..\ROH.Test\ROH.Test.csproj", "{A9A52163-C138-40D1-9D81-3AF4B17C6212}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Api.Account", "..\ROH.Api.Account\ROH.Api.Account.csproj", "{DC52D53A-C5E8-4BC2-BA4A-6940FA8C6C57}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -117,8 +119,15 @@ Global
 		{A9A52163-C138-40D1-9D81-3AF4B17C6212}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9A52163-C138-40D1-9D81-3AF4B17C6212}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9A52163-C138-40D1-9D81-3AF4B17C6212}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC52D53A-C5E8-4BC2-BA4A-6940FA8C6C57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC52D53A-C5E8-4BC2-BA4A-6940FA8C6C57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC52D53A-C5E8-4BC2-BA4A-6940FA8C6C57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC52D53A-C5E8-4BC2-BA4A-6940FA8C6C57}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {97767F3F-F328-4301-8127-250356DF8742}
 	EndGlobalSection
 EndGlobal

@@ -3,10 +3,9 @@
 using ROH.Domain.Version;
 using ROH.StandardModels.Version;
 
-namespace ROH.Mapper.Version
+namespace ROH.Mapper.Version;
+
+public class GameVersionFileMapping : Profile
 {
-    public class GameVersionFileMapping : Profile
-    {
-        public GameVersionFileMapping() => CreateMap<GameVersionFile, GameVersionFileModel>().ReverseMap();
-    }
+    public GameVersionFileMapping() => CreateMap<GameVersionFile, GameVersionFileModel>().ReverseMap();
 }

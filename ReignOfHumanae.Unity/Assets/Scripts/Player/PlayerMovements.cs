@@ -51,10 +51,7 @@ namespace Assets.Scripts.Player
             }
         }
 
-        private void Jump()
-        {
-            body.AddRelativeForce(new Vector3(0, velocity * 2, 0), ForceMode.VelocityChange);
-        }
+        private void Jump() => body.AddRelativeForce(new Vector3(0, velocity * 2, 0), ForceMode.VelocityChange);
 
         private void MoveForward()
         {
@@ -80,10 +77,7 @@ namespace Assets.Scripts.Player
             SetFront();
         }
 
-        private void SetFront()
-        {
-            gameObject.transform.rotation = Quaternion.Euler(new Vector3(0, Camera.transform.eulerAngles.y, 0));
-        }
+        private void SetFront() => gameObject.transform.rotation = Quaternion.Euler(new Vector3(0, Camera.transform.eulerAngles.y, 0));
 
         private void OnCollisionEnter(Collision theCollision)
         {
