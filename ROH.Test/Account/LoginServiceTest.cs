@@ -17,15 +17,15 @@ public class LoginServiceTest
     public async Task Login_WithEmptyCredentials_ShouldReturnError()
     {
         // Arrange
-        var validator = new LoginModelValidator();
+        LoginModelValidator validator = new();
 
         Mock<IExceptionHandler> mockExceptionHandler = new();
         Mock<IUserService> mockUserService = new();
 
-        var service = new LoginService(mockExceptionHandler.Object, validator, mockUserService.Object);
+        LoginService service = new(mockExceptionHandler.Object, validator, mockUserService.Object);
 
         // Act
-        var result = await service.Login(new LoginModel());
+        DefaultResponse result = await service.Login(new LoginModel());
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, result.HttpStatus);
@@ -36,24 +36,24 @@ public class LoginServiceTest
     public async Task Login_WithNotFoundCredentials_ShouldReturnNotFound()
     {
         // Arrange
-        var validator = new LoginModelValidator();
+        LoginModelValidator validator = new();
 
         Mock<IExceptionHandler> mockExceptionHandler = new();
 
         Mock<IUserService> mockUserService = new();
-        mockUserService.Setup(x => x.FindUserByEmail(It.IsAny<string>())).ReturnsAsync(() => null);
-        mockUserService.Setup(x => x.FindUserByUserName(It.IsAny<string>())).ReturnsAsync(() => null);
+        _ = mockUserService.Setup(x => x.FindUserByEmail(It.IsAny<string>())).ReturnsAsync(() => null);
+        _ = mockUserService.Setup(x => x.FindUserByUserName(It.IsAny<string>())).ReturnsAsync(() => null);
 
-        var service = new LoginService(mockExceptionHandler.Object, validator, mockUserService.Object);
+        LoginService service = new(mockExceptionHandler.Object, validator, mockUserService.Object);
 
-        var loginModel = new LoginModel()
+        LoginModel loginModel = new()
         {
             Login = "test",
             Password = "test"
         };
 
         // Act
-        var result = await service.Login(loginModel);
+        DefaultResponse result = await service.Login(loginModel);
 
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, result.HttpStatus);
@@ -61,37 +61,65 @@ public class LoginServiceTest
     }
 
     [Fact]
-    public async Task Login_WithValidCredentials_ShouldReturnUserModel()
+    public async Task Login_WithInvalidPassword_ShouldReturnError()
     {
         // Arrange
-        User user = new User(1,1, Guid.NewGuid(), "test", "test");
-        UserModel userModel = new () 
+        User user = new(1, 1, Guid.NewGuid(), "test", "test");
+        user.SetPassword("test");
+
+        LoginModel loginModel = new()
         {
-            Email = user.Email,
-            Guid = user.Guid,
-            UserName = user.UserName
+            Login = "test",
+            Password = "testwrong"
         };
 
-        var validator = new LoginModelValidator();
+        LoginModelValidator validator = new();
 
         Mock<IExceptionHandler> mockExceptionHandler = new();
 
         Mock<IUserService> mockUserService = new();
-        mockUserService.Setup(x => x.FindUserByEmail(It.IsAny<string>())).ReturnsAsync(user);
-        mockUserService.Setup(x => x.FindUserByUserName(It.IsAny<string>())).ReturnsAsync(user);
+        _ = mockUserService.Setup(x => x.FindUserByEmail(It.IsAny<string>())).ReturnsAsync(user);
+        _ = mockUserService.Setup(x => x.FindUserByUserName(It.IsAny<string>())).ReturnsAsync(user);
 
-        var service = new LoginService(mockExceptionHandler.Object, validator, mockUserService.Object);
+        LoginService service = new(mockExceptionHandler.Object, validator, mockUserService.Object);
 
-        var loginModel = new LoginModel()
-        {
-            Login = "test",
-            Password = "test"
-        };
-
-        var expected = new DefaultResponse(objectResponse: new UserModel() { Email = user.Email, UserName = user.UserName, Guid = user.Guid });
+        DefaultResponse expected = new(httpStatus: HttpStatusCode.Unauthorized, message: "Invalid password!");
 
         // Act
-        var result = await service.Login(loginModel);
+        DefaultResponse result = await service.Login(loginModel);
+
+        // Assert
+        Assert.Equivalent(expected, result);
+    }
+
+    [Fact]
+    public async Task Login_WithValidCredentials_ShouldReturnUserModel()
+    {
+        // Arrange
+        string pass = "test";
+        User user = new(1, 1, Guid.NewGuid(), "test", "test");
+        user.SetPassword(pass);
+
+        LoginModel loginModel = new()
+        {
+            Login = "test",
+            Password = pass
+        };
+
+        LoginModelValidator validator = new();
+
+        Mock<IExceptionHandler> mockExceptionHandler = new();
+
+        Mock<IUserService> mockUserService = new();
+        _ = mockUserService.Setup(x => x.FindUserByEmail(It.IsAny<string>())).ReturnsAsync(user);
+        _ = mockUserService.Setup(x => x.FindUserByUserName(It.IsAny<string>())).ReturnsAsync(user);
+
+        LoginService service = new(mockExceptionHandler.Object, validator, mockUserService.Object);
+
+        DefaultResponse expected = new(objectResponse: new UserModel() { Email = user.Email, UserName = user.UserName, Guid = user.Guid });
+
+        // Act
+        DefaultResponse result = await service.Login(loginModel);
 
         // Assert
         Assert.Equivalent(expected, result);

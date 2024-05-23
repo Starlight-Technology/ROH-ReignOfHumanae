@@ -100,7 +100,7 @@ public class UserServiceTest
         UserService service = new(mockExceptionHandler.Object, userValidator, mockRepository.Object);
 
         // Act
-        var result = await service.FindUserByEmail("test");
+        User? result = await service.FindUserByEmail("test");
 
         // Assert
 
@@ -123,7 +123,7 @@ public class UserServiceTest
         UserService service = new(mockExceptionHandler.Object, userValidator, mockRepository.Object);
 
         // Act
-        var result = await service.FindUserByEmail("test");
+        User? result = await service.FindUserByEmail("test");
 
         // Assert
 
@@ -145,7 +145,7 @@ public class UserServiceTest
         UserService service = new(mockExceptionHandler.Object, userValidator, mockRepository.Object);
 
         // Act
-        var result = await service.FindUserByUserName("test");
+        User? result = await service.FindUserByUserName("test");
 
         // Assert
 
@@ -156,7 +156,7 @@ public class UserServiceTest
     public async Task FindUserByUserName_ShoulReturn_User_WhenUserFound()
     {
         // Arrange 
-        User userTest = new (Id: 1, IdAccount: 1, Email:"test@test.com", UserName:"User Name Test", Guid: Guid.NewGuid());
+        User userTest = new(Id: 1, IdAccount: 1, Email: "test@test.com", UserName: "User Name Test", Guid: Guid.NewGuid());
 
         UserModelValidator userValidator = new();
 
@@ -168,7 +168,7 @@ public class UserServiceTest
         UserService service = new(mockExceptionHandler.Object, userValidator, mockRepository.Object);
 
         // Act
-        var result = await service.FindUserByUserName("test");
+        User? result = await service.FindUserByUserName("test");
 
         // Assert
 
