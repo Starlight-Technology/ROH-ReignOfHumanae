@@ -35,8 +35,8 @@ builder.Services.AddScoped<ILogRepository, LogRepository>();
 builder.Services.AddScoped<IGameVersionService, GameVersionService>();
 builder.Services.AddScoped<IGameVersionFileService, GameVersionFileService>();
 
-builder.Services.AddScoped<IValidator<GameVersionModel>, GameVersionModelValidation>();
-builder.Services.AddScoped<IValidator<GameVersionFileModel>, GameVersionFileModelValidation>();
+builder.Services.AddScoped<IValidator<GameVersionModel>, GameVersionModelValidator>();
+builder.Services.AddScoped<IValidator<GameVersionFileModel>, GameVersionFileModelValidator>();
 
 builder.Services.AddScoped<IExceptionHandler, ExceptionHandler>();
 

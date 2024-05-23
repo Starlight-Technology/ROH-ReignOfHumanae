@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ROH.Domain.Accounts;
 
-public record User(long Id = 0, long IdAccount = 0, Guid Guid = default, string? Email = null)
+public record User(long Id = 0, long IdAccount = 0, Guid Guid = default, string? Email = null, string? UserName = null)
 {
     public virtual Account? Account { get; set; } = new Account();
     public byte[]? Salt { get; set; }

@@ -39,4 +39,7 @@ public class UserService(IExceptionHandler handler, IValidator<UserModel> userVa
             return handler.HandleException(e);
         }
     }
+
+    public async Task<User?> FindUserByEmail(string email) => await repository.FindUserByEmail(email);
+    public async Task<User?> FindUserByUserName(string userName) => await repository.FindUserByUserName(userName);
 }

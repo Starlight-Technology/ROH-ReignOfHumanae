@@ -15,4 +15,7 @@ public class UserRepository(ISqlContext context) : IUserRepository
         _ = await context.SaveChangesAsync();
         return user;
     }
+
+    public async Task<User?> FindUserByEmail(string email) => await context.Users.FirstOrDefaultAsync(u => u.Email == email);
+    public async Task<User?> FindUserByUserName(string userName) => await context.Users.FirstOrDefaultAsync(u => u.UserName == userName);
 }

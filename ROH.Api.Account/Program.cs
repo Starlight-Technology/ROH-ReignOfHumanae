@@ -29,7 +29,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddScoped<IUserService, UserService>();
 
-builder.Services.AddScoped<IValidator<UserModel>, UserModelValidation>();
+builder.Services.AddScoped<IValidator<UserModel>, UserModelValidator>();
 
 builder.Services.AddScoped<IExceptionHandler, ExceptionHandler>();
 

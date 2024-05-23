@@ -19,7 +19,7 @@ public class UserServiceTest
         // Arrange
         UserModel userModel = new();
 
-        UserModelValidation userValidator = new();
+        UserModelValidator userValidator = new();
 
         Mock<IExceptionHandler> mockExceptionHandler = new();
 
@@ -42,7 +42,7 @@ public class UserServiceTest
         // Arrange
         UserModel userModel = new() { Email = "test.email@test.com", Password = "test123" };
 
-        UserModelValidation userValidator = new();
+        UserModelValidator userValidator = new();
 
         Mock<IExceptionHandler> mockExceptionHandler = new();
 
@@ -67,7 +67,7 @@ public class UserServiceTest
         // Arrange 
         UserModel userModel = new() { Email = "test.email@test.com", Password = "test123" };
 
-        UserModelValidation userValidator = new();
+        UserModelValidator userValidator = new();
 
         Mock<IExceptionHandler> mockExceptionHandler = new();
 
@@ -84,5 +84,94 @@ public class UserServiceTest
         // Assert
 
         Assert.Equivalent(expected, result);
+    }
+
+    [Fact]
+    public async Task FindUserByEmail_ShoulReturn_Null_WhenUserNotFound()
+    {
+        // Arrange 
+        UserModelValidator userValidator = new();
+
+        Mock<IExceptionHandler> mockExceptionHandler = new();
+
+        Mock<IUserRepository> mockRepository = new();
+        _ = mockRepository.Setup(x => x.FindUserByEmail(It.IsAny<string>())).ReturnsAsync(() => null);
+
+        UserService service = new(mockExceptionHandler.Object, userValidator, mockRepository.Object);
+
+        // Act
+        var result = await service.FindUserByEmail("test");
+
+        // Assert
+
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task FindUserByEmail_ShoulReturn_User_WhenUserFound()
+    {
+        // Arrange 
+        User userTest = new(Id: 1, IdAccount: 1, Email: "test@test.com", UserName: "User Name Test", Guid: Guid.NewGuid());
+
+        UserModelValidator userValidator = new();
+
+        Mock<IExceptionHandler> mockExceptionHandler = new();
+
+        Mock<IUserRepository> mockRepository = new();
+        _ = mockRepository.Setup(x => x.FindUserByEmail(It.IsAny<string>())).ReturnsAsync(userTest);
+
+        UserService service = new(mockExceptionHandler.Object, userValidator, mockRepository.Object);
+
+        // Act
+        var result = await service.FindUserByEmail("test");
+
+        // Assert
+
+        Assert.Equal(result, userTest);
+    }
+
+    [Fact]
+    public async Task FindUserByUserName_ShoulReturn_Null_WhenUserNotFound()
+    {
+        // Arrange 
+
+        UserModelValidator userValidator = new();
+
+        Mock<IExceptionHandler> mockExceptionHandler = new();
+
+        Mock<IUserRepository> mockRepository = new();
+        _ = mockRepository.Setup(x => x.FindUserByUserName(It.IsAny<string>())).ReturnsAsync(() => null);
+
+        UserService service = new(mockExceptionHandler.Object, userValidator, mockRepository.Object);
+
+        // Act
+        var result = await service.FindUserByUserName("test");
+
+        // Assert
+
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task FindUserByUserName_ShoulReturn_User_WhenUserFound()
+    {
+        // Arrange 
+        User userTest = new (Id: 1, IdAccount: 1, Email:"test@test.com", UserName:"User Name Test", Guid: Guid.NewGuid());
+
+        UserModelValidator userValidator = new();
+
+        Mock<IExceptionHandler> mockExceptionHandler = new();
+
+        Mock<IUserRepository> mockRepository = new();
+        _ = mockRepository.Setup(x => x.FindUserByUserName(It.IsAny<string>())).ReturnsAsync(userTest);
+
+        UserService service = new(mockExceptionHandler.Object, userValidator, mockRepository.Object);
+
+        // Act
+        var result = await service.FindUserByUserName("test");
+
+        // Assert
+
+        Assert.Equal(result, userTest);
     }
 }
