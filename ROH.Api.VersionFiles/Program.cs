@@ -8,7 +8,7 @@ using ROH.Interfaces.Repository.Log;
 using ROH.Interfaces.Repository.Version;
 using ROH.Interfaces.Services.ExceptionService;
 using ROH.Interfaces.Services.Version;
-using ROH.Mapper.Version;
+using ROH.Mapping.Version;
 using ROH.Repository.Log;
 using ROH.Repository.Version;
 using ROH.Services.ExceptionService;

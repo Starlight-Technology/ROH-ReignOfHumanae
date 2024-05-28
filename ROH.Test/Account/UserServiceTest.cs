@@ -174,4 +174,28 @@ public class UserServiceTest
 
         Assert.Equal(result, userTest);
     }
+
+    [Fact]
+    public async Task FindUserByGuid_ShoulReturn_User()
+    {
+        // Arrange 
+        var guidTest = Guid.NewGuid();
+        User userTest = new(Id: 1, IdAccount: 1, Email: "test@test.com", UserName: "User Name Test", Guid: guidTest);
+
+        UserModelValidator userValidator = new();
+
+        Mock<IExceptionHandler> mockExceptionHandler = new();
+
+        Mock<IUserRepository> mockRepository = new();
+        _ = mockRepository.Setup(x => x.GetUserByGuid(It.IsAny<Guid>())).ReturnsAsync(userTest);
+
+        UserService service = new(mockExceptionHandler.Object, userValidator, mockRepository.Object);
+
+        // Act
+        User? result = await service.GetUserByGuid(guidTest);
+
+        // Assert
+
+        Assert.Equal(result, userTest);
+    }
 }

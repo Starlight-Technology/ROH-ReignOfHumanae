@@ -3,7 +3,7 @@
 using ROH.Domain.Version;
 using ROH.StandardModels.Version;
 
-namespace ROH.Mapper.Version;
+namespace ROH.Mapping.Version;
 
 public class GameVersionFileMapping : Profile
 {
