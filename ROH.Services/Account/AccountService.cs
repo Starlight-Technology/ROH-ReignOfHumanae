@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+
 using ROH.Interfaces.Repository.Account;
 using ROH.Interfaces.Services.Account;
 using ROH.Interfaces.Services.ExceptionService;
@@ -17,7 +19,10 @@ public class AccountService(IExceptionHandler handler, IUserService userService,
 
             Domain.Accounts.Account? account = await repository.GetAccountById(user.IdAccount);
 
-            return new DefaultResponse(objectResponse: mapper.Map<AccountModel>(account));
+            AccountModel model = mapper.Map<AccountModel>(account);
+            model.UserName = user.UserName;
+
+            return new DefaultResponse(objectResponse: model);
         }
         catch (Exception ex)
         {
@@ -27,15 +32,22 @@ public class AccountService(IExceptionHandler handler, IUserService userService,
 
     public async Task<DefaultResponse> UpdateAccount(AccountModel accountModel)
     {
-        var account = await repository.GetAccountByGuid(accountModel.Guid);
-        if (account is null)
-            return new DefaultResponse(httpStatus:System.Net.HttpStatusCode.NotFound, message:"Account not found.");
+        try
+        {
+            var account = await repository.GetAccountByGuid(accountModel.Guid);
+            if (account is null)
+                return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.NotFound, message: "Account not found.");
 
-        account = account with { BirthDate = DateOnly.FromDateTime(accountModel.BirthDate), RealName = accountModel.RealName, };
+            account = account with { BirthDate = DateOnly.FromDateTime(accountModel.BirthDate), RealName = accountModel.RealName, };
 
-        await repository.UpdateAccount(account);
+            await repository.UpdateAccount(account);
 
-        return new DefaultResponse();
+            return new DefaultResponse();
+        }
+        catch (Exception ex)
+        {
+            return handler.HandleException(ex);
+        }
     }
 
 }

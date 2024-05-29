@@ -28,7 +28,7 @@ public class GameVersionServiceTests
     private readonly GameVersion _version = new(_utcNow, 1, _guidGenerated, 1, 1, 1);
 
     [Fact]
-    public async Task GetVersionByGuid_ShouldReturnVersion_WhenVersionExists()
+    public async Task GetVersionByGuid_ShouldReturn_Version_WhenVersionExists()
     {
         // Arrange
         MapperConfiguration config = new(cfg =>
@@ -54,7 +54,7 @@ public class GameVersionServiceTests
     }
 
     [Fact]
-    public async Task GetAllVersions_ShouldReturnListWithVersions_WhenHaveAny()
+    public async Task GetAllVersions_ShouldReturn__ListWithVersions_WhenHaveAny()
     {
         // Arrange
         MapperConfiguration config = new(cfg =>
