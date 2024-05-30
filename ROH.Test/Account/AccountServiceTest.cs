@@ -23,9 +23,11 @@ public class AccountServiceTest
         {
             // Configure your mappings here
             _ = cfg.CreateMap<Domain.Accounts.Account, AccountModel>()
-    .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate.ToDateTime(new TimeOnly(0, 0))));
+                .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate.ToDateTime(new TimeOnly(0, 0))));
             _ = cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
+
+            cfg.CreateMap<User, UserModel>().ReverseMap();
         });
 
         Mapper mapper = new(config);
@@ -36,12 +38,9 @@ public class AccountServiceTest
         Mock<IAccountRepository> mockRepository = new();
         _ = mockRepository.Setup(x => x.GetAccountById(It.IsAny<long>())).ReturnsAsync(() => null);
 
-        Mock<IUserService> mockUserService = new();
-        _ = mockUserService.Setup(x => x.GetUserByGuid(It.IsAny<Guid>())).ThrowsAsync(new Exception());
+        AccountService service = new(mockExceptionHandler.Object, mockRepository.Object, mapper);
 
-        AccountService service = new(mockExceptionHandler.Object, mockUserService.Object, mockRepository.Object, mapper);
-
-        DefaultResponse expected = new(httpStatus: HttpStatusCode.BadRequest);
+        DefaultResponse expected = new(httpStatus: HttpStatusCode.NotFound);
 
         // Act
         DefaultResponse result = await service.GetAccounByUserGuid(Guid.NewGuid());
@@ -52,7 +51,7 @@ public class AccountServiceTest
     }
 
     [Fact]
-    public async Task GetAccountByUserGuid_ShouldReturn_User_WhenUserFound()
+    public async Task GetAccountByUserGuid_ShouldReturn_Account_WhenUserFound()
     {
         // Arrange 
         MapperConfiguration config = new(cfg =>
@@ -62,6 +61,8 @@ public class AccountServiceTest
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate.ToDateTime(new TimeOnly(0, 0))));
             _ = cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
+
+            cfg.CreateMap<User, UserModel>().ReverseMap();
         });
 
         Mapper mapper = new(config);
@@ -71,20 +72,17 @@ public class AccountServiceTest
         string realNameTest = "Test";
         DateTime birthDateTest = DateTime.Today;
 
-        User mockedUser = new(UserName: userNameTest);
+        UserModel mockedUserModel = new() { UserName=userNameTest};
 
-        AccountModel accountModel = new() { Guid = guidTest, UserName = userNameTest, RealName = realNameTest, BirthDate = birthDateTest };
+        AccountModel accountModel = new() { Guid = guidTest, RealName = realNameTest, BirthDate = birthDateTest };
         Domain.Accounts.Account account = new(Guid: guidTest, RealName: realNameTest, BirthDate: DateOnly.FromDateTime(birthDateTest));
 
         Mock<IExceptionHandler> mockExceptionHandler = new();
 
         Mock<IAccountRepository> mockRepository = new();
-        _ = mockRepository.Setup(x => x.GetAccountById(It.IsAny<long>())).ReturnsAsync(account);
+        _ = mockRepository.Setup(x => x.GetAccountByUserGuid(It.IsAny<Guid>())).ReturnsAsync(account);
 
-        Mock<IUserService> mockUserService = new();
-        _ = mockUserService.Setup(x => x.GetUserByGuid(It.IsAny<Guid>())).ReturnsAsync(mockedUser);
-
-        AccountService service = new(mockExceptionHandler.Object, mockUserService.Object, mockRepository.Object, mapper);
+        AccountService service = new(mockExceptionHandler.Object,  mockRepository.Object, mapper);
 
         DefaultResponse expected = new(httpStatus: HttpStatusCode.OK, objectResponse: accountModel);
 
@@ -107,6 +105,8 @@ public class AccountServiceTest
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate.ToDateTime(new TimeOnly(0, 0))));
             _ = cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
+
+            cfg.CreateMap<User, UserModel>().ReverseMap();
         });
 
         Mapper mapper = new(config);
@@ -116,16 +116,14 @@ public class AccountServiceTest
         string realNameTest = "Test";
         DateTime birthDateTest = DateTime.Today;
 
-        AccountModel accountModel = new() { Guid = guidTest, UserName = userNameTest, RealName = realNameTest, BirthDate = birthDateTest };
+        AccountModel accountModel = new() { Guid = guidTest, RealName = realNameTest, BirthDate = birthDateTest };
 
         Mock<IExceptionHandler> mockExceptionHandler = new();
 
         Mock<IAccountRepository> mockRepository = new();
         _ = mockRepository.Setup(x => x.GetAccountByGuid(It.IsAny<Guid>())).ReturnsAsync(() => null);
 
-        Mock<IUserService> mockUserService = new();
-
-        AccountService service = new(mockExceptionHandler.Object, mockUserService.Object, mockRepository.Object, mapper);
+        AccountService service = new(mockExceptionHandler.Object, mockRepository.Object, mapper);
 
         DefaultResponse expected = new(httpStatus: HttpStatusCode.NotFound, message: "Account not found.");
 
@@ -148,6 +146,8 @@ public class AccountServiceTest
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate.ToDateTime(new TimeOnly(0, 0))));
             _ = cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
+
+            cfg.CreateMap<User, UserModel>().ReverseMap();
         });
 
         Mapper mapper = new(config);
@@ -158,8 +158,9 @@ public class AccountServiceTest
         DateTime birthDateTest = DateTime.Today;
 
         User mockedUser = new(UserName: userNameTest);
+        UserModel mockedUserModel = new() { UserName = userNameTest };
 
-        AccountModel accountModel = new() { Guid = guidTest, UserName = userNameTest, RealName = realNameTest, BirthDate = birthDateTest };
+        AccountModel accountModel = new() { Guid = guidTest, RealName = realNameTest, BirthDate = birthDateTest };
 
         Domain.Accounts.Account account = new(Guid: guidTest, RealName: realNameTest, BirthDate: DateOnly.FromDateTime(birthDateTest));
 
@@ -168,10 +169,7 @@ public class AccountServiceTest
         Mock<IAccountRepository> mockRepository = new();
         _ = mockRepository.Setup(x => x.GetAccountByGuid(It.IsAny<Guid>())).ReturnsAsync(account);
 
-        Mock<IUserService> mockUserService = new();
-        _ = mockUserService.Setup(x => x.GetUserByGuid(It.IsAny<Guid>())).ReturnsAsync(mockedUser);
-
-        AccountService service = new(mockExceptionHandler.Object, mockUserService.Object, mockRepository.Object, mapper);
+        AccountService service = new(mockExceptionHandler.Object, mockRepository.Object, mapper);
 
         DefaultResponse expected = new();
 

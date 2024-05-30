@@ -19,11 +19,11 @@ public class LoginService(IExceptionHandler handler, IValidator<LoginModel> logi
             if (validation != null && !validation.IsValid && validation.Errors.Count > 0)
                 return new DefaultResponse(null, HttpStatusCode.BadRequest, validation.Errors.ToString()!);
 
-            User? user = await FindUser(loginModel);
+            UserModel? user = await FindUser(loginModel);
 
             return user is null
                 ? new DefaultResponse(httpStatus: HttpStatusCode.NotFound, message: "User not found.")
-                : ValidatePassword(user, loginModel);
+                : await ValidatePassword(user, loginModel);
         }
         catch (Exception e)
         {
@@ -31,9 +31,10 @@ public class LoginService(IExceptionHandler handler, IValidator<LoginModel> logi
         }
     }
 
-    private static DefaultResponse ValidatePassword(User user, LoginModel loginModel) => user.VerifyPassword(loginModel.Password!)
+    private async Task<DefaultResponse> ValidatePassword(UserModel user, LoginModel loginModel) => 
+         await userService.ValidatePassword(loginModel.Password!, user.Guid!.Value)
         ? new DefaultResponse(objectResponse: new UserModel() { Email = user.Email, UserName = user.UserName, Guid = user.Guid })
         : new DefaultResponse(httpStatus: HttpStatusCode.Unauthorized, message: "Invalid password!");
 
-    private async Task<User?> FindUser(LoginModel loginModel) => await userService.FindUserByEmail(loginModel.Login!) ?? await userService.FindUserByUserName(loginModel.Login!);
+    private async Task<UserModel?> FindUser(LoginModel loginModel) => await userService.FindUserByEmail(loginModel.Login!) ?? await userService.FindUserByUserName(loginModel.Login!);
 }

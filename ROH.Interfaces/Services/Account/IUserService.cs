@@ -6,7 +6,8 @@ namespace ROH.Interfaces.Services.Account;
 public interface IUserService
 {
     Task<DefaultResponse> NewUser(UserModel userModel);
-    Task<User?> FindUserByEmail(string email);
-    Task<User?> FindUserByUserName(string userName);
-    Task<User> GetUserByGuid(Guid userGuid);
+    Task<UserModel?> FindUserByEmail(string email);
+    Task<UserModel?> FindUserByUserName(string userName);
+    Task<UserModel> GetUserByGuid(Guid userGuid);
+    Task<bool> ValidatePassword(string password, Guid userGuid);
 }

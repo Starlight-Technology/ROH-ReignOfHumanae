@@ -7,18 +7,18 @@ using ROH.StandardModels.Account;
 using ROH.StandardModels.Response;
 
 namespace ROH.Services.Account;
-public class AccountService(IExceptionHandler handler, IUserService userService, IAccountRepository repository, IMapper mapper) : IAccountService
+public class AccountService(IExceptionHandler handler, IAccountRepository repository, IMapper mapper) : IAccountService
 {
     public async Task<DefaultResponse> GetAccounByUserGuid(Guid userGuid)
     {
         try
         {
-            Domain.Accounts.User user = await userService.GetUserByGuid(userGuid);
+            Domain.Accounts.Account? account = await repository.GetAccountByUserGuid(userGuid);
 
-            Domain.Accounts.Account? account = await repository.GetAccountById(user.IdAccount);
+            if (account is null)
+                return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.NotFound);
 
             AccountModel model = mapper.Map<AccountModel>(account);
-            model.UserName = user.UserName;
 
             return new DefaultResponse(objectResponse: model);
         }

@@ -64,8 +64,11 @@ public class LoginServiceTest
     public async Task Login_WithInvalidPassword_ShouldReturnError()
     {
         // Arrange
-        User user = new(1, 1, Guid.NewGuid(), "test", "test");
+        var guidTest = Guid.NewGuid();
+        User user = new(1, 1, guidTest, "test", "test");
         user.SetPassword("test");
+        UserModel userModelTest = new() { Email = "test@test.com", UserName = "User Name Test", Guid = guidTest };
+
 
         LoginModel loginModel = new()
         {
@@ -78,8 +81,8 @@ public class LoginServiceTest
         Mock<IExceptionHandler> mockExceptionHandler = new();
 
         Mock<IUserService> mockUserService = new();
-        _ = mockUserService.Setup(x => x.FindUserByEmail(It.IsAny<string>())).ReturnsAsync(user);
-        _ = mockUserService.Setup(x => x.FindUserByUserName(It.IsAny<string>())).ReturnsAsync(user);
+        _ = mockUserService.Setup(x => x.FindUserByEmail(It.IsAny<string>())).ReturnsAsync(userModelTest);
+        _ = mockUserService.Setup(x => x.FindUserByUserName(It.IsAny<string>())).ReturnsAsync(userModelTest);
 
         LoginService service = new(mockExceptionHandler.Object, validator, mockUserService.Object);
 
@@ -97,8 +100,10 @@ public class LoginServiceTest
     {
         // Arrange
         string pass = "test";
-        User user = new(1, 1, Guid.NewGuid(), "test", "test");
+        var guidTest = Guid.NewGuid();
+        User user = new(1, 1, guidTest, "test@test.com", "User Name Test");
         user.SetPassword(pass);
+        UserModel userModelTest = new() { Email = "test@test.com", UserName = "User Name Test", Guid = guidTest };
 
         LoginModel loginModel = new()
         {
@@ -111,8 +116,9 @@ public class LoginServiceTest
         Mock<IExceptionHandler> mockExceptionHandler = new();
 
         Mock<IUserService> mockUserService = new();
-        _ = mockUserService.Setup(x => x.FindUserByEmail(It.IsAny<string>())).ReturnsAsync(user);
-        _ = mockUserService.Setup(x => x.FindUserByUserName(It.IsAny<string>())).ReturnsAsync(user);
+        _ = mockUserService.Setup(x => x.FindUserByEmail(It.IsAny<string>())).ReturnsAsync(userModelTest);
+        _ = mockUserService.Setup(x => x.FindUserByUserName(It.IsAny<string>())).ReturnsAsync(userModelTest);
+        _ = mockUserService.Setup(x => x.ValidatePassword(It.IsAny<string>(), It.IsAny<Guid>())).ReturnsAsync(true);
 
         LoginService service = new(mockExceptionHandler.Object, validator, mockUserService.Object);
 
