@@ -26,8 +26,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ISqlContext, SqlContext>();
 builder.Services.AddScoped<ILogRepository, LogRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 builder.Services.AddScoped<IValidator<UserModel>, UserModelValidator>();
 
@@ -54,6 +56,31 @@ if (app.Environment.IsDevelopment())
 app.MapPost("CreateNewUser", async (IUserService _userService, UserModel model) =>
     await _userService.NewUser(model)
 ).WithName("CreateNewUser")
+.WithOpenApi();
+
+app.MapGet("FindUserByEmail", async (IUserService _userService, string email) =>
+    await _userService.FindUserByEmail(email)
+).WithName("FindUserByEmail")
+.WithOpenApi();
+
+app.MapGet("FindUserByUserName", async (IUserService _userService, string userName) =>
+    await _userService.FindUserByUserName(userName)
+).WithName("FindUserByUserName")
+.WithOpenApi();
+
+app.MapGet("GetUserByGuid", async (IUserService _userService, Guid guid) =>
+    await _userService.GetUserByGuid(guid)
+).WithName("GetUserByGuid")
+.WithOpenApi();
+
+app.MapGet("GetAccounByUserGuid", async (IAccountService _accountService, Guid guid) =>
+    await _accountService.GetAccounByUserGuid(guid)
+).WithName("GetAccounByUserGuid")
+.WithOpenApi();
+
+app.MapGet("UpdateAccount", async (IAccountService _accountService, AccountModel model) =>
+    await _accountService.UpdateAccount(model)
+).WithName("UpdateAccount")
 .WithOpenApi();
 
 app.UseHttpsRedirection();
