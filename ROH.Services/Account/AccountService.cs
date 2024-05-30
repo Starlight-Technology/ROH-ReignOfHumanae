@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
 
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-
 using ROH.Interfaces.Repository.Account;
 using ROH.Interfaces.Services.Account;
 using ROH.Interfaces.Services.ExceptionService;
@@ -34,7 +32,7 @@ public class AccountService(IExceptionHandler handler, IUserService userService,
     {
         try
         {
-            var account = await repository.GetAccountByGuid(accountModel.Guid);
+            Domain.Accounts.Account? account = await repository.GetAccountByGuid(accountModel.Guid);
             if (account is null)
                 return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.NotFound, message: "Account not found.");
 
@@ -49,5 +47,4 @@ public class AccountService(IExceptionHandler handler, IUserService userService,
             return handler.HandleException(ex);
         }
     }
-
 }

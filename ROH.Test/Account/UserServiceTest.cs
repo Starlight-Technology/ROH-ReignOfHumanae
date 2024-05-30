@@ -179,7 +179,7 @@ public class UserServiceTest
     public async Task FindUserByGuid_ShoulReturn_User()
     {
         // Arrange 
-        var guidTest = Guid.NewGuid();
+        Guid guidTest = Guid.NewGuid();
         User userTest = new(Id: 1, IdAccount: 1, Email: "test@test.com", UserName: "User Name Test", Guid: guidTest);
 
         UserModelValidator userValidator = new();

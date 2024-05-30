@@ -12,7 +12,7 @@ public class AccountRepository(ISqlContext context) : IAccountRepository
 
     public async Task UpdateAccount(Domain.Accounts.Account account)
     {
-        context.Accounts.Update(account);
-        await context.SaveChangesAsync();
+        _ = context.Accounts.Update(account);
+        _ = await context.SaveChangesAsync();
     }
 }

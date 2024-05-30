@@ -44,5 +44,5 @@ public class UserService(IExceptionHandler handler, IValidator<UserModel> userVa
 
     public async Task<User?> FindUserByUserName(string userName) => await repository.FindUserByUserName(userName);
 
-    public async Task<User> GetUserByGuid (Guid userGuid) => await repository.GetUserByGuid(userGuid);
+    public async Task<User> GetUserByGuid(Guid userGuid) => await repository.GetUserByGuid(userGuid);
 }

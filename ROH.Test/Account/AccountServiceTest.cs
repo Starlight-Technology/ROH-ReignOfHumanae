@@ -10,12 +10,7 @@ using ROH.Services.Account;
 using ROH.StandardModels.Account;
 using ROH.StandardModels.Response;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ROH.Test.Account;
 public class AccountServiceTest
@@ -27,9 +22,9 @@ public class AccountServiceTest
         MapperConfiguration config = new(cfg =>
         {
             // Configure your mappings here
-            cfg.CreateMap<Domain.Accounts.Account, AccountModel>()
+            _ = cfg.CreateMap<Domain.Accounts.Account, AccountModel>()
     .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate.ToDateTime(new TimeOnly(0, 0))));
-            cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
+            _ = cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
         });
 
@@ -63,9 +58,9 @@ public class AccountServiceTest
         MapperConfiguration config = new(cfg =>
         {
             // Configure your mappings here
-            cfg.CreateMap<Domain.Accounts.Account, AccountModel>()
+            _ = cfg.CreateMap<Domain.Accounts.Account, AccountModel>()
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate.ToDateTime(new TimeOnly(0, 0))));
-            cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
+            _ = cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
         });
 
@@ -108,9 +103,9 @@ public class AccountServiceTest
         MapperConfiguration config = new(cfg =>
         {
             // Configure your mappings here
-            cfg.CreateMap<Domain.Accounts.Account, AccountModel>()
+            _ = cfg.CreateMap<Domain.Accounts.Account, AccountModel>()
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate.ToDateTime(new TimeOnly(0, 0))));
-            cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
+            _ = cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
         });
 
@@ -149,9 +144,9 @@ public class AccountServiceTest
         MapperConfiguration config = new(cfg =>
         {
             // Configure your mappings here
-            cfg.CreateMap<Domain.Accounts.Account, AccountModel>()
+            _ = cfg.CreateMap<Domain.Accounts.Account, AccountModel>()
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate.ToDateTime(new TimeOnly(0, 0))));
-            cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
+            _ = cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
         });
 
@@ -179,7 +174,7 @@ public class AccountServiceTest
         AccountService service = new(mockExceptionHandler.Object, mockUserService.Object, mockRepository.Object, mapper);
 
         DefaultResponse expected = new();
-         
+
         // Act
         DefaultResponse result = await service.UpdateAccount(accountModel);
 
