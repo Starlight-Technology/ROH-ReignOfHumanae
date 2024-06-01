@@ -37,7 +37,9 @@ namespace ROH.Utils.ApiConfiguration
             FindUserByUserName,
             GetUserByGuid,
             GetAccounByUserGuid,
-            UpdateAccount
+            UpdateAccount,
+
+            Login
         }
 
         private static readonly Dictionary<Services, Uri> _servicesUrl = new Dictionary<Services, Uri>
@@ -50,6 +52,7 @@ namespace ROH.Utils.ApiConfiguration
             {Services.GetAllReleasedVersionsPaginated, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"GetAllReleasedVersionsPaginated" ) },
             {Services.GetVersionDetails, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"GetVersionDetails" ) },
             {Services.ReleaseVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"ReleaseVersion" ) },
+
             #endregion VERSION
 
             #region FILES
@@ -57,6 +60,7 @@ namespace ROH.Utils.ApiConfiguration
              {Services.UploadVersionFile, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.VersionFile),"UploadFile" ) },
              {Services.GetAllVersionFiles, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.VersionFile),"GetAllVersionFiles" ) },
              {Services.DownloadFile, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.VersionFile),"DownloadFile" ) },
+
             #endregion FILES
 
             #region ACCOUNT
@@ -66,8 +70,15 @@ namespace ROH.Utils.ApiConfiguration
              {Services.FindUserByUserName, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Account),"FindUserByUserName" ) },
              {Services.GetUserByGuid, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Account),"GetUserByGuid" ) },
              {Services.GetAccounByUserGuid, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Account),"GetAccounByUserGuid" ) },
-             {Services.UpdateAccount, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Account),"UpdateAccount" ) }
+             {Services.UpdateAccount, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Account),"UpdateAccount" ) },
+
             #endregion ACCOUNT
+
+            #region LOGIN
+
+            { Services.Login, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Login), "Login")}
+
+            #endregion LOGIN
         };
 
         public async Task<string> Get<T>(Services service, T parametersObject)

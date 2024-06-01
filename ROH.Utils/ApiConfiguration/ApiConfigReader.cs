@@ -18,7 +18,8 @@ namespace ROH.Utils.ApiConfiguration
             Version,
             VersionFile,
             GateWay,
-            Account
+            Account,
+            Login
         }
 
         public ApiConfigReader()

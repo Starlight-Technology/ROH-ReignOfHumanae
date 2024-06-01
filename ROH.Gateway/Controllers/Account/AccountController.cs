@@ -27,4 +27,7 @@ public class AccountController : ControllerBase
 
     [HttpPut("UpdateAccount")]
     public async Task<IActionResult> UpdateAccount(AccountModel model) => Ok(await _api.Update(Utils.ApiConfiguration.Api.Services.UpdateAccount, model));
+
+    [HttpPut("Login")]
+    public async Task<IActionResult> Login(LoginModel model) => Ok(await _api.Post(Utils.ApiConfiguration.Api.Services.Login, model));
 }

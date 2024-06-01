@@ -50,9 +50,15 @@ namespace ROH.Utils.ApiConfiguration
             FindUserByUserName,
             GetUserByGuid,
             GetAccounByUserGuid,
-            UpdateAccount
+            UpdateAccount,
 
             #endregion ACCOUNT
+
+            #region LOGIN
+
+            Login
+
+            #endregion LOGIN
         }
 
         private static readonly Dictionary<Services, Uri> _gatewayServiceUrl = new Dictionary<Services, Uri>
@@ -65,6 +71,7 @@ namespace ROH.Utils.ApiConfiguration
             {Services.GetAllReleasedVersionsPaginated, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Version/GetAllReleasedVersionsPaginated" ) },
             {Services.GetVersionDetails, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Version/GetVersionDetails" ) },
             {Services.ReleaseVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Version/ReleaseVersion" ) },
+
             #endregion VERSION
 
             #region FILES
@@ -72,6 +79,7 @@ namespace ROH.Utils.ApiConfiguration
              {Services.UploadFile, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/VersionFile/UploadFile" ) },
              {Services.GetAllVersionFiles, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/VersionFile/GetAllVersionFiles" ) },
              {Services.DownloadFile, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/VersionFile/DownloadFile" ) },
+
             #endregion FILES
 
             #region ACCOUNT
@@ -81,8 +89,15 @@ namespace ROH.Utils.ApiConfiguration
              {Services.FindUserByUserName, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Account/FindUserByUserName" ) },
              {Services.GetUserByGuid, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Account/GetUserByGuid" ) },
              {Services.GetAccounByUserGuid, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Account/GetAccounByUserGuid" ) },
-             {Services.UpdateAccount, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Account/UpdateAccount" ) }
+             {Services.UpdateAccount, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Account/UpdateAccount" ) },
+
             #endregion ACCOUNT
+
+            #region LOGIN
+
+             {Services.Login, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Account/Login" ) },
+
+            #endregion LOGIN
         };
 
         public async Task<DefaultResponse?> Get<T>(Services service, T parametersObject)

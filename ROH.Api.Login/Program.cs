@@ -1,3 +1,5 @@
+using AutoMapper;
+
 using FluentValidation;
 
 using ROH.Context.PostgreSQLContext;
@@ -6,6 +8,7 @@ using ROH.Interfaces.Repository.Account;
 using ROH.Interfaces.Repository.Log;
 using ROH.Interfaces.Services.Account;
 using ROH.Interfaces.Services.ExceptionService;
+using ROH.Mapping.Account;
 using ROH.Repository.Account;
 using ROH.Repository.Log;
 using ROH.Services.Account;
@@ -32,6 +35,16 @@ builder.Services.AddScoped<IValidator<UserModel>, UserModelValidator>();
 builder.Services.AddScoped<IValidator<LoginModel>, LoginModelValidator>();
 
 builder.Services.AddScoped<IExceptionHandler, ExceptionHandler>();
+
+// Auto Mapper Configurations
+MapperConfiguration mappingConfig = new(mc =>
+{
+    mc.AddProfile(new UserMapping());
+    mc.AddProfile(new AccountMapping());
+});
+
+IMapper mapper = mappingConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
 
 WebApplication app = builder.Build();
 
