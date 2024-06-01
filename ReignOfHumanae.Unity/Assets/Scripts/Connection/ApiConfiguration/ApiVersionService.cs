@@ -16,6 +16,7 @@ namespace Assets.Scripts.Connection.ApiConfiguration
     public class ApiVersionService
     {
         private readonly ApiClient _apiClient = new();
+
         public Task GetCurrentVersion()
         {
             _apiClient.Get<DefaultResponse>("Api/Version/GetCurrentVersion", (response) =>
@@ -46,7 +47,6 @@ namespace Assets.Scripts.Connection.ApiConfiguration
 
             _apiClient.Get<DefaultResponse>("Api/Version/GetAllReleasedVersionsPaginated", (response) =>
             {
-
                 if (response != null)
                 {
                     PaginatedModel paginatedModel = response.ResponseToModel<PaginatedModel>();

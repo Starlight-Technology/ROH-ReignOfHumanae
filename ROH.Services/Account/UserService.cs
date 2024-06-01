@@ -1,4 +1,6 @@
-﻿using FluentValidation;
+﻿using AutoMapper;
+
+using FluentValidation;
 
 using ROH.Domain.Accounts;
 using ROH.Interfaces.Repository.Account;
@@ -10,7 +12,8 @@ using ROH.StandardModels.Response;
 using System.Net;
 
 namespace ROH.Services.Account;
-public class UserService(IExceptionHandler handler, IValidator<UserModel> userValidator, IUserRepository repository) : IUserService
+
+public class UserService(IExceptionHandler handler, IValidator<UserModel> userValidator, IUserRepository repository, IMapper mapper) : IUserService
 {
     public async Task<DefaultResponse> NewUser(UserModel userModel)
     {
@@ -38,5 +41,18 @@ public class UserService(IExceptionHandler handler, IValidator<UserModel> userVa
         {
             return handler.HandleException(e);
         }
+    }
+
+    public async Task<UserModel?> FindUserByEmail(string email) => mapper.Map<UserModel>(await repository.FindUserByEmail(email));
+
+    public async Task<UserModel?> FindUserByUserName(string userName) => mapper.Map<UserModel>(await repository.FindUserByUserName(userName));
+
+    public async Task<UserModel> GetUserByGuid(Guid userGuid) => mapper.Map<UserModel>(await repository.GetUserByGuid(userGuid));
+
+    public async Task<bool> ValidatePassword(string password, Guid userGuid)
+    {
+        User user = await repository.GetUserByGuid(userGuid);
+
+        return user.VerifyPassword(password);
     }
 }

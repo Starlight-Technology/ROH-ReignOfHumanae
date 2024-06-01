@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ROH.Domain.Accounts;
 
-public record User(long Id = 0, long IdAccount = 0, Guid Guid = default, string? Email = null)
+public record User(long Id = 0, long IdAccount = 0, Guid Guid = default, string? Email = null, string? UserName = null)
 {
     public virtual Account? Account { get; set; } = new Account();
     public byte[]? Salt { get; set; }
@@ -13,7 +13,7 @@ public record User(long Id = 0, long IdAccount = 0, Guid Guid = default, string?
     // Method to set password hash and salt
     public void SetPassword(string password)
     {
-        if (string.IsNullOrEmpty(password))
+        if (string.IsNullOrEmpty(password)) 
             throw new ArgumentException("Password cannot be null or empty.");
         Salt = new byte[16]; // Generate a 16-byte salt
         RandomNumberGenerator.Fill(Salt);

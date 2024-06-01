@@ -28,7 +28,7 @@ public class GameVersionFileServiceTest
     private readonly GameVersionFile _file = new(1, 1, _testGuid, 26354178, "testFile", "~/testFolder", "format");
 
     [Fact]
-    public async Task GetFiles_Returns_Files()
+    public async Task GetFiles_ShouldReturn_Files()
     {
         // Arrange
         MapperConfiguration config = new(cfg =>
@@ -62,7 +62,7 @@ public class GameVersionFileServiceTest
     }
 
     [Fact]
-    public async Task NewFile_With_Valid_File_Creates_File_And_Saves()
+    public async Task NewFile_WithValidFile_CreateFileAndSave()
     {
         // Arrange
         MapperConfiguration config = new(cfg =>
@@ -99,7 +99,7 @@ public class GameVersionFileServiceTest
     }
 
     [Fact]
-    public async Task NewFile_With_Invalid_File_Returns_Error()
+    public async Task NewFile_ShouldReturn_Error_WhenInvalidFile()
     {
         // Arrange
         MapperConfiguration config = new(cfg =>
@@ -141,7 +141,7 @@ public class GameVersionFileServiceTest
     }
 
     [Fact]
-    public async Task NewFile_With_Invalid_Version_Returns_Error()
+    public async Task NewFile_ShouldReturn_Error_WhenInvalidVersion()
     {
         // Arrange
         MapperConfiguration config = new(cfg =>
@@ -178,7 +178,7 @@ public class GameVersionFileServiceTest
     }
 
     [Fact]
-    public async Task NewFile_With_Released_Version_Returns_Error()
+    public async Task NewFile_ShouldReturn_Error_WhenReleasedVersion()
     {
         // Arrange
         MapperConfiguration config = new(cfg =>
@@ -217,7 +217,7 @@ public class GameVersionFileServiceTest
     }
 
     [Fact]
-    public async Task DownloadFile_Returns_NotFound_WhenFileNotExist()
+    public async Task DownloadFile_ShouldReturn_NotFound_WhenFileNotExist()
     {
         // Arrange
         MapperConfiguration config = new(cfg =>
@@ -253,7 +253,7 @@ public class GameVersionFileServiceTest
     }
 
     [Fact]
-    public async Task DownloadFile_Returns_Error_WhenException()
+    public async Task DownloadFile_ShouldReturn_Error_WhenException()
     {
         // Arrange
         MapperConfiguration config = new(cfg =>
@@ -290,7 +290,7 @@ public class GameVersionFileServiceTest
     }
 
     [Fact]
-    public async Task DownloadFile_Returns_Error_WhenFileIsNotValid()
+    public async Task DownloadFile_ShouldReturn_Error_WhenFileIsNotValid()
     {
         // Arrange
         MapperConfiguration config = new(cfg =>

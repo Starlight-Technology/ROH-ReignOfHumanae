@@ -5,6 +5,8 @@
       <Service name="GateWay" url="http://localhost:9001/" />
       <Service name="Version" url="https://localhost:7240/" />
       <Service name="VersionFile" url="https://localhost:7068/" />
+      <Service name="Account" url="https://localhost:7211/" />
+      <Service name="Login" url="https://localhost:7031" />
     </ServiceUrls>
   </Develop>
   <Test>
@@ -12,6 +14,8 @@
       <Service name="GateWay" url="http://192.168.0.37:9001/" />
       <Service name="Version" url="http://ROH.Api.Version:8080/" />
       <Service name="VersionFile" url="http://ROH.Api.VersionFiles:8080/" />
+      <Service name="Account" url="http://ROH.Api.Account:8080/" />
+      <Service name="Login" url="http://ROH.Api.Login:8080/" />
     </ServiceUrls>
   </Test>
   <Release>
@@ -19,6 +23,8 @@
       <Service name="GateWay" url="http://ROH.Gateway:9001/" />
       <Service name="Version" url="http://ROH.Api.Version:8080/" />
       <Service name="VersionFile" url="http://ROH.Api.VersionFiles:8080/" />
+      <Service name="Account" url="http://ROH.Api.Account:8080/" />
+      <Service name="Login" url="http://ROH.Api.Login:8080/" />
     </ServiceUrls>
   </Release>
 </ApiConfig>

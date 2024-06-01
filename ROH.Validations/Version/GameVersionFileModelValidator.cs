@@ -4,11 +4,11 @@ using ROH.StandardModels.Version;
 
 namespace ROH.Validations.Version;
 
-public class GameVersionFileModelValidation : AbstractValidator<GameVersionFileModel>
+public class GameVersionFileModelValidator : AbstractValidator<GameVersionFileModel>
 {
-    public GameVersionFileModelValidation()
+    public GameVersionFileModelValidator()
     {
-        _ = RuleFor(f => f.GameVersion).NotNull().SetValidator(new GameVersionModelValidation() as IValidator<GameVersionModel?>);
+        _ = RuleFor(f => f.GameVersion).NotNull().SetValidator(new GameVersionModelValidator() as IValidator<GameVersionModel?>);
         _ = RuleFor(f => f.Content).NotEmpty();
         _ = RuleFor(f => f.Format).NotEmpty();
         _ = RuleFor(f => f.Name).NotEmpty();

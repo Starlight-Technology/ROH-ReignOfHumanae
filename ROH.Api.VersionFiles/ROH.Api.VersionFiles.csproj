@@ -18,7 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ROH.Context\ROH.Context.csproj" />
     <ProjectReference Include="..\ROH.Interfaces\ROH.Interfaces.csproj" />
-    <ProjectReference Include="..\ROH.Mapper\ROH.Mapper.csproj" />
+    <ProjectReference Include="..\ROH.Mapper\ROH.Mapping.csproj" />
     <ProjectReference Include="..\ROH.Repository\ROH.Repository.csproj" />
     <ProjectReference Include="..\ROH.Services\ROH.Services.csproj" />
     <ProjectReference Include="..\ROH.Utils\ROH.Utils.csproj" />

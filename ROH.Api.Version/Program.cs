@@ -10,7 +10,7 @@ using ROH.Interfaces.Repository.Log;
 using ROH.Interfaces.Repository.Version;
 using ROH.Interfaces.Services.ExceptionService;
 using ROH.Interfaces.Services.Version;
-using ROH.Mapper.Version;
+using ROH.Mapping.Version;
 using ROH.Repository.Log;
 using ROH.Repository.Version;
 using ROH.Services.ExceptionService;
@@ -35,8 +35,8 @@ builder.Services.AddScoped<ILogRepository, LogRepository>();
 builder.Services.AddScoped<IGameVersionService, GameVersionService>();
 builder.Services.AddScoped<IGameVersionFileService, GameVersionFileService>();
 
-builder.Services.AddScoped<IValidator<GameVersionModel>, GameVersionModelValidation>();
-builder.Services.AddScoped<IValidator<GameVersionFileModel>, GameVersionFileModelValidation>();
+builder.Services.AddScoped<IValidator<GameVersionModel>, GameVersionModelValidator>();
+builder.Services.AddScoped<IValidator<GameVersionFileModel>, GameVersionFileModelValidator>();
 
 builder.Services.AddScoped<IExceptionHandler, ExceptionHandler>();
 
