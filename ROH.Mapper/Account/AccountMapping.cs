@@ -3,6 +3,7 @@
 using ROH.StandardModels.Account;
 
 namespace ROH.Mapping.Account;
+
 public class AccountMapping : Profile
 {
     public AccountMapping()

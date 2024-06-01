@@ -12,6 +12,7 @@ using ROH.StandardModels.Response;
 using System.Net;
 
 namespace ROH.Services.Account;
+
 public class UserService(IExceptionHandler handler, IValidator<UserModel> userValidator, IUserRepository repository, IMapper mapper) : IUserService
 {
     public async Task<DefaultResponse> NewUser(UserModel userModel)
@@ -50,9 +51,8 @@ public class UserService(IExceptionHandler handler, IValidator<UserModel> userVa
 
     public async Task<bool> ValidatePassword(string password, Guid userGuid)
     {
-        var user = await repository.GetUserByGuid(userGuid);
+        User user = await repository.GetUserByGuid(userGuid);
 
         return user.VerifyPassword(password);
     }
-        
 }

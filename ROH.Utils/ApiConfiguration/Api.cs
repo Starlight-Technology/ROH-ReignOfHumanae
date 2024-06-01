@@ -43,6 +43,7 @@ namespace ROH.Utils.ApiConfiguration
         private static readonly Dictionary<Services, Uri> _servicesUrl = new Dictionary<Services, Uri>
         {
             #region VERSION
+
             {Services.GetCurrentVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"GetCurrentVersion" ) },
             {Services.CreateNewVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"CreateNewVersion" ) },
             {Services.GetAllVersionsPaginated, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version),"GetAllVersionsPaginated" ) },
@@ -52,12 +53,14 @@ namespace ROH.Utils.ApiConfiguration
             #endregion VERSION
 
             #region FILES
+
              {Services.UploadVersionFile, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.VersionFile),"UploadFile" ) },
              {Services.GetAllVersionFiles, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.VersionFile),"GetAllVersionFiles" ) },
              {Services.DownloadFile, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.VersionFile),"DownloadFile" ) },
             #endregion FILES
 
             #region ACCOUNT
+
              {Services.CreateNewUser, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Account),"CreateNewUser" ) },
              {Services.FindUserByEmail, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Account),"FindUserByEmail" ) },
              {Services.FindUserByUserName, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Account),"FindUserByUserName" ) },

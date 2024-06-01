@@ -13,6 +13,7 @@ using ROH.Validations.Account;
 using System.Net;
 
 namespace ROH.Test.Account;
+
 public class UserServiceTest
 {
     [Fact]
@@ -27,7 +28,7 @@ public class UserServiceTest
             _ = cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
 
-            cfg.CreateMap<User, UserModel>().ReverseMap();
+            _ = cfg.CreateMap<User, UserModel>().ReverseMap();
         });
 
         Mapper mapper = new(config);
@@ -48,7 +49,6 @@ public class UserServiceTest
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, result.HttpStatus);
         Assert.False(string.IsNullOrWhiteSpace(result.Message));
-
     }
 
     [Fact]
@@ -63,7 +63,7 @@ public class UserServiceTest
             _ = cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
 
-            cfg.CreateMap<User, UserModel>().ReverseMap();
+            _ = cfg.CreateMap<User, UserModel>().ReverseMap();
         });
 
         Mapper mapper = new(config);
@@ -92,7 +92,7 @@ public class UserServiceTest
     [Fact]
     public async Task NewUser_ShouldReturn_NewUser_WhenNewUserIsValid()
     {
-        // Arrange 
+        // Arrange
         MapperConfiguration config = new(cfg =>
         {
             // Configure your mappings here
@@ -101,7 +101,7 @@ public class UserServiceTest
             _ = cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
 
-            cfg.CreateMap<User, UserModel>().ReverseMap();
+            _ = cfg.CreateMap<User, UserModel>().ReverseMap();
         });
 
         Mapper mapper = new(config);
@@ -130,7 +130,7 @@ public class UserServiceTest
     [Fact]
     public async Task FindUserByEmail_ShoulReturn_Null_WhenUserNotFound()
     {
-        // Arrange 
+        // Arrange
         MapperConfiguration config = new(cfg =>
         {
             // Configure your mappings here
@@ -139,7 +139,7 @@ public class UserServiceTest
             _ = cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
 
-            cfg.CreateMap<User, UserModel>().ReverseMap();
+            _ = cfg.CreateMap<User, UserModel>().ReverseMap();
         });
 
         Mapper mapper = new(config);
@@ -164,7 +164,7 @@ public class UserServiceTest
     [Fact]
     public async Task FindUserByEmail_ShoulReturn_User_WhenUserFound()
     {
-        // Arrange 
+        // Arrange
         MapperConfiguration config = new(cfg =>
         {
             // Configure your mappings here
@@ -173,12 +173,12 @@ public class UserServiceTest
             _ = cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
 
-            cfg.CreateMap<User, UserModel>().ReverseMap();
+            _ = cfg.CreateMap<User, UserModel>().ReverseMap();
         });
 
         Mapper mapper = new(config);
 
-        var guidTest = Guid.NewGuid();
+        Guid guidTest = Guid.NewGuid();
         User userTest = new(Id: 1, IdAccount: 1, Email: "test@test.com", UserName: "User Name Test", Guid: guidTest);
         UserModel userModelTest = new() { Email = "test@test.com", UserName = "User Name Test", Guid = guidTest };
 
@@ -202,7 +202,7 @@ public class UserServiceTest
     [Fact]
     public async Task FindUserByUserName_ShoulReturn_Null_WhenUserNotFound()
     {
-        // Arrange 
+        // Arrange
         MapperConfiguration config = new(cfg =>
         {
             // Configure your mappings here
@@ -211,7 +211,7 @@ public class UserServiceTest
             _ = cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
 
-            cfg.CreateMap<User, UserModel>().ReverseMap();
+            _ = cfg.CreateMap<User, UserModel>().ReverseMap();
         });
 
         Mapper mapper = new(config);
@@ -236,7 +236,7 @@ public class UserServiceTest
     [Fact]
     public async Task FindUserByUserName_ShoulReturn_User_WhenUserFound()
     {
-        // Arrange 
+        // Arrange
         MapperConfiguration config = new(cfg =>
         {
             // Configure your mappings here
@@ -245,12 +245,12 @@ public class UserServiceTest
             _ = cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
 
-            cfg.CreateMap<User, UserModel>().ReverseMap();
+            _ = cfg.CreateMap<User, UserModel>().ReverseMap();
         });
 
         Mapper mapper = new(config);
 
-        var guidTest = Guid.NewGuid();
+        Guid guidTest = Guid.NewGuid();
         User userTest = new(Id: 1, IdAccount: 1, Email: "test@test.com", UserName: "User Name Test", Guid: guidTest);
         UserModel userModelTest = new() { Email = "test@test.com", UserName = "User Name Test", Guid = guidTest };
 
@@ -274,7 +274,7 @@ public class UserServiceTest
     [Fact]
     public async Task FindUserByGuid_ShoulReturn_User()
     {
-        // Arrange 
+        // Arrange
         MapperConfiguration config = new(cfg =>
         {
             // Configure your mappings here
@@ -283,7 +283,7 @@ public class UserServiceTest
             _ = cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
 
-            cfg.CreateMap<User, UserModel>().ReverseMap();
+            _ = cfg.CreateMap<User, UserModel>().ReverseMap();
         });
 
         Mapper mapper = new(config);

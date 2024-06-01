@@ -2,37 +2,36 @@
 
 #nullable disable
 
-namespace ROH.Context.Migrations
+namespace ROH.Context.Migrations;
+
+/// <inheritdoc />
+public partial class UserNameMigration : Migration
 {
     /// <inheritdoc />
-    public partial class UserNameMigration : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropColumn(
-                name: "UserName",
-                table: "Accounts");
+        _ = migrationBuilder.DropColumn(
+            name: "UserName",
+            table: "Accounts");
 
-            migrationBuilder.AddColumn<string>(
-                name: "UserName",
-                table: "Users",
-                type: "text",
-                nullable: true);
-        }
+        _ = migrationBuilder.AddColumn<string>(
+            name: "UserName",
+            table: "Users",
+            type: "text",
+            nullable: true);
+    }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropColumn(
-                name: "UserName",
-                table: "Users");
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        _ = migrationBuilder.DropColumn(
+            name: "UserName",
+            table: "Users");
 
-            migrationBuilder.AddColumn<string>(
-                name: "UserName",
-                table: "Accounts",
-                type: "text",
-                nullable: true);
-        }
+        _ = migrationBuilder.AddColumn<string>(
+            name: "UserName",
+            table: "Accounts",
+            type: "text",
+            nullable: true);
     }
 }

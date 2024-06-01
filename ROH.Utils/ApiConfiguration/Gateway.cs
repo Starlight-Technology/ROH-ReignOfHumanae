@@ -25,33 +25,40 @@ namespace ROH.Utils.ApiConfiguration
         public enum Services
         {
             #region VERSION
+
             GetCurrentVersion,
             CreateNewVersion,
             GetAllVersionsPaginated,
             GetAllReleasedVersionsPaginated,
             GetVersionDetails,
             ReleaseVersion,
+
             #endregion VERSION
 
             #region VERSIONFILE
+
             UploadFile,
             GetAllVersionFiles,
             DownloadFile,
+
             #endregion VERSIONFILE
 
             #region ACCOUNT
+
             CreateNewUser,
             FindUserByEmail,
             FindUserByUserName,
             GetUserByGuid,
             GetAccounByUserGuid,
             UpdateAccount
-            #endregion aCCOUNT
+
+            #endregion ACCOUNT
         }
 
         private static readonly Dictionary<Services, Uri> _gatewayServiceUrl = new Dictionary<Services, Uri>
         {
             #region VERSION
+
             {Services.GetCurrentVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Version/GetCurrentVersion" ) },
             {Services.CreateNewVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Version/CreateNewVersion" ) },
             {Services.GetAllVersionsPaginated, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Version/GetAllVersionsPaginated" ) },
@@ -61,19 +68,21 @@ namespace ROH.Utils.ApiConfiguration
             #endregion VERSION
 
             #region FILES
+
              {Services.UploadFile, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/VersionFile/UploadFile" ) },
              {Services.GetAllVersionFiles, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/VersionFile/GetAllVersionFiles" ) },
              {Services.DownloadFile, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/VersionFile/DownloadFile" ) },
             #endregion FILES
 
             #region ACCOUNT
+
              {Services.CreateNewUser, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Account/CreateNewUser" ) },
              {Services.FindUserByEmail, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Account/FindUserByEmail" ) },
              {Services.FindUserByUserName, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Account/FindUserByUserName" ) },
              {Services.GetUserByGuid, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Account/GetUserByGuid" ) },
              {Services.GetAccounByUserGuid, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Account/GetAccounByUserGuid" ) },
              {Services.UpdateAccount, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Account/UpdateAccount" ) }
-            #endregion aCCOUNT
+            #endregion ACCOUNT
         };
 
         public async Task<DefaultResponse?> Get<T>(Services service, T parametersObject)

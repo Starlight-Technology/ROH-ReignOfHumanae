@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 
-using ROH.Domain.Accounts;
 using ROH.Interfaces.Services.Account;
 using ROH.Interfaces.Services.ExceptionService;
 using ROH.StandardModels.Account;
@@ -9,6 +8,7 @@ using ROH.StandardModels.Response;
 using System.Net;
 
 namespace ROH.Services.Account;
+
 public class LoginService(IExceptionHandler handler, IValidator<LoginModel> loginValidator, IUserService userService) : ILoginService
 {
     public async Task<DefaultResponse> Login(LoginModel loginModel)
@@ -31,7 +31,7 @@ public class LoginService(IExceptionHandler handler, IValidator<LoginModel> logi
         }
     }
 
-    private async Task<DefaultResponse> ValidatePassword(UserModel user, LoginModel loginModel) => 
+    private async Task<DefaultResponse> ValidatePassword(UserModel user, LoginModel loginModel) =>
          await userService.ValidatePassword(loginModel.Password!, user.Guid!.Value)
         ? new DefaultResponse(objectResponse: new UserModel() { Email = user.Email, UserName = user.UserName, Guid = user.Guid })
         : new DefaultResponse(httpStatus: HttpStatusCode.Unauthorized, message: "Invalid password!");

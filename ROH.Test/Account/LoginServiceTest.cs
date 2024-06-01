@@ -11,6 +11,7 @@ using ROH.Validations.Account;
 using System.Net;
 
 namespace ROH.Test.Account;
+
 public class LoginServiceTest
 {
     [Fact]
@@ -64,11 +65,10 @@ public class LoginServiceTest
     public async Task Login_WithInvalidPassword_ShouldReturnError()
     {
         // Arrange
-        var guidTest = Guid.NewGuid();
+        Guid guidTest = Guid.NewGuid();
         User user = new(1, 1, guidTest, "test", "test");
         user.SetPassword("test");
         UserModel userModelTest = new() { Email = "test@test.com", UserName = "User Name Test", Guid = guidTest };
-
 
         LoginModel loginModel = new()
         {
@@ -100,7 +100,7 @@ public class LoginServiceTest
     {
         // Arrange
         string pass = "test";
-        var guidTest = Guid.NewGuid();
+        Guid guidTest = Guid.NewGuid();
         User user = new(1, 1, guidTest, "test@test.com", "User Name Test");
         user.SetPassword(pass);
         UserModel userModelTest = new() { Email = "test@test.com", UserName = "User Name Test", Guid = guidTest };

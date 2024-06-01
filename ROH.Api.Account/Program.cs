@@ -8,6 +8,7 @@ using ROH.Interfaces.Repository.Account;
 using ROH.Interfaces.Repository.Log;
 using ROH.Interfaces.Services.Account;
 using ROH.Interfaces.Services.ExceptionService;
+using ROH.Mapping.Account;
 using ROH.Repository.Account;
 using ROH.Repository.Log;
 using ROH.Services.Account;
@@ -38,7 +39,8 @@ builder.Services.AddScoped<IExceptionHandler, ExceptionHandler>();
 // Auto Mapper Configurations
 MapperConfiguration mappingConfig = new(mc =>
 {
-
+    mc.AddProfile(new UserMapping());
+    mc.AddProfile(new AccountMapping());
 });
 
 IMapper mapper = mappingConfig.CreateMapper();
@@ -86,5 +88,3 @@ app.MapPut("UpdateAccount", async (IAccountService _accountService, AccountModel
 app.UseHttpsRedirection();
 
 app.Run();
-
-

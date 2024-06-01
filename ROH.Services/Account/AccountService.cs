@@ -7,6 +7,7 @@ using ROH.StandardModels.Account;
 using ROH.StandardModels.Response;
 
 namespace ROH.Services.Account;
+
 public class AccountService(IExceptionHandler handler, IAccountRepository repository, IMapper mapper) : IAccountService
 {
     public async Task<DefaultResponse> GetAccounByUserGuid(Guid userGuid)

@@ -3,6 +3,7 @@
 using ROH.StandardModels.Account;
 
 namespace ROH.Validations.Account;
+
 public class UserModelValidator : AbstractValidator<UserModel>
 {
     public UserModelValidator()
