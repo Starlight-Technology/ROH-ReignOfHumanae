@@ -81,5 +81,4 @@ app.MapGet("DownloadFile", async (IGameVersionFileService _gameVersionFileServic
 }
 ).WithName("DownloadFile")
 .WithOpenApi();
-
-app.Run();
+await app.RunAsync();

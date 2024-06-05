@@ -89,4 +89,4 @@ app.MapGet("GetVersionDetails", async (IGameVersionService _gameVersionService, 
 ).WithName("GetVersionDetails")
 .WithOpenApi();
 
-app.Run();
+await app.RunAsync();

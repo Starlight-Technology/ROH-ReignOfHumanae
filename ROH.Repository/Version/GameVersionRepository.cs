@@ -22,7 +22,7 @@ public class GameVersionRepository(ISqlContext context) : IGameVersionRepository
             .Skip(skip)
             .Take(take)
             .ToListAsync();
-        int total = context.GameVersions.Count();
+        int total = await context.GameVersions.CountAsync();
         return new(total, versions.Cast<dynamic>().ToList());
     }
 
@@ -36,7 +36,7 @@ public class GameVersionRepository(ISqlContext context) : IGameVersionRepository
             .Skip(skip)
             .Take(take)
             .ToListAsync();
-        int total = context.GameVersions.Count();
+        int total = await context.GameVersions.CountAsync();
         return new(total, versions.Cast<dynamic>().ToList());
     }
 

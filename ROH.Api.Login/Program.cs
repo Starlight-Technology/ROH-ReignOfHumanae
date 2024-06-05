@@ -62,4 +62,4 @@ app.MapPost("Login", async (ILoginService loginService, LoginModel model) =>
 
 app.UseHttpsRedirection();
 
-app.Run();
+await app.RunAsync();

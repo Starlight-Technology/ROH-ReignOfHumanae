@@ -87,4 +87,4 @@ app.MapPut("UpdateAccount", async (IAccountService _accountService, AccountModel
 
 app.UseHttpsRedirection();
 
-app.Run();
+await app.RunAsync();
