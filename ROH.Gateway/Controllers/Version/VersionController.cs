@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 using ROH.StandardModels.Version;
 
@@ -6,6 +7,7 @@ namespace ROH.Gateway.Controllers.Version;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class VersionController : ControllerBase
 {
     private readonly Utils.ApiConfiguration.Api _api = new();
