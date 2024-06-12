@@ -34,7 +34,7 @@ public class LoginService(IExceptionHandler handler, IValidator<LoginModel> logi
 
     private async Task<DefaultResponse> ValidatePassword(UserModel user, LoginModel loginModel) =>
          await userService.ValidatePassword(loginModel.Password!, user.Guid!.Value)
-        ? new DefaultResponse(objectResponse: new UserModel() { Email = user.Email, UserName = user.UserName, Guid = user.Guid , Token = authService.GenerateJwtToken(user)})
+        ? new DefaultResponse(objectResponse: new UserModel() { Email = user.Email, UserName = user.UserName, Guid = user.Guid, Token = authService.GenerateJwtToken(user) })
         : new DefaultResponse(httpStatus: HttpStatusCode.Unauthorized, message: "Invalid password!");
 
     private async Task<UserModel?> FindUser(LoginModel loginModel) => await userService.FindUserByEmail(loginModel.Login!) ?? await userService.FindUserByUserName(loginModel.Login!);

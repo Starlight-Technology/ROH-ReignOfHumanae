@@ -27,7 +27,7 @@ public class AccountController : ControllerBase
     [HttpGet("GetAccounByUserGuid")]
     public async Task<IActionResult> GetAccounByUserGuid(Guid guid) => Ok(await _api.Get(Utils.ApiConfiguration.Api.Services.GetAccounByUserGuid, new { Guid = guid }));
 
-       [HttpPut("UpdateAccount")]
+    [HttpPut("UpdateAccount")]
     public async Task<IActionResult> UpdateAccount(AccountModel model) => Ok(await _api.Update(Utils.ApiConfiguration.Api.Services.UpdateAccount, model));
 
     [AllowAnonymous]

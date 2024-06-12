@@ -8,14 +8,15 @@ using System.Security.Claims;
 using System.Text;
 
 namespace ROH.Services.Authentication;
+
 public class AuthService : IAuthService
 {
     public string GenerateJwtToken(UserModel user)
     {
         string keyToken = Environment.GetEnvironmentVariable("ROH_KEY_TOKEN") ?? "thisisaverysecurekeywith32charslong!";
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(keyToken);
-        var tokenDescriptor = new SecurityTokenDescriptor
+        JwtSecurityTokenHandler tokenHandler = new();
+        byte[] key = Encoding.ASCII.GetBytes(keyToken);
+        SecurityTokenDescriptor tokenDescriptor = new()
         {
             Subject = new ClaimsIdentity(new Claim[]
             {
@@ -24,10 +25,10 @@ public class AuthService : IAuthService
             }),
             Expires = DateTime.UtcNow.AddHours(24),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
-            Audience = "ROH.Gateway", 
+            Audience = "ROH.Gateway",
             Issuer = "ROH.Services.Authentication.AuthService"
         };
-        var token = tokenHandler.CreateToken(tokenDescriptor);
+        SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
     }
 }

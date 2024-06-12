@@ -12,9 +12,9 @@ public record User(long Id = 0, long IdAccount = 0, Guid Guid = default, string?
 
     public void SetPassword(string password)
     {
-        if (string.IsNullOrEmpty(password)) 
+        if (string.IsNullOrEmpty(password))
             throw new ArgumentException("Password cannot be null or empty.");
-        Salt = new byte[16]; 
+        Salt = new byte[16];
         RandomNumberGenerator.Fill(Salt);
 
         byte[] combinedBytes = Encoding.UTF8.GetBytes(password + Convert.ToBase64String(Salt));

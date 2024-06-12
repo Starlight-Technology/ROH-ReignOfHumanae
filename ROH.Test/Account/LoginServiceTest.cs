@@ -23,8 +23,8 @@ public class LoginServiceTest
 
         Mock<IExceptionHandler> mockExceptionHandler = new();
         Mock<IUserService> mockUserService = new();
-        Mock<IAuthService> mockAuthService = new(); 
-        mockAuthService.Setup(x => x.GenerateJwtToken(It.IsAny<UserModel>())).Returns("");
+        Mock<IAuthService> mockAuthService = new();
+        _ = mockAuthService.Setup(x => x.GenerateJwtToken(It.IsAny<UserModel>())).Returns("");
 
         LoginService service = new(mockExceptionHandler.Object, validator, mockUserService.Object, mockAuthService.Object);
 
@@ -48,8 +48,8 @@ public class LoginServiceTest
         _ = mockUserService.Setup(x => x.FindUserByEmail(It.IsAny<string>())).ReturnsAsync(() => null);
         _ = mockUserService.Setup(x => x.FindUserByUserName(It.IsAny<string>())).ReturnsAsync(() => null);
 
-        Mock<IAuthService> mockAuthService = new(); 
-        mockAuthService.Setup(x => x.GenerateJwtToken(It.IsAny<UserModel>())).Returns("");
+        Mock<IAuthService> mockAuthService = new();
+        _ = mockAuthService.Setup(x => x.GenerateJwtToken(It.IsAny<UserModel>())).Returns("");
 
         LoginService service = new(mockExceptionHandler.Object, validator, mockUserService.Object, mockAuthService.Object);
 
@@ -90,8 +90,8 @@ public class LoginServiceTest
         _ = mockUserService.Setup(x => x.FindUserByEmail(It.IsAny<string>())).ReturnsAsync(userModelTest);
         _ = mockUserService.Setup(x => x.FindUserByUserName(It.IsAny<string>())).ReturnsAsync(userModelTest);
 
-        Mock<IAuthService> mockAuthService = new(); 
-        mockAuthService.Setup(x => x.GenerateJwtToken(It.IsAny<UserModel>())).Returns("");
+        Mock<IAuthService> mockAuthService = new();
+        _ = mockAuthService.Setup(x => x.GenerateJwtToken(It.IsAny<UserModel>())).Returns("");
 
         LoginService service = new(mockExceptionHandler.Object, validator, mockUserService.Object, mockAuthService.Object);
 
@@ -129,12 +129,12 @@ public class LoginServiceTest
         _ = mockUserService.Setup(x => x.FindUserByUserName(It.IsAny<string>())).ReturnsAsync(userModelTest);
         _ = mockUserService.Setup(x => x.ValidatePassword(It.IsAny<string>(), It.IsAny<Guid>())).ReturnsAsync(true);
 
-        Mock<IAuthService> mockAuthService = new(); 
-        mockAuthService.Setup(x => x.GenerateJwtToken(It.IsAny<UserModel>())).Returns("");
+        Mock<IAuthService> mockAuthService = new();
+        _ = mockAuthService.Setup(x => x.GenerateJwtToken(It.IsAny<UserModel>())).Returns("");
 
         LoginService service = new(mockExceptionHandler.Object, validator, mockUserService.Object, mockAuthService.Object);
 
-        DefaultResponse expected = new(objectResponse: new UserModel() { Email = user.Email, UserName = user.UserName, Guid = user.Guid , Token = ""});
+        DefaultResponse expected = new(objectResponse: new UserModel() { Email = user.Email, UserName = user.UserName, Guid = user.Guid, Token = "" });
 
         // Act
         DefaultResponse result = await service.Login(loginModel);
