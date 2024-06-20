@@ -49,7 +49,7 @@ namespace ROH.Utils.ApiConfiguration
             FindUserByEmail,
             FindUserByUserName,
             GetUserByGuid,
-            GetAccounByUserGuid,
+            GetAccountByUserGuid,
             UpdateAccount,
 
             #endregion ACCOUNT
@@ -88,7 +88,7 @@ namespace ROH.Utils.ApiConfiguration
              {Services.FindUserByEmail, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Account/FindUserByEmail" ) },
              {Services.FindUserByUserName, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Account/FindUserByUserName" ) },
              {Services.GetUserByGuid, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Account/GetUserByGuid" ) },
-             {Services.GetAccounByUserGuid, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Account/GetAccounByUserGuid" ) },
+             {Services.GetAccountByUserGuid, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Account/GetAccountByUserGuid" ) },
              {Services.UpdateAccount, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay),"Api/Account/UpdateAccount" ) },
 
             #endregion ACCOUNT

@@ -24,8 +24,8 @@ public class AccountController : ControllerBase
     [HttpGet("GetUserByGuid")]
     public async Task<IActionResult> GetUserByGuid(Guid guid) => Ok(await _api.Get(Utils.ApiConfiguration.Api.Services.GetUserByGuid, new { Guid = guid }));
 
-    [HttpGet("GetAccounByUserGuid")]
-    public async Task<IActionResult> GetAccounByUserGuid(Guid guid) => Ok(await _api.Get(Utils.ApiConfiguration.Api.Services.GetAccounByUserGuid, new { Guid = guid }));
+    [HttpGet("GetAccountByUserGuid")]
+    public async Task<IActionResult> GetAccountByUserGuid(Guid guid) => Ok(await _api.Get(Utils.ApiConfiguration.Api.Services.GetAccountByUserGuid, new { Guid = guid }));
 
     [HttpPut("UpdateAccount")]
     public async Task<IActionResult> UpdateAccount(AccountModel model) => Ok(await _api.Update(Utils.ApiConfiguration.Api.Services.UpdateAccount, model));

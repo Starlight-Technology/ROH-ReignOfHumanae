@@ -5,7 +5,7 @@ namespace ROH.Interfaces.Services.Account;
 
 public interface IAccountService
 {
-    Task<DefaultResponse> GetAccounByUserGuid(Guid userGuid);
+    Task<DefaultResponse> GetAccountByUserGuid(Guid userGuid);
 
     Task<DefaultResponse> UpdateAccount(AccountModel accountModel);
 }

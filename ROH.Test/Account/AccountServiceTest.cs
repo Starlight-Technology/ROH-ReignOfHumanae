@@ -43,7 +43,7 @@ public class AccountServiceTest
         DefaultResponse expected = new(httpStatus: HttpStatusCode.NotFound);
 
         // Act
-        DefaultResponse result = await service.GetAccounByUserGuid(Guid.NewGuid());
+        DefaultResponse result = await service.GetAccountByUserGuid(Guid.NewGuid());
 
         // Assert
 
@@ -84,7 +84,7 @@ public class AccountServiceTest
         DefaultResponse expected = new(httpStatus: HttpStatusCode.OK, objectResponse: accountModel);
 
         // Act
-        DefaultResponse result = await service.GetAccounByUserGuid(Guid.NewGuid());
+        DefaultResponse result = await service.GetAccountByUserGuid(Guid.NewGuid());
 
         // Assert
 

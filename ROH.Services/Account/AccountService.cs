@@ -10,7 +10,7 @@ namespace ROH.Services.Account;
 
 public class AccountService(IExceptionHandler handler, IAccountRepository repository, IMapper mapper) : IAccountService
 {
-    public async Task<DefaultResponse> GetAccounByUserGuid(Guid userGuid)
+    public async Task<DefaultResponse> GetAccountByUserGuid(Guid userGuid)
     {
         try
         {

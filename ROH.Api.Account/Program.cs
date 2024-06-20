@@ -75,9 +75,9 @@ app.MapGet("GetUserByGuid", async (IUserService _userService, Guid guid) =>
 ).WithName("GetUserByGuid")
 .WithOpenApi();
 
-app.MapGet("GetAccounByUserGuid", async (IAccountService _accountService, Guid guid) =>
-    await _accountService.GetAccounByUserGuid(guid)
-).WithName("GetAccounByUserGuid")
+app.MapGet("GetAccountByUserGuid", async (IAccountService _accountService, Guid guid) =>
+    await _accountService.GetAccountByUserGuid(guid)
+).WithName("GetAccountByUserGuid")
 .WithOpenApi();
 
 app.MapPut("UpdateAccount", async (IAccountService _accountService, AccountModel model) =>
