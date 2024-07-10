@@ -5,6 +5,10 @@
     {
       "library": "sweetalert2@11.7.32",
       "destination": "wwwroot/sweetalert2/"
+    },
+    {
+      "library": "sweetalert2@11.12.2",
+      "destination": "wwwroot/sweetalert2/"
     }
   ]
 }
