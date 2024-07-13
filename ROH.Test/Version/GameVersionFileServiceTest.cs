@@ -5,9 +5,11 @@ using FluentValidation.Results;
 
 using Moq;
 
+using ROH.Domain.GameFiles;
 using ROH.Domain.Version;
 using ROH.Interfaces.Repository.Version;
 using ROH.Interfaces.Services.ExceptionService;
+using ROH.Interfaces.Services.GameFile;
 using ROH.Interfaces.Services.Version;
 using ROH.Services.Version;
 using ROH.StandardModels.Response;
@@ -23,9 +25,8 @@ public class GameVersionFileServiceTest
 
     private readonly GameVersionModel _versionModel = new() { Version = 1, Release = 1, Review = 1, Released = false, ReleaseDate = null, VersionDate = DateTime.UtcNow };
     private readonly GameVersionFileModel _fileModel = new() { Name = "testFile", Size = 26354178, Path = "~/testFolder", Format = "format", Guid = _testGuid };
-
     private readonly GameVersion _version = new(null, 1, _testGuid, 1, 1, 1);
-    private readonly GameVersionFile _file = new(1, 1, _testGuid, 26354178, "testFile", "~/testFolder", "format");
+    private readonly GameVersionFile _file = new(1, 1, 1, _testGuid);
 
     [Fact]
     public async Task GetFiles_ShouldReturn_Files()
@@ -48,11 +49,13 @@ public class GameVersionFileServiceTest
         Mock<IGameVersionService> mockVersionService = new();
         _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<string>())).ReturnsAsync(true);
 
+        Mock<IGameFileService> mockGameFileService = new();
+
         Mock<IValidator<GameVersionFileModel>> mockValidator = new();
 
         Mock<IExceptionHandler> mockExceptionHandler = new();
 
-        GameVersionFileService service = new(mockRepository.Object, mockValidator.Object, mockVersionService.Object, mapper, mockExceptionHandler.Object);
+        GameVersionFileService service = new(mockRepository.Object, mockGameFileService.Object, mockValidator.Object, mockVersionService.Object, mapper, mockExceptionHandler.Object);
 
         // Act
         DefaultResponse result = await service.GetFiles(_version.Guid.ToString());
@@ -87,7 +90,9 @@ public class GameVersionFileServiceTest
 
         Mock<IExceptionHandler> mockExceptionHandler = new();
 
-        GameVersionFileService service = new(mockRepository.Object, mockValidator.Object, mockVersionService.Object, mapper, mockExceptionHandler.Object);
+        Mock<IGameFileService> mockGameFileService = new();
+
+        GameVersionFileService service = new(mockRepository.Object, mockGameFileService.Object, mockValidator.Object, mockVersionService.Object, mapper, mockExceptionHandler.Object);
 
         // Act
         bool result = service.NewFile(_fileModel).IsCompletedSuccessfully;
@@ -129,7 +134,9 @@ public class GameVersionFileServiceTest
 
         Mock<IExceptionHandler> mockExceptionHandler = new();
 
-        GameVersionFileService service = new(mockRepository.Object, mockValidator.Object, mockVersionService.Object, mapper, mockExceptionHandler.Object);
+        Mock<IGameFileService> mockGameFileService = new();
+
+        GameVersionFileService service = new(mockRepository.Object, mockGameFileService.Object, mockValidator.Object, mockVersionService.Object, mapper, mockExceptionHandler.Object);
 
         // Act
         _fileModel.Name = "";
@@ -167,7 +174,9 @@ public class GameVersionFileServiceTest
 
         Mock<IExceptionHandler> mockExceptionHandler = new();
 
-        GameVersionFileService service = new(mockRepository.Object, mockValidator.Object, mockVersionService.Object, mapper, mockExceptionHandler.Object);
+        Mock<IGameFileService> mockGameFileService = new();
+
+        GameVersionFileService service = new(mockRepository.Object, mockGameFileService.Object, mockValidator.Object, mockVersionService.Object, mapper, mockExceptionHandler.Object);
 
         // Act
         DefaultResponse result = await service.NewFile(_fileModel);
@@ -206,7 +215,9 @@ public class GameVersionFileServiceTest
 
         Mock<IExceptionHandler> mockExceptionHandler = new();
 
-        GameVersionFileService service = new(mockRepository.Object, mockValidator.Object, mockVersionService.Object, mapper, mockExceptionHandler.Object);
+        Mock<IGameFileService> mockGameFileService = new();
+
+        GameVersionFileService service = new(mockRepository.Object, mockGameFileService.Object, mockValidator.Object, mockVersionService.Object, mapper, mockExceptionHandler.Object);
 
         // Act
         DefaultResponse result = await service.NewFile(_fileModel);
@@ -243,7 +254,9 @@ public class GameVersionFileServiceTest
 
         Mock<IExceptionHandler> mockExceptionHandler = new();
 
-        GameVersionFileService service = new(mockRepository.Object, mockValidator.Object, mockVersionService.Object, mapper, mockExceptionHandler.Object);
+        Mock<IGameFileService> mockGameFileService = new();
+
+        GameVersionFileService service = new(mockRepository.Object, mockGameFileService.Object, mockValidator.Object, mockVersionService.Object, mapper, mockExceptionHandler.Object);
 
         // Act
         DefaultResponse result = await service.DownloadFile(_file.Id);
@@ -268,7 +281,7 @@ public class GameVersionFileServiceTest
         _fileModel.GameVersion = _versionModel;
 
         Mock<IGameVersionFileRepository> mockRepository = new();
-        _ = mockRepository.Setup(x => x.GetFile(It.IsAny<long>())).ReturnsAsync(_file with { Name = "" });
+        _ = mockRepository.Setup(x => x.GetFile(It.IsAny<long>())).ReturnsAsync(_file);
 
         Mock<IGameVersionService> mockVersionService = new();
         _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(true);
@@ -279,7 +292,9 @@ public class GameVersionFileServiceTest
 
         Mock<IExceptionHandler> mockExceptionHandler = new();
 
-        GameVersionFileService service = new(mockRepository.Object, mockValidator.Object, mockVersionService.Object, mapper, mockExceptionHandler.Object);
+        Mock<IGameFileService> mockGameFileService = new();
+
+        GameVersionFileService service = new(mockRepository.Object, mockGameFileService.Object, mockValidator.Object, mockVersionService.Object, mapper, mockExceptionHandler.Object);
 
         // Act
         DefaultResponse result = await service.DownloadFile(_file.Id);
@@ -305,7 +320,7 @@ public class GameVersionFileServiceTest
         _fileModel.GameVersion = _versionModel;
 
         Mock<IGameVersionFileRepository> mockRepository = new();
-        _ = mockRepository.Setup(x => x.GetFile(It.IsAny<long>())).ReturnsAsync(_file with { Name = "" });
+        _ = mockRepository.Setup(x => x.GetFile(It.IsAny<long>())).ReturnsAsync(_file);
 
         Mock<IGameVersionService> mockVersionService = new();
         _ = mockVersionService.Setup(x => x.VerifyIfVersionExist(It.IsAny<GameVersionModel>())).ReturnsAsync(true);
@@ -317,7 +332,9 @@ public class GameVersionFileServiceTest
 
         Mock<IExceptionHandler> mockExceptionHandler = new();
 
-        GameVersionFileService service = new(mockRepository.Object, mockValidator.Object, mockVersionService.Object, mapper, mockExceptionHandler.Object);
+        Mock<IGameFileService> mockGameFileService = new();
+
+        GameVersionFileService service = new(mockRepository.Object, mockGameFileService.Object, mockValidator.Object, mockVersionService.Object, mapper, mockExceptionHandler.Object);
 
         // Act
         DefaultResponse result = await service.DownloadFile(_file.Id);

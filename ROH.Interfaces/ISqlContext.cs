@@ -2,6 +2,7 @@
 
 using ROH.Domain.Accounts;
 using ROH.Domain.Characters;
+using ROH.Domain.GameFiles;
 using ROH.Domain.Guilds;
 using ROH.Domain.items;
 using ROH.Domain.Kingdoms;
@@ -34,6 +35,7 @@ public interface ISqlContext
     DbSet<GameVersion> GameVersions { get; }
     DbSet<GameVersionFile> GameVersionFiles { get; }
     DbSet<Log> Logs { get; }
+    DbSet<GameFile> GameFiles { get; }
 
     int SaveChanges();
 

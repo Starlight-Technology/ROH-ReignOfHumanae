@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 using ROH.Context.TypeConfiguration.Accounts;
 using ROH.Context.TypeConfiguration.Characters;
+using ROH.Context.TypeConfiguration.GameFiles;
 using ROH.Context.TypeConfiguration.Guilds;
 using ROH.Context.TypeConfiguration.Items;
 using ROH.Context.TypeConfiguration.Kingdoms;
@@ -11,6 +12,7 @@ using ROH.Context.TypeConfiguration.Log;
 using ROH.Context.TypeConfiguration.Version;
 using ROH.Domain.Accounts;
 using ROH.Domain.Characters;
+using ROH.Domain.GameFiles;
 using ROH.Domain.Guilds;
 using ROH.Domain.items;
 using ROH.Domain.Kingdoms;
@@ -66,6 +68,8 @@ public class SqlContext : DbContext, ISqlContext
 
     public DbSet<Log> Logs { get; set; }
 
+    public DbSet<GameFile> GameFiles { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         string? connectionString = Environment.GetEnvironmentVariable("ROH_DATABASE_CONNECTION_STRING");
@@ -96,6 +100,7 @@ public class SqlContext : DbContext, ISqlContext
         _ = modelBuilder.ApplyConfiguration(new GameVersionTypeConfiguration());
         _ = modelBuilder.ApplyConfiguration(new GameVersionFileTypeConfiguration());
         _ = modelBuilder.ApplyConfiguration(new LogTypeConfiguration());
+        _ = modelBuilder.ApplyConfiguration(new GameFileTypeConfiguration());
 
         base.OnModelCreating(modelBuilder);
     }

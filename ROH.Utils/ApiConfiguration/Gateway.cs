@@ -113,7 +113,7 @@ namespace ROH.Utils.ApiConfiguration
                     param = _api.GetParams(parametersObject!);
                 }
 
-                HttpResponseMessage response = await client.GetAsync(_gatewayServiceUrl.GetValueOrDefault(service) + param);
+                HttpResponseMessage response = await client.GetAsync(_gatewayServiceUrl.GetValueOrDefault(service) + param); 
 
                 if (response != null)
                 {

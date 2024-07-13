@@ -17,7 +17,7 @@ namespace ROH.Context.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.5")
+                .HasAnnotation("ProductVersion", "8.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -380,6 +380,42 @@ namespace ROH.Context.Migrations
                     b.ToTable("Statuses");
                 });
 
+            modelBuilder.Entity("ROH.Domain.GameFiles.GameFile", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Format")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("Guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<long>("Size")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GameFiles");
+                });
+
             modelBuilder.Entity("ROH.Domain.Guilds.Guild", b =>
                 {
                     b.Property<long>("Id")
@@ -566,30 +602,21 @@ namespace ROH.Context.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("Format")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<Guid>("Guid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasDefaultValueSql("gen_random_uuid()");
 
+                    b.Property<long>("IdGameFile")
+                        .HasColumnType("bigint");
+
                     b.Property<long>("IdVersion")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Path")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<long>("Size")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("IdGameFile")
+                        .IsUnique();
 
                     b.HasIndex("IdVersion");
 
@@ -937,11 +964,19 @@ namespace ROH.Context.Migrations
 
             modelBuilder.Entity("ROH.Domain.Version.GameVersionFile", b =>
                 {
+                    b.HasOne("ROH.Domain.GameFiles.GameFile", "GameFile")
+                        .WithOne()
+                        .HasForeignKey("ROH.Domain.Version.GameVersionFile", "IdGameFile")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ROH.Domain.Version.GameVersion", "GameVersion")
                         .WithMany("VersionFiles")
                         .HasForeignKey("IdVersion")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("GameFile");
 
                     b.Navigation("GameVersion");
                 });

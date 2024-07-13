@@ -14,5 +14,6 @@ public class GameVersionFileTypeConfiguration : IEntityTypeConfiguration<GameVer
         _ = builder.Property(g => g.Guid).HasDefaultValueSql("gen_random_uuid()");
 
         _ = builder.HasOne(f => f.GameVersion).WithMany(v => v.VersionFiles).HasForeignKey(f => f.IdVersion);
+        _ = builder.HasOne(f => f.GameFile).WithOne().HasForeignKey<GameVersionFile>(f => f.IdGameFile);
     }
 }

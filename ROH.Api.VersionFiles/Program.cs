@@ -4,14 +4,18 @@ using FluentValidation;
 
 using ROH.Context.PostgreSQLContext;
 using ROH.Interfaces;
+using ROH.Interfaces.Repository.GameFile;
 using ROH.Interfaces.Repository.Log;
 using ROH.Interfaces.Repository.Version;
 using ROH.Interfaces.Services.ExceptionService;
+using ROH.Interfaces.Services.GameFile;
 using ROH.Interfaces.Services.Version;
 using ROH.Mapping.Version;
+using ROH.Repository.GameFile;
 using ROH.Repository.Log;
 using ROH.Repository.Version;
 using ROH.Services.ExceptionService;
+using ROH.Services.GameFile;
 using ROH.Services.Version;
 using ROH.StandardModels.Version;
 using ROH.Utils.Helpers;
@@ -26,12 +30,14 @@ builder.Services.AddSwaggerGen();
 
 //Registry Interfaces
 builder.Services.AddScoped<ISqlContext, SqlContext>();
+builder.Services.AddScoped<IGameFileRepository, GameFileRepository>();
 builder.Services.AddScoped<IGameVersionFileRepository, GameVersionFileRepository>();
 builder.Services.AddScoped<IGameVersionRepository, GameVersionRepository>();
 builder.Services.AddScoped<ILogRepository, LogRepository>();
 
 builder.Services.AddScoped<IGameVersionService, GameVersionService>();
 builder.Services.AddScoped<IGameVersionFileService, GameVersionFileService>();
+builder.Services.AddScoped<IGameFileService, GameFileService>();
 
 builder.Services.AddScoped<IValidator<GameVersionModel>, GameVersionModelValidator>();
 builder.Services.AddScoped<IValidator<GameVersionFileModel>, GameVersionFileModelValidator>();

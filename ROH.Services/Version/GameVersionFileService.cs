@@ -1,12 +1,12 @@
-﻿// Ignore Spelling: validator
-
-using AutoMapper;
+﻿using AutoMapper;
 
 using FluentValidation;
 
+using ROH.Domain.GameFiles;
 using ROH.Domain.Version;
 using ROH.Interfaces.Repository.Version;
 using ROH.Interfaces.Services.ExceptionService;
+using ROH.Interfaces.Services.GameFile;
 using ROH.Interfaces.Services.Version;
 using ROH.StandardModels.Response;
 using ROH.StandardModels.Version;
@@ -14,201 +14,141 @@ using ROH.Utils.Helpers;
 
 using System.Net;
 
-namespace ROH.Services.Version;
-
-public class GameVersionFileService(IGameVersionFileRepository gameVersionFileRepository, IValidator<GameVersionFileModel> validator, IGameVersionService gameVersion, IMapper mapper, IExceptionHandler exceptionHandler) : IGameVersionFileService
+namespace ROH.Services.Version
 {
-    public async Task<DefaultResponse> DownloadFile(Guid fileGuid)
+    public class GameVersionFileService(
+        IGameVersionFileRepository gameVersionFileRepository,
+        IGameFileService gameFileService,
+        IValidator<GameVersionFileModel> validator,
+        IGameVersionService gameVersion,
+        IMapper mapper,
+        IExceptionHandler exceptionHandler) : IGameVersionFileService
     {
-        try
+        public async Task<DefaultResponse> DownloadFile(Guid fileGuid)
         {
-            GameVersionFile? file = await gameVersionFileRepository.GetFile(fileGuid);
-
-            return file is null ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "Game Version Not Found.") : await GetFile(file);
-        }
-        catch (Exception ex)
-        {
-            return exceptionHandler.HandleException(ex);
-        }
-    }
-
-    public async Task<DefaultResponse> DownloadFile(long id)
-    {
-        try
-        {
-            GameVersionFile? file = await gameVersionFileRepository.GetFile(id);
-
-            return file is null ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "Game Version Not Found.") : await GetFile(file);
-        }
-        catch (Exception ex)
-        {
-            return exceptionHandler.HandleException(ex);
-        }
-    }
-
-    private async Task<DefaultResponse> GetFile(GameVersionFile file)
-    {
-        try
-        {
-            if (file != null)
+            try
             {
-                file = file with
+                GameVersionFile? versionFile = await gameVersionFileRepository.GetFile(fileGuid);
+
+                if (versionFile?.GameFile != null)
+                    return await gameFileService.DownloadFile(versionFile.GameFile.Guid);
+
+                return new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "Game Version File Not Found.");
+            }
+            catch (Exception ex)
+            {
+                return exceptionHandler.HandleException(ex);
+            }
+        }
+
+        public async Task<DefaultResponse> DownloadFile(long id)
+        {
+            try
+            {
+                GameVersionFile? versionFile = await gameVersionFileRepository.GetFile(id);
+
+                if (versionFile?.GameFile != null)
+                    return await gameFileService.DownloadFile(versionFile.GameFile.Id);
+
+                return new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "Game Version File Not Found.");
+            }
+            catch (Exception ex)
+            {
+                return exceptionHandler.HandleException(ex);
+            }
+        }
+
+        public async Task<DefaultResponse> GetFiles(string versionGuid)
+        {
+            try
+            {
+                bool response = await gameVersion.VerifyIfVersionExist(versionGuid);
+
+                if (response && Guid.TryParse(versionGuid, out Guid guid))
                 {
-                    GameVersion = mapper.Map<GameVersion>(gameVersion.GetVersionByGuid(file.Guid.ToString()).Result?.ObjectResponse)
-                };
+                    List<GameVersionFile> files = await gameVersionFileRepository.GetFiles(guid);
 
-                string filePath = Path.Combine(file.Path, file.Name);
+                    foreach (GameVersionFile item in files)
+                    {
+                        item.GameVersion = null;
+                    }
+                    return new DefaultResponse(objectResponse: files);
+                }
 
-                if (File.Exists(filePath))
+                return new DefaultResponse(httpStatus: HttpStatusCode.NotFound);
+            }
+            catch (Exception ex)
+            {
+                return exceptionHandler.HandleException(ex);
+            }
+        }
+
+        public async Task<DefaultResponse> NewFile(GameVersionFileModel fileModel)
+        {
+            try
+            {
+                if (fileModel.Content is null)
+                    return new DefaultResponse(null, HttpStatusCode.BadRequest, "File content can't be empty.");
+
+                FluentValidation.Results.ValidationResult validation = await ValidateFileAsync(fileModel);
+                if (validation != null && !validation.IsValid && validation.Errors.Count > 0)
+                    return new DefaultResponse(null, HttpStatusCode.BadRequest, validation.Errors.ToString()!);
+
+                GameVersionFile versionFile = mapper.Map<GameVersionFile>(fileModel);
+                GameVersion? currentVersion = await GetCurrentVersionAsync();
+
+                if (versionFile.GameVersion != null && await gameVersion.VerifyIfVersionExist(fileModel.GameVersion!))
                 {
-                    byte[] fileContent = await File.ReadAllBytesAsync(filePath);
+                    if (await ShouldRejectFileUpload(versionFile.GameVersion, currentVersion))
+                        return new DefaultResponse(null, HttpStatusCode.BadRequest, GetRejectionMessage(versionFile.GameVersion));
 
-                    return new DefaultResponse(new GameVersionFileModel(
-                        name: file.Name,
-                        format: file.Format,
-                        content: fileContent).ToFileModel(), HttpStatusCode.OK);
+                    Domain.GameFiles.GameFile file = mapper.Map<Domain.GameFiles.GameFile>(fileModel);
+                    string path = GetFilePath(versionFile.GameVersion);
+                    file = file with { Path = path };
+
+                    await gameFileService.SaveFileAsync(file, fileModel.Content);
+
+                    versionFile = versionFile with { GameFile = file };
+                    await gameVersionFileRepository.SaveFile(versionFile);
+
+                    return new DefaultResponse(HttpStatusCode.OK);
                 }
                 else
                 {
-                    return new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File Not Found.");
+                    return new DefaultResponse(null, HttpStatusCode.BadRequest, "Game Version Not Found.");
                 }
             }
-            else
+            catch (Exception ex)
             {
-                return new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File Not Found.");
+                return exceptionHandler.HandleException(ex);
             }
         }
-        catch (Exception ex)
+
+        private async Task<FluentValidation.Results.ValidationResult> ValidateFileAsync(GameVersionFileModel file) => await validator.ValidateAsync(file);
+
+        private async Task<GameVersion?> GetCurrentVersionAsync()
         {
-            return exceptionHandler.HandleException(ex);
+            DefaultResponse? response = await gameVersion.GetCurrentVersion();
+
+            if (response is null)
+                return null;
+
+            GameVersion? version = response.MapObjectResponse<GameVersion>().ObjectResponse as GameVersion;
+            return version;
         }
-    }
 
-    public async Task<DefaultResponse> GetFiles(string versionGuid)
-    {
-        try
-        {
-            bool response = await gameVersion.VerifyIfVersionExist(versionGuid);
+        private static Task<bool> ShouldRejectFileUpload(GameVersion gameVersion, GameVersion? currentVersion) => Task.FromResult(gameVersion.Released || gameVersion.VersionDate < currentVersion?.VersionDate);
 
-            if (response && Guid.TryParse(versionGuid, out Guid guid))
-            {
-                List<GameVersionFile> files = await gameVersionFileRepository.GetFiles(guid);
+        private static string GetRejectionMessage(GameVersion gameVersion) => gameVersion.Released
+                ? "File Upload Failed: This version has already been released. You cannot upload new files for a released version."
+                : "File Upload Failed: This version has already been released with a yearly schedule. Uploading new files is not allowed for past versions.";
 
-                foreach (GameVersionFile item in files)
-                {
-                    item.GameVersion = null;
-                }
-                return new DefaultResponse(objectResponse: files);
-            }
-
-            return new DefaultResponse(httpStatus: HttpStatusCode.NotFound);
-        }
-        catch (Exception ex)
-        {
-            return exceptionHandler.HandleException(ex);
-        }
-    }
-
-    public async Task<DefaultResponse> NewFile(GameVersionFileModel fileModel)
-    {
-        try
-        {
-            FluentValidation.Results.ValidationResult validation = await ValidateFileAsync(fileModel);
-            if (validation != null && !validation.IsValid && validation.Errors.Count > 0)
-            {
-                return new DefaultResponse(null, HttpStatusCode.BadRequest, validation.Errors.ToString()!);
-            }
-
-            GameVersionFile file = mapper.Map<GameVersionFile>(fileModel);
-            GameVersion? currentVersion = await GetCurrentVersionAsync();
-
-            if (file.GameVersion != null && await gameVersion.VerifyIfVersionExist(fileModel.GameVersion!))
-            {
-                if (await ShouldRejectFileUpload(file.GameVersion, currentVersion))
-                {
-                    return new DefaultResponse(null, HttpStatusCode.BadRequest, GetRejectionMessage(file.GameVersion));
-                }
-
-                string path = GetFilePath(file.GameVersion);
-                await EnsureDirectoryExists(path);
-
-                await SaveFileAsync(path, fileModel);
-
-                return new DefaultResponse(HttpStatusCode.OK);
-            }
-            else
-            {
-                return new DefaultResponse(null, HttpStatusCode.BadRequest, "Game Version Not Found.");
-            }
-        }
-        catch (Exception ex)
-        {
-            return exceptionHandler.HandleException(ex);
-        }
-    }
-
-    private async Task<FluentValidation.Results.ValidationResult> ValidateFileAsync(GameVersionFileModel file) => await validator.ValidateAsync(file);
-
-    private async Task<GameVersion?> GetCurrentVersionAsync()
-    {
-        DefaultResponse? response = await gameVersion.GetCurrentVersion();
-
-        if (response is null)
-            return null;
-
-        GameVersion? version = response.MapObjectResponse<GameVersion>().ObjectResponse as GameVersion;
-        return version;
-    }
-
-    private static Task<bool> ShouldRejectFileUpload(GameVersion gameVersion, GameVersion? currentVersion) => Task.FromResult(gameVersion.Released || (gameVersion.VersionDate < currentVersion?.VersionDate));
-
-    private static string GetRejectionMessage(GameVersion gameVersion) => gameVersion.Released
-            ? "File Upload Failed: This version has already been released. You cannot upload new files for a released version."
-            : "File Upload Failed: This version has already been released with a yearly schedule. Uploading new files is not allowed for past versions.";
-
-    private static string GetFilePath(GameVersion gameVersion) =>
+        private static string GetFilePath(GameVersion gameVersion) =>
 
 #if DEBUG
-        @$".\ROHUpdateFiles\{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}\";
-
+            @$".\ROHUpdateFiles\{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}\";
 #else
         @$"/app/ROH/updateFiles/{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}/";
 #endif
-
-    private static Task EnsureDirectoryExists(string path)
-    {
-        if (!Directory.Exists(Path.GetDirectoryName(path)))
-        {
-            _ = Directory.CreateDirectory(Path.GetDirectoryName(path) ?? Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\ROHFiles");
-        }
-
-        return Task.CompletedTask;
-    }
-
-    private async Task SaveFileAsync(string path, GameVersionFileModel file)
-    {
-        try
-        {
-            string filePath = Path.Combine(path, file.Name);
-
-            if (File.Exists(filePath))
-            {
-                File.Delete(filePath);
-            }
-
-            using (FileStream fs = File.Create(filePath))
-            {
-                await fs.WriteAsync(file.Content.AsMemory(), CancellationToken.None);
-            }
-
-            GameVersionFile entity = mapper.Map<GameVersionFile>(file);
-            entity = entity with { Path = path };
-
-            await gameVersionFileRepository.SaveFile(entity);
-        }
-        catch (Exception ex)
-        {
-            _ = exceptionHandler.HandleException(ex);
-        }
     }
 }
