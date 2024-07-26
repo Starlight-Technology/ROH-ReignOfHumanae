@@ -64,7 +64,7 @@
         GameVersionModel model = new GameVersionModel() { Version = inputVersion, Release = inputRelease, Review = inputReview };
 
         var response = await _versionService.CreateNewVersion(model);
-
+        
         if (response != null)
             await _sweetAlert.ShowResponse(response);
     }

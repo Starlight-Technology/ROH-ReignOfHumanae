@@ -388,3 +388,16 @@ Thumbs.db
 /.sonarqube/conf
 /ROH.Api.VersionFiles/ROHUpdateFiles/0.0.0
 /.sonarqube/cxx-lint
+.vscode/launch.json
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/solution-explorer/apicontroller.cs-template
+.vscode/solution-explorer/class.cs-template
+.vscode/solution-explorer/class.ts-template
+.vscode/solution-explorer/class.vb-template
+.vscode/solution-explorer/default.ts-template
+.vscode/solution-explorer/enum.cs-template
+.vscode/solution-explorer/interface.cs-template
+.vscode/solution-explorer/interface.ts-template
+.vscode/solution-explorer/template-list.json
+.vscode/solution-explorer/template-parameters.js
