@@ -53,7 +53,9 @@
         isLoading = true;
         apiResponse = await _versionFileService.GetAllVersionFiles(VersionGuid);
 
-        if (apiResponse != null && !apiResponse.HttpStatus.IsSuccessStatusCode())
+        if(!apiResponse.HttpStatus.IsSuccessStatusCode())
+            await _sweetAlert.ShowResponse(apiResponse);
+        else if (apiResponse != null && !apiResponse.HttpStatus.IsSuccessStatusCode())
         {
             await _sweetAlert.ShowResponse(apiResponse);
         }
