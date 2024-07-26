@@ -1,12 +1,16 @@
 ﻿@namespace Manager.Version.Components
 @using Newtonsoft.Json;
 @using ROH.Blazor.Server.Interfaces.Api;
-@using ROH.StandardModels.Version
+@using ROH.Blazor.Server.Interfaces.Helpers;
+@using ROH.StandardModels.Version;
 @using ROH.Blazor.Server.Api;
 @using Pages.Components;
+@using ROH.Utils.Helpers;
 
 @inject IVersionService _versionService;
-<CardComponent Header="Current Version">
+@inject ISweetAlertService _sweetAlert;
+
+<Pages.Components.CardComponent Header="Current Version">
     @if (isLoadingCurrentVersion)
     {
         <div style="text-align:center">
@@ -53,7 +57,7 @@
 
     }
 
-</CardComponent>
+</Pages.Components.CardComponent>
 
 @code {
 
@@ -77,10 +81,11 @@
         isLoadingCurrentVersion = true;
         var currentVersionResponse = await _versionService.GetCurrentVersion();
 
-        if (currentVersionResponse != null && currentVersionResponse?.ObjectResponse != null)
-        {
-            currentVersion = JsonConvert.DeserializeObject<GameVersionModel>(currentVersionResponse.ObjectResponse.ToString()!);
-        }
+        if(!currentVersionResponse.HttpStatus.IsSuccessStatusCode())
+            await _sweetAlert.ShowResponse(currentVersionResponse);
+        else if (currentVersionResponse.ObjectResponse != null )
+            currentVersion = JsonConvert.DeserializeObject<GameVersionModel>(currentVersionResponse.ObjectResponse.ToString()!);     
+                    
         isLoadingCurrentVersion = false;
         StateHasChanged();
     }
