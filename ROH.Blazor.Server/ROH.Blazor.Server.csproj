@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <Folder Include="Data\" />
+    <Folder Include="Pages\Account\Components\" />
   </ItemGroup>
 
   <ItemGroup>

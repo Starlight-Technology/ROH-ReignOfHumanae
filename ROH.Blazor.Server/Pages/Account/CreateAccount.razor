@@ -1,0 +1,23 @@
+﻿@page "/CreateAccount"
+
+<Pages.Components.CardComponent Header="Create Account">
+    <div class="center-content">
+        <MatInputTextComponent Label="Email" @bind-Value="@EmailValue"></MatInputTextComponent>
+        <MatInputTextComponent Label="Username" @bind-Value="@Username"></MatInputTextComponent>
+        <MatInputTextComponent Label="Password" @bind-Value="@PasswordValue" Type="password"></MatInputTextComponent>
+        <MatInputTextComponent Label="Confirm Password" @bind-Value="@ConfirmPasswordValue" Type="password"></MatInputTextComponent>
+        <MatButton OnClick="Confirm" Style="margin:10px">Create Account</MatButton>
+    </div>
+</Pages.Components.CardComponent>
+
+@code {
+    public string EmailValue { get; set; } = "";
+    public string Username { get; set; } = "";
+    public string PasswordValue { get; set; } = "";
+    public string ConfirmPasswordValue { get; set; } = "";
+
+    public Task Confirm()
+    {
+        return Task.CompletedTask;
+    }
+}
