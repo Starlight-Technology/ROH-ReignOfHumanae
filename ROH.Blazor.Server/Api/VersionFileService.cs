@@ -8,9 +8,9 @@ public class VersionFileService : IVersionFileService
 {
     private readonly Utils.ApiConfiguration.Gateway _gateway = new();
 
-    public async Task<DefaultResponse> UploadVersionFile(GameVersionFileModel Model) => await _gateway.Post(Utils.ApiConfiguration.Gateway.Services.UploadFile, Model);
+    public async Task<DefaultResponse?> UploadVersionFile(GameVersionFileModel Model) => await _gateway.Post(Utils.ApiConfiguration.Gateway.Services.UploadFile, Model);
 
-    public async Task<DefaultResponse> GetAllVersionFiles(string VersionGuid) => await _gateway.Get(Utils.ApiConfiguration.Gateway.Services.GetAllVersionFiles, new { VersionGuid });
+    public async Task<DefaultResponse?> GetAllVersionFiles(string VersionGuid) => await _gateway.Get(Utils.ApiConfiguration.Gateway.Services.GetAllVersionFiles, new { VersionGuid });
 
-    public async Task<DefaultResponse> DownloadVersionFile(string FileGuid) => await _gateway.Get(Utils.ApiConfiguration.Gateway.Services.DownloadFile, new { FileGuid });
+    public async Task<DefaultResponse?> DownloadVersionFile(string FileGuid) => await _gateway.Get(Utils.ApiConfiguration.Gateway.Services.DownloadFile, new { FileGuid });
 }

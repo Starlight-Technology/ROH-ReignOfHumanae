@@ -10,28 +10,19 @@ using System.Net;
 
 namespace ROH.Services.GameFile
 {
-    public class GameFileService : IGameFileService
+    public class GameFileService(IGameFileRepository gameFileRepository, IExceptionHandler exceptionHandler) : IGameFileService
     {
-        private readonly IGameFileRepository _gameFileRepository;
-        private readonly IExceptionHandler _exceptionHandler;
-
-        public GameFileService(IGameFileRepository gameFileRepository, IExceptionHandler exceptionHandler)
-        {
-            _gameFileRepository = gameFileRepository;
-            _exceptionHandler = exceptionHandler;
-        }
-
         public async Task<DefaultResponse> DownloadFile(Guid fileGuid)
         {
             try
             {
-                Domain.GameFiles.GameFile? file = await _gameFileRepository.GetFile(fileGuid);
+                Domain.GameFiles.GameFile? file = await gameFileRepository.GetFile(fileGuid);
 
                 return file is null ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File Not Found.") : await GetGameFile(file);
             }
             catch (Exception ex)
             {
-                return _exceptionHandler.HandleException(ex);
+                return exceptionHandler.HandleException(ex);
             }
         }
 
@@ -39,13 +30,13 @@ namespace ROH.Services.GameFile
         {
             try
             {
-                Domain.GameFiles.GameFile? file = await _gameFileRepository.GetFile(id);
+                Domain.GameFiles.GameFile? file = await gameFileRepository.GetFile(id);
 
                 return file is null ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File Not Found.") : await GetGameFile(file);
             }
             catch (Exception ex)
             {
-                return _exceptionHandler.HandleException(ex);
+                return exceptionHandler.HandleException(ex);
             }
         }
 
@@ -71,7 +62,7 @@ namespace ROH.Services.GameFile
             }
             catch (Exception ex)
             {
-                return _exceptionHandler.HandleException(ex);
+                return exceptionHandler.HandleException(ex);
             }
         }
 
@@ -89,11 +80,11 @@ namespace ROH.Services.GameFile
                     await fs.WriteAsync(content.AsMemory(), CancellationToken.None);
                 }
 
-                await _gameFileRepository.SaveFile(file);
+                await gameFileRepository.SaveFile(file);
             }
             catch (Exception ex)
             {
-                _ = _exceptionHandler.HandleException(ex);
+                _ = exceptionHandler.HandleException(ex);
             }
         }
     }

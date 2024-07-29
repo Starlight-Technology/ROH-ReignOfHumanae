@@ -103,11 +103,11 @@ namespace ROH.Utils.ApiConfiguration
         private const string UNAUTHORIZED_MESSAGE = "You must to be logged to do that.";
         private const string ERROR_MESSAGE = "Error, the connection has failed!";
 
-        private readonly DefaultResponse _errorResponse = new DefaultResponse(httpStatus: System.Net.HttpStatusCode.BadRequest, message: ERROR_MESSAGE);
-        private readonly DefaultResponse _unauthorizedResponse = new DefaultResponse(httpStatus: System.Net.HttpStatusCode.Unauthorized, message: UNAUTHORIZED_MESSAGE );
+        private readonly DefaultResponse? _errorResponse = new DefaultResponse(httpStatus: System.Net.HttpStatusCode.BadRequest, message: ERROR_MESSAGE);
+        private readonly DefaultResponse? _unauthorizedResponse = new DefaultResponse(httpStatus: System.Net.HttpStatusCode.Unauthorized, message: UNAUTHORIZED_MESSAGE );
 
 
-        public async Task<DefaultResponse> Get<T>(Services service, T parametersObject)
+        public async Task<DefaultResponse?> Get<T>(Services service, T parametersObject)
         {
             try
             {
@@ -140,7 +140,7 @@ namespace ROH.Utils.ApiConfiguration
             }
         }
 
-        public async Task<DefaultResponse> Post(Services service, object objectToSend)
+        public async Task<DefaultResponse?> Post(Services service, object objectToSend)
         {
             using HttpClient client = new HttpClient();
 
@@ -162,7 +162,7 @@ namespace ROH.Utils.ApiConfiguration
             return _errorResponse;
         }
 
-        public async Task<DefaultResponse> Update(Services service, object objectToSend)
+        public async Task<DefaultResponse?> Update(Services service, object objectToSend)
         {
             using HttpClient client = new HttpClient();
 
@@ -185,7 +185,7 @@ namespace ROH.Utils.ApiConfiguration
             return _errorResponse;
         }
 
-        public async Task<DefaultResponse> Delete<T>(Services service, T parametersObject)
+        public async Task<DefaultResponse?> Delete<T>(Services service, T parametersObject)
         {
             using HttpClient client = new HttpClient();
 

@@ -108,32 +108,35 @@
         else if (selectedVersionType == "Released Versions")
             apiResponse = await _versionService.GetAllReleasedVersionsPaginated(page, take);
 
-        if(!apiResponse.HttpStatus.IsSuccessStatusCode())
-            await _sweetAlert.ShowResponse(apiResponse);
-        else if (apiResponse != null && !apiResponse.HttpStatus.IsSuccessStatusCode())
+        if (apiResponse != null)
         {
-            await _sweetAlert.ShowResponse(apiResponse);
-        }
-
-        else if (apiResponse != null && apiResponse.ObjectResponse != null && apiResponse.HttpStatus.IsSuccessStatusCode())
-        {
-            var result = JsonConvert.DeserializeObject<PaginatedModel>(apiResponse.ObjectResponse.ToString() ?? "");
-
-            if (result != null)
+            if (!apiResponse.HttpStatus.IsSuccessStatusCode())
+                await _sweetAlert.ShowResponse(apiResponse);
+            else if (!apiResponse.HttpStatus.IsSuccessStatusCode())
             {
-                TotalPages = result.TotalPages;
+                await _sweetAlert.ShowResponse(apiResponse);
+            }
 
-                if (result.ObjectResponse != null)
+            else if (apiResponse.ObjectResponse != null && apiResponse.HttpStatus.IsSuccessStatusCode())
+            {
+                var result = JsonConvert.DeserializeObject<PaginatedModel>(apiResponse.ObjectResponse.ToString() ?? "");
+
+                if (result != null)
                 {
-                    var versionList = result.ObjectResponse.ToList();
+                    TotalPages = result.TotalPages;
 
-                    foreach (var item in versionList)
+                    if (result.ObjectResponse != null)
                     {
-                        var gameVersionModel = JsonConvert.DeserializeObject<GameVersionModel>(item.ToString());
+                        var versionList = result.ObjectResponse.ToList();
 
-                        if (gameVersionModel != null)
+                        foreach (var item in versionList)
                         {
-                            PagedGameVersions?.Add(gameVersionModel);
+                            var gameVersionModel = JsonConvert.DeserializeObject<GameVersionModel>(item.ToString());
+
+                            if (gameVersionModel != null)
+                            {
+                                PagedGameVersions?.Add(gameVersionModel);
+                            }
                         }
                     }
                 }

@@ -12,6 +12,7 @@ public class AccountController : ControllerBase
 {
     private readonly Utils.ApiConfiguration.Api _api = new();
 
+    [AllowAnonymous]
     [HttpPost("CreateNewUser")]
     public async Task<IActionResult> CreateNewUser(UserModel userModel) => Ok(await _api.Post(Utils.ApiConfiguration.Api.Services.CreateNewUser, userModel));
 

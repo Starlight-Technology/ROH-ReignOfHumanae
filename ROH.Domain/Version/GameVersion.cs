@@ -20,7 +20,7 @@ public record GameVersion(
     int Review = 0
     )
 {
-    public ICollection<GameVersionFile> VersionFiles { get; init; } = new List<GameVersionFile>();
+    public ICollection<GameVersionFile> VersionFiles { get; init; } = [];
 
     public bool Released { get; set; } = false;
 

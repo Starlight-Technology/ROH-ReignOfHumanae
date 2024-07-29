@@ -12,5 +12,6 @@ public class ServicesManager
         _ = services.AddScoped<IVersionFileService, VersionFileService>();
         _ = services.AddScoped<ISweetAlertService, SweetAlertService>();
         _ = services.AddScoped<IDownloadFileService, DownloadFileService>();
+        _ = services.AddScoped<IAccountService, AccountService>();
     }
 }

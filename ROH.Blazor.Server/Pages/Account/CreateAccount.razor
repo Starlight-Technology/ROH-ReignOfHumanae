@@ -1,23 +1,62 @@
 ﻿@page "/CreateAccount"
+@using ROH.Blazor.Server.Interfaces.Api
+@using ROH.Blazor.Server.Interfaces.Helpers
+
+@inject IAccountService _accountService;
+@inject ISweetAlertService _sweetAlert;
 
 <Pages.Components.CardComponent Header="Create Account">
-    <div class="center-content">
-        <MatInputTextComponent Label="Email" @bind-Value="@EmailValue"></MatInputTextComponent>
-        <MatInputTextComponent Label="Username" @bind-Value="@Username"></MatInputTextComponent>
-        <MatInputTextComponent Label="Password" @bind-Value="@PasswordValue" Type="password"></MatInputTextComponent>
-        <MatInputTextComponent Label="Confirm Password" @bind-Value="@ConfirmPasswordValue" Type="password"></MatInputTextComponent>
-        <MatButton OnClick="Confirm" Style="margin:10px">Create Account</MatButton>
-    </div>
+    @if (isLoading)
+    {
+        <div style="text-align:center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only"></span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="center-content">
+            <MatInputTextComponent Label="Email" @bind-Value="@EmailValue"></MatInputTextComponent>
+            <MatInputTextComponent Label="Username" @bind-Value="@UsernameValue"></MatInputTextComponent>
+            <MatInputTextComponent Label="Password" @bind-Value="@PasswordValue" Type="password"></MatInputTextComponent>
+            <MatInputTextComponent Label="Confirm Password" @bind-Value="@ConfirmPasswordValue" Type="password"></MatInputTextComponent>
+            <MatButton OnClick="Confirm" Style="margin:10px">Create Account</MatButton>
+        </div>
+    }
 </Pages.Components.CardComponent>
 
 @code {
     public string EmailValue { get; set; } = "";
-    public string Username { get; set; } = "";
+    public string UsernameValue { get; set; } = "";
     public string PasswordValue { get; set; } = "";
     public string ConfirmPasswordValue { get; set; } = "";
 
-    public Task Confirm()
+    public bool isLoading = false;
+
+    public async Task Confirm()
     {
-        return Task.CompletedTask;
+        isLoading = true;
+
+        if (PasswordValue == ConfirmPasswordValue)
+        {
+
+            var response = await _accountService.CreateNewUser(
+                new StandardModels.Account.UserModel()
+                    {
+                        Email = EmailValue,
+                        UserName = UsernameValue,
+                        Password = PasswordValue
+                    }
+            );
+
+            await _sweetAlert.ShowResponse(response?? new StandardModels.Response.DefaultResponse(httpStatus:System.Net.HttpStatusCode.BadGateway));
+        }
+        else
+        {
+            await _sweetAlert.Show("", "Passwords don't match!", Helpers.Types.SweetAlertType.Error);
+        }
+        isLoading = false;
+        StateHasChanged();
     }
 }
