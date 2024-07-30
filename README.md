@@ -82,7 +82,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 # Contact
 If you have any questions, feel free to reach out to us at starlighttecnologia@hotmail.com.
-Foud any bug? Fell free to open a issue.
+Found any bug? Fell free to open a issue.
 
 
 ![ArchtectureDiagram](https://github.com/RodrigoMartinsMoraes-Z/ROH-ReignOfHumanae/assets/28880737/db5055d2-56c7-4e10-b819-f5c6a0770c5f)
