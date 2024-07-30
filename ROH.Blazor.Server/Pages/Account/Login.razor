@@ -1,4 +1,5 @@
 ﻿@page "/Login"
+@inject NavigationManager Navigation;
 
 <Pages.Components.CardComponent Header="Login">
     <div class="center-content">
@@ -11,7 +12,7 @@
         </div>
         <div class="row" style="margin-top:10px">
             <div class="col-auto">
-                <MatButton>New Account</MatButton>
+                <MatButton OnClick="@(() => Navigation.NavigateTo("/createaccount"))">New Account</MatButton>
             </div>
         </div>
         <div class="row" style="margin-top:10px">
@@ -27,3 +28,4 @@
     public string PasswordValue { get; set; } = "";
 
 }
+
