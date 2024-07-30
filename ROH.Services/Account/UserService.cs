@@ -28,7 +28,8 @@ public class UserService(IExceptionHandler handler, IValidator<UserModel> userVa
 
             User user = new()
             {
-                Email = userModel.Email
+                Email = userModel.Email,
+                UserName = userModel.UserName
             };
 
             user.SetPassword(userModel.Password!);
