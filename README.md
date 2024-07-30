@@ -1,6 +1,66 @@
-# ROH
+# Reign of Humanæ (ROH)
 
-MMORPG that tells the history about a world with magic and technology. The world of Reign of Humanæ began with only one intelligent race, the Humanae. As time passed, the Humanae divided into four distinct races: Humans, Elves, Dwarfs, and Demons. Each race had unique characteristics and abilities that made them stand out from the others. The Humans were known for their adaptability and large communities. They had the ability to learn things 15% faster than other races and had a 10% resistance to cold. The Elves were a reclusive race that lived in small communities within forests. They had a deep connection with nature and had the ability to learn nature magic and agility skills 20% faster than other races. Creatures in the forest would not attack them unless provoked. The Dwarfs lived in caverns and did not like other races, particularly the Elves. They were known for their advanced technology and had the ability to make items 25% more powerful. They were also 10% faster at mining and could learn strength skills 20% faster than other races. However, they struggled with magic, finding it 20% harder to learn. The Demons preferred warm climates and did not like other races. They had a natural ability to learn fire magic 25% faster than other races and had a 50% resistance to fire. However, they found it 20% harder to learn agility and strength skills. As the races interacted, alliances and rivalries were formed. Some races formed alliances to gain an advantage in the world, while others waged wars against each other. The world of Reign of Humanæ was full of adventure and excitement as the races battled for supremacy in a world filled with magic and technology.
+# Introduction
+
+Reign of Humanæ (ROH) is an MMORPG that immerses players in a world where magic and technology coexist. The game world began with a single intelligent race, the Humanae, which eventually divided into four distinct races: Humans, Elves, Dwarfs, and Demons. Each race possesses unique characteristics and abilities that shape their interactions and roles within the world.
+
+# Races and Their Abilities
+# Humans
+
+Adaptability and large communities.
+Learn new skills 15% faster.
+10% resistance to cold.
+
+# Elves
+
+Reclusive, living in small forest communities.
+Deep connection with nature.
+Learn nature magic and agility skills 20% faster.
+Forest creatures do not attack unless provoked.
+
+# Dwarfs
+
+Reside in caverns, advanced in technology.
+Create items 25% more powerful.
+10% faster at mining.
+Learn strength skills 20% faster but find magic 20% harder to learn.
+
+# Demons
+
+Prefer warm climates, disdain other races.
+Learn fire magic 25% faster.
+50% resistance to fire.
+Find agility and strength skills 20% harder to learn.
+As the races interact, alliances and rivalries form, leading to a dynamic world filled with adventure and conflict.
+
+# Features
+Unique race-specific abilities and skills.
+Complex interactions and alliances between races.
+Rich lore and backstory.
+Integration of magic and technology.
+
+
+# Getting Started
+# Prerequisites
+.NET 8 or later
+Blazor
+
+
+# Contributing
+We welcome contributions from the community! To contribute, please follow these steps:
+
+Fork the repository.
+Create a new branch (git checkout -b feature/YourFeature).
+Commit your changes (git commit -m 'Add some feature').
+Push to the branch (git push origin feature/YourFeature).
+Open a Pull Request.
+
+# License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+# Contact
+If you have any questions, feel free to reach out to us at starlighttecnologia@hotmail.com.
+Foud any bug? Fell free to open a issue.
 
 
 ![ArchtectureDiagram](https://github.com/RodrigoMartinsMoraes-Z/ROH-ReignOfHumanae/assets/28880737/db5055d2-56c7-4e10-b819-f5c6a0770c5f)
