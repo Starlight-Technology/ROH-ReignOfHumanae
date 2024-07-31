@@ -386,7 +386,7 @@ Thumbs.db
 *.booproj.user
 *.sln.docstates
 /.sonarqube/conf
-/ROH.Api.VersionFiles/ROHUpdateFiles/0.0.0
+/ROH.Api.VersionFiles/ROHUpdateFiles
 /.sonarqube/cxx-lint
 .vscode/launch.json
 .vscode/settings.json

@@ -1,0 +1,31 @@
+﻿@page "/Login"
+@inject NavigationManager Navigation;
+
+<Pages.Components.CardComponent Header="Login">
+    <div class="center-content">
+        <MatInputTextComponent Label="Login" @bind-Value="@LoginValue"></MatInputTextComponent>
+        <MatInputTextComponent Label="Password" @bind-Value="@PasswordValue" Type="password"></MatInputTextComponent>
+        <div class="row" style="margin-top:10px">
+            <div class="col-auto">
+                <MatButton>Confirm</MatButton>
+            </div>
+        </div>
+        <div class="row" style="margin-top:10px">
+            <div class="col-auto">
+                <MatButton OnClick="@(() => Navigation.NavigateTo("/createaccount"))">New Account</MatButton>
+            </div>
+        </div>
+        <div class="row" style="margin-top:10px">
+            <div class="col-auto">
+                <MatButton>Forgot Password</MatButton>
+            </div>
+        </div>
+    </div>
+</Pages.Components.CardComponent>
+
+@code {
+    public string LoginValue { get; set; } = "";
+    public string PasswordValue { get; set; } = "";
+
+}
+

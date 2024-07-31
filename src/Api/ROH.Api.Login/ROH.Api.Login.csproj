@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\ROH</DockerfileContext>
+    <UserSecretsId>fb48d56f-6c5e-4224-9874-5abb1a92ce2d</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.7" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Database\ROH.Context\ROH.Context.csproj" />
+    <ProjectReference Include="..\..\Common\ROH.Interfaces\ROH.Interfaces.csproj" />
+    <ProjectReference Include="..\..\Database\ROH.Repository\ROH.Repository.csproj" />
+    <ProjectReference Include="..\..\Rules\ROH.Services\ROH.Services.csproj" />
+  </ItemGroup>
+
+</Project>

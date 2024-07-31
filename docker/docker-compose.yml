@@ -1,0 +1,72 @@
+version: '3.8'
+
+networks:
+  roh_network:
+    name: roh_network
+
+services:
+  gateway:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.gateway
+    image: roh.gateway
+    container_name: ROH.Gateway
+    networks:
+      - roh_network
+    ports:
+      - "9001:9001"
+    environment:
+      - ROH_DATABASE_CONNECTION_STRING=${ROH_DATABASE_CONNECTION_STRING}
+
+  blazor:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.blazor
+    image: roh.blazor.server
+    container_name: ROH.Blazor
+    networks:
+      - roh_network
+    ports:
+      - "9010:9010"
+    environment:
+      - ROH_DATABASE_CONNECTION_STRING=${ROH_DATABASE_CONNECTION_STRING}
+
+  api_versionfiles:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.versionfiles
+    image: roh.api.versionfiles
+    container_name: ROH.Api.VersionFiles
+    networks:
+      - roh_network
+    volumes:
+      - /home/roh:/app/ROH/updateFiles
+    environment:
+      - ROH_DATABASE_CONNECTION_STRING=${ROH_DATABASE_CONNECTION_STRING}
+    user: roh  
+
+  api_version:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.version
+    image: roh.api.version
+    container_name: ROH.Api.Version
+    networks:
+      - roh_network
+    environment:
+      - ROH_DATABASE_CONNECTION_STRING=${ROH_DATABASE_CONNECTION_STRING}
+
+  api_login:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.login
+    image: roh.api.login
+    container_name: ROH.Api.Login
+    networks:
+      - roh_network
+    environment:
+      - ROH_DATABASE_CONNECTION_STRING=${ROH_DATABASE_CONNECTION_STRING}
+
+# Define the global environment variable
+env_file:
+  - .env
