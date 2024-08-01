@@ -5,7 +5,6 @@ using FluentValidation.Results;
 
 using Moq;
 
-using ROH.Domain.GameFiles;
 using ROH.Domain.Version;
 using ROH.Interfaces.Repository.Version;
 using ROH.Interfaces.Services.ExceptionService;

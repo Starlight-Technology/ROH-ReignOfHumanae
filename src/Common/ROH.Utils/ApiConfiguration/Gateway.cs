@@ -104,8 +104,7 @@ namespace ROH.Utils.ApiConfiguration
         private const string ERROR_MESSAGE = "Error, the connection has failed!";
 
         private readonly DefaultResponse? _errorResponse = new DefaultResponse(httpStatus: System.Net.HttpStatusCode.BadRequest, message: ERROR_MESSAGE);
-        private readonly DefaultResponse? _unauthorizedResponse = new DefaultResponse(httpStatus: System.Net.HttpStatusCode.Unauthorized, message: UNAUTHORIZED_MESSAGE );
-
+        private readonly DefaultResponse? _unauthorizedResponse = new DefaultResponse(httpStatus: System.Net.HttpStatusCode.Unauthorized, message: UNAUTHORIZED_MESSAGE);
 
         public async Task<DefaultResponse?> Get<T>(Services service, T parametersObject)
         {
@@ -120,12 +119,12 @@ namespace ROH.Utils.ApiConfiguration
                     param = _api.GetParams(parametersObject!);
                 }
 
-                HttpResponseMessage response = await client.GetAsync(_gatewayServiceUrl.GetValueOrDefault(service) + param); 
+                HttpResponseMessage response = await client.GetAsync(_gatewayServiceUrl.GetValueOrDefault(service) + param);
 
                 if (response != null)
                 {
-                    if(response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                     return _unauthorizedResponse;
+                    if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                        return _unauthorizedResponse;
 
                     string responseJson = await response.Content.ReadAsStringAsync();
 
@@ -151,8 +150,8 @@ namespace ROH.Utils.ApiConfiguration
 
             if (response != null)
             {
-                if(response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                     return _unauthorizedResponse;
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                    return _unauthorizedResponse;
 
                 string responseJson = await response.Content.ReadAsStringAsync();
 
@@ -174,8 +173,8 @@ namespace ROH.Utils.ApiConfiguration
 
             if (response != null)
             {
-                if(response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                     return _unauthorizedResponse;
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                    return _unauthorizedResponse;
 
                 string responseJson = await response.Content.ReadAsStringAsync();
 
@@ -200,8 +199,8 @@ namespace ROH.Utils.ApiConfiguration
 
             if (response != null)
             {
-                if(response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                     return _unauthorizedResponse;
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                    return _unauthorizedResponse;
 
                 string responseJson = await response.Content.ReadAsStringAsync();
 

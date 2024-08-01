@@ -4,6 +4,7 @@ using ROH.Interfaces;
 using ROH.Interfaces.Repository.GameFile;
 
 namespace ROH.Repository.GameFile;
+
 public class GameFileRepository(ISqlContext context) : IGameFileRepository
 {
     public async Task<Domain.GameFiles.GameFile?> GetFile(long id) => await context.GameFiles.FindAsync(id);

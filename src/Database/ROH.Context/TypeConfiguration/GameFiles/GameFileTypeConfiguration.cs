@@ -3,6 +3,7 @@
 using ROH.Domain.GameFiles;
 
 namespace ROH.Context.TypeConfiguration.GameFiles;
+
 public class GameFileTypeConfiguration : IEntityTypeConfiguration<GameFile>
 {
     public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<GameFile> builder)
