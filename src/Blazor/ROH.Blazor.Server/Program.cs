@@ -1,4 +1,5 @@
 using ROH.Blazor.Server.Helpers;
+using MatBlazor;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -6,7 +7,7 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 ServicesManager servicesManager = new();
 
 builder.Services.AddRazorPages();
-
+builder.Services.AddMatBlazor();
 builder.Services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
 
 servicesManager.ConfigureServices(builder.Services);
