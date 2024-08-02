@@ -1,17 +1,47 @@
 ﻿@inherits LayoutComponentBase
+@using MatBlazor
 
-<PageTitle>ROH.Blazor.Server</PageTitle>
+<MatAppBarContainer>
+    <MatAppBar Fixed="true">
+        <MatAppBarRow>
+            <MatAppBarSection>
+                <MatIconButton Icon="menu" @onclick="ToggleDrawer" />
+                <MatAppBarTitle>Reign of Humanae</MatAppBarTitle>
+            </MatAppBarSection>
+            <MatAppBarSection Align="MatAppBarSectionAlign.End">
+                <MatIconButton Icon="account_circle"></MatIconButton>
+            </MatAppBarSection>
+        </MatAppBarRow>
+    </MatAppBar>
+    <MatDrawerContainer>
+        <MatAppBarContent>
+            <MatDrawer @bind-Opened="@_drawerOpen">
+                <MatNavMenu>
+                    <MatNavItem Href="/">Home</MatNavItem>
+                    <MatNavItem Href="/lore">Lore</MatNavItem>
+                    <MatNavItem Href="/world-bosses">World Bosses</MatNavItem>
+                    <MatNavItem Href="/races">Races</MatNavItem>
+                    <MatNavItem Href="/crafting">Crafting</MatNavItem>
+                    <MatNavItem Href="/magic-skills">Magic & Skills</MatNavItem>
+                </MatNavMenu>
+            </MatDrawer>
+            <MatDrawerContent>
+                <div class="container" style="margin-top: 20px;">
+                    @Body
+                <MatFooter>
+                    <span>&copy; 2024 Reign of Humanae. All rights reserved.</span>
+                </MatFooter>
+                </div>
+            </MatDrawerContent>
+        </MatAppBarContent>
+    </MatDrawerContainer>
+</MatAppBarContainer>
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+@code {
+    private bool _drawerOpen = true;
 
-    <main>
-        <article class="content px-4">
-            <div class="container">
-                @Body
-            </div>
-        </article>
-    </main>
-</div>
+    private void ToggleDrawer()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+}
