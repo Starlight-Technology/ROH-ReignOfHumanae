@@ -32,3 +32,21 @@
     bottom: 0;
     width: 100%;
 }
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.col-sm-4, .col-sm-8 {
+    flex: 1;
+    min-width: 250px; /* Ensures that the columns don't become too small */
+}
+
+.boss-image {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto; /* Centers the image horizontally */
+}
