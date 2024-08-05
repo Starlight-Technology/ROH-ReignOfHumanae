@@ -63,10 +63,7 @@ Docker and Docker Compose
 Unity3D
 
 ## Running the Project
-You can run the entire project using Docker. The repository includes Dockerfiles and bash/powershell scripts to run all components with configured settings.
-To run on linux, plz give permission to file can be executed and run "RUNDOCKER.sh"
-On Windows, run "RUNDOCKER.ps1", ensure that you have permission and can run scripts.
-(Musta have docker installed)
+You can run every API's, Blazor and Gateway with .net, and unity with unity engine 3D (last version), if you want to run everything (but not unity) on docker, it has a yml file on docker folder. Remember to configure the DB connection string, it as configured to run on postgreSQL and will search for connection string on environment variable with key= ROH_DATABASE_CONNECTION_STRING, ex: ROH_DATABASE_CONNECTION_STRING=Host=localhost;Port=5432;Database=ROH;Username=postgres;Password=postgres123; 
 
 ## Contributing
 We welcome contributions from the community! To contribute, please follow these steps:
