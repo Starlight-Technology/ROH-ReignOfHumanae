@@ -63,7 +63,9 @@ Docker and Docker Compose
 Unity3D
 
 ## Running the Project
-You can run every API's, Blazor and Gateway with .net, and unity with unity engine 3D (last version), if you want to run everything (but not unity) on docker, it has a yml file on docker folder. Remember to configure the DB connection string, it as configured to run on postgreSQL and will search for connection string on environment variable with key= ROH_DATABASE_CONNECTION_STRING, ex: ROH_DATABASE_CONNECTION_STRING=Host=localhost;Port=5432;Database=ROH;Username=postgres;Password=postgres123; 
+You can run every API's, Blazor and Gateway with .net, and unity with unity engine 3D (last version), if you want to run everything (but not unity) on docker, it has a yml file on docker folder. Remember to configure the DB connection string, it as configured to run on postgreSQL and will search for connection string on environment variable with key= ROH_DATABASE_CONNECTION_STRING, ex: ROH_DATABASE_CONNECTION_STRING=Host=localhost;Port=5432;Database=ROH;Username=postgres;Password=postgres123;
+Remember, whe use code first, so dont create or edit any table on db with SQL, use entity framework to create a migration with the required changes.
+For details see [https://learn.microsoft.com/pt-br/ef/core/](https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/?tabs=dotnet-core-cli) 
 
 ## Contributing
 We welcome contributions from the community! To contribute, please follow these steps:
