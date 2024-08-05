@@ -50,3 +50,19 @@
     display: block;
     margin: 0 auto; /* Centers the image horizontally */
 }
+
+.fixed-drawer {
+    position: fixed; /* Fixes the drawer position */
+    top: 64px; /* Adjusts to align with the app bar height */
+    width: 250px; /* Fixed width for the drawer */
+    overflow-y: auto; /* Allows the drawer itself to be scrollable if its content exceeds the viewport */
+    height: calc(100vh - 64px); /* Full height minus the app bar */
+    z-index: 1000; /* Ensures the drawer is above other content */
+}
+
+.scrollable-content {
+    margin-left: 250px; /* Adjust this to match the drawer's width */
+    overflow-y: auto; /* Allows the content to be scrollable */
+    height: calc(100vh - 64px); /* Full height minus the app bar */
+    padding: 20px; /* Adds padding to the content area */
+}
