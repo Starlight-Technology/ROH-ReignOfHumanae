@@ -1,24 +1,38 @@
-#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
+# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
+# This stage is used when running from VS in fast mode (Default for Debug configuration)
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER app
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
+
+# This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["ROH.Api.Login/ROH.Api.Login.csproj", "ROH.Api.Login/"]
-RUN dotnet restore "./ROH.Api.Login/./ROH.Api.Login.csproj"
+COPY ["src/Api/ROH.Api.Login/ROH.Api.Login.csproj", "src/Api/ROH.Api.Login/"]
+COPY ["src/Database/ROH.Context/ROH.Context.csproj", "src/Database/ROH.Context/"]
+COPY ["src/Common/ROH.Interfaces/ROH.Interfaces.csproj", "src/Common/ROH.Interfaces/"]
+COPY ["src/Database/ROH.Domain/ROH.Domain.csproj", "src/Database/ROH.Domain/"]
+COPY ["src/Common/ROH.StandardModels/ROH.StandardModels.csproj", "src/Common/ROH.StandardModels/"]
+COPY ["src/Database/ROH.Repository/ROH.Repository.csproj", "src/Database/ROH.Repository/"]
+COPY ["src/Rules/ROH.Services/ROH.Services.csproj", "src/Rules/ROH.Services/"]
+COPY ["src/Common/ROH.Mapper/ROH.Mapping.csproj", "src/Common/ROH.Mapper/"]
+COPY ["src/Common/ROH.Utils/ROH.Utils.csproj", "src/Common/ROH.Utils/"]
+COPY ["src/Rules/ROH.Validations/ROH.Validations.csproj", "src/Rules/ROH.Validations/"]
+RUN dotnet restore "./src/Api/ROH.Api.Login/ROH.Api.Login.csproj"
 COPY . .
-WORKDIR "/src/ROH.Api.Login"
+WORKDIR "/src/src/Api/ROH.Api.Login"
 RUN dotnet build "./ROH.Api.Login.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
+# This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./ROH.Api.Login.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
+# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .

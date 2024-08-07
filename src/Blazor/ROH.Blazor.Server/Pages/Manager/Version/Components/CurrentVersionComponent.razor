@@ -81,7 +81,7 @@
         isLoadingCurrentVersion = true;
         var currentVersionResponse = await _versionService.GetCurrentVersion();
 
-        if(!currentVersionResponse.HttpStatus.IsSuccessStatusCode())
+        if (!currentVersionResponse.HttpStatus.IsSuccessStatusCode())
             await _sweetAlert.ShowResponse(currentVersionResponse);
         else if (currentVersionResponse.ObjectResponse != null )
             currentVersion = JsonConvert.DeserializeObject<GameVersionModel>(currentVersionResponse.ObjectResponse.ToString()!);     

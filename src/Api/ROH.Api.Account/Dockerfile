@@ -12,28 +12,28 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["src/Api/ROH.Api.VersionFiles/ROH.Api.VersionFiles.csproj", "src/Api/ROH.Api.VersionFiles/"]
+COPY ["src/Api/ROH.Api.Account/ROH.Api.Account.csproj", "src/Api/ROH.Api.Account/"]
 COPY ["src/Database/ROH.Context/ROH.Context.csproj", "src/Database/ROH.Context/"]
 COPY ["src/Common/ROH.Interfaces/ROH.Interfaces.csproj", "src/Common/ROH.Interfaces/"]
 COPY ["src/Database/ROH.Domain/ROH.Domain.csproj", "src/Database/ROH.Domain/"]
 COPY ["src/Common/ROH.StandardModels/ROH.StandardModels.csproj", "src/Common/ROH.StandardModels/"]
-COPY ["src/Common/ROH.Mapper/ROH.Mapping.csproj", "src/Common/ROH.Mapper/"]
 COPY ["src/Database/ROH.Repository/ROH.Repository.csproj", "src/Database/ROH.Repository/"]
 COPY ["src/Rules/ROH.Services/ROH.Services.csproj", "src/Rules/ROH.Services/"]
+COPY ["src/Common/ROH.Mapper/ROH.Mapping.csproj", "src/Common/ROH.Mapper/"]
 COPY ["src/Common/ROH.Utils/ROH.Utils.csproj", "src/Common/ROH.Utils/"]
 COPY ["src/Rules/ROH.Validations/ROH.Validations.csproj", "src/Rules/ROH.Validations/"]
-RUN dotnet restore "./src/Api/ROH.Api.VersionFiles/ROH.Api.VersionFiles.csproj"
+RUN dotnet restore "./src/Api/ROH.Api.Account/ROH.Api.Account.csproj"
 COPY . .
-WORKDIR "/src/src/Api/ROH.Api.VersionFiles"
-RUN dotnet build "./ROH.Api.VersionFiles.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/src/Api/ROH.Api.Account"
+RUN dotnet build "./ROH.Api.Account.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./ROH.Api.VersionFiles.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./ROH.Api.Account.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "ROH.Api.VersionFiles.dll"]
+ENTRYPOINT ["dotnet", "ROH.Api.Account.dll"]
