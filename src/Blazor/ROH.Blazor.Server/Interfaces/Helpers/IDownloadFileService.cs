@@ -4,5 +4,5 @@ namespace ROH.Blazor.Server.Interfaces.Helpers;
 
 public interface IDownloadFileService
 {
-    Task Download(FileModel fileModel);
+    Task Download(GameFileModel fileModel);
 }

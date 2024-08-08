@@ -1,13 +1,16 @@
-﻿using ROH.Domain.Logging;
+﻿using Microsoft.Extensions.Configuration;
+
+using ROH.Domain.Logging;
 using ROH.Interfaces.Repository.Log;
 using ROH.Interfaces.Services.ExceptionService;
 using ROH.StandardModels.Response;
 
 namespace ROH.Services.ExceptionService;
 
-public class ExceptionHandler(ILogRepository logRepository) : IExceptionHandler
+public class ExceptionHandler(ILogRepository logRepository, IConfiguration configuration) : IExceptionHandler
 {
     private readonly ILogRepository _logRepository = logRepository;
+    private readonly bool _isDebugMode = configuration.GetValue<bool>("IsDebugMode");
 
     public DefaultResponse HandleException(Exception exception)
     {
@@ -16,14 +19,15 @@ public class ExceptionHandler(ILogRepository logRepository) : IExceptionHandler
         // Log the exception (e.g., to a file or logging service)
         LogException(error);
 
-        Console.WriteLine(error);
-
         // Return a friendly message to the user unless are in DEBUG
-#if DEBUG
-        return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.BadRequest, message: error);
-#else
-        return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.BadRequest, message: "An error has occurred. Don't be afraid; an email with the error details has been sent to your developers.");
-#endif
+        if (_isDebugMode)
+        {
+            return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.BadRequest, message: error);
+        }
+        else
+        {
+            return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.BadRequest, message: "An error has occurred. Don't be afraid! An email with the error details has been sent to your developers.");
+        }
     }
 
     private void LogException(string exception) => _logRepository.SaveLog(new Log(0, Domain.Logging.Severity.Error, exception));
