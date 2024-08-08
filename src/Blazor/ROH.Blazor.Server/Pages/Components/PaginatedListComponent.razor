@@ -144,7 +144,7 @@
         {
             if (response.ObjectResponse is not null)
             {
-                FileModel fileModel = response.ResponseToModel<FileModel>();
+                GameFileModel fileModel = response.ResponseToModel<GameFileModel>();
                 await _downloadFile.Download(fileModel);
             }
             else

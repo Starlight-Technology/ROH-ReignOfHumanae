@@ -2,7 +2,7 @@
 using ROH.Interfaces.Services.ExceptionService;
 using ROH.Interfaces.Services.GameFile;
 using ROH.StandardModels.Response;
-using ROH.StandardModels.Version;
+using ROH.StandardModels.File;
 
 using System.Net;
 
@@ -48,10 +48,10 @@ public class GameFileService(IGameFileRepository gameFileRepository, IExceptionH
             {
                 byte[] fileContent = await File.ReadAllBytesAsync(filePath);
 
-                return new DefaultResponse(new GameVersionFileModel(
+                return new DefaultResponse(new GameFileModel(
                     name: gameFile.Name,
                     format: gameFile.Format,
-                    content: fileContent).ToFileModel(), HttpStatusCode.OK);
+                    content: fileContent), HttpStatusCode.OK);
             }
             else
             {
