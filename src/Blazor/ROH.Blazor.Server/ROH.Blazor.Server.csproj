@@ -12,6 +12,8 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MatBlazor" Version="2.10.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7" />
+    <PackageReference Include="Microsoft.OpenApi" Version="1.6.17" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
     <PackageReference Include="MimeMapping" Version="3.0.1" />
   </ItemGroup>
