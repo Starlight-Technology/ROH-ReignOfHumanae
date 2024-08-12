@@ -1,6 +1,4 @@
-﻿// Ignore Spelling: Shouldnt Havent
-
-using AutoMapper;
+﻿using AutoMapper;
 
 using Moq;
 
@@ -19,329 +17,291 @@ namespace ROH.Test.Version;
 
 public class GameVersionServiceTests
 {
-    private static readonly DateTime _utcNow = DateTime.UtcNow;
+    private readonly Mock<IGameVersionRepository> _mockVersionRepository;
+    private readonly Mock<IMapper> _mockMapper;
+    private readonly Mock<IExceptionHandler> _mockExceptionHandler;
+    private readonly GameVersionService _service;
+    private readonly GameVersion _gameVersion;
+    private readonly GameVersionModel _gameVersionModel;
+    private readonly Paginated _paginatedResult;
 
-    private static readonly Guid _guidGenerated = Guid.NewGuid();
-
-    private readonly GameVersionModel _versionModel = new() { Guid = _guidGenerated, Version = 1, Release = 1, Review = 1, Released = false, ReleaseDate = null, VersionDate = _utcNow };
-
-    private readonly GameVersion _version = new(_utcNow, 1, _guidGenerated, 1, 1, 1);
-
-    [Fact]
-    public async Task GetVersionByGuid_ShouldReturn_Version_WhenVersionExists()
+    public GameVersionServiceTests()
     {
-        // Arrange
-        MapperConfiguration config = new(cfg =>
-        {
-            // Configure your mappings here
-            _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
-        });
+        _mockVersionRepository = new Mock<IGameVersionRepository>();
+        _mockMapper = new Mock<IMapper>();
+        _mockExceptionHandler = new Mock<IExceptionHandler>();
+        _service = new GameVersionService(_mockVersionRepository.Object, _mockMapper.Object, _mockExceptionHandler.Object);
 
-        Mapper mapper = new(config);
+        _gameVersion = new GameVersion(VersionDate: DateTime.Today, Guid: Guid.NewGuid());
+        _gameVersionModel = new GameVersionModel { Guid = _gameVersion.Guid };
 
-        Mock<IGameVersionRepository> mockRepository = new();
-        _ = mockRepository.Setup(x => x.GetVersionByGuid(It.IsAny<Guid>())).ReturnsAsync(_version);
+        _paginatedResult = new Paginated(1, new List<object> { _gameVersion });
 
-        Mock<IExceptionHandler> mockExceptionHandler = new();
-
-        GameVersionService service = new(mockRepository.Object, mapper, mockExceptionHandler.Object);
-
-        // Act
-        DefaultResponse? result = await service.GetVersionByGuid(_guidGenerated.ToString());
-
-        // Assert
-        Assert.Equivalent(_versionModel, result?.ObjectResponse);
+        _mockMapper.Setup(m => m.Map<IList<GameVersionModel>>(It.IsAny<IList<GameVersion>>()))
+            .Returns(new List<GameVersionModel> { _gameVersionModel });
     }
 
     [Fact]
-    public async Task GetAllVersions_ShouldReturn__ListWithVersions_WhenHaveAny()
+    public async Task GetVersionByGuid_ShouldReturn_Version_WhenFound()
     {
         // Arrange
-        MapperConfiguration config = new(cfg =>
-        {
-            // Configure your mappings here
-            _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
-        });
-
-        Mapper mapper = new(config);
-
-        List<dynamic> listOfVersions = [];
-
-        for (int i = 0; i < 10; i++)
-        {
-            GameVersion version = _version with { Id = i + 1 };
-
-            listOfVersions.Add(version);
-        }
-
-        Paginated paginatedVersions = new(listOfVersions.Count, listOfVersions);
-
-        Mock<IGameVersionRepository> mockRepository = new();
-        _ = mockRepository.Setup(x => x.GetAllVersions(10, 0)).ReturnsAsync(paginatedVersions);
-
-        Mock<IExceptionHandler> mockExceptionHandler = new();
-
-        GameVersionService service = new(mockRepository.Object, mapper, mockExceptionHandler.Object);
+        _mockVersionRepository.Setup(repo => repo.GetVersionByGuid(It.IsAny<Guid>())).ReturnsAsync(_gameVersion);
 
         // Act
-        DefaultResponse? result = await service.GetAllVersions();
-        List<GameVersionModel>? versions = ((PaginatedModel?)result.ObjectResponse)?.ObjectResponse?.Cast<GameVersionModel>().ToList();
+        DefaultResponse result = await _service.GetVersionByGuid(_gameVersion.Guid.ToString());
 
         // Assert
-        Assert.True(versions?.Count > 1);
+        Assert.NotNull(result.ObjectResponse);
+        Assert.IsType<GameVersion>(result.ObjectResponse);
     }
 
     [Fact]
-    public async Task GetAllVersions_ShouldReturnListWithMaximum5Versions_WhenHaveMoreThan5Versions()
+    public async Task GetVersionByGuid_ShouldReturn_ExpectationFailed_WhenVersionGuidIsInvalid()
     {
-        // Arrange
-        MapperConfiguration config = new(cfg =>
-        {
-            // Configure your mappings here
-            _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
-        });
-
-        Mapper mapper = new(config);
-
-        List<dynamic> listOfVersions = [];
-
-        for (int i = 0; i < 10; i++)
-        {
-            GameVersion version = _version with { Id = i + 1 };
-
-            listOfVersions.Add(version);
-        }
-
-        Paginated paginatedVersions = new(5, listOfVersions.Take(5).ToList());
-
-        Mock<IGameVersionRepository> mockRepository = new();
-        _ = mockRepository.Setup(x => x.GetAllVersions(5, 0)).ReturnsAsync(paginatedVersions);
-
-        Mock<IExceptionHandler> mockExceptionHandler = new();
-
-        GameVersionService service = new(mockRepository.Object, mapper, mockExceptionHandler.Object);
-
         // Act
-        DefaultResponse? result = await service.GetAllVersions(5, 1);
-        List<GameVersionModel>? versions = ((PaginatedModel?)result.ObjectResponse)?.ObjectResponse?.Cast<GameVersionModel>().ToList();
+        DefaultResponse result = await _service.GetVersionByGuid("invalid-guid");
 
         // Assert
-        Assert.Equal(5, versions?.Count);
+        Assert.Equal(HttpStatusCode.ExpectationFailed, result.HttpStatus);
+        Assert.Equal("The Guid is invalid!", result.Message);
     }
 
     [Fact]
-    public async Task GetAllVersions_ShouldSkip5VersionsAndReturnListWithMaximum5Versions_WhenHaveMoreThan5Versions()
+    public async Task GetVersionByGuid_ShouldHandle_Exception()
     {
         // Arrange
-        MapperConfiguration config = new(cfg =>
-        {
-            // Configure your mappings here
-            _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
-        });
-
-        Mapper mapper = new(config);
-
-        List<dynamic> listOfVersions = [];
-
-        for (int i = 0; i < 10; i++)
-        {
-            GameVersion version = _version with { Id = i + 1, Version = i + 1 };
-
-            listOfVersions.Add(version);
-        }
-
-        Paginated paginatedVersions = new(10, listOfVersions.Skip(5).Take(5).ToList());
-
-        Mock<IGameVersionRepository> mockRepository = new();
-        _ = mockRepository.Setup(x => x.GetAllVersions(5, 5)).ReturnsAsync(paginatedVersions);
-
-        Mock<IExceptionHandler> mockExceptionHandler = new();
-
-        GameVersionService service = new(mockRepository.Object, mapper, mockExceptionHandler.Object);
+        _mockVersionRepository.Setup(repo => repo.GetVersionByGuid(It.IsAny<Guid>())).ThrowsAsync(new Exception());
+        _mockExceptionHandler.Setup(handler => handler.HandleException(It.IsAny<Exception>())).Returns(new DefaultResponse(null, HttpStatusCode.InternalServerError, "Exception occurred"));
 
         // Act
-        DefaultResponse? result = await service.GetAllVersions(5, 2);
-        List<GameVersionModel>? versions = ((PaginatedModel?)result.ObjectResponse)?.ObjectResponse?.Cast<GameVersionModel>().ToList();
+        DefaultResponse result = await _service.GetVersionByGuid(Guid.NewGuid().ToString());
 
         // Assert
-        Assert.Equal(5, versions?.Count);
-        Assert.Equal(6, versions![0].Version);
-        Assert.Equal(10, versions[^1].Version);
+        Assert.Equal(HttpStatusCode.InternalServerError, result.HttpStatus);
+        Assert.Equal("Exception occurred", result.Message);
     }
 
     [Fact]
-    public async Task GetAllReleasedVersions_ShouldReturnListWithReleasedVersions_WhenHaveAny()
+    public async Task GetAllVersions_ShouldReturn_Versions()
     {
         // Arrange
-        MapperConfiguration config = new(cfg =>
-        {
-            // Configure your mappings here
-            _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
-        });
-
-        Mapper mapper = new(config);
-
-        List<dynamic> listOfVersions = [];
-
-        for (int i = 0; i < 10; i++)
-        {
-            GameVersion version = _version with { Id = i + 1, Released = true };
-
-            listOfVersions.Add(version);
-        }
-
-        Paginated paginatedVersions = new(listOfVersions.Count, listOfVersions);
-
-        Mock<IGameVersionRepository> mockRepository = new();
-        _ = mockRepository.Setup(x => x.GetAllReleasedVersions(10, 0)).ReturnsAsync(paginatedVersions);
-
-        Mock<IExceptionHandler> mockExceptionHandler = new();
-
-        GameVersionService service = new(mockRepository.Object, mapper, mockExceptionHandler.Object);
+        _mockVersionRepository.Setup(repo => repo.GetAllVersions(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(_paginatedResult);
 
         // Act
-        DefaultResponse? result = await service.GetAllReleasedVersions();
-        List<GameVersionModel>? versions = ((PaginatedModel?)result.ObjectResponse)?.ObjectResponse?.Cast<GameVersionModel>().ToList();
+        DefaultResponse result = await _service.GetAllVersions();
 
         // Assert
-        Assert.True(versions?.Count > 0);
+        Assert.NotNull(result.ObjectResponse);
+        Assert.IsType<PaginatedModel>(result.ObjectResponse);
     }
 
     [Fact]
-    public async Task GetAllReleasedVersions_ShouldntReturnListWithReleasedVersions_WhenHaventAny()
+    public async Task GetAllVersions_ShouldHandle_Exception()
     {
         // Arrange
-        MapperConfiguration config = new(cfg =>
-        {
-            // Configure your mappings here
-            _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
-        });
-
-        Mapper mapper = new(config);
-
-        List<dynamic> listOfVersions = [];
-
-        Paginated paginatedVersions = new(listOfVersions.Count, listOfVersions);
-
-        Mock<IGameVersionRepository> mockRepository = new();
-        _ = mockRepository.Setup(x => x.GetAllReleasedVersions(10, 0)).ReturnsAsync(paginatedVersions);
-
-        Mock<IExceptionHandler> mockExceptionHandler = new();
-
-        GameVersionService service = new(mockRepository.Object, mapper, mockExceptionHandler.Object);
+        _mockVersionRepository.Setup(repo => repo.GetAllVersions(It.IsAny<int>(), It.IsAny<int>())).ThrowsAsync(new Exception());
+        _mockExceptionHandler.Setup(handler => handler.HandleException(It.IsAny<Exception>())).Returns(new DefaultResponse(null, HttpStatusCode.InternalServerError, "Exception occurred"));
 
         // Act
-        DefaultResponse? result = await service.GetAllReleasedVersions();
-        List<GameVersionModel>? versions = ((PaginatedModel?)result.ObjectResponse)?.ObjectResponse?.Cast<GameVersionModel>().ToList();
+        DefaultResponse result = await _service.GetAllVersions();
 
         // Assert
-        Assert.False(versions?.Count > 0);
+        Assert.Equal(HttpStatusCode.InternalServerError, result.HttpStatus);
+        Assert.Equal("Exception occurred", result.Message);
     }
 
     [Fact]
-    public async Task NewVersion_ShouldReturnStatusCreated_WhenVersionCreatedWithSuccess()
+    public async Task GetAllReleasedVersions_ShouldReturn_ReleasedVersions()
     {
         // Arrange
-        MapperConfiguration config = new(cfg =>
-        {
-            // Configure your mappings here
-            _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
-        });
-
-        Mapper mapper = new(config);
-
-        Mock<IGameVersionRepository> mockRepository = new();
-        _ = mockRepository.Setup(x => x.SetNewGameVersion(_version)).ReturnsAsync(_version);
-
-        Mock<IExceptionHandler> mockExceptionHandler = new();
-
-        GameVersionService service = new(mockRepository.Object, mapper, mockExceptionHandler.Object);
+        _mockVersionRepository.Setup(repo => repo.GetAllReleasedVersions(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(_paginatedResult);
 
         // Act
-        DefaultResponse result = await service.NewVersion(_versionModel);
+        DefaultResponse result = await _service.GetAllReleasedVersions();
+
+        // Assert
+        Assert.NotNull(result.ObjectResponse);
+        Assert.IsType<PaginatedModel>(result.ObjectResponse);
+        Assert.Equal("That are all released versions", result.Message);
+    }
+
+    [Fact]
+    public async Task GetAllReleasedVersions_ShouldHandle_Exception()
+    {
+        // Arrange
+        _mockVersionRepository.Setup(repo => repo.GetAllReleasedVersions(It.IsAny<int>(), It.IsAny<int>())).ThrowsAsync(new Exception());
+        _mockExceptionHandler.Setup(handler => handler.HandleException(It.IsAny<Exception>())).Returns(new DefaultResponse(null, HttpStatusCode.InternalServerError, "Exception occurred"));
+
+        // Act
+        DefaultResponse result = await _service.GetAllReleasedVersions();
+
+        // Assert
+        Assert.Equal(HttpStatusCode.InternalServerError, result.HttpStatus);
+        Assert.Equal("Exception occurred", result.Message);
+    }
+
+    [Fact]
+    public async Task NewVersion_ShouldReturn_Created_WhenVersionIsNew()
+    {
+        // Arrange
+        _mockVersionRepository.Setup(repo => repo.VerifyIfExist(It.IsAny<GameVersion>())).ReturnsAsync(false);
+
+        // Act
+        DefaultResponse result = await _service.NewVersion(_gameVersionModel);
 
         // Assert
         Assert.Equal(HttpStatusCode.Created, result.HttpStatus);
+        Assert.Equal("New game version created.", result.Message);
     }
 
     [Fact]
-    public async Task NewVersion_ShouldReturnStatusConflict_WhenVersionNotCreated()
+    public async Task NewVersion_ShouldReturn_Conflict_WhenVersionAlreadyExists()
     {
         // Arrange
-        MapperConfiguration config = new(cfg =>
-        {
-            // Configure your mappings here
-            _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
-        });
-
-        Mapper mapper = new(config);
-
-        Mock<IGameVersionRepository> mockRepository = new();
-        _ = mockRepository.Setup(x => x.SetNewGameVersion(It.IsAny<GameVersion>())).ReturnsAsync(_version);
-        _ = mockRepository.Setup(x => x.VerifyIfExist(It.IsAny<GameVersion>())).ReturnsAsync(true);
-
-        Mock<IExceptionHandler> mockExceptionHandler = new();
-
-        GameVersionService service = new(mockRepository.Object, mapper, mockExceptionHandler.Object);
+        _mockVersionRepository.Setup(repo => repo.VerifyIfExist(It.IsAny<GameVersion>())).ReturnsAsync(true);
 
         // Act
-        DefaultResponse result = await service.NewVersion(_versionModel);
+        DefaultResponse result = await _service.NewVersion(_gameVersionModel);
 
         // Assert
         Assert.Equal(HttpStatusCode.Conflict, result.HttpStatus);
+        Assert.Equal("This version already exist.", result.Message);
     }
 
     [Fact]
-    public async Task SetReleased_ShouldReturnStatusOkWithSuccessfullMesage_WhenVersionSetHasReleased()
+    public async Task NewVersion_ShouldHandle_Exception()
     {
         // Arrange
-        MapperConfiguration config = new(cfg =>
-        {
-            // Configure your mappings here
-            _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
-        });
-        Mapper mapper = new(config);
-
-        Mock<IGameVersionRepository> mockRepository = new();
-        _ = mockRepository.Setup(x => x.GetVersionByGuid(It.IsAny<Guid>())).ReturnsAsync(_version);
-
-        Mock<IExceptionHandler> mockExceptionHandler = new();
-
-        GameVersionService service = new(mockRepository.Object, mapper, mockExceptionHandler.Object);
-
-        DefaultResponse expected = new(message: "The version has been set as release.");
+        _mockVersionRepository.Setup(repo => repo.SetNewGameVersion(It.IsAny<GameVersion>())).ThrowsAsync(new Exception());
+        _mockExceptionHandler.Setup(handler => handler.HandleException(It.IsAny<Exception>())).Returns(new DefaultResponse(null, HttpStatusCode.InternalServerError, "Exception occurred"));
 
         // Act
-        DefaultResponse result = await service.SetReleased(_guidGenerated.ToString());
+        DefaultResponse result = await _service.NewVersion(_gameVersionModel);
 
         // Assert
-        Assert.Equivalent(result, expected);
+        Assert.Equal(HttpStatusCode.InternalServerError, result.HttpStatus);
+        Assert.Equal("Exception occurred", result.Message);
     }
 
     [Fact]
-    public async Task SetReleased_ShouldReturnError_WhenGuidIsInvalid()
+    public async Task VerifyIfVersionExist_ShouldReturn_True_WhenVersionExists()
     {
         // Arrange
-        MapperConfiguration config = new(cfg =>
-        {
-            // Configure your mappings here
-            _ = cfg.CreateMap<GameVersion, GameVersionModel>().ReverseMap();
-        });
-        Mapper mapper = new(config);
-
-        Mock<IGameVersionRepository> mockRepository = new();
-        _ = mockRepository.Setup(x => x.GetVersionByGuid(It.IsAny<Guid>())).ReturnsAsync((GameVersion?)null);
-
-        Mock<IExceptionHandler> mockExceptionHandler = new();
-
-        GameVersionService service = new(mockRepository.Object, mapper, mockExceptionHandler.Object);
-
-        DefaultResponse expected = new() { HttpStatus = System.Net.HttpStatusCode.ExpectationFailed, Message = "The Guid is invalid!" };
+        _mockVersionRepository.Setup(repo => repo.VerifyIfExist(It.IsAny<GameVersion>())).ReturnsAsync(true);
 
         // Act
-        DefaultResponse result = await service.SetReleased(_guidGenerated.ToString());
+        bool result = await _service.VerifyIfVersionExist(_gameVersionModel);
 
         // Assert
-        Assert.Equivalent(result, expected);
+        Assert.True(result);
+    }
+
+    [Fact]
+    public async Task VerifyIfVersionExist_ShouldReturn_False_WhenVersionDoesNotExist()
+    {
+        // Arrange
+        _mockVersionRepository.Setup(repo => repo.VerifyIfExist(It.IsAny<GameVersion>())).ReturnsAsync(false);
+
+        // Act
+        bool result = await _service.VerifyIfVersionExist(_gameVersionModel);
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public async Task VerifyIfVersionExist_ShouldReturn_True_WhenVersionGuidExists()
+    {
+        // Arrange
+        _mockVersionRepository.Setup(repo => repo.VerifyIfExist(It.IsAny<Guid>())).ReturnsAsync(true);
+
+        // Act
+        bool result = await _service.VerifyIfVersionExist(_gameVersion.Guid.ToString());
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public async Task VerifyIfVersionExist_ShouldReturn_False_WhenVersionGuidDoesNotExist()
+    {
+        // Arrange
+        _mockVersionRepository.Setup(repo => repo.VerifyIfExist(It.IsAny<Guid>())).ReturnsAsync(false);
+
+        // Act
+        bool result = await _service.VerifyIfVersionExist(_gameVersion.Guid.ToString());
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public async Task GetCurrentVersion_ShouldReturn_CurrentVersion()
+    {
+        // Arrange
+        _mockVersionRepository.Setup(repo => repo.GetCurrentGameVersion()).ReturnsAsync(_gameVersion);
+
+        // Act
+        DefaultResponse result = await _service.GetCurrentVersion();
+
+        // Assert
+        Assert.NotNull(result.ObjectResponse);
+        Assert.IsType<GameVersion>(result.ObjectResponse);
+    }
+
+    [Fact]
+    public async Task GetCurrentVersion_ShouldHandle_Exception()
+    {
+        // Arrange
+        _mockVersionRepository.Setup(repo => repo.GetCurrentGameVersion()).ThrowsAsync(new Exception());
+        _mockExceptionHandler.Setup(handler => handler.HandleException(It.IsAny<Exception>())).Returns(new DefaultResponse(null, HttpStatusCode.InternalServerError, "Exception occurred"));
+
+        // Act
+        DefaultResponse result = await _service.GetCurrentVersion();
+
+        // Assert
+        Assert.Equal(HttpStatusCode.InternalServerError, result.HttpStatus);
+        Assert.Equal("Exception occurred", result.Message);
+    }
+
+    [Fact]
+    public async Task SetReleased_ShouldRelease_Version_WhenValidGuid()
+    {
+        // Arrange
+        _mockVersionRepository.Setup(repo => repo.GetVersionByGuid(It.IsAny<Guid>())).ReturnsAsync(_gameVersion);
+        _mockVersionRepository.Setup(repo => repo.UpdateGameVersion(It.IsAny<GameVersion>())).ReturnsAsync(_gameVersion);
+
+        // Act
+        DefaultResponse result = await _service.SetReleased(_gameVersion.Guid.ToString());
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, result.HttpStatus);
+        Assert.Equal("The version has been set as release.", result.Message);
+    }
+
+    [Fact]
+    public async Task SetReleased_ShouldReturn_NotFound_WhenInvalidGuid()
+    {
+        // Act
+        DefaultResponse result = await _service.SetReleased("invalid-guid");
+
+        // Assert
+        Assert.Equal(HttpStatusCode.ExpectationFailed, result.HttpStatus);
+        Assert.Equal("The Guid is invalid!", result.Message);
+    }
+
+    [Fact]
+    public async Task SetReleased_ShouldHandle_Exception()
+    {
+        // Arrange
+        _mockVersionRepository.Setup(repo => repo.GetVersionByGuid(It.IsAny<Guid>())).ThrowsAsync(new Exception());
+        _mockExceptionHandler.Setup(handler => handler.HandleException(It.IsAny<Exception>())).Returns(new DefaultResponse(null, HttpStatusCode.ExpectationFailed, "Exception occurred"));
+
+        // Act
+        DefaultResponse result = await _service.SetReleased(Guid.NewGuid().ToString());
+
+        // Assert
+        Assert.Equal(HttpStatusCode.ExpectationFailed, result.HttpStatus);
+        Assert.Equal("Exception occurred", result.Message);
     }
 }

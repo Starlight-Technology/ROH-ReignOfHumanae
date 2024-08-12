@@ -136,7 +136,7 @@ public class GameVersionService(IGameVersionRepository versionRepository, IMappe
         {
             DefaultResponse versionResponse = await GetVersionByGuid(versionGuid);
 
-            return versionResponse.HttpStatus.IsSuccessStatusCode() ? await ReleaseVersion(versionResponse) : await ReturnGuidInvalid();
+            return versionResponse.HttpStatus.IsSuccessStatusCode() ? await ReleaseVersion(versionResponse) : versionResponse;
         }
         catch (Exception ex)
         {
