@@ -17,7 +17,7 @@
     <MatDrawerContainer>
         <MatAppBarContent>
             <MatDrawer @bind-Opened="@_drawerOpen" class="fixed-drawer" style="position: fixed;">
-                <MatNavMenu >
+                <MatNavMenu>
                     <MatNavItem Href="/">Home</MatNavItem>
                     <MatNavItem Href="/lore">Lore</MatNavItem>
                     <MatNavItem Href="/world-bosses">World Bosses</MatNavItem>
@@ -26,12 +26,14 @@
                     <MatNavItem Href="/magic-skills">Magic & Skills</MatNavItem>
                 </MatNavMenu>
             </MatDrawer>
-            <MatDrawerContent class="scrollable-content"> 
+            <MatDrawerContent class="scrollable-content">
                 <div class="container" style="margin-top: 20px;">
-                    @Body
-                <MatFooter>
-                    <span>&copy; 2024 Reign of Humanae. All rights reserved.</span>
-                </MatFooter>
+                    <CascadingAuthenticationState>
+                        @Body
+                    </CascadingAuthenticationState>
+                    <MatFooter>
+                        <span>&copy; 2024 Reign of Humanae. All rights reserved.</span>
+                    </MatFooter>
                 </div>
             </MatDrawerContent>
         </MatAppBarContent>
