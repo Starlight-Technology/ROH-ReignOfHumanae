@@ -1,5 +1,6 @@
-using ROH.Blazor.Server.Helpers;
 using MatBlazor;
+
+using ROH.Blazor.Server.Helpers;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 

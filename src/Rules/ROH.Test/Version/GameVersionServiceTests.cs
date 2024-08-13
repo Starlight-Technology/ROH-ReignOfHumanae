@@ -38,7 +38,7 @@ public class GameVersionServiceTests
         _paginatedResult = new Paginated(1, new List<object> { _gameVersion });
 
         _mockMapper.Setup(m => m.Map<IList<GameVersionModel>>(It.IsAny<IList<GameVersion>>()))
-            .Returns(new List<GameVersionModel> { _gameVersionModel });
+            .Returns([_gameVersionModel]);
     }
 
     [Fact]
