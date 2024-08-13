@@ -185,7 +185,7 @@ public class GameVersionFileServiceTests
     public async Task NewFile_ValidationFails_ReturnsBadRequest()
     {
         // Arrange
-        var fileModel = new GameVersionFileModel { Content = new byte[] { 1, 2, 3 } };
+        var fileModel = new GameVersionFileModel { Content = [1, 2, 3] };
         var validationResult = new ValidationResult(new List<ValidationFailure> { new("Name", "Name is required.") });
 
         _mockValidator.Setup(validator => validator.ValidateAsync(fileModel, default))
@@ -214,7 +214,7 @@ public class GameVersionFileServiceTests
         _mockValidator.Setup(validator => validator.ValidateAsync(fileModel, default))
             .ReturnsAsync(new ValidationResult());
 
-        _mockGameVersionService.Setup(service => service.VerifyIfVersionExist(fileModel.GameVersion))
+        _mockGameVersionService.Setup(service => service.VerifyIfVersionExist(fileModel.GameVersion!))
             .ReturnsAsync(false);
 
         // Act

@@ -56,35 +56,35 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapPost("CreateNewUser", async (IUserService _userService, UserModel model) =>
-    await _userService.NewUser(model)
+    await _userService.NewUser(model).ConfigureAwait(false)
 ).WithName("CreateNewUser")
 .WithOpenApi();
 
 app.MapGet("FindUserByEmail", async (IUserService _userService, string email) =>
-    await _userService.FindUserByEmail(email)
+    await _userService.FindUserByEmail(email).ConfigureAwait(false)
 ).WithName("FindUserByEmail")
 .WithOpenApi();
 
 app.MapGet("FindUserByUserName", async (IUserService _userService, string userName) =>
-    await _userService.FindUserByUserName(userName)
+    await _userService.FindUserByUserName(userName).ConfigureAwait(false)
 ).WithName("FindUserByUserName")
 .WithOpenApi();
 
 app.MapGet("GetUserByGuid", async (IUserService _userService, Guid guid) =>
-    await _userService.GetUserByGuid(guid)
+    await _userService.GetUserByGuid(guid).ConfigureAwait(false)
 ).WithName("GetUserByGuid")
 .WithOpenApi();
 
 app.MapGet("GetAccountByUserGuid", async (IAccountService _accountService, Guid guid) =>
-    await _accountService.GetAccountByUserGuid(guid)
+    await _accountService.GetAccountByUserGuid(guid).ConfigureAwait(false)
 ).WithName("GetAccountByUserGuid")
 .WithOpenApi();
 
 app.MapPut("UpdateAccount", async (IAccountService _accountService, AccountModel model) =>
-    await _accountService.UpdateAccount(model)
+    await _accountService.UpdateAccount(model).ConfigureAwait(false)
 ).WithName("UpdateAccount")
 .WithOpenApi();
 
 app.UseHttpsRedirection();
 
-await app.RunAsync();
+await app.RunAsync().ConfigureAwait(false);

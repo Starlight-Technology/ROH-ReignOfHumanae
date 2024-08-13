@@ -105,5 +105,5 @@ public class SqlContext : DbContext, ISqlContext
         base.OnModelCreating(modelBuilder);
     }
 
-    public async Task<int> SaveChangesAsync() => await base.SaveChangesAsync();
+    public async Task<int> SaveChangesAsync() => await base.SaveChangesAsync().ConfigureAwait(false);
 }

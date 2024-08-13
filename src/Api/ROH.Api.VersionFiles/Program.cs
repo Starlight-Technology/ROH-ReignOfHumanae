@@ -71,22 +71,17 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapPost("UploadFile", async (IGameVersionFileService _gameVersionFileService, GameVersionFileModel File) =>
-{
-    return await _gameVersionFileService.NewFile(File);
-}).WithName("UploadFile")
-  .WithOpenApi();
+    await _gameVersionFileService.NewFile(File).ConfigureAwait(false)
+).WithName("UploadFile")
+ .WithOpenApi();
 
-app.MapGet("GetAllVersionFiles", async (IGameVersionFileService _gameVersionFileService, string VersionGuid) =>
-{
-    return await Task.FromResult(_gameVersionFileService.GetFiles(VersionGuid).Result.MapObjectResponse<ICollection<GameVersionFileModel>>());
-}
+app.MapGet("GetAllVersionFiles", async (IGameVersionFileService _gameVersionFileService, string VersionGuid) => 
+await _gameVersionFileService.GetFiles(VersionGuid).ConfigureAwait(false)
 ).WithName("GetAllVersionFiles")
 .WithOpenApi();
 
 app.MapGet("DownloadFile", async (IGameVersionFileService _gameVersionFileService, string FileGuid) =>
-{
-    return await _gameVersionFileService.DownloadFile(new Guid(FileGuid));
-}
+    await _gameVersionFileService.DownloadFile(new Guid(FileGuid)).ConfigureAwait(false)
 ).WithName("DownloadFile")
 .WithOpenApi();
-await app.RunAsync();
+await app.RunAsync().ConfigureAwait(false);

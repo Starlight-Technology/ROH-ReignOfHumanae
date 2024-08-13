@@ -17,6 +17,7 @@ public class GameFileServiceTest
     private readonly GameFileService _service;
 
     private readonly Guid _testGuid = Guid.NewGuid();
+
     private readonly Domain.GameFiles.GameFile _testFile = new(
         Name: "testFile.txt",
         Format: "txt",

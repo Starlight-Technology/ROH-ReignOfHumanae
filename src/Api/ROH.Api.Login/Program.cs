@@ -59,10 +59,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapPost("Login", async (ILoginService loginService, LoginModel model) =>
-    await loginService.Login(model)
+    await loginService.Login(model).ConfigureAwait(false)
 ).WithName("Login")
 .WithOpenApi();
 
 app.UseHttpsRedirection();
 
-await app.RunAsync();
+await app.RunAsync().ConfigureAwait(false);
