@@ -12,6 +12,7 @@ using ROH.Interfaces.Repository.Version;
 using ROH.Interfaces.Services.ExceptionService;
 using ROH.Interfaces.Services.GameFile;
 using ROH.Interfaces.Services.Version;
+using ROH.Mapping.GameFile;
 using ROH.Mapping.Version;
 using ROH.Repository.GameFile;
 using ROH.Repository.Log;
@@ -51,6 +52,7 @@ MapperConfiguration mappingConfig = new(mc =>
 {
     mc.AddProfile(new GameVersionFileMapping());
     mc.AddProfile(new GameVersionMapping());
+    mc.AddProfile(new GameFileMapping());
 });
 
 IMapper mapper = mappingConfig.CreateMapper();

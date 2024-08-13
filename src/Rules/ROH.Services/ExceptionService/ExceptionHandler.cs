@@ -20,14 +20,9 @@ public class ExceptionHandler(ILogRepository logRepository, IConfiguration confi
         LogException(error);
 
         // Return a friendly message to the user unless are in DEBUG
-        if (_isDebugMode)
-        {
-            return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.BadRequest, message: error);
-        }
-        else
-        {
-            return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.BadRequest, message: "An error has occurred. Don't be afraid! An email with the error details has been sent to your developers.");
-        }
+        return _isDebugMode
+            ? new DefaultResponse(httpStatus: System.Net.HttpStatusCode.BadRequest, message: error)
+            : new DefaultResponse(httpStatus: System.Net.HttpStatusCode.BadRequest, message: "An error has occurred. Don't be afraid! An email with the error details has been sent to your developers.");
     }
 
     private void LogException(string exception) => _logRepository.SaveLog(new Log(0, Domain.Logging.Severity.Error, exception));

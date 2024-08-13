@@ -1,4 +1,6 @@
-﻿using Moq;
+﻿using FluentValidation;
+
+using Moq;
 
 using ROH.Domain.Accounts;
 using ROH.Interfaces.Authentication;
@@ -141,5 +143,40 @@ public class LoginServiceTest
 
         // Assert
         Assert.Equivalent(expected, result);
+    }
+
+    [Fact]
+    public async Task Login_ShouldHandle_Exception()
+    {
+        // Arrange
+        var mockExceptionHandler = new Mock<IExceptionHandler>();
+        mockExceptionHandler.Setup(x => x.HandleException(It.IsAny<Exception>()))
+            .Returns(new DefaultResponse(httpStatus: HttpStatusCode.InternalServerError, message: "Internal Server Error"));
+
+        var mockLoginValidator = new Mock<IValidator<LoginModel>>();
+        mockLoginValidator.Setup(x => x.ValidateAsync(It.IsAny<LoginModel>(), default))
+            .ThrowsAsync(new Exception("Validation error"));
+
+        Mock<IUserService> mockUserService = new();
+
+        Mock<IAuthService> mockAuthService = new();
+
+        var loginService = new LoginService(
+            mockExceptionHandler.Object,
+            mockLoginValidator.Object,
+            mockUserService.Object,
+            mockAuthService.Object
+        );
+
+        var loginModel = new LoginModel { Login = "test", Password = "test" };
+
+        var expected = new DefaultResponse(httpStatus: HttpStatusCode.InternalServerError, message: "Internal Server Error");
+
+        // Act
+        var result = await loginService.Login(loginModel);
+
+        // Assert
+        Assert.Equivalent(expected, result);
+        mockExceptionHandler.Verify(x => x.HandleException(It.IsAny<Exception>()), Times.Once);
     }
 }

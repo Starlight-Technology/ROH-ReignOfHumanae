@@ -5,7 +5,6 @@ using FluentValidation.Results;
 
 using Moq;
 
-using ROH.Domain.GameFiles;
 using ROH.Domain.Version;
 using ROH.Interfaces.Repository.Version;
 using ROH.Interfaces.Services.ExceptionService;
@@ -16,8 +15,6 @@ using ROH.StandardModels.Response;
 using ROH.StandardModels.Version;
 
 using System.Net;
-
-using Xunit;
 
 namespace ROH.Test.Version;
 
@@ -135,7 +132,7 @@ public class GameVersionFileServiceTests
     {
         // Arrange
         var versionGuid = Guid.NewGuid().ToString();
-        var files = new List<GameVersionFile> { new GameVersionFile() };
+        var files = new List<GameVersionFile> { new() };
 
         _mockGameVersionService.Setup(service => service.VerifyIfVersionExist(versionGuid))
             .ReturnsAsync(true);
@@ -189,7 +186,7 @@ public class GameVersionFileServiceTests
     {
         // Arrange
         var fileModel = new GameVersionFileModel { Content = new byte[] { 1, 2, 3 } };
-        var validationResult = new ValidationResult(new List<ValidationFailure> { new ValidationFailure("Name", "Name is required.") });
+        var validationResult = new ValidationResult(new List<ValidationFailure> { new("Name", "Name is required.") });
 
         _mockValidator.Setup(validator => validator.ValidateAsync(fileModel, default))
             .ReturnsAsync(validationResult);

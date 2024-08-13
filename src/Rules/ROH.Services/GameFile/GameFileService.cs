@@ -1,8 +1,8 @@
 ﻿using ROH.Interfaces.Repository.GameFile;
 using ROH.Interfaces.Services.ExceptionService;
 using ROH.Interfaces.Services.GameFile;
-using ROH.StandardModels.Response;
 using ROH.StandardModels.File;
+using ROH.StandardModels.Response;
 
 using System.Net;
 
@@ -44,6 +44,9 @@ public class GameFileService(IGameFileRepository gameFileRepository, IExceptionH
         {
             string filePath = Path.Combine(gameFile.Path, gameFile.Name);
 
+            if (string.IsNullOrWhiteSpace(filePath))
+                throw new InvalidOperationException("Cant find the file patch!");
+
             if (File.Exists(filePath))
             {
                 byte[] fileContent = await File.ReadAllBytesAsync(filePath);
@@ -55,7 +58,7 @@ public class GameFileService(IGameFileRepository gameFileRepository, IExceptionH
             }
             else
             {
-                return new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File Not Found.");
+                return new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File not found.");
             }
         }
         catch (Exception ex)
