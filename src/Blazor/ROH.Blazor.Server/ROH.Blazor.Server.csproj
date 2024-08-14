@@ -6,6 +6,7 @@
     <UserSecretsId>090d3c57-7b11-445a-94d8-d1729ece81f5</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <Configurations>Debug;Release;Test</Configurations>
+    <DockerfileContext>..\..\..</DockerfileContext>
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="Pages\CardComponent.razor" />
