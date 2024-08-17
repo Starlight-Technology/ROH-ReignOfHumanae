@@ -106,11 +106,13 @@ namespace ROH.Utils.ApiConfiguration
         private readonly DefaultResponse? _errorResponse = new DefaultResponse(httpStatus: System.Net.HttpStatusCode.BadRequest, message: ERROR_MESSAGE);
         private readonly DefaultResponse? _unauthorizedResponse = new DefaultResponse(httpStatus: System.Net.HttpStatusCode.Unauthorized, message: UNAUTHORIZED_MESSAGE);
 
-        public async Task<DefaultResponse?> Get<T>(Services service, T parametersObject)
+        public async Task<DefaultResponse?> Get<T>(Services service, T parametersObject, string token = "")
         {
             try
             {
                 using HttpClient client = new HttpClient();
+
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
                 string param = string.Empty;
 
@@ -139,9 +141,11 @@ namespace ROH.Utils.ApiConfiguration
             }
         }
 
-        public async Task<DefaultResponse?> Post(Services service, object objectToSend)
+        public async Task<DefaultResponse?> Post(Services service, object objectToSend, string token = "")
         {
             using HttpClient client = new HttpClient();
+
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
             string jsonContent = JsonConvert.SerializeObject(objectToSend);
             StringContent httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
@@ -161,9 +165,11 @@ namespace ROH.Utils.ApiConfiguration
             return _errorResponse;
         }
 
-        public async Task<DefaultResponse?> Update(Services service, object objectToSend)
+        public async Task<DefaultResponse?> Update(Services service, object objectToSend, string token ="")
         {
             using HttpClient client = new HttpClient();
+
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
             string jsonContent = JsonConvert.SerializeObject(objectToSend);
 
@@ -184,9 +190,11 @@ namespace ROH.Utils.ApiConfiguration
             return _errorResponse;
         }
 
-        public async Task<DefaultResponse?> Delete<T>(Services service, T parametersObject)
+        public async Task<DefaultResponse?> Delete<T>(Services service, T parametersObject, string token = "")
         {
             using HttpClient client = new HttpClient();
+
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
             string param = string.Empty;
 

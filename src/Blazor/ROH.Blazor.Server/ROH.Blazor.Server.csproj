@@ -12,6 +12,7 @@
     <Content Remove="Pages\CardComponent.razor" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
     <PackageReference Include="MatBlazor" Version="2.10.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7" />
     <PackageReference Include="Microsoft.OpenApi" Version="1.6.17" />

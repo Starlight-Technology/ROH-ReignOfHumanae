@@ -32,6 +32,6 @@ public class AccountController : ControllerBase
     public async Task<IActionResult> UpdateAccount(AccountModel model) => Ok(await _api.Update(Utils.ApiConfiguration.Api.Services.UpdateAccount, model));
 
     [AllowAnonymous]
-    [HttpPut("Login")]
+    [HttpPost("Login")]
     public async Task<IActionResult> Login(LoginModel model) => Ok(await _api.Post(Utils.ApiConfiguration.Api.Services.Login, model));
 }

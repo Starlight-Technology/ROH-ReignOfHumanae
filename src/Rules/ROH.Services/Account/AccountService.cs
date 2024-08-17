@@ -41,7 +41,7 @@ public class AccountService(IExceptionHandler handler, IAccountRepository reposi
 
             await repository.UpdateAccount(account);
 
-            return new DefaultResponse();
+            return new DefaultResponse(message: "Account has been updated.");
         }
         catch (Exception ex)
         {

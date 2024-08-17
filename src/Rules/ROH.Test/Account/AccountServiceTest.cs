@@ -163,7 +163,7 @@ public class AccountServiceTest
 
         AccountService service = new(mockExceptionHandler.Object, mockRepository.Object, mapper);
 
-        DefaultResponse expected = new();
+        DefaultResponse expected = new(message:"Account has been updated.");
 
         // Act
         DefaultResponse result = await service.UpdateAccount(accountModel);

@@ -1,7 +1,8 @@
 ﻿@page "/CreateAccount"
 @using ROH.Blazor.Server.Interfaces.Api
 @using ROH.Blazor.Server.Interfaces.Helpers
-
+@using ROH.Utils.Helpers;
+@inject NavigationManager Navigation;
 @inject IAccountService _accountService;
 @inject ISweetAlertService _sweetAlert;
 
@@ -51,6 +52,9 @@
             );
 
             await _sweetAlert.ShowResponse(response?? new StandardModels.Response.DefaultResponse(httpStatus:System.Net.HttpStatusCode.BadGateway));
+
+            if (response.HttpStatus.IsSuccessStatusCode())
+                Navigation.NavigateTo("/login");
         }
         else
         {

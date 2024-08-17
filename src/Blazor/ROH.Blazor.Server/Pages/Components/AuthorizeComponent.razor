@@ -1,18 +1,34 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Authorization
+@using ROH.Blazor.Server.Interfaces.Helpers
+@using System.ComponentModel.DataAnnotations
+@inject ICustomAuthenticationStateProvider CustomAuthStateProvider
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 @namespace Pages.Components
 
 @code {
+    [Required]
     [Parameter] public RenderFragment ChildContent { get; set; }
+
+    [Required]
     [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; }
 
     private bool IsAuthorized { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await AuthenticationStateTask;
-        IsAuthorized = authState?.User?.Identity?.IsAuthenticated ?? false;
+        IsAuthorized = !string.IsNullOrWhiteSpace(await CustomAuthStateProvider.GetToken());
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            CustomAuthStateProvider.Initialize();
+            IsAuthorized = !string.IsNullOrWhiteSpace(await CustomAuthStateProvider.GetToken());
+            StateHasChanged();
+        }
     }
 }
 
@@ -22,10 +38,10 @@
 }
 else
 {
-<div class="alert alert-danger" role="alert">
-    <h4 class="alert-heading">Access Denied!</h4>
-    <p>You are not authorized to view this page.</p>
-    <hr>
-    <p class="mb-0">If you believe this is an error, please contact support.</p>
-</div>
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Access Denied!</h4>
+        <p>You are not authorized to view this page.</p>
+        <hr>
+        <p class="mb-0">If you believe this is an error, please contact support.</p>
+    </div>
 }

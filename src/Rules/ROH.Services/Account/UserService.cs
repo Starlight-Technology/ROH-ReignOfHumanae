@@ -36,7 +36,7 @@ public class UserService(IExceptionHandler handler, IValidator<UserModel> userVa
 
             _ = await repository.CreateNewUser(user);
 
-            return new DefaultResponse(httpStatus: HttpStatusCode.OK);
+            return new DefaultResponse(httpStatus: HttpStatusCode.OK, message: "Account has been created!");
         }
         catch (Exception e)
         {

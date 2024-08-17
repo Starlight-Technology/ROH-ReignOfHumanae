@@ -1,3 +1,5 @@
+using Blazored.LocalStorage;
+
 using MatBlazor;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -22,7 +24,6 @@ builder.Services.AddServerSideBlazor().AddCircuitOptions(options =>
 #endif
 });
 
-servicesManager.ConfigureServices(builder.Services);
 
 builder.WebHost.ConfigureKestrel(options =>
 {
@@ -53,7 +54,11 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+builder.Services.AddHttpContextAccessor();
+
+servicesManager.ConfigureServices(builder.Services);
 
 WebApplication app = builder.Build();
 

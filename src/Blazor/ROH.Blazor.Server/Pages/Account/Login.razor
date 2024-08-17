@@ -1,5 +1,13 @@
 ﻿@page "/Login"
+@using ROH.Blazor.Server.Interfaces.Api
+@using ROH.Blazor.Server.Interfaces.Helpers
+@using ROH.Blazor.Server.Helpers
+@using ROH.Utils.Helpers;
+@using ROH.StandardModels.Account
 @inject NavigationManager Navigation;
+@inject IAccountService _accountService;
+@inject ISweetAlertService _sweetAlert;
+@inject ICustomAuthenticationStateProvider _customAuthenticationStateProviderProvider;
 
 <Pages.Components.CardComponent Header="Login">
     <div class="center-content">
@@ -7,7 +15,7 @@
         <MatInputTextComponent Label="Password" @bind-Value="@PasswordValue" Type="password"></MatInputTextComponent>
         <div class="row" style="margin-top:10px">
             <div class="col-auto">
-                <MatButton>Confirm</MatButton>
+                <MatButton OnClick="Confirm">Confirm</MatButton>
             </div>
         </div>
         <div class="row" style="margin-top:10px">
@@ -26,6 +34,31 @@
 @code {
     public string LoginValue { get; set; } = "";
     public string PasswordValue { get; set; } = "";
+
+
+    public async Task Confirm()
+    {
+        var response = await _accountService.Login(
+            new StandardModels.Account.LoginModel()
+                {
+                    Login = LoginValue,
+                    Password = PasswordValue
+                }
+        );
+
+        await _sweetAlert.ShowResponse(response ?? new StandardModels.Response.DefaultResponse(httpStatus: System.Net.HttpStatusCode.BadGateway));
+
+        if (response.HttpStatus.IsSuccessStatusCode())
+        {
+            string token = response?.ResponseToModel<UserModel>().Token;
+            string userGuid = response?.ResponseToModel<UserModel>().Guid.ToString();
+            await _customAuthenticationStateProviderProvider.SetUserToken(userGuid, token);
+            Navigation.NavigateTo("/");
+        }
+
+        StateHasChanged();
+    }
+
 
 }
 
