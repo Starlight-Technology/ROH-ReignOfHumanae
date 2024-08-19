@@ -8,11 +8,9 @@
 @namespace Pages.Components
 
 @code {
-    [Required]
-    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; } = null!;
 
-    [Required]
-    [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; }
+    [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
 
     private bool IsAuthorized { get; set; }
 

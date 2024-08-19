@@ -20,9 +20,7 @@ public class GameVersionService(IGameVersionRepository versionRepository, IMappe
             if (Guid.TryParse(versionGuid, out Guid guid))
             {
                 GameVersion? version = await versionRepository.GetVersionByGuid(guid);
-
-                if (version != null)
-                    return new DefaultResponse() { ObjectResponse = version };
+                return new DefaultResponse() { ObjectResponse = version };
             }
 
             return await ReturnGuidInvalid();
@@ -132,16 +130,9 @@ public class GameVersionService(IGameVersionRepository versionRepository, IMappe
 
     public async Task<DefaultResponse> SetReleased(string versionGuid)
     {
-        try
-        {
-            DefaultResponse versionResponse = await GetVersionByGuid(versionGuid);
+        DefaultResponse versionResponse = await GetVersionByGuid(versionGuid);
 
-            return versionResponse.HttpStatus.IsSuccessStatusCode() ? await ReleaseVersion(versionResponse) : versionResponse;
-        }
-        catch (Exception ex)
-        {
-            return exceptionHandler.HandleException(ex);
-        }
+        return versionResponse.HttpStatus.IsSuccessStatusCode() ? await ReleaseVersion(versionResponse) : versionResponse;
     }
 
     private async Task<DefaultResponse> ReleaseVersion(DefaultResponse defaultResponse)
@@ -153,11 +144,8 @@ public class GameVersionService(IGameVersionRepository versionRepository, IMappe
 
             GameVersion? existingVersion = await versionRepository.GetVersionByGuid(((GameVersion)defaultResponse.ObjectResponse).Guid);
 
-            if (existingVersion is null)
-                return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.NotFound, message: "The version has not been found!");
-
-            existingVersion.Released = true;
-            existingVersion.ReleaseDate = DateTime.UtcNow;
+            existingVersion!.Released = true;
+            existingVersion!.ReleaseDate = DateTime.UtcNow;
 
             _ = await versionRepository.UpdateGameVersion(existingVersion);
 

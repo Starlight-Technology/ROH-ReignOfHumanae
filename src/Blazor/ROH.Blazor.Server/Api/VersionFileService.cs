@@ -5,7 +5,7 @@ using ROH.StandardModels.Version;
 
 namespace ROH.Blazor.Server.Api;
 
-public class VersionFileService (ICustomAuthenticationStateProvider customAuthenticationStateProvider) : IVersionFileService
+public class VersionFileService(ICustomAuthenticationStateProvider customAuthenticationStateProvider) : IVersionFileService
 {
     private readonly Utils.ApiConfiguration.Gateway _gateway = new();
 

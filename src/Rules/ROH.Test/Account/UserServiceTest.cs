@@ -79,7 +79,7 @@ public class UserServiceTest
         UserModel userModel = new() { Email = "test.email@test.com", Password = "test123" };
         _ = _mockRepository.Setup(x => x.CreateNewUser(It.IsAny<User>())).ReturnsAsync(new User());
 
-        DefaultResponse expected = new(httpStatus: HttpStatusCode.OK, message:"Account has been created!");
+        DefaultResponse expected = new(httpStatus: HttpStatusCode.OK, message: "Account has been created!");
 
         // Act
         DefaultResponse result = await service.NewUser(userModel);

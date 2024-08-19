@@ -17,14 +17,14 @@ public class CustomAuthenticationStateProvider(ILocalStorageService localStorage
     private readonly string _userKey = "userKey";
     private bool _isInitialized;
 
-    public async Task<string> GetToken() => _isInitialized? await localStorage.GetItemAsStringAsync(_authToken) ?? "" : "";
-    
-    public async Task<string> GetUser() => _isInitialized? await localStorage.GetItemAsStringAsync(_userKey) ?? "": "";
+    public async Task<string> GetToken() => _isInitialized ? await localStorage.GetItemAsStringAsync(_authToken) ?? "" : "";
+
+    public async Task<string> GetUser() => _isInitialized ? await localStorage.GetItemAsStringAsync(_userKey) ?? "" : "";
 
     public async Task SetUserToken(string user = "", string token = "")
     {
         await localStorage.SetItemAsync(_authToken, token);
-        await localStorage.SetItemAsync(_userKey, user);        
+        await localStorage.SetItemAsync(_userKey, user);
     }
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()

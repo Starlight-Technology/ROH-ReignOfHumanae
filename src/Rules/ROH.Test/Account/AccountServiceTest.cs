@@ -33,10 +33,9 @@ public class AccountServiceTest
         Mapper mapper = new(config);
 
         Mock<IExceptionHandler> mockExceptionHandler = new();
-        _ = mockExceptionHandler.Setup(x => x.HandleException(It.IsAny<Exception>())).Returns(new DefaultResponse(httpStatus: HttpStatusCode.BadRequest));
 
         Mock<IAccountRepository> mockRepository = new();
-        _ = mockRepository.Setup(x => x.GetAccountById(It.IsAny<long>())).ReturnsAsync(() => null);
+        _ = mockRepository.Setup(x => x.GetAccountByGuid(It.IsAny<Guid>())).ReturnsAsync(() => null);
 
         AccountService service = new(mockExceptionHandler.Object, mockRepository.Object, mapper);
 
@@ -163,7 +162,7 @@ public class AccountServiceTest
 
         AccountService service = new(mockExceptionHandler.Object, mockRepository.Object, mapper);
 
-        DefaultResponse expected = new(message:"Account has been updated.");
+        DefaultResponse expected = new(message: "Account has been updated.");
 
         // Act
         DefaultResponse result = await service.UpdateAccount(accountModel);

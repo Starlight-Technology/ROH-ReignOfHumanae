@@ -16,8 +16,6 @@ using ROH.StandardModels.Version;
 
 using System.Net;
 
-using Xunit.Sdk;
-
 namespace ROH.Test.Version;
 
 public class GameVersionFileServiceTests
@@ -88,7 +86,7 @@ public class GameVersionFileServiceTests
         Assert.Equal(HttpStatusCode.NotFound, result.HttpStatus);
         Assert.Equal("Game Version File Not Found.", result.Message);
     }
-    
+
     [Fact]
     public async Task DownloadFile_ByGuid_ShouldHandleException()
     {
@@ -100,7 +98,7 @@ public class GameVersionFileServiceTests
         _mockExceptionHandler.Setup(x => x.HandleException(It.IsAny<Exception>()))
             .Returns(new DefaultResponse(httpStatus: HttpStatusCode.InternalServerError, message: "Internal Server Error"));
 
-        
+
 
         // Act
         var result = await _service.DownloadFile(fileGuid);
@@ -191,6 +189,27 @@ public class GameVersionFileServiceTests
         Assert.NotNull(result);
         Assert.Equal(HttpStatusCode.OK, result.HttpStatus);
         Assert.NotNull(result.ObjectResponse);
+    }
+
+    [Fact]
+    public async Task GetFiles_ShouldHandleException()
+    {
+        // Arrange
+        var versionGuid = Guid.NewGuid().ToString();
+
+        _mockGameVersionService.Setup(service => service.VerifyIfVersionExist(versionGuid))
+            .ThrowsAsync(new Exception());
+
+        _mockExceptionHandler.Setup(x => x.HandleException(It.IsAny<Exception>()))
+            .Returns(new DefaultResponse(httpStatus: HttpStatusCode.InternalServerError, message: "Internal Server Error"));
+
+        // Act
+        var result = await _service.GetFiles(versionGuid);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(HttpStatusCode.InternalServerError, result.HttpStatus);
+        Assert.Equal("Internal Server Error", result.Message);
     }
 
     [Fact]
@@ -313,7 +332,7 @@ public class GameVersionFileServiceTests
         // Arrange
         var fileModel = new GameVersionFileModel { Content = [1, 2, 3], GameVersion = null };
         var gameVersion = new GameVersion(VersionDate: DateTime.Now.AddDays(1)) { Released = true };
-        var versionFile = new GameVersionFile { GameVersion = gameVersion};
+        var versionFile = new GameVersionFile { GameVersion = gameVersion };
 
         _mockMapper.Setup(mapper => mapper.Map<GameVersionFile>(fileModel))
                 .Returns(versionFile);
@@ -339,7 +358,7 @@ public class GameVersionFileServiceTests
         // Arrange
         var fileModel = new GameVersionFileModel { Content = [1, 2, 3], GameVersion = null };
         var gameVersion = new GameVersion(VersionDate: DateTime.Now.AddDays(1));
-        var versionFile = new GameVersionFile { GameVersion = gameVersion};
+        var versionFile = new GameVersionFile { GameVersion = gameVersion };
 
         _mockMapper.Setup(mapper => mapper.Map<GameVersionFile>(fileModel))
                 .Returns(versionFile);
@@ -350,7 +369,7 @@ public class GameVersionFileServiceTests
         _mockGameVersionService.Setup(service => service.VerifyIfVersionExist(fileModel.GameVersion!))
             .ReturnsAsync(true);
         _mockGameVersionService.Setup(service => service.GetCurrentVersion())
-            .ReturnsAsync(new DefaultResponse(objectResponse: new GameVersion(VersionDate: DateTime.Now.AddDays(2)) { Released = true}));
+            .ReturnsAsync(new DefaultResponse(objectResponse: new GameVersion(VersionDate: DateTime.Now.AddDays(2)) { Released = true }));
 
         // Act
         var result = await _service.NewFile(fileModel);
@@ -359,5 +378,36 @@ public class GameVersionFileServiceTests
         Assert.NotNull(result);
         Assert.Equal(HttpStatusCode.BadRequest, result.HttpStatus);
         Assert.Equal("File Upload Failed: This version has already been released with a yearly schedule. Uploading new files is not allowed for past versions.", result.Message);
+    }
+
+    [Fact]
+    public async Task NewFile_ShouldHandleException()
+    {
+        // Arrange
+        var fileModel = new GameVersionFileModel { Content = [1, 2, 3], GameVersion = null };
+        var gameVersion = new GameVersion(VersionDate: DateTime.Now.AddDays(1));
+        var versionFile = new GameVersionFile { GameVersion = gameVersion };
+
+        _mockMapper.Setup(mapper => mapper.Map<GameVersionFile>(fileModel))
+        .Returns(versionFile);
+
+        _mockValidator.Setup(validator => validator.ValidateAsync(fileModel, default))
+            .ReturnsAsync(new ValidationResult());
+
+        _mockGameVersionService.Setup(service => service.VerifyIfVersionExist(fileModel.GameVersion!))
+            .ReturnsAsync(true);
+        _mockGameVersionService.Setup(service => service.GetCurrentVersion())
+            .ThrowsAsync(new Exception());
+
+        _mockExceptionHandler.Setup(x => x.HandleException(It.IsAny<Exception>()))
+            .Returns(new DefaultResponse(httpStatus: HttpStatusCode.InternalServerError, message: "Internal Server Error"));
+
+        // Act
+        var result = await _service.NewFile(fileModel);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(HttpStatusCode.InternalServerError, result.HttpStatus);
+        Assert.Equal("Internal Server Error", result.Message);
     }
 }

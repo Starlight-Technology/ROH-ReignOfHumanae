@@ -19,7 +19,6 @@ using ROH.Services.ExceptionService;
 using ROH.Services.GameFile;
 using ROH.Services.Version;
 using ROH.StandardModels.Version;
-using ROH.Utils.Helpers;
 using ROH.Validations.Version;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -75,7 +74,7 @@ app.MapPost("UploadFile", async (IGameVersionFileService _gameVersionFileService
 ).WithName("UploadFile")
  .WithOpenApi();
 
-app.MapGet("GetAllVersionFiles", async (IGameVersionFileService _gameVersionFileService, string VersionGuid) => 
+app.MapGet("GetAllVersionFiles", async (IGameVersionFileService _gameVersionFileService, string VersionGuid) =>
 await _gameVersionFileService.GetFiles(VersionGuid).ConfigureAwait(false)
 ).WithName("GetAllVersionFiles")
 .WithOpenApi();

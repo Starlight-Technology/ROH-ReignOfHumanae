@@ -165,7 +165,7 @@ namespace ROH.Utils.ApiConfiguration
             return _errorResponse;
         }
 
-        public async Task<DefaultResponse?> Update(Services service, object objectToSend, string token ="")
+        public async Task<DefaultResponse?> Update(Services service, object objectToSend, string token = "")
         {
             using HttpClient client = new HttpClient();
 

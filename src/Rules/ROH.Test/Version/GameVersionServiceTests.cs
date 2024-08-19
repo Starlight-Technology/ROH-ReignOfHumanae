@@ -290,18 +290,35 @@ public class GameVersionServiceTests
         Assert.Equal("The Guid is invalid!", result.Message);
     }
 
+
     [Fact]
-    public async Task SetReleased_ShouldHandle_Exception()
+    public async Task ReleaseVersion_ShouldHandle_Exception()
     {
         // Arrange
-        _mockVersionRepository.Setup(repo => repo.GetVersionByGuid(It.IsAny<Guid>())).ThrowsAsync(new Exception());
-        _mockExceptionHandler.Setup(handler => handler.HandleException(It.IsAny<Exception>())).Returns(new DefaultResponse(null, HttpStatusCode.ExpectationFailed, "Exception occurred"));
+        _mockVersionRepository.Setup(repo => repo.GetVersionByGuid(It.IsAny<Guid>())).ReturnsAsync(_gameVersion);
+        _mockVersionRepository.Setup(repo => repo.UpdateGameVersion(It.IsAny<GameVersion>())).ThrowsAsync(new Exception());
+
+        _mockExceptionHandler.Setup(handler => handler.HandleException(It.IsAny<Exception>())).Returns(new DefaultResponse(null, HttpStatusCode.InternalServerError, "Exception occurred"));
 
         // Act
-        DefaultResponse result = await _service.SetReleased(Guid.NewGuid().ToString());
+        DefaultResponse result = await _service.SetReleased(_gameVersion.Guid.ToString());
 
         // Assert
-        Assert.Equal(HttpStatusCode.ExpectationFailed, result.HttpStatus);
+        Assert.Equal(HttpStatusCode.InternalServerError, result.HttpStatus);
         Assert.Equal("Exception occurred", result.Message);
+    }
+
+    [Fact]
+    public async Task ReleaseVersion_ShouldReturn_NotFound_WhenObjectIsNull()
+    {
+        // Arrange
+        _mockVersionRepository.Setup(repo => repo.GetVersionByGuid(It.IsAny<Guid>())).ReturnsAsync(() => null);
+
+        // Act
+        DefaultResponse result = await _service.SetReleased(_gameVersion.Guid.ToString());
+
+        // Assert
+        Assert.Equal(HttpStatusCode.NotFound, result.HttpStatus);
+        Assert.Equal("The version has not found!", result.Message);
     }
 }

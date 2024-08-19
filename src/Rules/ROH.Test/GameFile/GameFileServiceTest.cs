@@ -215,7 +215,6 @@ public class GameFileServiceTest
         // Arrange
         long fileId = 1;
         Exception testException = new("Test exception");
-        string filePath = Path.Combine(_testFile.Path, _testFile.Name);
 
         _mockRepository.Setup(repo => repo.GetFile(fileId)).ThrowsAsync(testException);
 
@@ -235,12 +234,6 @@ public class GameFileServiceTest
 
         // Verify that the exception handler was called with the test exception
         _mockExceptionHandler.Verify(handler => handler.HandleException(testException), Times.Once);
-
-        // Cleanup
-        if (File.Exists(filePath))
-        {
-            File.Delete(filePath);
-        }
     }
 
     [Fact]
@@ -249,7 +242,6 @@ public class GameFileServiceTest
         // Arrange
         _mockRepository.Setup(repo => repo.GetFile(It.IsAny<long>()))
             .ReturnsAsync(_testFile with { Path = string.Empty });
-        string filePath = Path.Combine(_testFile.Path, _testFile.Name);
 
         // Act
         var result = await _service.DownloadFile(1);
@@ -257,12 +249,6 @@ public class GameFileServiceTest
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, result.HttpStatus);
         Assert.Equal("File not found.", result.Message);
-
-        // Cleanup
-        if (File.Exists(filePath))
-        {
-            File.Delete(filePath);
-        }
     }
 
     [Fact]
@@ -277,19 +263,11 @@ public class GameFileServiceTest
         _mockExceptionHandler.Setup(handler => handler.HandleException(It.IsAny<Exception>()))
             .Returns(new DefaultResponse(null, HttpStatusCode.InternalServerError, "File read error"));
 
-        string filePath = Path.Combine(_testFile.Path, _testFile.Name);
-
         // Act
         DefaultResponse result = await _service.DownloadFile(_testGuid);
 
         // Assert
         Assert.Equal(HttpStatusCode.InternalServerError, result.HttpStatus);
         Assert.Equal("File read error", result.Message);
-
-        // Cleanup
-        if (File.Exists(filePath))
-        {
-            File.Delete(filePath);
-        }
     }
 }
