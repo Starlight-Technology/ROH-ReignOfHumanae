@@ -69,7 +69,7 @@ public class GameVersionFileService(
                 {
                     item.GameVersion = null;
                 }
-                return new DefaultResponse(objectResponse: files);
+                return new DefaultResponse(objectResponse: mapper.Map<List<GameVersionFileModel>>(files));
             }
 
             return new DefaultResponse(httpStatus: HttpStatusCode.NotFound);

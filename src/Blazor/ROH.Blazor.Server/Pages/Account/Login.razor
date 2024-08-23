@@ -48,10 +48,10 @@
 
         await _sweetAlert.ShowResponse(response ?? new StandardModels.Response.DefaultResponse(httpStatus: System.Net.HttpStatusCode.BadGateway));
 
-        if (response.HttpStatus.IsSuccessStatusCode())
+        if (response?.HttpStatus.IsSuccessStatusCode() is true)
         {
-            string token = response?.ResponseToModel<UserModel>().Token;
-            string userGuid = response?.ResponseToModel<UserModel>().Guid.ToString();
+            string token = response?.ResponseToModel<UserModel>().Token ?? string.Empty;
+            string userGuid = response?.ResponseToModel<UserModel>().Guid.ToString() ?? string.Empty;
             await _customAuthenticationStateProviderProvider.SetUserToken(userGuid, token);
             Navigation.NavigateTo("/");
         }

@@ -7,12 +7,13 @@
 @using ROH.StandardModels.Version;
 @using ROH.Utils.Helpers;
 @using Microsoft.AspNetCore.Components.Forms;
+@using ROH.Blazor.Server.Pages
 
 @inject IVersionService _versionService;
 @inject IVersionFileService _versionFileService;
 @inject ISweetAlertService _sweetAlert;
 
-<AuthorizeComponent>
+<Pages.Components.AuthorizeComponent>
             <Pages.Components.CardComponent Header="Version">
             <div class="row">
                 <div class="col-sm-1">
@@ -89,7 +90,7 @@
                 </div>
             </div>
         </Pages.Components.CardComponent>
-</AuthorizeComponent>
+</Pages.Components.AuthorizeComponent>
 
 
 

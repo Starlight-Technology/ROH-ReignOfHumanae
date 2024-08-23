@@ -175,6 +175,10 @@ public class GameVersionFileServiceTests
         // Arrange
         var versionGuid = Guid.NewGuid().ToString();
         var files = new List<GameVersionFile> { new() };
+        var filesModel = new List<GameVersionFileModel> { new() };
+       
+        _mockMapper.Setup(mapper => mapper.Map<List<GameVersionFileModel>>(files))
+                  .Returns(filesModel);
 
         _mockGameVersionService.Setup(service => service.VerifyIfVersionExist(versionGuid))
             .ReturnsAsync(true);
