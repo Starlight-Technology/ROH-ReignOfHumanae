@@ -400,3 +400,7 @@ Thumbs.db
 .vscode/solution-explorer/interface.ts-template
 .vscode/solution-explorer/template-list.json
 .vscode/solution-explorer/template-parameters.js
+/src/Unity/ReignOfHumanae.Unity/Library
+/src/Unity/ReignOfHumanae.Unity/Temp
+/src/Unity/ReignOfHumanae.Unity/Logs
+/src/Api/ROH.Api.VersionFiles/ROHUpdateFiles

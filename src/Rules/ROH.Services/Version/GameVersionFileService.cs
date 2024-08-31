@@ -2,6 +2,7 @@
 
 using FluentValidation;
 
+using ROH.Domain.GameFiles;
 using ROH.Domain.Version;
 using ROH.Interfaces.Repository.Version;
 using ROH.Interfaces.Services.ExceptionService;
@@ -65,11 +66,15 @@ public class GameVersionFileService(
             {
                 List<GameVersionFile> files = await gameVersionFileRepository.GetFiles(guid);
 
+                List<GameVersionFileModel> filesModels = new();
+
                 foreach (GameVersionFile item in files)
                 {
-                    item.GameVersion = null;
+                    item.GameVersion = DownloadFile(item.IdGameFile).Result.ObjectResponse as GameVersion;
+
+                    filesModels.Add(new GameVersionFileModel(guid: item.Guid, name: item.GameFile!.Name, size: item.GameFile!.Size));
                 }
-                return new DefaultResponse(objectResponse: mapper.Map<List<GameVersionFileModel>>(files));
+                return new DefaultResponse(objectResponse: filesModels);
             }
 
             return new DefaultResponse(httpStatus: HttpStatusCode.NotFound);

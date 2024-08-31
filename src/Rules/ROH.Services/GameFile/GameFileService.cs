@@ -71,6 +71,11 @@ public class GameFileService(IGameFileRepository gameFileRepository, IExceptionH
     {
         try
         {
+            if (!Directory.Exists(file.Path))
+            {
+                _ = Directory.CreateDirectory(file.Path);
+            }
+
             string filePath = Path.Combine(file.Path, file.Name);
 
             if (File.Exists(filePath))
