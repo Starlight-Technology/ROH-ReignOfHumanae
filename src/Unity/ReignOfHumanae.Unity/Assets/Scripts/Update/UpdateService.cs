@@ -75,7 +75,7 @@ namespace Assets.Scripts.Update
                 }
                 else
                 {
-                    ChangeText("A error has occured, please contact the support.");
+                    ChangeText("A error has occurred, please contact the support.");
                 }
             }
             catch (Exception ex) { Debug.LogException(ex); }

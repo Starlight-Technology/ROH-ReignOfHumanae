@@ -8,9 +8,21 @@ namespace ROH.Repository.Version;
 
 public class GameVersionFileRepository(ISqlContext context) : IGameVersionFileRepository
 {
-    public async Task<GameVersionFile?> GetFile(long id) => await context.GameVersionFiles.FindAsync(id);
+    public async Task<GameVersionFile?> GetFile(long id)
+    {
+        var gameVersionFile = await context.GameVersionFiles.FindAsync(id);
+        gameVersionFile!.GameFile = await context.GameFiles.FindAsync(gameVersionFile.IdGameFile);
 
-    public async Task<GameVersionFile?> GetFile(Guid fileGuid) => await context.GameVersionFiles.FirstOrDefaultAsync(v => v.Guid == fileGuid);
+        return gameVersionFile;
+    }
+
+    public async Task<GameVersionFile?> GetFile(Guid fileGuid)
+    {
+        var gameVersionFile = await context.GameVersionFiles.FirstOrDefaultAsync(v => v.Guid == fileGuid);
+        gameVersionFile!.GameFile = await context.GameFiles.FindAsync(gameVersionFile.IdGameFile);
+
+        return gameVersionFile;
+    }
 
     public async Task<List<GameVersionFile>> GetFiles(GameVersion version)
     {

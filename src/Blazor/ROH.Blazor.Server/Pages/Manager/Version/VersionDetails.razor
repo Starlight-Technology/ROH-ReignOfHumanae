@@ -7,89 +7,90 @@
 @using ROH.StandardModels.Version;
 @using ROH.Utils.Helpers;
 @using Microsoft.AspNetCore.Components.Forms;
+@using ROH.Blazor.Server.Pages
 
 @inject IVersionService _versionService;
 @inject IVersionFileService _versionFileService;
 @inject ISweetAlertService _sweetAlert;
 
-<AuthorizeComponent>
-            <Pages.Components.CardComponent Header="Version">
-            <div class="row">
-                <div class="col-sm-1">
-                    <label for="Version">Version:</label>
-                </div>
-                <div class="col-sm-1">
-                    <input type="number" id="Version" class="form-control" @bind="gameVersion.Version" readonly />
-                </div>
-
-                <div class="col-sm-1">
-                    <label for="Release">Release:</label>
-                </div>
-                <div class="col-sm-1">
-                    <input type="number" id="Release" class="form-control" @bind="gameVersion.Release" readonly />
-                </div>
-
-                <div class="col-sm-1">
-                    <label for="Review">Review:</label>
-                </div>
-                <div class="col-sm-1">
-                    <input type="number" id="Review" class="form-control" @bind="gameVersion.Review" readonly />
-                </div>
-
-                @if (!gameVersion.Released)
-                {
-                    <div class="col-sm-2">
-                        <button class="btn btn-outline-primary" @onclick="ReleaseVersion"> Release Version </button>
-                    </div>
-                }
-
-                @if (gameVersion.ReleaseDate.HasValue)
-                {
-                    <div class="col-sm-1">
-                        <label for="ReleaseDate">Released Date:</label>
-                    </div>
-                    <div class="col-sm-3">
-                        <input type="date" id="ReleaseDate" class="form-control" @bind="gameVersion.ReleaseDate" readonly />
-                    </div>
-                }
-
+<Pages.Components.AuthorizeComponent>
+    <Pages.Components.CardComponent Header="Version">
+        <div class="row">
+            <div class="col-sm-1">
+                <label for="Version">Version:</label>
             </div>
-        </Pages.Components.CardComponent>
+            <div class="col-sm-1">
+                <input type="number" id="Version" class="form-control" @bind="gameVersion.Version" readonly />
+            </div>
 
-        <Pages.Components.CardComponent Header="Upload File">
-            <EditForm Model="gameVersionFile" OnValidSubmit="HandleSubmit" style="margin:20px">
-                <div class="row">
-                    <div class="col-sm-10">
-                        <div class="form-group">
-                            <label for="file">Files:</label>
-                            <InputFile id="file" multiple maxAllowedSize="0" OnChange="HandleFileSelection" />
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <button type="submit" class="btn btn-outline-success">Submit</button>
-                    </div>
-                </div>
-            </EditForm>
+            <div class="col-sm-1">
+                <label for="Release">Release:</label>
+            </div>
+            <div class="col-sm-1">
+                <input type="number" id="Release" class="form-control" @bind="gameVersion.Release" readonly />
+            </div>
 
-            @if (isUploading)
+            <div class="col-sm-1">
+                <label for="Review">Review:</label>
+            </div>
+            <div class="col-sm-1">
+                <input type="number" id="Review" class="form-control" @bind="gameVersion.Review" readonly />
+            </div>
+
+            @if (!gameVersion.Released)
             {
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="text-center">
-                            <MatProgressBar Progress="@(uploadProgress/100)" />
-                            <p>Uploading... (@uploadProgress%)</p>
-                        </div>
-                    </div>
+                <div class="col-sm-2">
+                    <button class="btn btn-outline-primary" @onclick="ReleaseVersion"> Release Version </button>
                 </div>
             }
+
+            @if (gameVersion.ReleaseDate.HasValue)
+            {
+                <div class="col-sm-1">
+                    <label for="ReleaseDate">Released Date:</label>
+                </div>
+                <div class="col-sm-3">
+                    <input type="date" id="ReleaseDate" class="form-control" @bind="gameVersion.ReleaseDate" readonly />
+                </div>
+            }
+
+        </div>
+    </Pages.Components.CardComponent>
+
+    <Pages.Components.CardComponent Header="Upload File">
+        <EditForm Model="gameVersionFile" OnValidSubmit="HandleSubmit" style="margin:20px">
             <div class="row">
-                <div class="col-sm-12">
-                    <Manager.Version.Components.AllFilesComponent VersionGuid="@versionGuid">
-                    </Manager.Version.Components.AllFilesComponent>
+                <div class="col-sm-10">
+                    <div class="form-group">
+                        <label for="file">Files:</label>
+                        <InputFile id="file" multiple maxAllowedSize="0" OnChange="HandleFileSelection" />
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <button type="submit" class="btn btn-outline-success">Submit</button>
                 </div>
             </div>
-        </Pages.Components.CardComponent>
-</AuthorizeComponent>
+        </EditForm>
+
+        @if (isUploading)
+        {
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="text-center">
+                        <MatProgressBar Progress="@(uploadProgress/100)" />
+                        <p>Uploading... (@uploadProgress%)</p>
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="row">
+            <div class="col-sm-12">
+                <Manager.Version.Components.AllFilesComponent VersionGuid="@versionGuid">
+                </Manager.Version.Components.AllFilesComponent>
+            </div>
+        </div>
+    </Pages.Components.CardComponent>
+</Pages.Components.AuthorizeComponent>
 
 
 
@@ -172,6 +173,7 @@
 
                             var responseUpload = await _versionFileService.UploadVersionFile(
                             new GameVersionFileModel(
+                            Guid.Empty,
                             fileName,
                             "",
                             fileExtension,
@@ -198,10 +200,11 @@
                 selectedFiles = null;
                 isUploading = false;
                 uploadProgress = 0;
+                StateHasChanged();
             }
 
         }
-
+        StateHasChanged();
         await Task.CompletedTask;
     }
 
