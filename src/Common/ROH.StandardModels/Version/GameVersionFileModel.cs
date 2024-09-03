@@ -14,9 +14,9 @@ namespace ROH.StandardModels.Version
         public byte[]? Content { get; set; }
         public virtual GameVersionModel? GameVersion { get; set; }
 
-        public GameVersionFileModel(Guid guid = new Guid(), string name = "", string path = "", string format = "", byte[]? content = null, long size = 0, GameVersionModel? gameVersion = null)
+        public GameVersionFileModel(Guid? guid, string name = "", string path = "", string format = "", byte[]? content = null, long size = 0, GameVersionModel? gameVersion = null)
         {
-            Guid = guid;
+            Guid = guid.GetValueOrDefault();
             Name = name;
             Path = path;
             Format = format;

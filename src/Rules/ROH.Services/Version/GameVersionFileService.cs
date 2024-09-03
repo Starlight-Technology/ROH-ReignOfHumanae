@@ -66,11 +66,14 @@ public class GameVersionFileService(
             {
                 List<GameVersionFile> files = await gameVersionFileRepository.GetFiles(guid);
 
-                List<GameVersionFileModel> filesModels = new();
+                List<GameVersionFileModel> filesModels = [];
 
                 foreach (GameVersionFile item in files)
                 {
-                    item.GameVersion = DownloadFile(item.IdGameFile).Result.ObjectResponse as GameVersion;
+                    item.GameFile = DownloadFile(item.IdGameFile).Result.ObjectResponse as Domain.GameFiles.GameFile;
+
+                    if (item.GameFile is null)
+                        continue;
 
                     filesModels.Add(new GameVersionFileModel(guid: item.Guid, name: item.GameFile!.Name, size: item.GameFile!.Size));
                 }

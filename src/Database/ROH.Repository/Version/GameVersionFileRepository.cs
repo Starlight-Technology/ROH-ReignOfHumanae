@@ -11,7 +11,7 @@ public class GameVersionFileRepository(ISqlContext context) : IGameVersionFileRe
     public async Task<GameVersionFile?> GetFile(long id)
     {
         var gameVersionFile = await context.GameVersionFiles.FindAsync(id);
-        gameVersionFile.GameFile = await context.GameFiles.FindAsync(gameVersionFile.IdGameFile);
+        gameVersionFile!.GameFile = await context.GameFiles.FindAsync(gameVersionFile.IdGameFile);
 
         return gameVersionFile;
     }
@@ -19,7 +19,7 @@ public class GameVersionFileRepository(ISqlContext context) : IGameVersionFileRe
     public async Task<GameVersionFile?> GetFile(Guid fileGuid)
     {
         var gameVersionFile = await context.GameVersionFiles.FirstOrDefaultAsync(v => v.Guid == fileGuid);
-        gameVersionFile.GameFile = await context.GameFiles.FindAsync(gameVersionFile.IdGameFile);
+        gameVersionFile!.GameFile = await context.GameFiles.FindAsync(gameVersionFile.IdGameFile);
 
         return gameVersionFile;
     }

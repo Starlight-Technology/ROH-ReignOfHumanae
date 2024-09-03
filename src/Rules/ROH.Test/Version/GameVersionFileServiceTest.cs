@@ -175,7 +175,7 @@ public class GameVersionFileServiceTests
         // Arrange
         var versionGuid = Guid.NewGuid().ToString();
         var files = new List<GameVersionFile> { new() };
-        var filesModel = new List<GameVersionFileModel> { new() };
+        var filesModel = new List<GameVersionFileModel> { new(Guid.Empty) };
        
         _mockMapper.Setup(mapper => mapper.Map<List<GameVersionFileModel>>(files))
                   .Returns(filesModel);
@@ -237,7 +237,7 @@ public class GameVersionFileServiceTests
     public async Task NewFile_FileContentIsNull_ReturnsBadRequest()
     {
         // Arrange
-        var fileModel = new GameVersionFileModel { Content = null };
+        var fileModel = new GameVersionFileModel (Guid.Empty);
 
         // Act
         var result = await _service.NewFile(fileModel);
@@ -252,7 +252,7 @@ public class GameVersionFileServiceTests
     public async Task NewFile_ValidationFails_ReturnsBadRequest()
     {
         // Arrange
-        var fileModel = new GameVersionFileModel { Content = [1, 2, 3] };
+        var fileModel = new GameVersionFileModel(Guid.Empty) { Content = [1, 2, 3] };
         var validationResult = new ValidationResult(new List<ValidationFailure> { new("Name", "Name is required.") });
 
         _mockValidator.Setup(validator => validator.ValidateAsync(fileModel, default))
@@ -271,7 +271,7 @@ public class GameVersionFileServiceTests
     public async Task NewFile_VersionNotFound_ReturnsBadRequest()
     {
         // Arrange
-        var fileModel = new GameVersionFileModel { Content = [1, 2, 3], GameVersion = null };
+        var fileModel = new GameVersionFileModel (Guid.Empty) { Content = [1, 2, 3], GameVersion = null };
         var gameVersion = new GameVersion(VersionDate: DateTime.Now.AddDays(1));
         var versionFile = new GameVersionFile { GameVersion = gameVersion };
 
@@ -297,7 +297,7 @@ public class GameVersionFileServiceTests
     public async Task NewFile_SuccessfullySavesFile()
     {
         // Arrange
-        var fileModel = new GameVersionFileModel { Content = [1, 2, 3], GameVersion = new GameVersionModel() { } };
+        var fileModel = new GameVersionFileModel(Guid.Empty) { Content = [1, 2, 3], GameVersion = new GameVersionModel() { } };
         var gameVersion = new GameVersion(VersionDate: DateTime.Now.AddDays(1));
         var versionFile = new GameVersionFile { GameVersion = gameVersion };
 
@@ -334,7 +334,7 @@ public class GameVersionFileServiceTests
     public async Task NewFile_VersionReleased_ReturnsBadRequest()
     {
         // Arrange
-        var fileModel = new GameVersionFileModel { Content = [1, 2, 3], GameVersion = null };
+        var fileModel = new GameVersionFileModel (Guid.Empty) { Content = [1, 2, 3], GameVersion = null };
         var gameVersion = new GameVersion(VersionDate: DateTime.Now.AddDays(1)) { Released = true };
         var versionFile = new GameVersionFile { GameVersion = gameVersion };
 
@@ -360,7 +360,7 @@ public class GameVersionFileServiceTests
     public async Task NewFile_OldVersion_ReturnsBadRequest()
     {
         // Arrange
-        var fileModel = new GameVersionFileModel { Content = [1, 2, 3], GameVersion = null };
+        var fileModel = new GameVersionFileModel (Guid.Empty) { Content = [1, 2, 3], GameVersion = null };
         var gameVersion = new GameVersion(VersionDate: DateTime.Now.AddDays(1));
         var versionFile = new GameVersionFile { GameVersion = gameVersion };
 
@@ -388,7 +388,7 @@ public class GameVersionFileServiceTests
     public async Task NewFile_ShouldHandleException()
     {
         // Arrange
-        var fileModel = new GameVersionFileModel { Content = [1, 2, 3], GameVersion = null };
+        var fileModel = new GameVersionFileModel (Guid.Empty) { Content = [1, 2, 3], GameVersion = null };
         var gameVersion = new GameVersion(VersionDate: DateTime.Now.AddDays(1));
         var versionFile = new GameVersionFile { GameVersion = gameVersion };
 

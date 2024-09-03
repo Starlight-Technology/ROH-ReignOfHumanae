@@ -11,7 +11,7 @@ using UnityEngine.Networking;
 
 namespace Assets.Scripts.Connection.ApiConfiguration
 {
-    public class ApiClient : MonoBehaviour
+    public class ApiClient
     {
         private readonly Uri _baseUrl;
         private readonly InitialConfiguration _initialConfiguration = new();

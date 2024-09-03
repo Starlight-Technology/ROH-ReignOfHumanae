@@ -9,15 +9,13 @@ namespace Assets.Scripts.Configurations
     {
         private readonly DataManager _dataManager = new();
 
-        private void Start() => GetInitialConfiguration();
-
+        [RuntimeInitializeOnLoadMethod]
         public ConfigurationModel GetInitialConfiguration()
         {
             string assetsFolderPath = Application.dataPath;
             string rootFolder = System.IO.Directory.GetParent(assetsFolderPath).FullName;
             string configurationPath = rootFolder + "config";
-            ConfigurationModel config = _dataManager.LoadData<ConfigurationModel>(configurationPath);
-
+            ConfigurationModel config = _dataManager.LoadData<ConfigurationModel>(configurationPath) ?? new ConfigurationModel();
             config.ServerUrl ??= "http://192.168.0.65:9001";
 
             _dataManager.SaveData<ConfigurationModel>(config, configurationPath);
