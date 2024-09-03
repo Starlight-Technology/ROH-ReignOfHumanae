@@ -13,20 +13,20 @@ docker rm -f gateway blazor $(docker ps -a -q --filter="name=ROH.*" --format="{{
 docker rmi -f $(docker images -q --filter="reference=roh.*") 2>/dev/null
 
 # Build and run the Gateway Dockerfile
-docker build -t roh.gateway -f /src/Gateway/ROH.Gateway/Dockerfile .
+docker build -t roh.gateway -f ./src/Gateway/ROH.Gateway/Dockerfile .
 docker run -d --name ROH.Gateway --network $NETWORK_NAME -p 9001:9001 roh.gateway
 
 # Build and run the ROH.Docker.Server Dockerfile
-docker build -t roh.blazor.server -f /src/Blazor/ROH.Blazor.Server/Dockerfile .
+docker build -t roh.blazor.server -f ./src/Blazor/ROH.Blazor.Server/Dockerfile .
 docker run -d --name ROH.Blazor --network $NETWORK_NAME -p 9010:9010 roh.blazor.server
 
 # Build and run the ROH.Api.VersionFiles Dockerfile
-docker build -t roh.api.versionfiles -f /src/Api/ROH.Api.VersionFiles/Dockerfile .
+docker build -t roh.api.versionfiles -f ./src/Api/ROH.Api.VersionFiles/Dockerfile .
 docker run -d --name ROH.Api.VersionFiles --network $NETWORK_NAME -v /home/roh:/app/ROH/updateFiles -u roh -e ROH_DATABASE_CONNECTION_STRING="Host=localhost;Port=5432;Database=ROH;Username=postgres;Password=postgres123;" roh.api.versionfiles 
 
 
 # Iterate through other projects and build/run their Dockerfiles
-for project in $(find . -type f -name "Dockerfile" -not -path "/src/Gateway/ROH.Gateway*" -not -path "/src/Blazor/ROH.Blazor.Server*" -not -path "/src/Api/ROH.Api.VersionFiles*"); do
+for project in $(find . -type f -name "Dockerfile" -not -path "./src/Gateway/ROH.Gateway*" -not -path "./src/Blazor/ROH.Blazor.Server*" -not -path "./src/Api/ROH.Api.VersionFiles*"); do
   project_name=$(dirname $project)
   image_name="$(basename $project_name | tr '[:upper:]' '[:lower:]')"  # Ensure lowercase image name
   docker build -t $image_name -f $project .
