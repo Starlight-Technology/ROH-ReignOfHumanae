@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 using static ROH.Utils.ApiConfiguration.ApiConfigReader;
@@ -81,7 +82,7 @@ namespace ROH.Utils.ApiConfiguration
             #endregion LOGIN
         };
 
-        public async Task<string> Get<T>(Services service, T parametersObject)
+        public async Task<string> GetAsync<T>(Services service, T parametersObject)
 
         {
             using HttpClient client = new HttpClient();
@@ -92,7 +93,7 @@ namespace ROH.Utils.ApiConfiguration
                 param = GetParams(parametersObject!);
             }
 
-            HttpResponseMessage response = await client.GetAsync(_servicesUrl.GetValueOrDefault(service) + param);
+            HttpResponseMessage response = await client.GetAsync($"{_servicesUrl.GetValueOrDefault(service)}{param}");
 
             return await response.Content.ReadAsStringAsync();
         }

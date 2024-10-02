@@ -8,6 +8,7 @@ using ROH.Interfaces.Repository.Version;
 using ROH.Interfaces.Services.ExceptionService;
 using ROH.Interfaces.Services.GameFile;
 using ROH.Interfaces.Services.Version;
+using ROH.StandardModels.File;
 using ROH.StandardModels.Response;
 using ROH.StandardModels.Version;
 using ROH.Utils.Helpers;
@@ -70,12 +71,17 @@ public class GameVersionFileService(
 
                 foreach (GameVersionFile item in files)
                 {
-                    item.GameFile = DownloadFile(item.IdGameFile).Result.ObjectResponse as Domain.GameFiles.GameFile;
+                    var result = await DownloadFile(item.IdGameFile);
 
-                    if (item.GameFile is null)
+                    var gameFileModel = result.ObjectResponse as GameFileModel;
+
+                    if (gameFileModel is null)
                         continue;
 
-                    filesModels.Add(new GameVersionFileModel(guid: item.Guid, name: item.GameFile!.Name, size: item.GameFile!.Size));
+                    filesModels.Add(new GameVersionFileModel(guid: item.Guid,
+                                                             name: gameFileModel.Name,
+                                                             size: gameFileModel.Size,
+                                                             active: gameFileModel.Active));
                 }
                 return new DefaultResponse(objectResponse: filesModels);
             }

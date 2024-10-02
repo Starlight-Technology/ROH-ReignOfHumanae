@@ -14,7 +14,7 @@ public class GameFileService(IGameFileRepository gameFileRepository, IExceptionH
     {
         try
         {
-            Domain.GameFiles.GameFile? file = await gameFileRepository.GetFile(fileGuid);
+            Domain.GameFiles.GameFile? file = await gameFileRepository.GetFileAsync(fileGuid);
 
             return file is null ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File Not Found.") : await GetGameFile(file);
         }
@@ -28,7 +28,7 @@ public class GameFileService(IGameFileRepository gameFileRepository, IExceptionH
     {
         try
         {
-            Domain.GameFiles.GameFile? file = await gameFileRepository.GetFile(id);
+            Domain.GameFiles.GameFile? file = await gameFileRepository.GetFileAsync(id);
 
             return file is null ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File Not Found.") : await GetGameFile(file);
         }
@@ -45,7 +45,7 @@ public class GameFileService(IGameFileRepository gameFileRepository, IExceptionH
             string filePath = Path.Combine(gameFile.Path, gameFile.Name);
 
             if (string.IsNullOrWhiteSpace(filePath))
-                throw new InvalidOperationException("Cant find the file patch!");
+                throw new InvalidOperationException("Cant find the file path!");
 
             if (File.Exists(filePath))
             {
@@ -54,7 +54,9 @@ public class GameFileService(IGameFileRepository gameFileRepository, IExceptionH
                 return new DefaultResponse(new GameFileModel(
                     name: gameFile.Name,
                     format: gameFile.Format,
-                    content: fileContent), HttpStatusCode.OK);
+                    content: fileContent,
+                    size: gameFile.Size,
+                    active: gameFile.Active), HttpStatusCode.OK);
             }
             else
             {
@@ -86,11 +88,32 @@ public class GameFileService(IGameFileRepository gameFileRepository, IExceptionH
                 await fs.WriteAsync(content.AsMemory(), CancellationToken.None);
             }
 
-            await gameFileRepository.SaveFile(file);
+            await gameFileRepository.SaveFileAsync(file);
         }
         catch (Exception ex)
         {
             _ = exceptionHandler.HandleException(ex);
+        }
+    }
+
+    public async Task<DefaultResponse> MakeFileHasDeprecatedAsync(Guid fileGuid)
+    {
+        try
+        {
+            Domain.GameFiles.GameFile? file = await gameFileRepository.GetFileAsync(fileGuid);
+
+            if(file is null)
+                return new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File not found.");
+
+            file = file with { Active = false };
+
+            await gameFileRepository.UpdateFileAsync(file);
+
+            return new DefaultResponse(HttpStatusCode.OK, message: $"The file \"{file.Name}\" of version has marked as deprecated.");
+        }
+        catch (Exception ex)
+        {
+            return exceptionHandler.HandleException(ex);
         }
     }
 }

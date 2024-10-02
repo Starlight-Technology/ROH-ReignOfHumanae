@@ -2,7 +2,7 @@
 
 using System;
 
-namespace ROH.Models.Version
+namespace Assets.Scripts.Models.Version
 {
     [Serializable]
     public record GameVersionFileModel
@@ -14,5 +14,6 @@ namespace ROH.Models.Version
         public string Format { get; set; }
         public byte[] Content { get; set; }
         public virtual GameVersionModel GameVersion { get; set; }
+        public bool Active { get; set; }
     }
 }

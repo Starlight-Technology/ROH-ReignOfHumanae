@@ -4,5 +4,6 @@
     public class ConfigurationModel
     {
         public string ServerUrl;
+        public string JwToken { get; set; }
     }
 }

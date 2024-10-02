@@ -7,18 +7,24 @@ namespace Assets.Scripts.Configurations
 {
     public class InitialConfiguration : MonoBehaviour
     {
-        private readonly DataManager _dataManager = new();
+        private void Start()
+        {
+        }
 
-        [RuntimeInitializeOnLoadMethod]
         public ConfigurationModel GetInitialConfiguration()
         {
+            var dataManagerObject = new GameObject("dataManagerObj");
+            dataManagerObject.AddComponent<DataManager>();
+
+            var dataManager = dataManagerObject.GetComponent<DataManager>();
+
             string assetsFolderPath = Application.dataPath;
             string rootFolder = System.IO.Directory.GetParent(assetsFolderPath).FullName;
             string configurationPath = rootFolder + "config";
-            ConfigurationModel config = _dataManager.LoadData<ConfigurationModel>(configurationPath) ?? new ConfigurationModel();
-            config.ServerUrl ??= "http://192.168.0.65:9001";
+            ConfigurationModel config = dataManager.LoadData<ConfigurationModel>(configurationPath) ?? new ConfigurationModel();
+            config.ServerUrl ??= "http://localhost:9001";
 
-            _dataManager.SaveData<ConfigurationModel>(config, configurationPath);
+            dataManager.SaveData<ConfigurationModel>(config, configurationPath);
 
             return config;
         }

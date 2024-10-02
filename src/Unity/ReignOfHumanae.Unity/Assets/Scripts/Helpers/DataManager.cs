@@ -5,8 +5,14 @@ using UnityEngine;
 
 namespace Assets.Scripts.Helpers
 {
-    public class DataManager
+    public class DataManager : MonoBehaviour
     {
+
+        public void Start()
+        {
+            
+        }
+
         public void SaveData<T>(object data, string filePath)
         {
             T dataToSerialize = (T)Convert.ChangeType(data, typeof(T));

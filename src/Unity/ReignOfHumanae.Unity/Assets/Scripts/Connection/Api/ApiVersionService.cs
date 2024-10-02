@@ -10,12 +10,22 @@ using ROH.StandardModels.Paginator;
 using System.Threading.Tasks;
 
 using UnityEngine;
+using Assets.Scripts.Connection.ApiConfiguration;
 
-namespace Assets.Scripts.Connection.ApiConfiguration
+namespace Assets.Scripts.Connection.Api
 {
-    public class ApiVersionService
+    public class ApiVersionService : MonoBehaviour
     {
-        private readonly ApiClient _apiClient = new();
+        private ApiClient _apiClient;
+
+        public void Start()
+        {
+            var apiClientObject = new GameObject("apiClientObj");
+            apiClientObject.AddComponent<ApiClient>();
+
+            _apiClient = apiClientObject.GetComponent<ApiClient>();
+            _apiClient.Start(); 
+        }
 
         public Task GetCurrentVersion()
         {

@@ -52,7 +52,7 @@ public class ExceptionHandlerTests
         var response = exceptionHandler.HandleException(exception);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.HttpStatus);
+        Assert.Equal(HttpStatusCode.InternalServerError, response.HttpStatus);
         Assert.Contains("Source:", response.Message);
     }
 
@@ -74,7 +74,7 @@ public class ExceptionHandlerTests
         var response = exceptionHandler.HandleException(exception);
 
         // Assert
-        Assert.Equal(HttpStatusCode.BadRequest, response.HttpStatus);
+        Assert.Equal(HttpStatusCode.InternalServerError, response.HttpStatus);
         Assert.Equal("An error has occurred. Don't be afraid! An email with the error details has been sent to your developers.", response.Message);
     }
 }

@@ -1,5 +1,6 @@
 using Moq;
 
+using ROH.Domain.GameFiles;
 using ROH.Interfaces.Repository.GameFile;
 using ROH.Interfaces.Services.ExceptionService;
 using ROH.Services.GameFile;
@@ -36,7 +37,7 @@ public class GameFileServiceTest
     public async Task DownloadFile_ByGuid_ShouldReturn_FileNotFound_WhenFileDoesNotExist()
     {
         // Arrange
-        _mockRepository.Setup(repo => repo.GetFile(It.IsAny<Guid>()))
+        _mockRepository.Setup(repo => repo.GetFileAsync(It.IsAny<Guid>()))
             .ReturnsAsync((Domain.GameFiles.GameFile?)null);
 
         // Act
@@ -51,7 +52,7 @@ public class GameFileServiceTest
     public async Task DownloadFile_ByGuid_ShouldReturn_FileContent_WhenFileExists()
     {
         // Arrange
-        _mockRepository.Setup(repo => repo.GetFile(It.IsAny<Guid>()))
+        _mockRepository.Setup(repo => repo.GetFileAsync(It.IsAny<Guid>()))
             .ReturnsAsync(_testFile);
 
         string filePath = Path.Combine(_testFile.Path, _testFile.Name);
@@ -79,7 +80,7 @@ public class GameFileServiceTest
     public async Task DownloadFile_ByGuid_ShouldHandle_Exceptions()
     {
         // Arrange
-        _mockRepository.Setup(repo => repo.GetFile(It.IsAny<Guid>()))
+        _mockRepository.Setup(repo => repo.GetFileAsync(It.IsAny<Guid>()))
             .ThrowsAsync(new Exception("Repository exception"));
 
         _mockExceptionHandler.Setup(handler => handler.HandleException(It.IsAny<Exception>()))
@@ -97,7 +98,7 @@ public class GameFileServiceTest
     public async Task DownloadFile_ById_ShouldReturn_FileNotFound_WhenFileDoesNotExist()
     {
         // Arrange
-        _mockRepository.Setup(repo => repo.GetFile(It.IsAny<long>()))
+        _mockRepository.Setup(repo => repo.GetFileAsync(It.IsAny<long>()))
             .ReturnsAsync((Domain.GameFiles.GameFile?)null);
 
         // Act
@@ -112,7 +113,7 @@ public class GameFileServiceTest
     public async Task DownloadFile_ById_ShouldReturn_FileContent_WhenFileExists()
     {
         // Arrange
-        _mockRepository.Setup(repo => repo.GetFile(It.IsAny<long>()))
+        _mockRepository.Setup(repo => repo.GetFileAsync(It.IsAny<long>()))
             .ReturnsAsync(_testFile);
 
         string filePath = Path.Combine(_testFile.Path, _testFile.Name);
@@ -143,13 +144,15 @@ public class GameFileServiceTest
         byte[] content = System.Text.Encoding.UTF8.GetBytes("Test content");
         string filePath = Path.Combine(_testFile.Path, _testFile.Name);
 
+        File.Delete(filePath);
+
         // Act
         await _service.SaveFileAsync(_testFile, content);
 
         // Assert
         Assert.True(File.Exists(filePath));
         Assert.Equal("Test content", await File.ReadAllTextAsync(filePath));
-        _mockRepository.Verify(repo => repo.SaveFile(It.IsAny<Domain.GameFiles.GameFile>()), Times.Once);
+        _mockRepository.Verify(repo => repo.SaveFileAsync(It.IsAny<Domain.GameFiles.GameFile>()), Times.Once);
 
         // Cleanup
         if (File.Exists(filePath))
@@ -174,7 +177,7 @@ public class GameFileServiceTest
         // Assert
         Assert.True(File.Exists(filePath));
         Assert.Equal("New content", await File.ReadAllTextAsync(filePath));
-        _mockRepository.Verify(repo => repo.SaveFile(It.IsAny<Domain.GameFiles.GameFile>()), Times.Once);
+        _mockRepository.Verify(repo => repo.SaveFileAsync(It.IsAny<Domain.GameFiles.GameFile>()), Times.Once);
 
         // Cleanup
         if (File.Exists(filePath))
@@ -187,7 +190,7 @@ public class GameFileServiceTest
     public async Task SaveFileAsync_ShouldHandle_Exceptions()
     {
         // Arrange
-        _mockRepository.Setup(repo => repo.SaveFile(It.IsAny<Domain.GameFiles.GameFile>()))
+        _mockRepository.Setup(repo => repo.SaveFileAsync(It.IsAny<Domain.GameFiles.GameFile>()))
             .ThrowsAsync(new Exception("Repository exception"));
 
         _mockExceptionHandler.Setup(handler => handler.HandleException(It.IsAny<Exception>()))
@@ -216,7 +219,7 @@ public class GameFileServiceTest
         long fileId = 1;
         Exception testException = new("Test exception");
 
-        _mockRepository.Setup(repo => repo.GetFile(fileId)).ThrowsAsync(testException);
+        _mockRepository.Setup(repo => repo.GetFileAsync(fileId)).ThrowsAsync(testException);
 
         // Mock the exception handler to return a specific response
         DefaultResponse expectedResponse = new(
@@ -240,7 +243,7 @@ public class GameFileServiceTest
     public async Task GetGameFile_ShouldReturnNotFound_WhenFileDoesNotExist()
     {
         // Arrange
-        _mockRepository.Setup(repo => repo.GetFile(It.IsAny<long>()))
+        _mockRepository.Setup(repo => repo.GetFileAsync(It.IsAny<long>()))
             .ReturnsAsync(_testFile with { Path = string.Empty });
 
         // Act
@@ -257,7 +260,7 @@ public class GameFileServiceTest
         // Arrange
         var testFile = _testFile with { Path = string.Empty, Name = string.Empty, Format = string.Empty };
 
-        _mockRepository.Setup(repo => repo.GetFile(It.IsAny<Guid>()))
+        _mockRepository.Setup(repo => repo.GetFileAsync(It.IsAny<Guid>()))
             .ReturnsAsync(testFile);
 
         _mockExceptionHandler.Setup(handler => handler.HandleException(It.IsAny<Exception>()))
@@ -269,5 +272,56 @@ public class GameFileServiceTest
         // Assert
         Assert.Equal(HttpStatusCode.InternalServerError, result.HttpStatus);
         Assert.Equal("File read error", result.Message);
+    }
+
+    [Fact]
+    public async Task MakeFileHasDeprecatedAsync_ShouldReturnNotFound_WhenFileDoesNotExist()
+    {
+        //  Arrange
+        _mockRepository.Setup(repo => repo.GetFileAsync(It.IsAny<Guid>()))
+            .ReturnsAsync((Domain.GameFiles.GameFile?)null);
+
+        // Act
+        var result = await _service.MakeFileHasDeprecatedAsync(_testGuid);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.NotFound, result.HttpStatus);
+        Assert.Equal("File not found.", result.Message);
+    }
+
+    [Fact]
+    public async Task MakeFileHasDeprecatedAsync_ShouldHandleException_WhenExceptionOccurs()
+    {
+        // Arrange
+        _mockRepository.Setup(repo => repo.GetFileAsync(It.IsAny<Guid>()))
+            .ThrowsAsync(new Exception("Error message"));
+
+        _mockExceptionHandler.Setup(handler => handler.HandleException(It.IsAny<Exception>()))
+            .Returns(new DefaultResponse(null, HttpStatusCode.InternalServerError, "Error message"));
+
+        // Act
+        DefaultResponse result = await _service.MakeFileHasDeprecatedAsync(_testGuid);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.InternalServerError, result.HttpStatus);
+        Assert.Equal("Error message", result.Message);
+    }
+
+    [Fact]
+    public async Task MakeFileHasDeprecatedAsync_ShouldReturnSuccessMessage_WhenFileHasMarkedAsDeprecated()
+    {
+
+        // Arrange 
+        _mockRepository.Setup(repo => repo.GetFileAsync(It.IsAny<Guid>()))
+            .ReturnsAsync(_testFile with { Active = true });
+
+        _mockRepository.Setup(repo => repo.UpdateFileAsync(It.IsAny<Domain.GameFiles.GameFile>()));
+
+        // Act
+        DefaultResponse result = await _service.MakeFileHasDeprecatedAsync(_testGuid);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, result.HttpStatus);
+        Assert.Equal($"The file \"{_testFile.Name}\" of version has marked as deprecated.", result.Message);
     }
 }

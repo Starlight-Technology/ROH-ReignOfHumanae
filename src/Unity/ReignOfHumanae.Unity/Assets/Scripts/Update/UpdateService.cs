@@ -1,10 +1,9 @@
-using Assets.Scripts.Connection.ApiConfiguration;
+using Assets.Scripts.Connection.Api;
 using Assets.Scripts.Helpers;
 using Assets.Scripts.Models.Version;
 
 using Newtonsoft.Json;
 
-using ROH.Models.Version;
 using ROH.StandardModels.Paginator;
 
 using System;
@@ -23,11 +22,16 @@ namespace Assets.Scripts.Update
     {
         private readonly ObjectPropertyGetter<Text> _txtUpdate = new() { ObjectName = "txtUpdate" };
         private readonly ObjectPropertyGetter<Text> _txtUpdateBackground = new() { ObjectName = "txtUpdateBackground" };
-        private readonly ApiVersionService _apiService = new();
+        private ApiVersionService _apiService;
         private string filePath;
 
         private async void Start()
         {
+            var versionService = new GameObject("verServiceObject");
+            versionService.AddComponent<ApiVersionService>();
+            _apiService = versionService.GetComponent<ApiVersionService>();
+            _apiService.Start();
+
             ChangeText("Connecting to server...");
             filePath = Application.persistentDataPath;
             await LookForUpdate();
@@ -99,8 +103,13 @@ namespace Assets.Scripts.Update
 
                 file.Path = @$"{versionFolder}/{file.Name}";
 
-                if (!File.Exists(file.Path))
-                    await DownloadFile(file);
+                if (file.Active)
+                {
+                    if (!File.Exists(file.Path))
+                        await DownloadFile(file);
+                }
+                else if (File.Exists(file.Path))
+                    File.Delete(file.Path);
             }
         }
 

@@ -2,9 +2,11 @@
 
 public interface IGameFileRepository
 {
-    Task<Domain.GameFiles.GameFile?> GetFile(Guid fileGuid);
+    Task<Domain.GameFiles.GameFile?> GetFileAsync(Guid fileGuid);
 
-    Task<Domain.GameFiles.GameFile?> GetFile(long id);
+    Task<Domain.GameFiles.GameFile?> GetFileAsync(long id);
 
-    Task SaveFile(Domain.GameFiles.GameFile file);
+    Task SaveFileAsync(Domain.GameFiles.GameFile file);
+
+    Task UpdateFileAsync(Domain.GameFiles.GameFile file);
 }
