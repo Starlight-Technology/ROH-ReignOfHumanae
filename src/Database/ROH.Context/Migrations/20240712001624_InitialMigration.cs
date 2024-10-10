@@ -1,4 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿//-----------------------------------------------------------------------
+// <copyright file="20240712001624_InitialMigration.cs" company="Starlight-Technology">
+//     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using Microsoft.EntityFrameworkCore.Migrations;
 
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -6,10 +12,62 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ROH.Context.Migrations;
 
-/// <inheritdoc />
+/// <inheritdoc/>
 public partial class InitialMigration : Migration
 {
-    /// <inheritdoc />
+    /// <inheritdoc/>
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropForeignKey(name: "FK_Kingdoms_Characters_IdRuler", table: "Kingdoms");
+
+        migrationBuilder.DropTable(name: "AttackStatuses");
+
+        migrationBuilder.DropTable(name: "Champions");
+
+        migrationBuilder.DropTable(name: "CharacterInventory");
+
+        migrationBuilder.DropTable(name: "CharacterSkills");
+
+        migrationBuilder.DropTable(name: "DefenseStatuses");
+
+        migrationBuilder.DropTable(name: "GameVersionFiles");
+
+        migrationBuilder.DropTable(name: "ItemEnchantments");
+
+        migrationBuilder.DropTable(name: "KingdomRelations");
+
+        migrationBuilder.DropTable(name: "Logs");
+
+        migrationBuilder.DropTable(name: "MembersPositions");
+
+        migrationBuilder.DropTable(name: "RingsEquipped");
+
+        migrationBuilder.DropTable(name: "Statuses");
+
+        migrationBuilder.DropTable(name: "Users");
+
+        migrationBuilder.DropTable(name: "Skills");
+
+        migrationBuilder.DropTable(name: "GameFiles");
+
+        migrationBuilder.DropTable(name: "GameVersions");
+
+        migrationBuilder.DropTable(name: "Enchantments");
+
+        migrationBuilder.DropTable(name: "EquippedItems");
+
+        migrationBuilder.DropTable(name: "Items");
+
+        migrationBuilder.DropTable(name: "Characters");
+
+        migrationBuilder.DropTable(name: "Accounts");
+
+        migrationBuilder.DropTable(name: "Guilds");
+
+        migrationBuilder.DropTable(name: "Kingdoms");
+    }
+
+    /// <inheritdoc/>
     protected override void Up(MigrationBuilder migrationBuilder)
     {
         migrationBuilder.CreateTable(
@@ -23,10 +81,7 @@ public partial class InitialMigration : Migration
                 RealName = table.Column<string>(type: "text", nullable: true),
                 BirthDate = table.Column<DateOnly>(type: "date", nullable: false)
             },
-            constraints: table =>
-            {
-                table.PrimaryKey("PK_Accounts", x => x.Id);
-            });
+            constraints: table => table.PrimaryKey("PK_Accounts", x => x.Id));
 
         migrationBuilder.CreateTable(
             name: "Enchantments",
@@ -40,10 +95,7 @@ public partial class InitialMigration : Migration
                 Name = table.Column<string>(type: "text", nullable: false),
                 Type = table.Column<int>(type: "integer", nullable: false)
             },
-            constraints: table =>
-            {
-                table.PrimaryKey("PK_Enchantments", x => x.Id);
-            });
+            constraints: table => table.PrimaryKey("PK_Enchantments", x => x.Id));
 
         migrationBuilder.CreateTable(
             name: "GameFiles",
@@ -58,10 +110,7 @@ public partial class InitialMigration : Migration
                 Format = table.Column<string>(type: "text", nullable: false),
                 Active = table.Column<bool>(type: "boolean", nullable: false)
             },
-            constraints: table =>
-            {
-                table.PrimaryKey("PK_GameFiles", x => x.Id);
-            });
+            constraints: table => table.PrimaryKey("PK_GameFiles", x => x.Id));
 
         migrationBuilder.CreateTable(
             name: "GameVersions",
@@ -77,10 +126,7 @@ public partial class InitialMigration : Migration
                 Released = table.Column<bool>(type: "boolean", nullable: false),
                 ReleaseDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
             },
-            constraints: table =>
-            {
-                table.PrimaryKey("PK_GameVersions", x => x.Id);
-            });
+            constraints: table => table.PrimaryKey("PK_GameVersions", x => x.Id));
 
         migrationBuilder.CreateTable(
             name: "Guilds",
@@ -92,10 +138,7 @@ public partial class InitialMigration : Migration
                 Name = table.Column<string>(type: "text", nullable: false),
                 Description = table.Column<string>(type: "text", nullable: false)
             },
-            constraints: table =>
-            {
-                table.PrimaryKey("PK_Guilds", x => x.Id);
-            });
+            constraints: table => table.PrimaryKey("PK_Guilds", x => x.Id));
 
         migrationBuilder.CreateTable(
             name: "Items",
@@ -113,10 +156,7 @@ public partial class InitialMigration : Migration
                 File = table.Column<string>(type: "text", nullable: true),
                 Format = table.Column<string>(type: "text", nullable: true)
             },
-            constraints: table =>
-            {
-                table.PrimaryKey("PK_Items", x => x.Id);
-            });
+            constraints: table => table.PrimaryKey("PK_Items", x => x.Id));
 
         migrationBuilder.CreateTable(
             name: "Logs",
@@ -127,10 +167,7 @@ public partial class InitialMigration : Migration
                 Severity = table.Column<int>(type: "integer", nullable: false),
                 Message = table.Column<string>(type: "text", nullable: false)
             },
-            constraints: table =>
-            {
-                table.PrimaryKey("PK_Logs", x => x.Id);
-            });
+            constraints: table => table.PrimaryKey("PK_Logs", x => x.Id));
 
         migrationBuilder.CreateTable(
             name: "Skills",
@@ -145,10 +182,7 @@ public partial class InitialMigration : Migration
                 Name = table.Column<string>(type: "text", nullable: false),
                 Type = table.Column<int>(type: "integer", nullable: false)
             },
-            constraints: table =>
-            {
-                table.PrimaryKey("PK_Skills", x => x.Id);
-            });
+            constraints: table => table.PrimaryKey("PK_Skills", x => x.Id));
 
         migrationBuilder.CreateTable(
             name: "Users",
@@ -237,10 +271,7 @@ public partial class InitialMigration : Migration
                 OneHandedWeaponLevel = table.Column<long>(type: "bigint", nullable: false),
                 TwoHandedWeaponLevel = table.Column<long>(type: "bigint", nullable: false)
             },
-            constraints: table =>
-            {
-                table.PrimaryKey("PK_AttackStatuses", x => x.IdCharacter);
-            });
+            constraints: table => table.PrimaryKey("PK_AttackStatuses", x => x.IdCharacter));
 
         migrationBuilder.CreateTable(
             name: "Champions",
@@ -251,10 +282,7 @@ public partial class InitialMigration : Migration
                 IdCharacter = table.Column<long>(type: "bigint", nullable: false),
                 IdKingdom = table.Column<long>(type: "bigint", nullable: false)
             },
-            constraints: table =>
-            {
-                table.PrimaryKey("PK_Champions", x => x.Id);
-            });
+            constraints: table => table.PrimaryKey("PK_Champions", x => x.Id));
 
         migrationBuilder.CreateTable(
             name: "CharacterInventory",
@@ -545,15 +573,9 @@ public partial class InitialMigration : Migration
                     onDelete: ReferentialAction.Cascade);
             });
 
-        migrationBuilder.CreateIndex(
-            name: "IX_Champions_IdCharacter",
-            table: "Champions",
-            column: "IdCharacter");
+        migrationBuilder.CreateIndex(name: "IX_Champions_IdCharacter", table: "Champions", column: "IdCharacter");
 
-        migrationBuilder.CreateIndex(
-            name: "IX_Champions_IdKingdom",
-            table: "Champions",
-            column: "IdKingdom");
+        migrationBuilder.CreateIndex(name: "IX_Champions_IdKingdom", table: "Champions", column: "IdKingdom");
 
         migrationBuilder.CreateIndex(
             name: "IX_CharacterInventory_IdCharacter",
@@ -565,65 +587,35 @@ public partial class InitialMigration : Migration
             table: "CharacterInventory",
             column: "IdItem");
 
-        migrationBuilder.CreateIndex(
-            name: "IX_Characters_IdAccount",
-            table: "Characters",
-            column: "IdAccount");
+        migrationBuilder.CreateIndex(name: "IX_Characters_IdAccount", table: "Characters", column: "IdAccount");
 
-        migrationBuilder.CreateIndex(
-            name: "IX_Characters_IdGuild",
-            table: "Characters",
-            column: "IdGuild");
+        migrationBuilder.CreateIndex(name: "IX_Characters_IdGuild", table: "Characters", column: "IdGuild");
 
-        migrationBuilder.CreateIndex(
-            name: "IX_Characters_IdKingdom",
-            table: "Characters",
-            column: "IdKingdom");
+        migrationBuilder.CreateIndex(name: "IX_Characters_IdKingdom", table: "Characters", column: "IdKingdom");
 
         migrationBuilder.CreateIndex(
             name: "IX_CharacterSkills_IdCharacter",
             table: "CharacterSkills",
             column: "IdCharacter");
 
-        migrationBuilder.CreateIndex(
-            name: "IX_CharacterSkills_IdSkill",
-            table: "CharacterSkills",
-            column: "IdSkill");
+        migrationBuilder.CreateIndex(name: "IX_CharacterSkills_IdSkill", table: "CharacterSkills", column: "IdSkill");
 
-        migrationBuilder.CreateIndex(
-            name: "IX_EquippedItems_IdArmor",
-            table: "EquippedItems",
-            column: "IdArmor");
+        migrationBuilder.CreateIndex(name: "IX_EquippedItems_IdArmor", table: "EquippedItems", column: "IdArmor");
 
-        migrationBuilder.CreateIndex(
-            name: "IX_EquippedItems_IdBoots",
-            table: "EquippedItems",
-            column: "IdBoots");
+        migrationBuilder.CreateIndex(name: "IX_EquippedItems_IdBoots", table: "EquippedItems", column: "IdBoots");
 
-        migrationBuilder.CreateIndex(
-            name: "IX_EquippedItems_IdGloves",
-            table: "EquippedItems",
-            column: "IdGloves");
+        migrationBuilder.CreateIndex(name: "IX_EquippedItems_IdGloves", table: "EquippedItems", column: "IdGloves");
 
-        migrationBuilder.CreateIndex(
-            name: "IX_EquippedItems_IdHead",
-            table: "EquippedItems",
-            column: "IdHead");
+        migrationBuilder.CreateIndex(name: "IX_EquippedItems_IdHead", table: "EquippedItems", column: "IdHead");
 
         migrationBuilder.CreateIndex(
             name: "IX_EquippedItems_IdLeftBracelet",
             table: "EquippedItems",
             column: "IdLeftBracelet");
 
-        migrationBuilder.CreateIndex(
-            name: "IX_EquippedItems_IdLegs",
-            table: "EquippedItems",
-            column: "IdLegs");
+        migrationBuilder.CreateIndex(name: "IX_EquippedItems_IdLegs", table: "EquippedItems", column: "IdLegs");
 
-        migrationBuilder.CreateIndex(
-            name: "IX_EquippedItems_IdNecklace",
-            table: "EquippedItems",
-            column: "IdNecklace");
+        migrationBuilder.CreateIndex(name: "IX_EquippedItems_IdNecklace", table: "EquippedItems", column: "IdNecklace");
 
         migrationBuilder.CreateIndex(
             name: "IX_EquippedItems_IdRightBracelet",
@@ -646,21 +638,14 @@ public partial class InitialMigration : Migration
             table: "ItemEnchantments",
             column: "IdEnchantment");
 
-        migrationBuilder.CreateIndex(
-            name: "IX_ItemEnchantments_IdItem",
-            table: "ItemEnchantments",
-            column: "IdItem");
+        migrationBuilder.CreateIndex(name: "IX_ItemEnchantments_IdItem", table: "ItemEnchantments", column: "IdItem");
 
         migrationBuilder.CreateIndex(
             name: "IX_KingdomRelations_IdKingdom2",
             table: "KingdomRelations",
             column: "IdKingdom2");
 
-        migrationBuilder.CreateIndex(
-            name: "IX_Kingdoms_IdRuler",
-            table: "Kingdoms",
-            column: "IdRuler",
-            unique: true);
+        migrationBuilder.CreateIndex(name: "IX_Kingdoms_IdRuler", table: "Kingdoms", column: "IdRuler", unique: true);
 
         migrationBuilder.CreateIndex(
             name: "IX_MembersPositions_IdCharacter",
@@ -668,26 +653,16 @@ public partial class InitialMigration : Migration
             column: "IdCharacter",
             unique: true);
 
-        migrationBuilder.CreateIndex(
-            name: "IX_MembersPositions_IdGuild",
-            table: "MembersPositions",
-            column: "IdGuild");
+        migrationBuilder.CreateIndex(name: "IX_MembersPositions_IdGuild", table: "MembersPositions", column: "IdGuild");
 
         migrationBuilder.CreateIndex(
             name: "IX_RingsEquipped_IdEquippedItems",
             table: "RingsEquipped",
             column: "IdEquippedItems");
 
-        migrationBuilder.CreateIndex(
-            name: "IX_RingsEquipped_IdItem",
-            table: "RingsEquipped",
-            column: "IdItem");
+        migrationBuilder.CreateIndex(name: "IX_RingsEquipped_IdItem", table: "RingsEquipped", column: "IdItem");
 
-        migrationBuilder.CreateIndex(
-            name: "IX_Users_IdAccount",
-            table: "Users",
-            column: "IdAccount",
-            unique: true);
+        migrationBuilder.CreateIndex(name: "IX_Users_IdAccount", table: "Users", column: "IdAccount", unique: true);
 
         migrationBuilder.AddForeignKey(
             name: "FK_AttackStatuses_Characters_IdCharacter",
@@ -728,82 +703,5 @@ public partial class InitialMigration : Migration
             principalTable: "Kingdoms",
             principalColumn: "Id",
             onDelete: ReferentialAction.Cascade);
-    }
-
-    /// <inheritdoc />
-    protected override void Down(MigrationBuilder migrationBuilder)
-    {
-        migrationBuilder.DropForeignKey(
-            name: "FK_Kingdoms_Characters_IdRuler",
-            table: "Kingdoms");
-
-        migrationBuilder.DropTable(
-            name: "AttackStatuses");
-
-        migrationBuilder.DropTable(
-            name: "Champions");
-
-        migrationBuilder.DropTable(
-            name: "CharacterInventory");
-
-        migrationBuilder.DropTable(
-            name: "CharacterSkills");
-
-        migrationBuilder.DropTable(
-            name: "DefenseStatuses");
-
-        migrationBuilder.DropTable(
-            name: "GameVersionFiles");
-
-        migrationBuilder.DropTable(
-            name: "ItemEnchantments");
-
-        migrationBuilder.DropTable(
-            name: "KingdomRelations");
-
-        migrationBuilder.DropTable(
-            name: "Logs");
-
-        migrationBuilder.DropTable(
-            name: "MembersPositions");
-
-        migrationBuilder.DropTable(
-            name: "RingsEquipped");
-
-        migrationBuilder.DropTable(
-            name: "Statuses");
-
-        migrationBuilder.DropTable(
-            name: "Users");
-
-        migrationBuilder.DropTable(
-            name: "Skills");
-
-        migrationBuilder.DropTable(
-            name: "GameFiles");
-
-        migrationBuilder.DropTable(
-            name: "GameVersions");
-
-        migrationBuilder.DropTable(
-            name: "Enchantments");
-
-        migrationBuilder.DropTable(
-            name: "EquippedItems");
-
-        migrationBuilder.DropTable(
-            name: "Items");
-
-        migrationBuilder.DropTable(
-            name: "Characters");
-
-        migrationBuilder.DropTable(
-            name: "Accounts");
-
-        migrationBuilder.DropTable(
-            name: "Guilds");
-
-        migrationBuilder.DropTable(
-            name: "Kingdoms");
     }
 }

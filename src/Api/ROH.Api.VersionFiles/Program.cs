@@ -1,3 +1,9 @@
+//-----------------------------------------------------------------------
+// <copyright file="Program.cs" company="Starlight-Technology">
+//     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
 using AutoMapper;
 
 using FluentValidation;
@@ -45,20 +51,18 @@ builder.Services.AddScoped<IValidator<GameVersionFileModel>, GameVersionFileMode
 builder.Services.AddScoped<IExceptionHandler, ExceptionHandler>();
 
 // Auto Mapper Configurations
-MapperConfiguration mappingConfig = new(mc =>
-{
-    mc.AddProfile(new GameVersionFileMapping());
-    mc.AddProfile(new GameVersionMapping());
-    mc.AddProfile(new GameFileMapping());
-});
+MapperConfiguration mappingConfig = new(
+    mc =>
+    {
+        mc.AddProfile(new GameVersionFileMapping());
+        mc.AddProfile(new GameVersionMapping());
+        mc.AddProfile(new GameFileMapping());
+    });
 
 IMapper mapper = mappingConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.Limits.MaxRequestBodySize = null;
-});
+builder.WebHost.ConfigureKestrel(options => options.Limits.MaxRequestBodySize = null);
 
 WebApplication app = builder.Build();
 
@@ -69,18 +73,30 @@ if (app.Environment.IsDevelopment())
     _ = app.UseSwaggerUI();
 }
 
-app.MapPost("UploadFile", async (IGameVersionFileService _gameVersionFileService, GameVersionFileModel File) =>
-    await _gameVersionFileService.NewFile(File).ConfigureAwait(false)
-).WithName("UploadFile")
- .WithOpenApi();
+app.MapPost(
+    "UploadFile",
+    async (IGameVersionFileService gameVersionFileService, GameVersionFileModel file) => await gameVersionFileService.NewFile(
+        file)
+        .ConfigureAwait(false)
+)
+    .WithName("UploadFile")
+    .WithOpenApi();
 
-app.MapGet("GetAllVersionFiles", async (IGameVersionFileService _gameVersionFileService, string VersionGuid) =>
-await _gameVersionFileService.GetFiles(VersionGuid).ConfigureAwait(false)
-).WithName("GetAllVersionFiles")
-.WithOpenApi();
+app.MapGet(
+    "GetAllVersionFiles",
+    async (IGameVersionFileService gameVersionFileService, string versionGuid) => await gameVersionFileService.GetFiles(
+        versionGuid)
+        .ConfigureAwait(false)
+)
+    .WithName("GetAllVersionFiles")
+    .WithOpenApi();
 
-app.MapGet("DownloadFile", async (IGameVersionFileService _gameVersionFileService, string FileGuid) =>
-    await _gameVersionFileService.DownloadFile(new Guid(FileGuid)).ConfigureAwait(false)
-).WithName("DownloadFile")
-.WithOpenApi();
+app.MapGet(
+    "DownloadFile",
+    async (IGameVersionFileService gameVersionFileService, string fileGuid) => await gameVersionFileService.DownloadFile(
+        new Guid(fileGuid))
+        .ConfigureAwait(false)
+)
+    .WithName("DownloadFile")
+    .WithOpenApi();
 await app.RunAsync().ConfigureAwait(false);

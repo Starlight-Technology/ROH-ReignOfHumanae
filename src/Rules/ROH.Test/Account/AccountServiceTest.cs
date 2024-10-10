@@ -1,4 +1,10 @@
-﻿using AutoMapper;
+﻿//-----------------------------------------------------------------------
+// <copyright file="AccountServiceTest.cs" company="Starlight-Technology">
+//     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using AutoMapper;
 
 using Moq;
 
@@ -16,36 +22,40 @@ namespace ROH.Test.Account;
 public class AccountServiceTest
 {
     [Fact]
-    public async Task GetAccountByUserGuid_ShouldReturn_Error_WhenUserNotFound()
+    public async Task GetAccountByUserGuid_ShouldHandle_Exception()
     {
         // Arrange
-        MapperConfiguration config = new(cfg =>
-        {
-            // Configure your mappings here
-            _ = cfg.CreateMap<Domain.Accounts.Account, AccountModel>()
-                .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate.ToDateTime(new TimeOnly(0, 0))));
-            _ = cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
-                .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
+        MapperConfiguration config = new(
+            cfg =>
+            {
+                cfg.CreateMap<Domain.Accounts.Account, AccountModel>()
+                    .ForMember(
+                        dest => dest.BirthDate,
+                        opt => opt.MapFrom(src => src.BirthDate.ToDateTime(new TimeOnly(0, 0))));
+                cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
+                    .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
 
-            _ = cfg.CreateMap<User, UserModel>().ReverseMap();
-        });
+                cfg.CreateMap<User, UserModel>().ReverseMap();
+            });
 
         Mapper mapper = new(config);
 
         Mock<IExceptionHandler> mockExceptionHandler = new();
+        mockExceptionHandler.Setup(x => x.HandleException(It.IsAny<Exception>()))
+            .Returns(
+                new DefaultResponse(httpStatus: HttpStatusCode.InternalServerError, message: "Internal Server Error"));
 
         Mock<IAccountRepository> mockRepository = new();
-        _ = mockRepository.Setup(x => x.GetAccountByGuid(It.IsAny<Guid>())).ReturnsAsync(() => null);
+        mockRepository.Setup(x => x.GetAccountByUserGuidAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ThrowsAsync(new Exception("Database error"));
 
         AccountService service = new(mockExceptionHandler.Object, mockRepository.Object, mapper);
 
-        DefaultResponse expected = new(httpStatus: HttpStatusCode.NotFound);
+        DefaultResponse expected = new(httpStatus: HttpStatusCode.InternalServerError, message: "Internal Server Error");
 
         // Act
         DefaultResponse result = await service.GetAccountByUserGuid(Guid.NewGuid());
 
         // Assert
-
         Assert.Equivalent(expected, result);
     }
 
@@ -53,16 +63,19 @@ public class AccountServiceTest
     public async Task GetAccountByUserGuid_ShouldReturn_Account_WhenUserFound()
     {
         // Arrange
-        MapperConfiguration config = new(cfg =>
-        {
-            // Configure your mappings here
-            _ = cfg.CreateMap<Domain.Accounts.Account, AccountModel>()
-                .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate.ToDateTime(new TimeOnly(0, 0))));
-            _ = cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
-                .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
+        MapperConfiguration config = new(
+            cfg =>
+            {
+                // Configure your mappings here
+                _ = cfg.CreateMap<Domain.Accounts.Account, AccountModel>()
+                    .ForMember(
+                        dest => dest.BirthDate,
+                        opt => opt.MapFrom(src => src.BirthDate.ToDateTime(new TimeOnly(0, 0))));
+                _ = cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
+                    .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
 
-            _ = cfg.CreateMap<User, UserModel>().ReverseMap();
-        });
+                _ = cfg.CreateMap<User, UserModel>().ReverseMap();
+            });
 
         Mapper mapper = new(config);
 
@@ -71,12 +84,15 @@ public class AccountServiceTest
         DateTime birthDateTest = DateTime.Today;
 
         AccountModel accountModel = new() { Guid = guidTest, RealName = realNameTest, BirthDate = birthDateTest };
-        Domain.Accounts.Account account = new(Guid: guidTest, RealName: realNameTest, BirthDate: DateOnly.FromDateTime(birthDateTest));
+        Domain.Accounts.Account account = new(
+            Guid: guidTest,
+            RealName: realNameTest,
+            BirthDate: DateOnly.FromDateTime(birthDateTest));
 
         Mock<IExceptionHandler> mockExceptionHandler = new();
 
         Mock<IAccountRepository> mockRepository = new();
-        _ = mockRepository.Setup(x => x.GetAccountByUserGuid(It.IsAny<Guid>())).ReturnsAsync(account);
+        _ = mockRepository.Setup(x => x.GetAccountByUserGuidAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(account);
 
         AccountService service = new(mockExceptionHandler.Object, mockRepository.Object, mapper);
 
@@ -91,19 +107,103 @@ public class AccountServiceTest
     }
 
     [Fact]
+    public async Task GetAccountByUserGuid_ShouldReturn_Error_WhenUserNotFound()
+    {
+        // Arrange
+        MapperConfiguration config = new(
+            cfg =>
+            {
+                // Configure your mappings here
+                _ = cfg.CreateMap<Domain.Accounts.Account, AccountModel>()
+                    .ForMember(
+                        dest => dest.BirthDate,
+                        opt => opt.MapFrom(src => src.BirthDate.ToDateTime(new TimeOnly(0, 0))));
+                _ = cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
+                    .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
+
+                _ = cfg.CreateMap<User, UserModel>().ReverseMap();
+            });
+
+        Mapper mapper = new(config);
+
+        Mock<IExceptionHandler> mockExceptionHandler = new();
+
+        Mock<IAccountRepository> mockRepository = new();
+        _ = mockRepository.Setup(x => x.GetAccountByGuidAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(() => null);
+
+        AccountService service = new(mockExceptionHandler.Object, mockRepository.Object, mapper);
+
+        DefaultResponse expected = new(httpStatus: HttpStatusCode.NotFound);
+
+        // Act
+        DefaultResponse result = await service.GetAccountByUserGuid(Guid.NewGuid());
+
+        // Assert
+
+        Assert.Equivalent(expected, result);
+    }
+
+    [Fact]
+    public async Task UpdateAccount_ShouldHandle_Exception()
+    {
+        // Arrange
+        MapperConfiguration config = new(
+            cfg =>
+            {
+                cfg.CreateMap<Domain.Accounts.Account, AccountModel>()
+                    .ForMember(
+                        dest => dest.BirthDate,
+                        opt => opt.MapFrom(src => src.BirthDate.ToDateTime(new TimeOnly(0, 0))));
+                cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
+                    .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
+
+                cfg.CreateMap<User, UserModel>().ReverseMap();
+            });
+
+        Mapper mapper = new(config);
+
+        Guid guidTest = Guid.NewGuid();
+        string realNameTest = "Test";
+        DateTime birthDateTest = DateTime.Today;
+
+        AccountModel accountModel = new() { Guid = guidTest, RealName = realNameTest, BirthDate = birthDateTest };
+
+        Mock<IExceptionHandler> mockExceptionHandler = new();
+        mockExceptionHandler.Setup(x => x.HandleException(It.IsAny<Exception>()))
+            .Returns(
+                new DefaultResponse(httpStatus: HttpStatusCode.InternalServerError, message: "Internal Server Error"));
+
+        Mock<IAccountRepository> mockRepository = new();
+        mockRepository.Setup(x => x.GetAccountByGuidAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ThrowsAsync(new Exception("Database error"));
+
+        AccountService service = new(mockExceptionHandler.Object, mockRepository.Object, mapper);
+
+        DefaultResponse expected = new(httpStatus: HttpStatusCode.InternalServerError, message: "Internal Server Error");
+
+        // Act
+        DefaultResponse result = await service.UpdateAccount(accountModel);
+
+        // Assert
+        Assert.Equivalent(expected, result);
+    }
+
+    [Fact]
     public async Task UpdateAccount_ShouldReturn_NotFound_WhenAccountNotFound()
     {
         // Arrange
-        MapperConfiguration config = new(cfg =>
-        {
-            // Configure your mappings here
-            _ = cfg.CreateMap<Domain.Accounts.Account, AccountModel>()
-                .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate.ToDateTime(new TimeOnly(0, 0))));
-            _ = cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
-                .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
+        MapperConfiguration config = new(
+            cfg =>
+            {
+                // Configure your mappings here
+                _ = cfg.CreateMap<Domain.Accounts.Account, AccountModel>()
+                    .ForMember(
+                        dest => dest.BirthDate,
+                        opt => opt.MapFrom(src => src.BirthDate.ToDateTime(new TimeOnly(0, 0))));
+                _ = cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
+                    .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
 
-            _ = cfg.CreateMap<User, UserModel>().ReverseMap();
-        });
+                _ = cfg.CreateMap<User, UserModel>().ReverseMap();
+            });
 
         Mapper mapper = new(config);
 
@@ -116,7 +216,7 @@ public class AccountServiceTest
         Mock<IExceptionHandler> mockExceptionHandler = new();
 
         Mock<IAccountRepository> mockRepository = new();
-        _ = mockRepository.Setup(x => x.GetAccountByGuid(It.IsAny<Guid>())).ReturnsAsync(() => null);
+        _ = mockRepository.Setup(x => x.GetAccountByGuidAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(() => null);
 
         AccountService service = new(mockExceptionHandler.Object, mockRepository.Object, mapper);
 
@@ -134,16 +234,19 @@ public class AccountServiceTest
     public async Task UpdateAccount_ShouldReturn_Success_WhenAccountFound()
     {
         // Arrange
-        MapperConfiguration config = new(cfg =>
-        {
-            // Configure your mappings here
-            _ = cfg.CreateMap<Domain.Accounts.Account, AccountModel>()
-                .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate.ToDateTime(new TimeOnly(0, 0))));
-            _ = cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
-                .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
+        MapperConfiguration config = new(
+            cfg =>
+            {
+                // Configure your mappings here
+                _ = cfg.CreateMap<Domain.Accounts.Account, AccountModel>()
+                    .ForMember(
+                        dest => dest.BirthDate,
+                        opt => opt.MapFrom(src => src.BirthDate.ToDateTime(new TimeOnly(0, 0))));
+                _ = cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
+                    .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
 
-            _ = cfg.CreateMap<User, UserModel>().ReverseMap();
-        });
+                _ = cfg.CreateMap<User, UserModel>().ReverseMap();
+            });
 
         Mapper mapper = new(config);
 
@@ -153,12 +256,15 @@ public class AccountServiceTest
 
         AccountModel accountModel = new() { Guid = guidTest, RealName = realNameTest, BirthDate = birthDateTest };
 
-        Domain.Accounts.Account account = new(Guid: guidTest, RealName: realNameTest, BirthDate: DateOnly.FromDateTime(birthDateTest));
+        Domain.Accounts.Account account = new(
+            Guid: guidTest,
+            RealName: realNameTest,
+            BirthDate: DateOnly.FromDateTime(birthDateTest));
 
         Mock<IExceptionHandler> mockExceptionHandler = new();
 
         Mock<IAccountRepository> mockRepository = new();
-        _ = mockRepository.Setup(x => x.GetAccountByGuid(It.IsAny<Guid>())).ReturnsAsync(account);
+        _ = mockRepository.Setup(x => x.GetAccountByGuidAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(account);
 
         AccountService service = new(mockExceptionHandler.Object, mockRepository.Object, mapper);
 
@@ -169,82 +275,6 @@ public class AccountServiceTest
 
         // Assert
 
-        Assert.Equivalent(expected, result);
-    }
-
-    [Fact]
-    public async Task GetAccountByUserGuid_ShouldHandle_Exception()
-    {
-        // Arrange
-        MapperConfiguration config = new(cfg =>
-        {
-            cfg.CreateMap<Domain.Accounts.Account, AccountModel>()
-                .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate.ToDateTime(new TimeOnly(0, 0))));
-            cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
-                .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
-
-            cfg.CreateMap<User, UserModel>().ReverseMap();
-        });
-
-        Mapper mapper = new(config);
-
-        Mock<IExceptionHandler> mockExceptionHandler = new();
-        mockExceptionHandler.Setup(x => x.HandleException(It.IsAny<Exception>()))
-            .Returns(new DefaultResponse(httpStatus: HttpStatusCode.InternalServerError, message: "Internal Server Error"));
-
-        Mock<IAccountRepository> mockRepository = new();
-        mockRepository.Setup(x => x.GetAccountByUserGuid(It.IsAny<Guid>()))
-            .ThrowsAsync(new Exception("Database error"));
-
-        AccountService service = new(mockExceptionHandler.Object, mockRepository.Object, mapper);
-
-        DefaultResponse expected = new(httpStatus: HttpStatusCode.InternalServerError, message: "Internal Server Error");
-
-        // Act
-        DefaultResponse result = await service.GetAccountByUserGuid(Guid.NewGuid());
-
-        // Assert
-        Assert.Equivalent(expected, result);
-    }
-
-    [Fact]
-    public async Task UpdateAccount_ShouldHandle_Exception()
-    {
-        // Arrange
-        MapperConfiguration config = new(cfg =>
-        {
-            cfg.CreateMap<Domain.Accounts.Account, AccountModel>()
-                .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate.ToDateTime(new TimeOnly(0, 0))));
-            cfg.CreateMap<AccountModel, Domain.Accounts.Account>()
-                .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
-
-            cfg.CreateMap<User, UserModel>().ReverseMap();
-        });
-
-        Mapper mapper = new(config);
-
-        Guid guidTest = Guid.NewGuid();
-        string realNameTest = "Test";
-        DateTime birthDateTest = DateTime.Today;
-
-        AccountModel accountModel = new() { Guid = guidTest, RealName = realNameTest, BirthDate = birthDateTest };
-
-        Mock<IExceptionHandler> mockExceptionHandler = new();
-        mockExceptionHandler.Setup(x => x.HandleException(It.IsAny<Exception>()))
-            .Returns(new DefaultResponse(httpStatus: HttpStatusCode.InternalServerError, message: "Internal Server Error"));
-
-        Mock<IAccountRepository> mockRepository = new();
-        mockRepository.Setup(x => x.GetAccountByGuid(It.IsAny<Guid>()))
-            .ThrowsAsync(new Exception("Database error"));
-
-        AccountService service = new(mockExceptionHandler.Object, mockRepository.Object, mapper);
-
-        DefaultResponse expected = new(httpStatus: HttpStatusCode.InternalServerError, message: "Internal Server Error");
-
-        // Act
-        DefaultResponse result = await service.UpdateAccount(accountModel);
-
-        // Assert
         Assert.Equivalent(expected, result);
     }
 }

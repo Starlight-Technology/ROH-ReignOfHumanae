@@ -1,3 +1,9 @@
+//-----------------------------------------------------------------------
+// <copyright file="AuthServiceTest.cs" company="Starlight-Technology">
+//     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
 using Microsoft.IdentityModel.Tokens;
 
 using ROH.Services.Authentication;
@@ -14,39 +20,39 @@ public class AuthServiceTest
     public void GenerateJwtToken_ShouldReturnValidToken()
     {
         // Arrange
-        var authService = new AuthService();
-        var user = new UserModel
-        {
-            UserName = "TestUser",
-            Guid = Guid.NewGuid()
-        };
+        AuthService authService = new();
+        UserModel user = new() { UserName = "TestUser", Guid = Guid.NewGuid() };
 
         // Act
-        var token = authService.GenerateJwtToken(user);
+        string token = authService.GenerateJwtToken(user);
 
         // Assert
         Assert.False(string.IsNullOrWhiteSpace(token));
 
         // Decode and validate token
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("ROH_KEY_TOKEN") ?? "thisisaverysecurekeywith32charslong!");
+        JwtSecurityTokenHandler tokenHandler = new();
+        byte[] key = Encoding.ASCII
+            .GetBytes(Environment.GetEnvironmentVariable("ROH_KEY_TOKEN") ?? "thisisaverysecurekeywith32charslong!");
 
-        tokenHandler.ValidateToken(token, new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(key),
-            ValidateIssuer = true,
-            ValidIssuer = "ROH.Services.Authentication.AuthService",
-            ValidateAudience = true,
-            ValidAudience = "ROH.Gateway",
-            ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero // No clock skew
-        }, out SecurityToken validatedToken);
+        tokenHandler.ValidateToken(
+            token,
+            new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = true,
+                ValidIssuer = "ROH.Services.Authentication.AuthService",
+                ValidateAudience = true,
+                ValidAudience = "ROH.Gateway",
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero // No clock skew
+            },
+            out SecurityToken validatedToken);
 
         // Check claims
-        var jwtToken = (JwtSecurityToken)validatedToken;
-        var usernameClaim = jwtToken.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Sub).Value;
-        var jtiClaim = jwtToken.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Jti).Value;
+        JwtSecurityToken jwtToken = (JwtSecurityToken)validatedToken;
+        string usernameClaim = jwtToken.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Sub).Value;
+        string jtiClaim = jwtToken.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Jti).Value;
 
         Assert.Equal(user.UserName, usernameClaim);
         Assert.Equal(user.Guid.Value.ToString(), jtiClaim);

@@ -1,3 +1,9 @@
+//-----------------------------------------------------------------------
+// <copyright file="Program.cs" company="Starlight-Technology">
+//     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
 using Blazored.LocalStorage;
 
 using MatBlazor;
@@ -17,40 +23,45 @@ ServicesManager servicesManager = new();
 
 builder.Services.AddRazorPages();
 builder.Services.AddMatBlazor();
-builder.Services.AddServerSideBlazor().AddCircuitOptions(options =>
-{
+builder.Services
+    .AddServerSideBlazor()
+    .AddCircuitOptions(
+        options =>
+        {
 #if DEBUG
-    options.DetailedErrors = true;
+            options.DetailedErrors = true;
 #endif
-});
+        });
 
-
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.ListenAnyIP(9010);
-    options.Limits.MaxRequestBodySize = null;
-});
+builder.WebHost
+    .ConfigureKestrel(
+        options =>
+        {
+            options.ListenAnyIP(9010);
+            options.Limits.MaxRequestBodySize = null;
+        });
 
 // Configure JWT authentication
 string tokenKey = Environment.GetEnvironmentVariable("ROH_KEY_TOKEN") ?? "thisisaverysecurekeywith32charslong!";
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)),
-        ValidIssuer = "ROH.Services.Authentication.AuthService",
-        ValidAudience = "ROH.Gateway"
-    };
-});
+builder.Services
+    .AddAuthentication(
+        options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+    .AddJwtBearer(
+        options => options.TokenValidationParameters =
+            new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)),
+                ValidIssuer = "ROH.Services.Authentication.AuthService",
+                ValidAudience = "ROH.Gateway"
+            });
 
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

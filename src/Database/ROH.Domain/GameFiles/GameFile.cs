@@ -1,4 +1,13 @@
-﻿namespace ROH.Domain.GameFiles;
+﻿//-----------------------------------------------------------------------
+// <copyright file="GameFile.cs" company="Starlight-Technology">
+//     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
+
+namespace ROH.Domain.GameFiles;
+
 public record GameFile
 (
     long Id = 0,

@@ -1,17 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿//-----------------------------------------------------------------------
+// <copyright file="AccountModel.cs" company="Starlight-Technology">
+//     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using System;
 
 namespace Assets.Scripts.Models.Account
 {
     [Serializable]
     public class AccountModel
     {
-        public Guid Guid { get; set; }
-        public string RealName { get; set; }
         public DateTime BirthDate { get; set; }
+
+        public Guid Guid { get; set; }
+
+        public string RealName { get; set; }
+
         public UserModel User { get; set; }
     }
 }

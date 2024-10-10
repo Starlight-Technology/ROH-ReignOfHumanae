@@ -1,4 +1,10 @@
-﻿// Ignore Spelling: Utils
+﻿//-----------------------------------------------------------------------
+// <copyright file="ApiConfigReader.cs" company="Starlight-Technology">
+//     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+// Ignore Spelling: Utils
 
 using System;
 using System.Collections.Generic;
@@ -12,15 +18,6 @@ namespace ROH.Utils.ApiConfiguration
     public class ApiConfigReader
     {
         private readonly XDocument _config;
-
-        public enum ApiUrl
-        {
-            Version,
-            VersionFile,
-            GateWay,
-            Account,
-            Login
-        }
 
         public ApiConfigReader()
         {
@@ -43,7 +40,9 @@ namespace ROH.Utils.ApiConfiguration
         // Release configuration
         string configuration = "Release";
 #endif
-            XElement selectedConfiguration = _config.Descendants(configuration).FirstOrDefault() ?? throw new InvalidOperationException($"Configuration '{configuration}' not found in api-config.xml");
+
+            XElement selectedConfiguration = _config.Descendants(configuration).FirstOrDefault() ??
+                throw new InvalidOperationException($"Configuration '{configuration}' not found in api-config.xml");
             Dictionary<ApiUrl, Uri> apiUrls = new Dictionary<ApiUrl, Uri>();
 
             foreach (XElement? serviceElement in selectedConfiguration.Descendants("Service"))
@@ -55,6 +54,15 @@ namespace ROH.Utils.ApiConfiguration
             }
 
             return apiUrls;
+        }
+
+        public enum ApiUrl
+        {
+            Version,
+            VersionFile,
+            GateWay,
+            Account,
+            Login
         }
     }
 }

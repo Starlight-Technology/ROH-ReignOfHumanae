@@ -1,19 +1,14 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="Race.cs" company="Starlight-Technology">
+// <copyright file="Enchantments.cs" company="Starlight-Technology">
 //     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
 //     Copyright (c) Starlight-Technology. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
+using ROH.Domain.Effect;
 
+namespace ROH.Domain.Items;
 
-namespace ROH.Domain.Characters;
-
-public enum Race
+public record Enchantment(long Id, long? Damage, long? Defense, string? Animation, string Name, EffectType Type)
 {
-    Undefined = 0,
-    Demon,
-    Dwarf,
-    Elf,
-    Human,
-    God = 100
+    public virtual ICollection<ItemEnchantment>? Items { get; set; }
 }

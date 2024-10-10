@@ -1,13 +1,17 @@
-﻿using UnityEngine;
+﻿//-----------------------------------------------------------------------
+// <copyright file="ObjectPropertyGetter.cs" company="Starlight-Technology">
+//     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.Helpers
 {
     public class ObjectPropertyGetter<T> where T : Component
     {
-        public string ObjectName { get; set; }
-
-        public void SetValue(string value)
+        public void SetFontColor(Color color)
         {
             GameObject obj = GameObject.Find(ObjectName);
             if (obj != null)
@@ -16,12 +20,12 @@ namespace Assets.Scripts.Helpers
 
                 if (component is Text textComponent)
                 {
-                    textComponent.text = value;
+                    textComponent.color = color;
                 }
             }
             else
             {
-                Debug.LogError("Object with name " + ObjectName + " not found.");
+                Debug.LogError($"Object with name {ObjectName} not found.");
             }
         }
 
@@ -39,11 +43,11 @@ namespace Assets.Scripts.Helpers
             }
             else
             {
-                Debug.LogError("Object with name " + ObjectName + " not found.");
+                Debug.LogError($"Object with name {ObjectName} not found.");
             }
         }
 
-        public void SetFontColor(Color color)
+        public void SetValue(string value)
         {
             GameObject obj = GameObject.Find(ObjectName);
             if (obj != null)
@@ -52,13 +56,15 @@ namespace Assets.Scripts.Helpers
 
                 if (component is Text textComponent)
                 {
-                    textComponent.color = color;
+                    textComponent.text = value;
                 }
             }
             else
             {
-                Debug.LogError("Object with name " + ObjectName + " not found.");
+                Debug.LogError($"Object with name {ObjectName} not found.");
             }
         }
+
+        public string ObjectName { get; set; }
     }
 }

@@ -67,33 +67,33 @@ if (app.Environment.IsDevelopment())
     _ = app.UseSwaggerUI();
 }
 
-app.MapPost("CreateNewVersion", async (IGameVersionService _gameVersionService, GameVersionModel model) =>
-    await _gameVersionService.NewVersion(model).ConfigureAwait(false)
+app.MapPost("CreateNewVersion", async (IGameVersionService gameVersionService, GameVersionModel model) =>
+    await gameVersionService.NewVersion(model).ConfigureAwait(false)
 ).WithName("CreateNewVersion")
 .WithOpenApi();
 
-app.MapPut("ReleaseVersion", async (IGameVersionService _gameVersionService, [FromBody] GameVersionModel gameVersion) =>
-    await _gameVersionService.SetReleased(gameVersion.Guid.ToString()).ConfigureAwait(false)
+app.MapPut("ReleaseVersion", async (IGameVersionService gameVersionService, [FromBody] GameVersionModel gameVersion) =>
+    await gameVersionService.SetReleased(gameVersion.Guid.ToString()).ConfigureAwait(false)
 ).WithName("ReleaseVersion")
 .WithOpenApi();
 
-app.MapGet("GetCurrentVersion", (IGameVersionService _gameVersionService) =>
-    _gameVersionService.GetCurrentVersion().Result.MapObjectResponse<GameVersionModel>()
+app.MapGet("GetCurrentVersion", (IGameVersionService gameVersionService) =>
+    gameVersionService.GetCurrentVersion().Result.MapObjectResponse<GameVersionModel>()
 ).WithName("GetCurrentVersion")
 .WithOpenApi();
 
-app.MapGet("GetAllVersionsPaginated", async (IGameVersionService _gameVersionService, int page, int take) =>
-    await _gameVersionService.GetAllVersions(page: page, take: take).ConfigureAwait(false)
+app.MapGet("GetAllVersionsPaginated", async (IGameVersionService gameVersionService, int page, int take) =>
+    await gameVersionService.GetAllVersions(page: page, take: take).ConfigureAwait(false)
 ).WithName("GetAllVersionsPaginated")
 .WithOpenApi();
 
-app.MapGet("GetAllReleasedVersionsPaginated", async (IGameVersionService _gameVersionService, int page, int take) =>
-    await _gameVersionService.GetAllReleasedVersions(page: page, take: take).ConfigureAwait(false)
+app.MapGet("GetAllReleasedVersionsPaginated", async (IGameVersionService gameVersionService, int page, int take) =>
+    await gameVersionService.GetAllReleasedVersions(page: page, take: take).ConfigureAwait(false)
 ).WithName("GetAllReleasedVersionsPaginated")
 .WithOpenApi();
 
-app.MapGet("GetVersionDetails", async (IGameVersionService _gameVersionService, string guid) =>
-    await _gameVersionService.GetVersionByGuid(guid).ConfigureAwait(false)
+app.MapGet("GetVersionDetails", async (IGameVersionService gameVersionService, string guid) =>
+    await gameVersionService.GetVersionByGuid(guid).ConfigureAwait(false)
 ).WithName("GetVersionDetails")
 .WithOpenApi();
 

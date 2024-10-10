@@ -1,4 +1,10 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿//-----------------------------------------------------------------------
+// <copyright file="AuthService.cs" company="Starlight-Technology">
+//     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using Microsoft.IdentityModel.Tokens;
 
 using ROH.Interfaces.Authentication;
 using ROH.StandardModels.Account;
@@ -18,13 +24,16 @@ public class AuthService : IAuthService
         byte[] key = Encoding.ASCII.GetBytes(keyToken);
         SecurityTokenDescriptor tokenDescriptor = new()
         {
-            Subject = new ClaimsIdentity(new Claim[]
-            {
-                new(JwtRegisteredClaimNames.Sub, user.UserName!),
-                new(JwtRegisteredClaimNames.Jti, user.Guid!.Value.ToString())
-            }),
+            Subject =
+                new ClaimsIdentity(
+                    new Claim[]
+                {
+                    new(JwtRegisteredClaimNames.Sub, user.UserName!),
+                    new(JwtRegisteredClaimNames.Jti, user.Guid!.Value.ToString())
+                }),
             Expires = DateTime.UtcNow.AddHours(24),
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
+            SigningCredentials =
+                new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
             Audience = "ROH.Gateway",
             Issuer = "ROH.Services.Authentication.AuthService"
         };

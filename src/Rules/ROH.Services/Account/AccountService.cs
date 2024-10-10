@@ -1,10 +1,18 @@
-﻿using AutoMapper;
+﻿//-----------------------------------------------------------------------
+// <copyright file="AccountService.cs" company="Starlight-Technology">
+//     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using AutoMapper;
 
 using ROH.Interfaces.Repository.Account;
 using ROH.Interfaces.Services.Account;
 using ROH.Interfaces.Services.ExceptionService;
 using ROH.StandardModels.Account;
 using ROH.StandardModels.Response;
+
+using System.Net;
 
 namespace ROH.Services.Account;
 
@@ -14,10 +22,10 @@ public class AccountService(IExceptionHandler handler, IAccountRepository reposi
     {
         try
         {
-            Domain.Accounts.Account? account = await repository.GetAccountByUserGuid(userGuid);
+            Domain.Accounts.Account? account = await repository.GetAccountByUserGuidAsync(userGuid);
 
             if (account is null)
-                return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.NotFound);
+                return new DefaultResponse(httpStatus: HttpStatusCode.NotFound);
 
             AccountModel model = mapper.Map<AccountModel>(account);
 
@@ -33,13 +41,18 @@ public class AccountService(IExceptionHandler handler, IAccountRepository reposi
     {
         try
         {
-            Domain.Accounts.Account? account = await repository.GetAccountByGuid(accountModel.Guid);
+            Domain.Accounts.Account? account = await repository.GetAccountByGuidAsync(accountModel.Guid);
             if (account is null)
-                return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.NotFound, message: "Account not found.");
+                return new DefaultResponse(httpStatus: HttpStatusCode.NotFound, message: "Account not found.");
 
-            account = account with { BirthDate = DateOnly.FromDateTime(accountModel.BirthDate), RealName = accountModel.RealName, };
+            account = account with
+            {
+                BirthDate = DateOnly.FromDateTime(accountModel.BirthDate),
+                RealName =
+                                                                                                    accountModel.RealName,
+            };
 
-            await repository.UpdateAccount(account);
+            await repository.UpdateAccountAsync(account);
 
             return new DefaultResponse(message: "Account has been updated.");
         }

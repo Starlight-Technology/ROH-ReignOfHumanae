@@ -1,4 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿//-----------------------------------------------------------------------
+// <copyright file="UserRepository.cs" company="Starlight-Technology">
+//     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using Microsoft.EntityFrameworkCore;
 
 using ROH.Domain.Accounts;
 using ROH.Interfaces;
@@ -8,18 +14,23 @@ namespace ROH.Repository.Account;
 
 public class UserRepository(ISqlContext context) : IUserRepository
 {
-    public Task<bool> EmailInUse(string email) => context.Users.AnyAsync(u => u.Email == email);
-
-    public async Task<User> CreateNewUser(User user)
+    public async Task<User> CreateNewUserAsync(User user, CancellationToken cancellationToken = default)
     {
-        _ = await context.Users.AddAsync(user);
-        _ = await context.SaveChangesAsync();
+        await context.Users.AddAsync(user, cancellationToken).ConfigureAwait(true);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(true);
         return user;
     }
 
-    public async Task<User?> FindUserByEmail(string email) => await context.Users.FirstOrDefaultAsync(u => u.Email == email);
+    public Task<bool> EmailInUseAsync(string email, CancellationToken cancellationToken = default)
+        => context.Users.AnyAsync(u => string.Compare(u.Email, email, StringComparison.Ordinal) == 0, cancellationToken);
 
-    public async Task<User?> FindUserByUserName(string userName) => await context.Users.FirstOrDefaultAsync(u => u.UserName == userName);
+    public Task<User?> FindUserByEmailAsync(string email, CancellationToken cancellationToken = default)
+        => context.Users.FirstOrDefaultAsync(u => string.Compare(u.Email, email, StringComparison.Ordinal) == 0, cancellationToken);
 
-    public async Task<User> GetUserByGuid(Guid userGuid) => await context.Users.FirstAsync(u => u.Guid == userGuid);
+    public Task<User?> FindUserByUserNameAsync(string userName, CancellationToken cancellationToken = default)
+        => context.Users.FirstOrDefaultAsync(u => string.Compare(u.UserName, userName, StringComparison.Ordinal) == 0, cancellationToken);
+
+    public Task<User> GetUserByGuidAsync(Guid userGuid, CancellationToken cancellationToken = default)
+        => context.Users.FirstAsync(u => u.Guid == userGuid, cancellationToken);
+
 }

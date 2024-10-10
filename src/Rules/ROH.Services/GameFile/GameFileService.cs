@@ -1,4 +1,10 @@
-﻿using ROH.Interfaces.Repository.GameFile;
+﻿//-----------------------------------------------------------------------
+// <copyright file="GameFileService.cs" company="Starlight-Technology">
+//     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using ROH.Interfaces.Repository.GameFile;
 using ROH.Interfaces.Services.ExceptionService;
 using ROH.Interfaces.Services.GameFile;
 using ROH.StandardModels.File;
@@ -10,34 +16,6 @@ namespace ROH.Services.GameFile;
 
 public class GameFileService(IGameFileRepository gameFileRepository, IExceptionHandler exceptionHandler) : IGameFileService
 {
-    public async Task<DefaultResponse> DownloadFile(Guid fileGuid)
-    {
-        try
-        {
-            Domain.GameFiles.GameFile? file = await gameFileRepository.GetFileAsync(fileGuid);
-
-            return file is null ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File Not Found.") : await GetGameFile(file);
-        }
-        catch (Exception ex)
-        {
-            return exceptionHandler.HandleException(ex);
-        }
-    }
-
-    public async Task<DefaultResponse> DownloadFile(long id)
-    {
-        try
-        {
-            Domain.GameFiles.GameFile? file = await gameFileRepository.GetFileAsync(id);
-
-            return file is null ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File Not Found.") : await GetGameFile(file);
-        }
-        catch (Exception ex)
-        {
-            return exceptionHandler.HandleException(ex);
-        }
-    }
-
     private async Task<DefaultResponse> GetGameFile(Domain.GameFiles.GameFile gameFile)
     {
         try
@@ -51,17 +29,74 @@ public class GameFileService(IGameFileRepository gameFileRepository, IExceptionH
             {
                 byte[] fileContent = await File.ReadAllBytesAsync(filePath);
 
-                return new DefaultResponse(new GameFileModel(
-                    name: gameFile.Name,
-                    format: gameFile.Format,
-                    content: fileContent,
-                    size: gameFile.Size,
-                    active: gameFile.Active), HttpStatusCode.OK);
+                return new DefaultResponse(
+                    new GameFileModel(
+                        name: gameFile.Name,
+                        format: gameFile.Format,
+                        content: fileContent,
+                        size: gameFile.Size,
+                        active: gameFile.Active),
+                    HttpStatusCode.OK);
             }
             else
             {
                 return new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File not found.");
             }
+        }
+        catch (Exception ex)
+        {
+            return exceptionHandler.HandleException(ex);
+        }
+    }
+
+    public async Task<DefaultResponse> DownloadFile(Guid fileGuid)
+    {
+        try
+        {
+            Domain.GameFiles.GameFile? file = await gameFileRepository.GetFileAsync(fileGuid);
+
+            return (file is null)
+                ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File Not Found.")
+                : (await GetGameFile(file));
+        }
+        catch (Exception ex)
+        {
+            return exceptionHandler.HandleException(ex);
+        }
+    }
+
+    public async Task<DefaultResponse> DownloadFile(long id)
+    {
+        try
+        {
+            Domain.GameFiles.GameFile? file = await gameFileRepository.GetFileAsync(id);
+
+            return (file is null)
+                ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File Not Found.")
+                : (await GetGameFile(file));
+        }
+        catch (Exception ex)
+        {
+            return exceptionHandler.HandleException(ex);
+        }
+    }
+
+    public async Task<DefaultResponse> MakeFileHasDeprecatedAsync(Guid fileGuid)
+    {
+        try
+        {
+            Domain.GameFiles.GameFile? file = await gameFileRepository.GetFileAsync(fileGuid);
+
+            if (file is null)
+                return new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File not found.");
+
+            file = file with { Active = false };
+
+            await gameFileRepository.UpdateFileAsync(file);
+
+            return new DefaultResponse(
+                HttpStatusCode.OK,
+                message: $"The file \"{file.Name}\" of version has marked as deprecated.");
         }
         catch (Exception ex)
         {
@@ -93,27 +128,6 @@ public class GameFileService(IGameFileRepository gameFileRepository, IExceptionH
         catch (Exception ex)
         {
             _ = exceptionHandler.HandleException(ex);
-        }
-    }
-
-    public async Task<DefaultResponse> MakeFileHasDeprecatedAsync(Guid fileGuid)
-    {
-        try
-        {
-            Domain.GameFiles.GameFile? file = await gameFileRepository.GetFileAsync(fileGuid);
-
-            if(file is null)
-                return new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File not found.");
-
-            file = file with { Active = false };
-
-            await gameFileRepository.UpdateFileAsync(file);
-
-            return new DefaultResponse(HttpStatusCode.OK, message: $"The file \"{file.Name}\" of version has marked as deprecated.");
-        }
-        catch (Exception ex)
-        {
-            return exceptionHandler.HandleException(ex);
         }
     }
 }

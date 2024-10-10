@@ -1,4 +1,10 @@
-﻿// Ignore Spelling: Blazor
+﻿//-----------------------------------------------------------------------
+// <copyright file="IVersionService.cs" company="Starlight-Technology">
+//     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+// Ignore Spelling: Blazor
 
 using ROH.StandardModels.Response;
 using ROH.StandardModels.Version;

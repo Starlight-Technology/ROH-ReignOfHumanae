@@ -1,4 +1,10 @@
-﻿// Ignore Spelling: js
+﻿//-----------------------------------------------------------------------
+// <copyright file="SweetAlertService.cs" company="Starlight-Technology">
+//     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+// Ignore Spelling: js
 
 using Microsoft.JSInterop;
 
@@ -11,7 +17,11 @@ namespace ROH.Blazor.Server.Helpers;
 
 public class SweetAlertService(IJSRuntime _jsRuntime) : ISweetAlertService
 {
-    public async Task Show(string title, string message, SweetAlertType type) => await _jsRuntime.InvokeVoidAsync("window.sweetalertInterop.showSweetAlert", title, message, type.ToString().ToLower());
+    public async Task Show(string title, string message, SweetAlertType type) => await _jsRuntime.InvokeVoidAsync(
+        "window.sweetalertInterop.showSweetAlert",
+        title,
+        message,
+        type.ToString().ToLower());
 
     public async Task ShowResponse(DefaultResponse response)
     {
@@ -26,6 +36,6 @@ public class SweetAlertService(IJSRuntime _jsRuntime) : ISweetAlertService
             type = SweetAlertType.Error;
         }
 
-        await Show("", response.Message, type);
+        await Show(string.Empty, response.Message, type);
     }
 }

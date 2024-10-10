@@ -1,16 +1,21 @@
-﻿using Assets.Scripts.Helpers;
+﻿//-----------------------------------------------------------------------
+// <copyright file="ApiVersionService.cs" company="Starlight-Technology">
+//     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using Assets.Scripts.Connection.ApiConfiguration;
+using Assets.Scripts.Helpers;
 using Assets.Scripts.Models.File;
 using Assets.Scripts.Models.Response;
+
 using Assets.Scripts.Models.Version;
 
 using Newtonsoft.Json;
 
-using ROH.StandardModels.Paginator;
-
 using System.Threading.Tasks;
 
 using UnityEngine;
-using Assets.Scripts.Connection.ApiConfiguration;
 
 namespace Assets.Scripts.Connection.Api
 {
@@ -18,35 +23,52 @@ namespace Assets.Scripts.Connection.Api
     {
         private ApiClient _apiClient;
 
-        public void Start()
+        public async Task<FileModel> DownloadFile(string guid)
         {
-            var apiClientObject = new GameObject("apiClientObj");
-            apiClientObject.AddComponent<ApiClient>();
+            TaskCompletionSource<FileModel> tcs = new();
 
-            _apiClient = apiClientObject.GetComponent<ApiClient>();
-            _apiClient.Start(); 
+            _apiClient.Get<DefaultResponse>(
+                $"api/VersionFile/DownloadFile?fileGuid={guid}",
+                (response) =>
+                {
+                    if (response != null)
+                    {
+                        string json = JsonConvert.SerializeObject(response.ObjectResponse);
+                        FileModel file = JsonConvert.DeserializeObject<FileModel>(json);
+                        tcs.SetResult(file);
+                    }
+                    else
+                    {
+                        Debug.LogError("Failed to retrieve response.");
+                        tcs.SetResult(null);
+                    }
+                });
+
+            return await tcs.Task;
         }
 
         public Task GetCurrentVersion()
         {
-            _apiClient.Get<DefaultResponse>("Api/Version/GetCurrentVersion", (response) =>
-            {
-                if (response != null)
+            _apiClient.Get<DefaultResponse>(
+                "Api/Version/GetCurrentVersion",
+                (response) =>
                 {
-                    GameVersionModel gameVersion = response.ResponseToModel<GameVersionModel>();
+                    if (response != null)
+                    {
+                        GameVersionModel gameVersion = response.ResponseToModel<GameVersionModel>();
 
-                    if (gameVersion != null && !gameVersion.Released)
-                        return;
+                        if ((gameVersion != null) && !gameVersion.Released)
+                            return;
 
-                    PlayerPrefs.SetInt("current-version-version", gameVersion!.Version);
-                    PlayerPrefs.SetInt("current-version-release", gameVersion.Release);
-                    PlayerPrefs.SetInt("current-version-review", gameVersion.Review);
-                }
-                else
-                {
-                    Debug.LogError("Failed to retrieve response.");
-                }
-            });
+                        PlayerPrefs.SetInt("current-version-version", gameVersion!.Version);
+                        PlayerPrefs.SetInt("current-version-release", gameVersion.Release);
+                        PlayerPrefs.SetInt("current-version-review", gameVersion.Review);
+                    }
+                    else
+                    {
+                        Debug.LogError("Failed to retrieve response.");
+                    }
+                });
 
             return Task.CompletedTask;
         }
@@ -55,19 +77,21 @@ namespace Assets.Scripts.Connection.Api
         {
             TaskCompletionSource<PaginatedModel> tcs = new();
 
-            _apiClient.Get<DefaultResponse>("Api/Version/GetAllReleasedVersionsPaginated", (response) =>
-            {
-                if (response != null)
+            _apiClient.Get<DefaultResponse>(
+                "Api/Version/GetAllReleasedVersionsPaginated",
+                (response) =>
                 {
-                    PaginatedModel paginatedModel = response.ResponseToModel<PaginatedModel>();
-                    tcs.SetResult(paginatedModel); // Set the result when the response is received
-                }
-                else
-                {
-                    Debug.LogError("Failed to retrieve response.");
-                    tcs.SetResult(null); // Set null if there's an error
-                }
-            });
+                    if (response != null)
+                    {
+                        PaginatedModel paginatedModel = response.ResponseToModel<PaginatedModel>();
+                        tcs.SetResult(paginatedModel); // Set the result when the response is received
+                    }
+                    else
+                    {
+                        Debug.LogError("Failed to retrieve response.");
+                        tcs.SetResult(null); // Set null if there's an error
+                    }
+                });
 
             return await tcs.Task;
         }
@@ -76,42 +100,31 @@ namespace Assets.Scripts.Connection.Api
         {
             TaskCompletionSource<DefaultResponse> tcs = new();
 
-            _apiClient.Get<DefaultResponse>("api/VersionFile/GetAllVersionFiles?versionGuid=" + guid, (response) =>
-            {
-                if (response != null)
+            _apiClient.Get<DefaultResponse>(
+                $"api/VersionFile/GetAllVersionFiles?versionGuid={guid}",
+                (response) =>
                 {
-                    tcs.SetResult(response);
-                }
-                else
-                {
-                    Debug.LogError("Failed to retrieve response.");
-                    tcs.SetResult(null);
-                }
-            });
+                    if (response != null)
+                    {
+                        tcs.SetResult(response);
+                    }
+                    else
+                    {
+                        Debug.LogError("Failed to retrieve response.");
+                        tcs.SetResult(null);
+                    }
+                });
 
             return await tcs.Task;
         }
 
-        public async Task<FileModel> DownloadFile(string guid)
+        public void Start()
         {
-            TaskCompletionSource<FileModel> tcs = new();
+            GameObject apiClientObject = new("apiClientObj");
+            apiClientObject.AddComponent<ApiClient>();
 
-            _apiClient.Get<DefaultResponse>("api/VersionFile/DownloadFile?fileGuid=" + guid, (response) =>
-            {
-                if (response != null)
-                {
-                    string json = JsonConvert.SerializeObject(response.ObjectResponse);
-                    FileModel file = JsonConvert.DeserializeObject<FileModel>(json);
-                    tcs.SetResult(file);
-                }
-                else
-                {
-                    Debug.LogError("Failed to retrieve response.");
-                    tcs.SetResult(null);
-                }
-            });
-
-            return await tcs.Task;
+            _apiClient = apiClientObject.GetComponent<ApiClient>();
+            _apiClient.Start();
         }
     }
 }

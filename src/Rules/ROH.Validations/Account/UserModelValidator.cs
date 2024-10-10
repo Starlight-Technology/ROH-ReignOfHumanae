@@ -1,4 +1,10 @@
-﻿using FluentValidation;
+﻿//-----------------------------------------------------------------------
+// <copyright file="UserModelValidator.cs" company="Starlight-Technology">
+//     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using FluentValidation;
 
 using ROH.StandardModels.Account;
 
