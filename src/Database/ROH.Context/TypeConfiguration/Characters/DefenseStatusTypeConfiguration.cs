@@ -1,4 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿//-----------------------------------------------------------------------
+// <copyright file="DefenseStatusTypeConfiguration.cs" company="Starlight-Technology">
+//     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using ROH.Domain.Characters;
@@ -11,6 +17,8 @@ public class DefenseStatusTypeConfiguration : IEntityTypeConfiguration<DefenseSt
     {
         _ = builder.HasKey(ds => ds.IdCharacter);
 
-        _ = builder.HasOne(a => a.Character).WithOne(c => c.DefenseStatus).HasForeignKey<DefenseStatus>(a => a.IdCharacter);
+        _ = builder.HasOne(a => a.Character)
+            .WithOne(c => c.DefenseStatus)
+            .HasForeignKey<DefenseStatus>(a => a.IdCharacter);
     }
 }

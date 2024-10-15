@@ -1,23 +1,29 @@
-﻿using ROH.Domain.Paginator;
+﻿//-----------------------------------------------------------------------
+// <copyright file="IGameVersionRepository.cs" company="Starlight-Technology">
+//     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using ROH.Domain.Paginator;
 using ROH.Domain.Version;
 
 namespace ROH.Interfaces.Repository.Version;
 
 public interface IGameVersionRepository
 {
-    Task<GameVersion?> GetVersionByGuid(Guid versionGuid);
+    Task<Paginated> GetAllReleasedVersionsAsync(int take = 10, int skip = 0, CancellationToken cancellationToken = default);
 
-    Task<Paginated> GetAllReleasedVersions(int take = 10, int skip = 0);
+    Task<Paginated> GetAllVersionsAsync(int take = 10, int skip = 0, CancellationToken cancellationToken = default);
 
-    Task<Paginated> GetAllVersions(int take = 10, int skip = 0);
+    Task<GameVersion?> GetCurrentGameVersionAsync(CancellationToken cancellationToken = default);
 
-    Task<GameVersion?> GetCurrentGameVersion();
+    Task<GameVersion?> GetVersionByGuidAsync(Guid versionGuid, CancellationToken cancellationToken = default);
 
-    Task<GameVersion> SetNewGameVersion(GameVersion version);
+    Task<GameVersion> SetNewGameVersionAsync(GameVersion version, CancellationToken cancellationToken = default);
 
-    Task<GameVersion> UpdateGameVersion(GameVersion version);
+    Task<GameVersion> UpdateGameVersionAsync(GameVersion version, CancellationToken cancellationToken = default);
 
-    Task<bool> VerifyIfExist(GameVersion version);
+    Task<bool> VerifyIfExistAsync(GameVersion version, CancellationToken cancellationToken = default);
 
-    Task<bool> VerifyIfExist(Guid versionGuid);
+    Task<bool> VerifyIfExistAsync(Guid versionGuid, CancellationToken cancellationToken = default);
 }

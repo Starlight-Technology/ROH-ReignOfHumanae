@@ -1,4 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿//-----------------------------------------------------------------------
+// <copyright file="EquippedItemsTypeConfiguration.cs" company="Starlight-Technology">
+//     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using ROH.Domain.Characters;
@@ -11,7 +17,9 @@ public class EquippedItemsTypeConfiguration : IEntityTypeConfiguration<EquippedI
     {
         _ = builder.HasKey(e => e.IdCharacter);
 
-        _ = builder.HasOne(e => e.Character).WithOne(c => c.EquippedItems).HasForeignKey<EquippedItems>(e => e.IdCharacter);
+        _ = builder.HasOne(e => e.Character)
+            .WithOne(c => c.EquippedItems)
+            .HasForeignKey<EquippedItems>(e => e.IdCharacter);
 
         _ = builder.HasOne(e => e.Boots).WithMany().HasForeignKey(e => e.IdBoots);
         _ = builder.HasOne(e => e.Head).WithMany().HasForeignKey(e => e.IdHead);

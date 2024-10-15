@@ -1,11 +1,16 @@
-using Assets.Scripts.Connection.ApiConfiguration;
+//-----------------------------------------------------------------------
+// <copyright file="UpdateService.cs" company="Starlight-Technology">
+//     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using Assets.Scripts.Connection.Api;
 using Assets.Scripts.Helpers;
+using Assets.Scripts.Models.File;
+using Assets.Scripts.Models.Response;
 using Assets.Scripts.Models.Version;
 
 using Newtonsoft.Json;
-
-using ROH.Models.Version;
-using ROH.StandardModels.Paginator;
 
 using System;
 using System.Collections.Generic;
@@ -21,19 +26,40 @@ namespace Assets.Scripts.Update
 {
     public class UpdateService : MonoBehaviour
     {
+        private ApiVersionService _apiService;
         private readonly ObjectPropertyGetter<Text> _txtUpdate = new() { ObjectName = "txtUpdate" };
         private readonly ObjectPropertyGetter<Text> _txtUpdateBackground = new() { ObjectName = "txtUpdateBackground" };
-        private readonly ApiVersionService _apiService = new();
         private string filePath;
 
-        private async void Start()
+        private void ChangeText(string text)
         {
-            ChangeText("Connecting to server...");
-            filePath = Application.persistentDataPath;
-            await LookForUpdate();
+            if (string.IsNullOrEmpty(text))
+            {
+                return;
+            }
+
+            _txtUpdate.SetValue(text);
+            _txtUpdateBackground.SetValue(text);
         }
 
-        private async Task LookForUpdate()
+        private async Task DownloadFileAsync(GameVersionFileModel file, CancellationToken cancellationToken = default)
+        {
+            FileModel download = await _apiService.DownloadFileAsync(file.Guid.ToString(), cancellationToken).ConfigureAwait(true);
+            if (download != null)
+            {
+                file.Content = download.Content;
+                await SaveFileAsync(file, cancellationToken).ConfigureAwait(true);
+            }
+        }
+
+        private bool HasNewVersion(GameVersionModel gameVersion, GameVersionModel currentGameVersion)
+        {
+            return (currentGameVersion.Version > gameVersion.Version) ||
+                (currentGameVersion.Release > gameVersion.Release) ||
+                (currentGameVersion.Review > gameVersion.Review);
+        }
+
+        private async Task LookForUpdateAsync(CancellationToken cancellationToken = default)
         {
             GameVersionModel gameVersion = new()
             {
@@ -44,7 +70,7 @@ namespace Assets.Scripts.Update
 
             ChangeText("Verifying version...");
 
-            await _apiService.GetCurrentVersion();
+            await _apiService.GetCurrentVersionAsync(cancellationToken).ConfigureAwait(true);
 
             GameVersionModel currentGameVersion = new()
             {
@@ -54,67 +80,13 @@ namespace Assets.Scripts.Update
             };
 
             if (HasNewVersion(gameVersion, currentGameVersion))
-                await VerifyFiles();
+                await VerifyFilesAsync(cancellationToken).ConfigureAwait(true);
         }
 
-        private bool HasNewVersion(GameVersionModel gameVersion, GameVersionModel currentGameVersion) => currentGameVersion.Version > gameVersion.Version || currentGameVersion.Release > gameVersion.Release || currentGameVersion.Review > gameVersion.Review;
+        private static bool ResponseHasGameVersions(PaginatedModel response)
+        { return (response != null) && (response.ObjectResponse != null) && response.ObjectResponse.Any(); }
 
-        private async Task VerifyFiles()
-        {
-            try
-            {
-                PaginatedModel response = await _apiService.GetReleasedVersions();
-                if (ResponseHasGameVersions(response))
-                {
-                    string json = JsonConvert.SerializeObject(response.ObjectResponse);
-                    ICollection<GameVersionModel> versions = JsonConvert.DeserializeObject<ICollection<GameVersionModel>>(json);
-                    foreach (GameVersionModel version in versions)
-                    {
-                        await VerifyIfFileExist(version);
-                    }
-                }
-                else
-                {
-                    ChangeText("A error has occurred, please contact the support.");
-                }
-            }
-            catch (Exception ex) { Debug.LogException(ex); }
-        }
-
-        private static bool ResponseHasGameVersions(PaginatedModel response) => response != null && response.ObjectResponse != null && response.ObjectResponse.Any();
-
-        private async Task VerifyIfFileExist(GameVersionModel version)
-        {
-            Models.Response.DefaultResponse response = await _apiService.GetVersionFiles(version.Guid.ToString());
-            string json = JsonConvert.SerializeObject(response.ObjectResponse);
-            ICollection<GameVersionFileModel> files = JsonConvert.DeserializeObject<ICollection<GameVersionFileModel>>(json);
-            foreach (GameVersionFileModel file in files)
-            {
-                string versionFolder = $@"{filePath}/{version.Version}.{version.Release}.{version.Review}";
-
-                if (!Directory.Exists(versionFolder))
-                {
-                    _ = Directory.CreateDirectory(versionFolder);
-                }
-
-                file.Path = @$"{versionFolder}/{file.Name}";
-
-                if (!File.Exists(file.Path))
-                    await DownloadFile(file);
-            }
-        }
-
-        private async Task DownloadFile(GameVersionFileModel file)
-        {
-            Models.File.FileModel download = await _apiService.DownloadFile(file.Guid.ToString());
-            if (download != null)
-            {
-                file.Content = download.Content;
-                await SaveFileAsync(file);
-            }
-        }
-
-        private async Task SaveFileAsync(GameVersionFileModel file)
+        private async Task SaveFileAsync(GameVersionFileModel file, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -130,7 +102,7 @@ namespace Assets.Scripts.Update
                 }
 
                 using FileStream fs = File.Create(file.Path);
-                await fs.WriteAsync(file.Content.AsMemory(), CancellationToken.None);
+                await fs.WriteAsync(file.Content.AsMemory(), cancellationToken).ConfigureAwait(true);
             }
             catch (Exception ex)
             {
@@ -138,21 +110,84 @@ namespace Assets.Scripts.Update
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Async/await", "CRR0034:An asynchronous method's name is missing an 'Async' suffix", Justification = "<Is a default for unity>")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Is a default for unity.>")]
+        private async void Start()
+        {
+            try
+            {
+                GameObject versionService = new("verServiceObject");
+                versionService.AddComponent<ApiVersionService>();
+                _apiService = versionService.GetComponent<ApiVersionService>();
+                _apiService.Start();
+
+                ChangeText("Connecting to server...");
+                filePath = Application.persistentDataPath;
+                await LookForUpdateAsync(CancellationToken.None).ConfigureAwait(true);
+            }
+            catch (Exception)
+            {
+                ChangeText("An unexpected error has occurred.");
+            }
+        }
+
+        private async Task VerifyFilesAsync(CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                PaginatedModel response = await _apiService.GetReleasedVersionsAsync(cancellationToken).ConfigureAwait(true);
+                if (ResponseHasGameVersions(response))
+                {
+                    string json = JsonConvert.SerializeObject(response.ObjectResponse);
+                    ICollection<GameVersionModel> versions = JsonConvert.DeserializeObject<ICollection<GameVersionModel>>(
+                        json);
+                    foreach (GameVersionModel version in versions)
+                    {
+                        await VerifyIfFileExistAsync(version, cancellationToken).ConfigureAwait(true);
+                    }
+                }
+                else
+                {
+                    ChangeText("A error has occurred, please contact the support.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
+        }
+
+        private async Task VerifyIfFileExistAsync(GameVersionModel version, CancellationToken cancellationToken = default)
+        {
+            DefaultResponse response = await _apiService.GetVersionFilesAsync(version.Guid.ToString(), cancellationToken).ConfigureAwait(true);
+            string json = JsonConvert.SerializeObject(response.ObjectResponse);
+            ICollection<GameVersionFileModel> files = JsonConvert.DeserializeObject<ICollection<GameVersionFileModel>>(
+                json);
+            foreach (GameVersionFileModel file in files)
+            {
+                string versionFolder = $@"{filePath}/{version.Version}.{version.Release}.{version.Review}";
+
+                if (!Directory.Exists(versionFolder))
+                {
+                    _ = Directory.CreateDirectory(versionFolder);
+                }
+
+                file.Path = @$"{versionFolder}/{file.Name}";
+
+                if (file.Active)
+                {
+                    if (!File.Exists(file.Path))
+                        await DownloadFileAsync(file, cancellationToken).ConfigureAwait(true);
+                }
+                else if (File.Exists(file.Path))
+                    File.Delete(file.Path);
+            }
+        }
+
         public void SaveVersionData(List<GameVersionModel> data)
         {
             string json = JsonUtility.ToJson(data);
             File.WriteAllText(filePath, json);
-        }
-
-        private void ChangeText(string text)
-        {
-            if (string.IsNullOrEmpty(text))
-            {
-                return;
-            }
-
-            _txtUpdate.SetValue(text);
-            _txtUpdateBackground.SetValue(text);
         }
     }
 }

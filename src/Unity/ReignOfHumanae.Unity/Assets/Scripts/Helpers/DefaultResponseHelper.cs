@@ -1,4 +1,10 @@
-﻿using Assets.Scripts.Models.Response;
+﻿//-----------------------------------------------------------------------
+// <copyright file="DefaultResponseHelper.cs" company="Starlight-Technology">
+//     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using Assets.Scripts.Models.Response;
 
 using Newtonsoft.Json;
 
@@ -8,20 +14,6 @@ namespace Assets.Scripts.Helpers
 {
     public static class DefaultResponseHelper
     {
-        public static T ResponseToModel<T>(this DefaultResponse response)
-        {
-            try
-            {
-                return response != null && response.ObjectResponse != null
-                    ? JsonConvert.DeserializeObject<T>(response.ObjectResponse.ToString()) ?? throw new InvalidCastException()
-                    : throw new InvalidCastException();
-            }
-            catch (InvalidCastException)
-            {
-                throw new InvalidCastException($"Can't convert object response to {typeof(T)}.");
-            }
-        }
-
         public static DefaultResponse MapObjectResponse<T>(this DefaultResponse response)
         {
             try
@@ -36,6 +28,21 @@ namespace Assets.Scripts.Helpers
                 return new DefaultResponse(null, response.HttpStatus, response.Message);
             }
             catch (Exception)
+            {
+                throw new InvalidCastException($"Can't convert object response to {typeof(T)}.");
+            }
+        }
+
+        public static T ResponseToModel<T>(this DefaultResponse response)
+        {
+            try
+            {
+                return ((response != null) && (response.ObjectResponse != null))
+                    ? (JsonConvert.DeserializeObject<T>(response.ObjectResponse.ToString()) ??
+                        throw new InvalidCastException())
+                    : throw new InvalidCastException();
+            }
+            catch (InvalidCastException)
             {
                 throw new InvalidCastException($"Can't convert object response to {typeof(T)}.");
             }

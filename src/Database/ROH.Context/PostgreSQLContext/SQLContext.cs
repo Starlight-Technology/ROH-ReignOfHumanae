@@ -1,4 +1,10 @@
-﻿// Ignore Spelling: Postgre
+﻿//-----------------------------------------------------------------------
+// <copyright file="SQLContext.cs" company="Starlight-Technology">
+//     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+// Ignore Spelling: Postgre
 
 using Microsoft.EntityFrameworkCore;
 
@@ -14,7 +20,7 @@ using ROH.Domain.Accounts;
 using ROH.Domain.Characters;
 using ROH.Domain.GameFiles;
 using ROH.Domain.Guilds;
-using ROH.Domain.items;
+using ROH.Domain.Items;
 using ROH.Domain.Kingdoms;
 using ROH.Domain.Logging;
 using ROH.Domain.Version;
@@ -24,52 +30,6 @@ namespace ROH.Context.PostgreSQLContext;
 
 public class SqlContext : DbContext, ISqlContext
 {
-    public DbSet<User> Users { get; set; }
-
-    public DbSet<Account> Accounts { get; set; }
-
-    public DbSet<AttackStatus> AttackStatuses { get; set; }
-
-    public DbSet<Character> Characters { get; set; }
-
-    public DbSet<DefenseStatus> DefenseStatuses { get; set; }
-
-    public DbSet<EquippedItems> EquippedItems { get; set; }
-
-    public DbSet<Skill> Skills { get; set; }
-
-    public DbSet<Status> Statuses { get; set; }
-
-    public DbSet<Guild> Guilds { get; set; }
-
-    public DbSet<MembersPosition> MembersPositions { get; set; }
-
-    public DbSet<Enchantment> Enchantments { get; set; }
-
-    public DbSet<Item> Items { get; set; }
-
-    public DbSet<Kingdom> Kingdoms { get; set; }
-
-    public DbSet<KingdomRelation> KingdomRelations { get; set; }
-
-    public DbSet<CharacterSkill> CharacterSkills { get; set; }
-
-    public DbSet<HandRing> RingsEquipped { get; set; }
-
-    public DbSet<CharacterInventory> CharacterInventory { get; set; }
-
-    public DbSet<ItemEnchantment> ItemEnchantments { get; set; }
-
-    public DbSet<Champion> Champions { get; set; }
-
-    public DbSet<GameVersion> GameVersions { get; set; }
-
-    public DbSet<GameVersionFile> GameVersionFiles { get; set; }
-
-    public DbSet<Log> Logs { get; set; }
-
-    public DbSet<GameFile> GameFiles { get; set; }
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         string? connectionString = Environment.GetEnvironmentVariable("ROH_DATABASE_CONNECTION_STRING");
@@ -105,5 +65,51 @@ public class SqlContext : DbContext, ISqlContext
         base.OnModelCreating(modelBuilder);
     }
 
-    public async Task<int> SaveChangesAsync() => await base.SaveChangesAsync().ConfigureAwait(false);
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => base.SaveChangesAsync(cancellationToken);
+
+    public DbSet<Account> Accounts { get; set; }
+
+    public DbSet<AttackStatus> AttackStatuses { get; set; }
+
+    public DbSet<Champion> Champions { get; set; }
+
+    public DbSet<CharacterInventory> CharacterInventory { get; set; }
+
+    public DbSet<Character> Characters { get; set; }
+
+    public DbSet<CharacterSkill> CharacterSkills { get; set; }
+
+    public DbSet<DefenseStatus> DefenseStatuses { get; set; }
+
+    public DbSet<Enchantment> Enchantments { get; set; }
+
+    public DbSet<EquippedItems> EquippedItems { get; set; }
+
+    public DbSet<GameFile> GameFiles { get; set; }
+
+    public DbSet<GameVersionFile> GameVersionFiles { get; set; }
+
+    public DbSet<GameVersion> GameVersions { get; set; }
+
+    public DbSet<Guild> Guilds { get; set; }
+
+    public DbSet<ItemEnchantment> ItemEnchantments { get; set; }
+
+    public DbSet<Item> Items { get; set; }
+
+    public DbSet<KingdomRelation> KingdomRelations { get; set; }
+
+    public DbSet<Kingdom> Kingdoms { get; set; }
+
+    public DbSet<Log> Logs { get; set; }
+
+    public DbSet<MembersPosition> MembersPositions { get; set; }
+
+    public DbSet<HandRing> RingsEquipped { get; set; }
+
+    public DbSet<Skill> Skills { get; set; }
+
+    public DbSet<Status> Statuses { get; set; }
+
+    public DbSet<User> Users { get; set; }
 }

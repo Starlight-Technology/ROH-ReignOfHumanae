@@ -172,15 +172,14 @@
                             StateHasChanged();
 
                             var responseUpload = await _versionFileService.UploadVersionFile(
-                            new GameVersionFileModel(
-                            Guid.Empty,
-                            fileName,
-                            "",
-                            fileExtension,
-                            fileContent,
-                            fileSize,
-                            gameVersion
-                            )
+                            new GameVersionFileModel (){
+                            Guid = Guid.Empty,
+                            Name= fileName,
+                            Format = fileExtension,
+                            Content = fileContent,
+                            Size = fileSize,
+                                    GameVersion = gameVersion
+                            }
                             );
 
                             if (responseUpload != null && !responseUpload.HttpStatus.IsSuccessStatusCode())

@@ -74,11 +74,16 @@
     <Analyzer Include="C:\Users\rodri\source\repos\RodrigoMartinsMoraes-Z\ROH-ReignOfHumanae\ReignOfHumanae.Unity\Library\PackageCache\com.unity.entities@1.0.16\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.JobEntityGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Connection\Api\ApiLoginService.cs" />
+    <Compile Include="Assets\Scripts\Login\LoginService.cs" />
+    <Compile Include="Assets\Scripts\Models\Account\AccountModel.cs" />
+    <Compile Include="Assets\Scripts\Models\Account\UserModel.cs" />
     <Compile Include="Assets\Scripts\Models\Configuration\ConfigurationModel.cs" />
     <Compile Include="Assets\Scripts\Helpers\DefaultResponseHelper.cs" />
     <Compile Include="Assets\Scripts\Helpers\ObjectPropertyGetter.cs" />
     <Compile Include="Assets\Scripts\Connection\ApiConfiguration\ApiClient.cs" />
     <Compile Include="Assets\Scripts\Configurations\InitialConfiguration.cs" />
+    <Compile Include="Assets\Scripts\Models\Login\LoginModel.cs" />
     <Compile Include="Assets\Scripts\Models\Response\PaginatedModel.cs" />
     <Compile Include="Assets\Scripts\Player\CameraMovements.cs" />
     <Compile Include="Assets\Scripts\Models\Response\DefaultResponse.cs" />
@@ -89,7 +94,7 @@
     <Compile Include="Assets\Scripts\Models\Version\GameVersionModel.cs" />
     <Compile Include="Assets\Scripts\Update\UpdateService.cs" />
     <Compile Include="Assets\Scripts\Models\File\FileModel.cs" />
-    <Compile Include="Assets\Scripts\Connection\ApiConfiguration\ApiVersionService.cs" />
+    <Compile Include="Assets\Scripts\Connection\Api\ApiVersionService.cs" />
     <Compile Include="GlobalSuppressions.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -1219,8 +1224,7 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

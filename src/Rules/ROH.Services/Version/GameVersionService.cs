@@ -1,5 +1,12 @@
-﻿using AutoMapper;
+﻿//-----------------------------------------------------------------------
+// <copyright file="GameVersionService.cs" company="Starlight-Technology">
+//     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using AutoMapper;
 
+using ROH.Domain.Paginator;
 using ROH.Domain.Version;
 using ROH.Interfaces.Repository.Version;
 using ROH.Interfaces.Services.ExceptionService;
@@ -9,21 +16,31 @@ using ROH.StandardModels.Response;
 using ROH.StandardModels.Version;
 using ROH.Utils.Helpers;
 
+using System.Net;
+
 namespace ROH.Services.Version;
 
-public class GameVersionService(IGameVersionRepository versionRepository, IMapper mapper, IExceptionHandler exceptionHandler) : IGameVersionService
+public class GameVersionService(
+    IGameVersionRepository versionRepository,
+    IMapper mapper,
+    IExceptionHandler exceptionHandler) : IGameVersionService
 {
-    public async Task<DefaultResponse> GetVersionByGuid(string versionGuid)
+    private async Task<DefaultResponse> ReleaseVersionAsync(DefaultResponse defaultResponse, CancellationToken cancellationToken = default)
     {
         try
         {
-            if (Guid.TryParse(versionGuid, out Guid guid))
-            {
-                GameVersion? version = await versionRepository.GetVersionByGuid(guid);
-                return new DefaultResponse() { ObjectResponse = version };
-            }
+            if (defaultResponse.ObjectResponse is null)
+                return new DefaultResponse(httpStatus: HttpStatusCode.NotFound, message: "The version has not found!");
 
-            return await ReturnGuidInvalid();
+            GameVersion? existingVersion = await versionRepository.GetVersionByGuidAsync(
+                ((GameVersion)defaultResponse.ObjectResponse).Guid, cancellationToken).ConfigureAwait(true);
+
+            existingVersion!.Released = true;
+            existingVersion!.ReleaseDate = DateTime.UtcNow;
+
+            _ = await versionRepository.UpdateGameVersionAsync(existingVersion, cancellationToken).ConfigureAwait(true);
+
+            return new DefaultResponse(message: "The version has been set as release.");
         }
         catch (Exception ex)
         {
@@ -31,53 +48,31 @@ public class GameVersionService(IGameVersionRepository versionRepository, IMappe
         }
     }
 
-    public async Task<DefaultResponse> GetAllVersions(int take = 10, int page = 1)
+    private static Task<DefaultResponse> ReturnGuidInvalidAsync(CancellationToken cancellationToken = default)
     {
-        try
-        {
-            int skip = take * (page - 1);
-
-            Domain.Paginator.Paginated result = await versionRepository.GetAllVersions(take, skip);
-
-            IList<GameVersion>? versions = result.ObjectResponse.Cast<GameVersion>().ToList();
-            int total = result.Total;
-            int pages = 0;
-            if (versions.Count > 0)
-            {
-                pages = (int)Math.Ceiling((double)total / take);
-            }
-
-            IList<GameVersionModel> versionModels = mapper.Map<IList<GameVersionModel>>(versions);
-
-            List<object> versionObjects = versionModels.Cast<object>().ToList();
-
-            PaginatedModel paginatedModel = new() { TotalPages = pages, ObjectResponse = versionObjects };
-
-            return new DefaultResponse(objectResponse: paginatedModel);
-        }
-        catch (Exception ex)
-        {
-            return exceptionHandler.HandleException(ex);
-        }
+        return cancellationToken.IsCancellationRequested
+            ? Task.FromCanceled<DefaultResponse>(cancellationToken)
+            : Task.FromResult(
+                new DefaultResponse { HttpStatus = HttpStatusCode.ExpectationFailed, Message = "The Guid is invalid!" });
     }
 
-    public async Task<DefaultResponse> GetAllReleasedVersions(int take = 10, int page = 1)
+    public async Task<DefaultResponse> GetAllReleasedVersionsAsync(int take = 10, int page = 1, CancellationToken cancellationToken = default)
     {
         try
         {
             int skip = take * (page - 1);
 
-            Domain.Paginator.Paginated result = await versionRepository.GetAllReleasedVersions(take, skip);
+            Paginated result = await versionRepository.GetAllReleasedVersionsAsync(take, skip, cancellationToken).ConfigureAwait(true);
 
-            IList<GameVersion>? versions = result.ObjectResponse.Cast<GameVersion>().ToList();
+            List<GameVersion>? versions = result.ObjectResponse.Cast<GameVersion>().ToList();
             int total = result.Total;
             int pages = 0;
             if (versions.Count > 0)
             {
-                pages = (int)Math.Ceiling((double)total / take);
+                pages = (int)Math.Ceiling(((double)total) / take);
             }
 
-            IList<GameVersionModel> versionModels = mapper.Map<IList<GameVersionModel>>(versions);
+            List<GameVersionModel> versionModels = mapper.Map<List<GameVersionModel>>(versions);
 
             List<object> versionObjects = versionModels.Cast<object>().ToList();
 
@@ -91,19 +86,28 @@ public class GameVersionService(IGameVersionRepository versionRepository, IMappe
         }
     }
 
-    public async Task<DefaultResponse> NewVersion(GameVersionModel version)
+    public async Task<DefaultResponse> GetAllVersionsAsync(int take = 10, int page = 1, CancellationToken cancellationToken = default)
     {
         try
         {
-            if (await VerifyIfVersionExist(version))
+            int skip = take * (page - 1);
+
+            Paginated result = await versionRepository.GetAllVersionsAsync(take, skip, cancellationToken).ConfigureAwait(true);
+
+            int total = result.Total;
+            int pages = 0;
+            List<GameVersion>? versions = result.ObjectResponse.Cast<GameVersion>().ToList();
+            if (versions.Count > 0)
             {
-                return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.Conflict,
-                                           message: "This version already exist.");
+                pages = (int)Math.Ceiling(((double)total) / take);
             }
 
-            _ = await versionRepository.SetNewGameVersion(mapper.Map<GameVersion>(version));
+            List<GameVersionModel> versionModels = mapper.Map<List<GameVersionModel>>(versions);
+            List<object> versionObjects = versionModels.Cast<object>().ToList();
 
-            return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.Created, message: "New game version created.");
+            PaginatedModel paginatedModel = new() { TotalPages = pages, ObjectResponse = versionObjects };
+
+            return new DefaultResponse(objectResponse: paginatedModel);
         }
         catch (Exception ex)
         {
@@ -111,15 +115,11 @@ public class GameVersionService(IGameVersionRepository versionRepository, IMappe
         }
     }
 
-    public async Task<bool> VerifyIfVersionExist(GameVersionModel version) => await versionRepository.VerifyIfExist(mapper.Map<GameVersion>(version));
-
-    public async Task<bool> VerifyIfVersionExist(string versionGuid) => Guid.TryParse(versionGuid, out Guid guid) && await versionRepository.VerifyIfExist(guid);
-
-    public async Task<DefaultResponse> GetCurrentVersion()
+    public async Task<DefaultResponse> GetCurrentVersionAsync(CancellationToken cancellationToken = default)
     {
         try
         {
-            GameVersion? version = await versionRepository.GetCurrentGameVersion();
+            GameVersion? version = await versionRepository.GetCurrentGameVersionAsync(cancellationToken).ConfigureAwait(true);
             return new DefaultResponse(objectResponse: version);
         }
         catch (Exception ex)
@@ -128,28 +128,17 @@ public class GameVersionService(IGameVersionRepository versionRepository, IMappe
         }
     }
 
-    public async Task<DefaultResponse> SetReleased(string versionGuid)
-    {
-        DefaultResponse versionResponse = await GetVersionByGuid(versionGuid);
-
-        return versionResponse.HttpStatus.IsSuccessStatusCode() ? await ReleaseVersion(versionResponse) : versionResponse;
-    }
-
-    private async Task<DefaultResponse> ReleaseVersion(DefaultResponse defaultResponse)
+    public async Task<DefaultResponse> GetVersionByGuidAsync(string versionGuid, CancellationToken cancellationToken = default)
     {
         try
         {
-            if (defaultResponse.ObjectResponse is null)
-                return new DefaultResponse(httpStatus: System.Net.HttpStatusCode.NotFound, message: "The version has not found!");
+            if (Guid.TryParse(versionGuid, out Guid guid))
+            {
+                GameVersion? version = await versionRepository.GetVersionByGuidAsync(guid, cancellationToken).ConfigureAwait(true);
+                return new DefaultResponse { ObjectResponse = version };
+            }
 
-            GameVersion? existingVersion = await versionRepository.GetVersionByGuid(((GameVersion)defaultResponse.ObjectResponse).Guid);
-
-            existingVersion!.Released = true;
-            existingVersion!.ReleaseDate = DateTime.UtcNow;
-
-            _ = await versionRepository.UpdateGameVersion(existingVersion);
-
-            return new DefaultResponse(message: "The version has been set as release.");
+            return await ReturnGuidInvalidAsync(cancellationToken).ConfigureAwait(true);
         }
         catch (Exception ex)
         {
@@ -157,5 +146,37 @@ public class GameVersionService(IGameVersionRepository versionRepository, IMappe
         }
     }
 
-    private static Task<DefaultResponse> ReturnGuidInvalid() => Task.FromResult(new DefaultResponse { HttpStatus = System.Net.HttpStatusCode.ExpectationFailed, Message = "The Guid is invalid!" });
+    public async Task<DefaultResponse> NewVersionAsync(GameVersionModel version, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            if (await VerifyIfVersionExistAsync(version, cancellationToken).ConfigureAwait(true))
+            {
+                return new DefaultResponse(httpStatus: HttpStatusCode.Conflict, message: "This version already exist.");
+            }
+
+            _ = await versionRepository.SetNewGameVersionAsync(mapper.Map<GameVersion>(version), cancellationToken).ConfigureAwait(true);
+
+            return new DefaultResponse(httpStatus: HttpStatusCode.Created, message: "New game version created.");
+        }
+        catch (Exception ex)
+        {
+            return exceptionHandler.HandleException(ex);
+        }
+    }
+
+    public async Task<DefaultResponse> SetReleasedAsync(string versionGuid, CancellationToken cancellationToken = default)
+    {
+        DefaultResponse versionResponse = await GetVersionByGuidAsync(versionGuid, cancellationToken).ConfigureAwait(true);
+
+        return versionResponse.HttpStatus.IsSuccessStatusCode()
+            ? (await ReleaseVersionAsync(versionResponse, cancellationToken).ConfigureAwait(true))
+            : versionResponse;
+    }
+
+    public Task<bool> VerifyIfVersionExistAsync(GameVersionModel version, CancellationToken cancellationToken = default) => versionRepository.VerifyIfExistAsync(
+        mapper.Map<GameVersion>(version), cancellationToken);
+
+    public async Task<bool> VerifyIfVersionExistAsync(string versionGuid, CancellationToken cancellationToken = default) => Guid.TryParse(versionGuid, out Guid guid) &&
+        (await versionRepository.VerifyIfExistAsync(guid, cancellationToken).ConfigureAwait(true));
 }

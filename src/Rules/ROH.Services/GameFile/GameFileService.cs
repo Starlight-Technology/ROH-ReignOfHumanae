@@ -1,4 +1,10 @@
-﻿using ROH.Interfaces.Repository.GameFile;
+﻿//-----------------------------------------------------------------------
+// <copyright file="GameFileService.cs" company="Starlight-Technology">
+//     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using ROH.Interfaces.Repository.GameFile;
 using ROH.Interfaces.Services.ExceptionService;
 using ROH.Interfaces.Services.GameFile;
 using ROH.StandardModels.File;
@@ -10,51 +16,27 @@ namespace ROH.Services.GameFile;
 
 public class GameFileService(IGameFileRepository gameFileRepository, IExceptionHandler exceptionHandler) : IGameFileService
 {
-    public async Task<DefaultResponse> DownloadFile(Guid fileGuid)
-    {
-        try
-        {
-            Domain.GameFiles.GameFile? file = await gameFileRepository.GetFile(fileGuid);
-
-            return file is null ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File Not Found.") : await GetGameFile(file);
-        }
-        catch (Exception ex)
-        {
-            return exceptionHandler.HandleException(ex);
-        }
-    }
-
-    public async Task<DefaultResponse> DownloadFile(long id)
-    {
-        try
-        {
-            Domain.GameFiles.GameFile? file = await gameFileRepository.GetFile(id);
-
-            return file is null ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File Not Found.") : await GetGameFile(file);
-        }
-        catch (Exception ex)
-        {
-            return exceptionHandler.HandleException(ex);
-        }
-    }
-
-    private async Task<DefaultResponse> GetGameFile(Domain.GameFiles.GameFile gameFile)
+    private async Task<DefaultResponse> GetGameFileAsync(Domain.GameFiles.GameFile gameFile, CancellationToken cancellationToken = default)
     {
         try
         {
             string filePath = Path.Combine(gameFile.Path, gameFile.Name);
 
             if (string.IsNullOrWhiteSpace(filePath))
-                throw new InvalidOperationException("Cant find the file patch!");
+                throw new InvalidOperationException("Cant find the file path!");
 
             if (File.Exists(filePath))
             {
-                byte[] fileContent = await File.ReadAllBytesAsync(filePath);
+                byte[] fileContent = await File.ReadAllBytesAsync(filePath, cancellationToken).ConfigureAwait(true);
 
-                return new DefaultResponse(new GameFileModel(
-                    name: gameFile.Name,
-                    format: gameFile.Format,
-                    content: fileContent), HttpStatusCode.OK);
+                return new DefaultResponse(
+                    new GameFileModel(
+                        name: gameFile.Name,
+                        format: gameFile.Format,
+                        content: fileContent,
+                        size: gameFile.Size,
+                        active: gameFile.Active),
+                    HttpStatusCode.OK);
             }
             else
             {
@@ -67,7 +49,62 @@ public class GameFileService(IGameFileRepository gameFileRepository, IExceptionH
         }
     }
 
-    public async Task SaveFileAsync(Domain.GameFiles.GameFile file, byte[] content)
+    public async Task<DefaultResponse> DownloadFileAsync(Guid fileGuid, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            Domain.GameFiles.GameFile? file = await gameFileRepository.GetFileAsync(fileGuid, cancellationToken).ConfigureAwait(true);
+
+            return (file is null)
+                ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File Not Found.")
+                : (await GetGameFileAsync(file, cancellationToken).ConfigureAwait(true));
+        }
+        catch (Exception ex)
+        {
+            return exceptionHandler.HandleException(ex);
+        }
+    }
+
+    public async Task<DefaultResponse> DownloadFileAsync(long id, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            Domain.GameFiles.GameFile? file = await gameFileRepository.GetFileAsync(id, cancellationToken).ConfigureAwait(true);
+
+            return (file is null)
+                ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File Not Found.")
+                : (await GetGameFileAsync(file, cancellationToken).ConfigureAwait(true));
+        }
+        catch (Exception ex)
+        {
+            return exceptionHandler.HandleException(ex);
+        }
+    }
+
+    public async Task<DefaultResponse> MakeFileHasDeprecatedAsync(Guid fileGuid, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            Domain.GameFiles.GameFile? file = await gameFileRepository.GetFileAsync(fileGuid, cancellationToken).ConfigureAwait(true);
+
+            if (file is null)
+                return new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File not found.");
+
+            file = file with { Active = false };
+
+            await gameFileRepository.UpdateFileAsync(file, cancellationToken).ConfigureAwait(true);
+
+            return new DefaultResponse(
+                HttpStatusCode.OK,
+                message: $"The file \"{file.Name}\" of version has marked as deprecated.");
+        }
+        catch (Exception ex)
+        {
+            return exceptionHandler.HandleException(ex);
+        }
+    }
+
+    public async Task SaveFileAsync(Domain.GameFiles.GameFile file, byte[] content, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -83,10 +120,10 @@ public class GameFileService(IGameFileRepository gameFileRepository, IExceptionH
 
             using (FileStream fs = File.Create(filePath))
             {
-                await fs.WriteAsync(content.AsMemory(), CancellationToken.None);
+                await fs.WriteAsync(content.AsMemory(), CancellationToken.None).ConfigureAwait(true);
             }
 
-            await gameFileRepository.SaveFile(file);
+            await gameFileRepository.SaveFileAsync(file, cancellationToken).ConfigureAwait(true);
         }
         catch (Exception ex)
         {

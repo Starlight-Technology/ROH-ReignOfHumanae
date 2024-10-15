@@ -1,3 +1,9 @@
+//-----------------------------------------------------------------------
+// <copyright file="CustomAuthenticationStateProvider.cs" company="Starlight-Technology">
+//     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
 using Blazored.LocalStorage;
 
 using Microsoft.AspNetCore.Components.Authorization;
@@ -14,27 +20,8 @@ namespace ROH.Blazor.Server.Helpers;
 public class CustomAuthenticationStateProvider(ILocalStorageService localStorage) : AuthenticationStateProvider, ICustomAuthenticationStateProvider
 {
     private readonly string _authToken = "authToken";
-    private readonly string _userKey = "userKey";
     private bool _isInitialized;
-
-    public async Task<string> GetToken()
-    {
-        if (!_isInitialized)
-        {
-            return "";
-        }
-
-        var token = await localStorage.GetItemAsStringAsync(_authToken);
-        return token?.Trim('"') ?? "";
-    }
-
-    public async Task<string> GetUser() => _isInitialized ? await localStorage.GetItemAsStringAsync(_userKey) ?? "" : "";
-
-    public async Task SetUserToken(string user = "", string token = "")
-    {
-        await localStorage.SetItemAsync(_authToken, token);
-        await localStorage.SetItemAsync(_userKey, user);
-    }
+    private readonly string _userKey = "userKey";
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
@@ -43,7 +30,7 @@ public class CustomAuthenticationStateProvider(ILocalStorageService localStorage
             return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
         }
 
-        var token = await localStorage.GetItemAsync<string>("_tokenKey");
+        string? token = await localStorage.GetItemAsync<string>("_tokenKey");
 
         token = token?.Trim('"');
 
@@ -52,39 +39,57 @@ public class CustomAuthenticationStateProvider(ILocalStorageService localStorage
             return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
         }
 
-        var claims = JwtParser.ParseClaimsFromJwt(token);
+        IEnumerable<Claim> claims = JwtParser.ParseClaimsFromJwt(token);
 
-        var user = new ClaimsPrincipal(new ClaimsIdentity(claims, "jwtAuthType"));
+        ClaimsPrincipal user = new(new ClaimsIdentity(claims, "jwtAuthType"));
 
         return new AuthenticationState(user);
     }
 
-    public async Task MarkUserAsAuthenticated(string token)
+    public async Task<string> GetToken()
     {
-        var claims = JwtParser.ParseClaimsFromJwt(token);
+        if (!_isInitialized)
+        {
+            return string.Empty;
+        }
 
-        await localStorage.SetItemAsync("_tokenKey", token);
-
-        var authenticatedUser = new ClaimsPrincipal(new ClaimsIdentity(claims, "jwtAuthType"));
-
-        NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(authenticatedUser)));
-
+        string? token = await localStorage.GetItemAsStringAsync(_authToken);
+        return token?.Trim('"') ?? string.Empty;
     }
 
-    public async Task MarkUserAsLoggedOut()
-    {
-        await localStorage.RemoveItemAsync("authToken");
-
-        var anonymousUser = new ClaimsPrincipal(new ClaimsIdentity());
-
-        NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(anonymousUser)));
-
-    }
+    public async Task<string> GetUser() => _isInitialized
+        ? (await localStorage.GetItemAsStringAsync(_userKey) ?? string.Empty)
+        : string.Empty;
 
     public void Initialize()
     {
         _isInitialized = true;
         NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
     }
-}
 
+    public async Task MarkUserAsAuthenticated(string token)
+    {
+        IEnumerable<Claim> claims = JwtParser.ParseClaimsFromJwt(token);
+
+        await localStorage.SetItemAsync("_tokenKey", token);
+
+        ClaimsPrincipal authenticatedUser = new(new ClaimsIdentity(claims, "jwtAuthType"));
+
+        NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(authenticatedUser)));
+    }
+
+    public async Task MarkUserAsLoggedOut()
+    {
+        await localStorage.RemoveItemAsync("authToken");
+
+        ClaimsPrincipal anonymousUser = new(new ClaimsIdentity());
+
+        NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(anonymousUser)));
+    }
+
+    public async Task SetUserToken(string user = "", string token = "")
+    {
+        await localStorage.SetItemAsync(_authToken, token);
+        await localStorage.SetItemAsync(_userKey, user);
+    }
+}

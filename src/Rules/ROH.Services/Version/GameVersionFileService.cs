@@ -1,13 +1,20 @@
-﻿using AutoMapper;
+﻿//-----------------------------------------------------------------------
+// <copyright file="GameVersionFileService.cs" company="Starlight-Technology">
+//     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using AutoMapper;
 
 using FluentValidation;
+using FluentValidation.Results;
 
-using ROH.Domain.GameFiles;
 using ROH.Domain.Version;
 using ROH.Interfaces.Repository.Version;
 using ROH.Interfaces.Services.ExceptionService;
 using ROH.Interfaces.Services.GameFile;
 using ROH.Interfaces.Services.Version;
+using ROH.StandardModels.File;
 using ROH.StandardModels.Response;
 using ROH.StandardModels.Version;
 using ROH.Utils.Helpers;
@@ -24,15 +31,56 @@ public class GameVersionFileService(
     IMapper mapper,
     IExceptionHandler exceptionHandler) : IGameVersionFileService
 {
-    public async Task<DefaultResponse> DownloadFile(Guid fileGuid)
+    private async Task<GameVersion?> GetCurrentVersionAsync(CancellationToken cancellationToken = default)
+    {
+        DefaultResponse? response = await gameVersion.GetCurrentVersionAsync(cancellationToken).ConfigureAwait(true);
+
+        if (response is null)
+            return null;
+
+        GameVersion? version = response.MapObjectResponse<GameVersion>().ObjectResponse as GameVersion;
+        return version;
+    }
+
+    private static string GetFilePath(GameVersion gameVersion) =>
+#if DEBUG
+        @$".\ROHUpdateFiles\{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}\";
+
+#else
+    @$"/app/ROH/updateFiles/{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}/";
+#endif
+
+    private static string GetRejectionMessage(GameVersion gameVersion) => gameVersion.Released
+        ? "File Upload Failed: This version has already been released. You cannot upload new files for a released version."
+        : "File Upload Failed: This version has already been released with a yearly schedule. Uploading new files is not allowed for past versions.";
+
+    private static Task<bool> ShouldRejectFileUploadAsync(
+        GameVersion gameVersion,
+        GameVersion? currentVersion,
+        CancellationToken cancellationToken = default)
+    {
+        // Task was cancelled, throw OperationCanceledException to respect the cancellation request
+        cancellationToken.ThrowIfCancellationRequested();
+
+        // Perform the original logic
+        return Task.FromResult(gameVersion.Released || (gameVersion.VersionDate < currentVersion?.VersionDate));
+    }
+
+    private Task<ValidationResult> ValidateFileAsync(GameVersionFileModel file, CancellationToken cancellationToken = default)
+        => validator.ValidateAsync(file, cancellationToken);
+
+    public async Task<DefaultResponse> DownloadFileAsync(Guid fileGuid, CancellationToken cancellationToken = default)
     {
         try
         {
-            GameVersionFile? versionFile = await gameVersionFileRepository.GetFile(fileGuid);
+            GameVersionFile? versionFile = await gameVersionFileRepository.GetFileAsync(fileGuid, cancellationToken).ConfigureAwait(true);
 
-            return versionFile?.GameFile != null
-                ? await gameFileService.DownloadFile(versionFile.GameFile.Guid)
-                : new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "Game Version File Not Found.");
+            return (versionFile?.GameFile != null)
+                ? (await gameFileService.DownloadFileAsync(versionFile.GameFile.Guid, cancellationToken).ConfigureAwait(true))
+                : new DefaultResponse(
+                    null,
+                    httpStatus: HttpStatusCode.NotFound,
+                    message: "Game Version File Not Found.");
         }
         catch (Exception ex)
         {
@@ -40,15 +88,18 @@ public class GameVersionFileService(
         }
     }
 
-    public async Task<DefaultResponse> DownloadFile(long id)
+    public async Task<DefaultResponse> DownloadFileAsync(long id, CancellationToken cancellationToken = default)
     {
         try
         {
-            GameVersionFile? versionFile = await gameVersionFileRepository.GetFile(id);
+            GameVersionFile? versionFile = await gameVersionFileRepository.GetFileAsync(id, cancellationToken).ConfigureAwait(true);
 
-            return versionFile?.GameFile != null
-                ? await gameFileService.DownloadFile(versionFile.GameFile.Id)
-                : new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "Game Version File Not Found.");
+            return (versionFile?.GameFile != null)
+                ? (await gameFileService.DownloadFileAsync(versionFile.GameFile.Id, cancellationToken).ConfigureAwait(true))
+                : new DefaultResponse(
+                    null,
+                    httpStatus: HttpStatusCode.NotFound,
+                    message: "Game Version File Not Found.");
         }
         catch (Exception ex)
         {
@@ -56,26 +107,33 @@ public class GameVersionFileService(
         }
     }
 
-    public async Task<DefaultResponse> GetFiles(string versionGuid)
+    public async Task<DefaultResponse> GetFilesAsync(string versionGuid, CancellationToken cancellationToken = default)
     {
         try
         {
-            bool response = await gameVersion.VerifyIfVersionExist(versionGuid);
+            bool response = await gameVersion.VerifyIfVersionExistAsync(versionGuid, cancellationToken).ConfigureAwait(true);
 
             if (response && Guid.TryParse(versionGuid, out Guid guid))
             {
-                List<GameVersionFile> files = await gameVersionFileRepository.GetFiles(guid);
+                List<GameVersionFile> files = await gameVersionFileRepository.GetFilesAsync(guid, cancellationToken).ConfigureAwait(true);
 
                 List<GameVersionFileModel> filesModels = [];
 
                 foreach (GameVersionFile item in files)
                 {
-                    item.GameFile = DownloadFile(item.IdGameFile).Result.ObjectResponse as Domain.GameFiles.GameFile;
+                    DefaultResponse result = await DownloadFileAsync(item.IdGameFile, cancellationToken).ConfigureAwait(true);
 
-                    if (item.GameFile is null)
+                    if (result.ObjectResponse is not GameFileModel gameFileModel)
                         continue;
 
-                    filesModels.Add(new GameVersionFileModel(guid: item.Guid, name: item.GameFile!.Name, size: item.GameFile!.Size));
+                    filesModels.Add(
+                        new GameVersionFileModel()
+                        {
+                            Guid = item.Guid,
+                            Name = gameFileModel.Name,
+                            Size = gameFileModel.Size,
+                            Active = gameFileModel.Active
+                        });
                 }
                 return new DefaultResponse(objectResponse: filesModels);
             }
@@ -88,35 +146,23 @@ public class GameVersionFileService(
         }
     }
 
-    public async Task<DefaultResponse> NewFile(GameVersionFileModel fileModel)
+    public async Task<DefaultResponse> NewFileAsync(GameVersionFileModel fileModel, CancellationToken cancellationToken = default)
     {
         try
         {
             if (fileModel.Content is null)
                 return new DefaultResponse(null, HttpStatusCode.BadRequest, "File content can't be empty.");
 
-            FluentValidation.Results.ValidationResult validation = await ValidateFileAsync(fileModel);
-            if (validation != null && !validation.IsValid && validation.Errors.Count > 0)
+            ValidationResult validation = await ValidateFileAsync(fileModel, cancellationToken).ConfigureAwait(true);
+            if ((validation is not null) && !validation.IsValid && (validation.Errors.Count > 0))
                 return new DefaultResponse(null, HttpStatusCode.BadRequest, validation.Errors.ToString()!);
 
             GameVersionFile versionFile = mapper.Map<GameVersionFile>(fileModel);
-            GameVersion? currentVersion = await GetCurrentVersionAsync();
+            GameVersion? currentVersion = await GetCurrentVersionAsync(cancellationToken).ConfigureAwait(true);
 
-            if (versionFile.GameVersion != null && await gameVersion.VerifyIfVersionExist(fileModel.GameVersion!))
+            if ((versionFile.GameVersion is not null) && (await gameVersion.VerifyIfVersionExistAsync(fileModel.GameVersion!, cancellationToken).ConfigureAwait(true)))
             {
-                if (await ShouldRejectFileUpload(versionFile.GameVersion, currentVersion))
-                    return new DefaultResponse(null, HttpStatusCode.BadRequest, GetRejectionMessage(versionFile.GameVersion));
-
-                Domain.GameFiles.GameFile file = mapper.Map<Domain.GameFiles.GameFile>(fileModel);
-                string path = GetFilePath(versionFile.GameVersion);
-                file = file with { Path = path };
-
-                await gameFileService.SaveFileAsync(file, fileModel.Content);
-
-                versionFile = versionFile with { GameFile = file };
-                await gameVersionFileRepository.SaveFile(versionFile);
-
-                return new DefaultResponse(HttpStatusCode.OK);
+                return await SaveFileAsync(gameVersionFileRepository, gameFileService, mapper, fileModel, versionFile, currentVersion, cancellationToken).ConfigureAwait(true);
             }
             else
             {
@@ -129,31 +175,23 @@ public class GameVersionFileService(
         }
     }
 
-    private async Task<FluentValidation.Results.ValidationResult> ValidateFileAsync(GameVersionFileModel file) => await validator.ValidateAsync(file);
-
-    private async Task<GameVersion?> GetCurrentVersionAsync()
+    private static async Task<DefaultResponse> SaveFileAsync(IGameVersionFileRepository gameVersionFileRepository, IGameFileService gameFileService, IMapper mapper, GameVersionFileModel fileModel, GameVersionFile versionFile, GameVersion? currentVersion, CancellationToken cancellationToken)
     {
-        DefaultResponse? response = await gameVersion.GetCurrentVersion();
+        if (await ShouldRejectFileUploadAsync(versionFile!.GameVersion!, currentVersion, cancellationToken).ConfigureAwait(true))
+            return new DefaultResponse(
+                null,
+                HttpStatusCode.BadRequest,
+                GetRejectionMessage(versionFile.GameVersion!));
 
-        if (response is null)
-            return null;
+        Domain.GameFiles.GameFile file = mapper.Map<Domain.GameFiles.GameFile>(fileModel);
+        string path = GetFilePath(versionFile.GameVersion!);
+        file = file with { Path = path };
 
-        GameVersion? version = response.MapObjectResponse<GameVersion>().ObjectResponse as GameVersion;
-        return version;
+        await gameFileService.SaveFileAsync(file, fileModel.Content!, cancellationToken).ConfigureAwait(true);
+
+        versionFile = versionFile with { GameFile = file };
+        await gameVersionFileRepository.SaveFileAsync(versionFile, cancellationToken).ConfigureAwait(true);
+
+        return new DefaultResponse(HttpStatusCode.OK);
     }
-
-    private static Task<bool> ShouldRejectFileUpload(GameVersion gameVersion, GameVersion? currentVersion) => Task.FromResult(gameVersion.Released || gameVersion.VersionDate < currentVersion?.VersionDate);
-
-    private static string GetRejectionMessage(GameVersion gameVersion) => gameVersion.Released
-            ? "File Upload Failed: This version has already been released. You cannot upload new files for a released version."
-            : "File Upload Failed: This version has already been released with a yearly schedule. Uploading new files is not allowed for past versions.";
-
-    private static string GetFilePath(GameVersion gameVersion) =>
-
-#if DEBUG
-        @$".\ROHUpdateFiles\{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}\";
-
-#else
-    @$"/app/ROH/updateFiles/{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}/";
-#endif
 }

@@ -1,3 +1,9 @@
+//-----------------------------------------------------------------------
+// <copyright file="Program.cs" company="Starlight-Technology">
+//     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
 using AutoMapper;
 
 using FluentValidation;
@@ -40,11 +46,12 @@ builder.Services.AddScoped<IValidator<LoginModel>, LoginModelValidator>();
 builder.Services.AddScoped<IExceptionHandler, ExceptionHandler>();
 
 // Auto Mapper Configurations
-MapperConfiguration mappingConfig = new(mc =>
-{
-    mc.AddProfile(new UserMapping());
-    mc.AddProfile(new AccountMapping());
-});
+MapperConfiguration mappingConfig = new(
+    mc =>
+    {
+        mc.AddProfile(new UserMapping());
+        mc.AddProfile(new AccountMapping());
+    });
 
 IMapper mapper = mappingConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
@@ -58,10 +65,12 @@ if (app.Environment.IsDevelopment())
     _ = app.UseSwaggerUI();
 }
 
-app.MapPost("Login", async (ILoginService loginService, LoginModel model) =>
-    await loginService.Login(model).ConfigureAwait(false)
-).WithName("Login")
-.WithOpenApi();
+app.MapPost(
+    "Login",
+    async (ILoginService loginService, LoginModel model) => await loginService.Login(model).ConfigureAwait(false)
+)
+    .WithName("Login")
+    .WithOpenApi();
 
 app.UseHttpsRedirection();
 
