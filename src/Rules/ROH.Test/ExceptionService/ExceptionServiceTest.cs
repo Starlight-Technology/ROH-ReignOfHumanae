@@ -17,10 +17,10 @@ using System.Net;
 
 namespace ROH.Test.ExceptionService;
 
-public class ExceptionHandlerTests
+public class ExceptionServiceTest
 {
     [Fact]
-    public void HandleException_ShouldLogException()
+    public void HandleExceptionShouldLogException()
     {
         // Arrange
         Mock<ILogRepository> logRepositoryMock = new();
@@ -39,13 +39,13 @@ public class ExceptionHandlerTests
         // Assert
         string expectedError = $@"Source: {exception.Source};Message: {exception.Message}; StackTrace: {exception.StackTrace}";
         logRepositoryMock.Verify(
-            logRepo => logRepo.SaveLog(
-                It.Is<Log>(log => (log.Message == expectedError) && (log.Severity == Severity.Error)), It.IsAny<CancellationToken>()),
+            logRepo => logRepo.SaveLogAsync(
+                It.Is<Log>(log => (string.Compare(log.Message, expectedError, StringComparison.Ordinal) == 0) && (log.Severity == Severity.Error)), It.IsAny<CancellationToken>()),
             Times.Once);
     }
 
     [Fact]
-    public void HandleException_ShouldReturnErrorResponseInDebugMode()
+    public void HandleExceptionShouldReturnErrorResponseInDebugMode()
     {
         // Arrange
         Mock<ILogRepository> logRepositoryMock = new();
@@ -67,7 +67,7 @@ public class ExceptionHandlerTests
     }
 
     [Fact]
-    public void HandleException_ShouldReturnFriendlyResponseInReleaseMode()
+    public void HandleExceptionShouldReturnFriendlyResponseInReleaseMode()
     {
         // Arrange
         Mock<ILogRepository> logRepositoryMock = new();

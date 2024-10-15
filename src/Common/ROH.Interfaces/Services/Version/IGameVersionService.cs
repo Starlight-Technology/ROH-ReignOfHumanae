@@ -11,19 +11,19 @@ namespace ROH.Interfaces.Services.Version;
 
 public interface IGameVersionService
 {
-    Task<DefaultResponse> GetAllReleasedVersions(int take = 10, int page = 1);
+    Task<DefaultResponse> GetAllReleasedVersionsAsync(int take = 10, int page = 1, CancellationToken cancellationToken = default);
 
-    Task<DefaultResponse> GetAllVersions(int take = 10, int page = 1);
+    Task<DefaultResponse> GetAllVersionsAsync(int take = 10, int page = 1, CancellationToken cancellationToken = default);
 
-    Task<DefaultResponse> GetCurrentVersion();
+    Task<DefaultResponse> GetCurrentVersionAsync(CancellationToken cancellationToken = default);
 
-    Task<DefaultResponse> GetVersionByGuid(string versionGuid);
+    Task<DefaultResponse> GetVersionByGuidAsync(string versionGuid, CancellationToken cancellationToken = default);
 
-    Task<DefaultResponse> NewVersion(GameVersionModel version);
+    Task<DefaultResponse> NewVersionAsync(GameVersionModel version, CancellationToken cancellationToken = default);
 
-    Task<DefaultResponse> SetReleased(string versionGuid);
+    Task<DefaultResponse> SetReleasedAsync(string versionGuid, CancellationToken cancellationToken = default);
 
-    Task<bool> VerifyIfVersionExist(GameVersionModel version);
+    Task<bool> VerifyIfVersionExistAsync(GameVersionModel version, CancellationToken cancellationToken = default);
 
-    Task<bool> VerifyIfVersionExist(string versionGuid);
+    Task<bool> VerifyIfVersionExistAsync(string versionGuid, CancellationToken cancellationToken = default);
 }

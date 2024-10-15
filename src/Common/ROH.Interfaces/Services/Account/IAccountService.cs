@@ -11,7 +11,7 @@ namespace ROH.Interfaces.Services.Account;
 
 public interface IAccountService
 {
-    Task<DefaultResponse> GetAccountByUserGuid(Guid userGuid);
+    Task<DefaultResponse> GetAccountByUserGuidAsync(Guid userGuid, CancellationToken cancellationToken = default);
 
-    Task<DefaultResponse> UpdateAccount(AccountModel accountModel);
+    Task<DefaultResponse> UpdateAccountAsync(AccountModel accountModel, CancellationToken cancellationToken = default);
 }

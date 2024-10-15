@@ -10,6 +10,7 @@ using Assets.Scripts.Models.Response;
 
 using Newtonsoft.Json;
 
+using System.Threading;
 using System.Threading.Tasks;
 
 using UnityEngine;
@@ -20,29 +21,40 @@ namespace Assets.Scripts.Connection.Api
     {
         private ApiClient _apiClient;
 
-        public async Task<DefaultResponse> Login(LoginModel loginModel)
+        public Task<DefaultResponse> LoginAsync(LoginModel loginModel, CancellationToken cancellationToken = default)
         {
             TaskCompletionSource<DefaultResponse> tcs = new();
 
-            _apiClient.Post<DefaultResponse>(
-                "Api/Account/Login",
-                loginModel,
-                (response) =>
-                {
-                    if (response != null)
-                    {
-                        string json = JsonConvert.SerializeObject(response);
-                        DefaultResponse resp = JsonConvert.DeserializeObject<DefaultResponse>(json);
-                        tcs.SetResult(resp);
-                    }
-                    else
-                    {
-                        Debug.LogError("Failed to retrieve response.");
-                        tcs.SetResult(null);
-                    }
-                });
+            // Check if cancellation is requested before starting the operation
+            if (cancellationToken.IsCancellationRequested)
+            {
+                tcs.SetCanceled();
+                return tcs.Task;
+            }
 
-            return await tcs.Task;
+            // Register the cancellation token to handle the cancellation request
+            using (cancellationToken.Register(() => tcs.TrySetCanceled()))
+            {
+                _apiClient.Post<DefaultResponse>(
+                    "Api/Account/Login",
+                    loginModel,
+                    (response) =>
+                    {
+                        if (response != null)
+                        {
+                            string json = JsonConvert.SerializeObject(response);
+                            DefaultResponse resp = JsonConvert.DeserializeObject<DefaultResponse>(json);
+                            tcs.TrySetResult(resp);
+                        }
+                        else
+                        {
+                            Debug.LogError("Failed to retrieve response.");
+                            tcs.TrySetResult(null);
+                        }
+                    });
+
+                return tcs.Task;
+            }
         }
 
         public void Start()

@@ -22,7 +22,7 @@ namespace ROH.Test.Account;
 public class AccountServiceTest
 {
     [Fact]
-    public async Task GetAccountByUserGuid_ShouldHandle_Exception()
+    public async Task GetAccountByUserGuidShouldHandleException()
     {
         // Arrange
         MapperConfiguration config = new(
@@ -53,14 +53,14 @@ public class AccountServiceTest
         DefaultResponse expected = new(httpStatus: HttpStatusCode.InternalServerError, message: "Internal Server Error");
 
         // Act
-        DefaultResponse result = await service.GetAccountByUserGuid(Guid.NewGuid());
+        DefaultResponse result = await service.GetAccountByUserGuidAsync(Guid.NewGuid(), CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.Equivalent(expected, result);
     }
 
     [Fact]
-    public async Task GetAccountByUserGuid_ShouldReturn_Account_WhenUserFound()
+    public async Task GetAccountByUserGuidShouldReturnAccountWhenUserFound()
     {
         // Arrange
         MapperConfiguration config = new(
@@ -99,7 +99,7 @@ public class AccountServiceTest
         DefaultResponse expected = new(httpStatus: HttpStatusCode.OK, objectResponse: accountModel);
 
         // Act
-        DefaultResponse result = await service.GetAccountByUserGuid(Guid.NewGuid());
+        DefaultResponse result = await service.GetAccountByUserGuidAsync(Guid.NewGuid(), CancellationToken.None).ConfigureAwait(true);
 
         // Assert
 
@@ -107,7 +107,7 @@ public class AccountServiceTest
     }
 
     [Fact]
-    public async Task GetAccountByUserGuid_ShouldReturn_Error_WhenUserNotFound()
+    public async Task GetAccountByUserGuidShouldReturnErrorWhenUserNotFound()
     {
         // Arrange
         MapperConfiguration config = new(
@@ -136,7 +136,7 @@ public class AccountServiceTest
         DefaultResponse expected = new(httpStatus: HttpStatusCode.NotFound);
 
         // Act
-        DefaultResponse result = await service.GetAccountByUserGuid(Guid.NewGuid());
+        DefaultResponse result = await service.GetAccountByUserGuidAsync(Guid.NewGuid(), CancellationToken.None).ConfigureAwait(true);
 
         // Assert
 
@@ -144,7 +144,7 @@ public class AccountServiceTest
     }
 
     [Fact]
-    public async Task UpdateAccount_ShouldHandle_Exception()
+    public async Task UpdateAccountShouldHandleException()
     {
         // Arrange
         MapperConfiguration config = new(
@@ -181,14 +181,14 @@ public class AccountServiceTest
         DefaultResponse expected = new(httpStatus: HttpStatusCode.InternalServerError, message: "Internal Server Error");
 
         // Act
-        DefaultResponse result = await service.UpdateAccount(accountModel);
+        DefaultResponse result = await service.UpdateAccountAsync(accountModel, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.Equivalent(expected, result);
     }
 
     [Fact]
-    public async Task UpdateAccount_ShouldReturn_NotFound_WhenAccountNotFound()
+    public async Task UpdateAccountShouldReturnNotFoundWhenAccountNotFound()
     {
         // Arrange
         MapperConfiguration config = new(
@@ -223,7 +223,7 @@ public class AccountServiceTest
         DefaultResponse expected = new(httpStatus: HttpStatusCode.NotFound, message: "Account not found.");
 
         // Act
-        DefaultResponse result = await service.UpdateAccount(accountModel);
+        DefaultResponse result = await service.UpdateAccountAsync(accountModel, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
 
@@ -231,7 +231,7 @@ public class AccountServiceTest
     }
 
     [Fact]
-    public async Task UpdateAccount_ShouldReturn_Success_WhenAccountFound()
+    public async Task UpdateAccountShouldReturnSuccessWhenAccountFound()
     {
         // Arrange
         MapperConfiguration config = new(
@@ -271,7 +271,7 @@ public class AccountServiceTest
         DefaultResponse expected = new(message: "Account has been updated.");
 
         // Act
-        DefaultResponse result = await service.UpdateAccount(accountModel);
+        DefaultResponse result = await service.UpdateAccountAsync(accountModel, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
 

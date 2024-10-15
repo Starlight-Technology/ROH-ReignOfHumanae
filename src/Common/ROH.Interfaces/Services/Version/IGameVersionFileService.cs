@@ -11,11 +11,11 @@ namespace ROH.Interfaces.Services.Version;
 
 public interface IGameVersionFileService
 {
-    Task<DefaultResponse> DownloadFile(long id);
+    Task<DefaultResponse> DownloadFileAsync(long id, CancellationToken cancellationToken = default);
 
-    Task<DefaultResponse> DownloadFile(Guid fileGuid);
+    Task<DefaultResponse> DownloadFileAsync(Guid fileGuid, CancellationToken cancellationToken = default);
 
-    Task<DefaultResponse> GetFiles(string versionGuid);
+    Task<DefaultResponse> GetFilesAsync(string versionGuid, CancellationToken cancellationToken = default);
 
-    Task<DefaultResponse> NewFile(GameVersionFileModel fileModel);
+    Task<DefaultResponse> NewFileAsync(GameVersionFileModel fileModel, CancellationToken cancellationToken = default);
 }

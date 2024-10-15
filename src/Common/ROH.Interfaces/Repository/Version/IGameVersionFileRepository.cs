@@ -10,13 +10,13 @@ namespace ROH.Interfaces.Repository.Version;
 
 public interface IGameVersionFileRepository
 {
-    Task<GameVersionFile?> GetFile(long id, CancellationToken cancellationToken = default);
+    Task<GameVersionFile?> GetFileAsync(long id, CancellationToken cancellationToken = default);
 
-    Task<GameVersionFile?> GetFile(Guid fileGuid, CancellationToken cancellationToken = default);
+    Task<GameVersionFile?> GetFileAsync(Guid fileGuid, CancellationToken cancellationToken = default);
 
-    Task<List<GameVersionFile>> GetFiles(GameVersion version, CancellationToken cancellationToken = default);
+    Task<List<GameVersionFile>> GetFilesAsync(GameVersion version, CancellationToken cancellationToken = default);
 
-    Task<List<GameVersionFile>> GetFiles(Guid versionGuid, CancellationToken cancellationToken = default);
+    Task<List<GameVersionFile>> GetFilesAsync(Guid versionGuid, CancellationToken cancellationToken = default);
 
-    Task SaveFile(GameVersionFile file, CancellationToken cancellationToken = default);
+    Task SaveFileAsync(GameVersionFile file, CancellationToken cancellationToken = default);
 }

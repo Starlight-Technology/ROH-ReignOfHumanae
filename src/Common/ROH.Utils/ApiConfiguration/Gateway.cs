@@ -16,6 +16,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 using static ROH.Utils.ApiConfiguration.ApiConfigReader;
@@ -109,7 +110,7 @@ namespace ROH.Utils.ApiConfiguration
             httpStatus: HttpStatusCode.Unauthorized,
             message: UNAUTHORIZED_MESSAGE);
 
-        public async Task<DefaultResponse?> Delete<T>(Services service, T parametersObject, string token = "")
+        public async Task<DefaultResponse?> DeleteAsync<T>(Services service, T parametersObject, string token = "", CancellationToken cancellationToken = default)
         {
             using HttpClient client = new HttpClient();
 
@@ -123,14 +124,14 @@ namespace ROH.Utils.ApiConfiguration
             }
 
             HttpResponseMessage response = await client.DeleteAsync(
-                $"{_gatewayServiceUrl.GetValueOrDefault(service)}{param}");
+                $"{_gatewayServiceUrl.GetValueOrDefault(service)}{param}", cancellationToken).ConfigureAwait(true);
 
             if (response != null)
             {
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
                     return _unauthorizedResponse;
 
-                string responseJson = await response.Content.ReadAsStringAsync();
+                string responseJson = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
 
                 return JsonConvert.DeserializeObject<DefaultResponse>(responseJson);
             }
@@ -138,7 +139,7 @@ namespace ROH.Utils.ApiConfiguration
             return _errorResponse;
         }
 
-        public async Task<DefaultResponse?> Get<T>(Services service, T parametersObject, string token = "")
+        public async Task<DefaultResponse?> GetAsync<T>(Services service, T parametersObject, string token = "", CancellationToken cancellationToken = default)
         {
             try
             {
@@ -154,14 +155,14 @@ namespace ROH.Utils.ApiConfiguration
                 }
 
                 HttpResponseMessage response = await client.GetAsync(
-                    $"{_gatewayServiceUrl.GetValueOrDefault(service)}{param}");
+                    $"{_gatewayServiceUrl.GetValueOrDefault(service)}{param}", cancellationToken).ConfigureAwait(true);
 
                 if (response != null)
                 {
                     if (response.StatusCode == HttpStatusCode.Unauthorized)
                         return _unauthorizedResponse;
 
-                    string responseJson = await response.Content.ReadAsStringAsync();
+                    string responseJson = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
 
                     return JsonConvert.DeserializeObject<DefaultResponse>(responseJson);
                 }
@@ -174,7 +175,7 @@ namespace ROH.Utils.ApiConfiguration
             }
         }
 
-        public async Task<DefaultResponse?> Post(Services service, object objectToSend, string token = "")
+        public async Task<DefaultResponse?> PostAsync(Services service, object objectToSend, string token = "", CancellationToken cancellationToken = default)
         {
             using HttpClient client = new HttpClient();
 
@@ -185,14 +186,14 @@ namespace ROH.Utils.ApiConfiguration
 
             HttpResponseMessage response = await client.PostAsync(
                 _gatewayServiceUrl.GetValueOrDefault(service),
-                httpContent);
+                httpContent, cancellationToken).ConfigureAwait(true);
 
             if (response != null)
             {
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
                     return _unauthorizedResponse;
 
-                string responseJson = await response.Content.ReadAsStringAsync();
+                string responseJson = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
 
                 return JsonConvert.DeserializeObject<DefaultResponse>(responseJson);
             }
@@ -200,7 +201,7 @@ namespace ROH.Utils.ApiConfiguration
             return _errorResponse;
         }
 
-        public async Task<DefaultResponse?> Update(Services service, object objectToSend, string token = "")
+        public async Task<DefaultResponse?> UpdateAsync(Services service, object objectToSend, string token = "", CancellationToken cancellationToken = default)
         {
             using HttpClient client = new HttpClient();
 
@@ -212,14 +213,14 @@ namespace ROH.Utils.ApiConfiguration
 
             HttpResponseMessage response = await client.PutAsync(
                 _gatewayServiceUrl.GetValueOrDefault(service),
-                httpContent);
+                httpContent, cancellationToken).ConfigureAwait(true);
 
             if (response != null)
             {
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
                     return _unauthorizedResponse;
 
-                string responseJson = await response.Content.ReadAsStringAsync();
+                string responseJson = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
 
                 return JsonConvert.DeserializeObject<DefaultResponse>(responseJson);
             }

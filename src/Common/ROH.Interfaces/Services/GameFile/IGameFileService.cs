@@ -10,9 +10,9 @@ namespace ROH.Interfaces.Services.GameFile;
 
 public interface IGameFileService
 {
-    Task<DefaultResponse> DownloadFile(Guid fileGuid);
+    Task<DefaultResponse> DownloadFileAsync(Guid fileGuid, CancellationToken cancellationToken = default);
 
-    Task<DefaultResponse> DownloadFile(long id);
+    Task<DefaultResponse> DownloadFileAsync(long id, CancellationToken cancellationToken = default);
 
-    Task SaveFileAsync(Domain.GameFiles.GameFile file, byte[] content);
+    Task SaveFileAsync(Domain.GameFiles.GameFile file, byte[] content, CancellationToken cancellationToken = default);
 }

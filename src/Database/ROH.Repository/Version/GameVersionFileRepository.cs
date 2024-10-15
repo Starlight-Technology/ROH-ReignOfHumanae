@@ -16,7 +16,7 @@ namespace ROH.Repository.Version;
 
 public class GameVersionFileRepository(ISqlContext context) : IGameVersionFileRepository
 {
-    public async Task<GameVersionFile?> GetFile(long id, CancellationToken cancellationToken = default)
+    public async Task<GameVersionFile?> GetFileAsync(long id, CancellationToken cancellationToken = default)
     {
         GameVersionFile? gameVersionFile = await context.GameVersionFiles.FindAsync([id, cancellationToken], cancellationToken: cancellationToken)
                                                                          .ConfigureAwait(true);
@@ -26,7 +26,7 @@ public class GameVersionFileRepository(ISqlContext context) : IGameVersionFileRe
         return gameVersionFile;
     }
 
-    public async Task<GameVersionFile?> GetFile(Guid fileGuid, CancellationToken cancellationToken = default)
+    public async Task<GameVersionFile?> GetFileAsync(Guid fileGuid, CancellationToken cancellationToken = default)
     {
         GameVersionFile? gameVersionFile = await context.GameVersionFiles.FirstOrDefaultAsync(v => v.Guid == fileGuid, cancellationToken: cancellationToken)
                                                                          .ConfigureAwait(true);
@@ -36,7 +36,7 @@ public class GameVersionFileRepository(ISqlContext context) : IGameVersionFileRe
         return gameVersionFile;
     }
 
-    public async Task<List<GameVersionFile>> GetFiles(GameVersion version, CancellationToken cancellationToken = default)
+    public async Task<List<GameVersionFile>> GetFilesAsync(GameVersion version, CancellationToken cancellationToken = default)
     {
         long versionId = context.GameVersions.FirstAsync(v => v.Guid == version.Guid, cancellationToken: cancellationToken).Result.Id;
 
@@ -47,7 +47,7 @@ public class GameVersionFileRepository(ISqlContext context) : IGameVersionFileRe
         return result;
     }
 
-    public async Task<List<GameVersionFile>> GetFiles(Guid versionGuid, CancellationToken cancellationToken = default)
+    public async Task<List<GameVersionFile>> GetFilesAsync(Guid versionGuid, CancellationToken cancellationToken = default)
     {
         long versionId = context.GameVersions.FirstAsync(v => v.Guid == versionGuid, cancellationToken: cancellationToken).Result.Id;
 
@@ -58,7 +58,7 @@ public class GameVersionFileRepository(ISqlContext context) : IGameVersionFileRe
         return result;
     }
 
-    public async Task SaveFile(GameVersionFile file, CancellationToken cancellationToken = default)
+    public async Task SaveFileAsync(GameVersionFile file, CancellationToken cancellationToken = default)
     {
         file.GameVersion = await context.GameVersions.FirstAsync(v => v.Guid == file.GameVersion!.Guid, cancellationToken: cancellationToken)
                                                      .ConfigureAwait(true);

@@ -7,6 +7,8 @@
 using System;
 using System.Net;
 
+#nullable enable
+
 namespace Assets.Scripts.Models.Response
 {
     [Serializable]

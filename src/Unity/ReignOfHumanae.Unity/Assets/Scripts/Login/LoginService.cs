@@ -7,6 +7,8 @@
 using Assets.Scripts.Connection.Api;
 using Assets.Scripts.Models.Login;
 
+using System.Threading;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,16 +16,17 @@ namespace Assets.Scripts.Login
 {
     public class LoginService : MonoBehaviour
     {
-        private readonly ApiLoginService _loginService;
-        public InputField LoginField;
-        public InputField PasswordField;
+        private readonly ApiLoginService _loginService = new();
+
+        public InputField LoginField { get; set; }
+        public InputField PasswordField { get; set; }
 
         public void Login()
         {
             string loginText = LoginField.text;
             string passwordText = PasswordField.text;
 
-            _ = _loginService.Login(new LoginModel { Login = loginText, Password = passwordText }).Result;
+            _ = _loginService.LoginAsync(new LoginModel { Login = loginText, Password = passwordText }, CancellationToken.None).Result;
         }
     }
 }

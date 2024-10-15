@@ -17,7 +17,7 @@ namespace ROH.Test.Authentication;
 public class AuthServiceTest
 {
     [Fact]
-    public void GenerateJwtToken_ShouldReturnValidToken()
+    public void GenerateJwtTokenShouldReturnValidToken()
     {
         // Arrange
         AuthService authService = new();
@@ -51,8 +51,8 @@ public class AuthServiceTest
 
         // Check claims
         JwtSecurityToken jwtToken = (JwtSecurityToken)validatedToken;
-        string usernameClaim = jwtToken.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Sub).Value;
-        string jtiClaim = jwtToken.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Jti).Value;
+        string usernameClaim = jwtToken.Claims.First(claim => string.Compare(claim.Type, JwtRegisteredClaimNames.Sub, StringComparison.Ordinal) == 0).Value;
+        string jtiClaim = jwtToken.Claims.First(claim => string.Compare(claim.Type, JwtRegisteredClaimNames.Jti, StringComparison.Ordinal) == 0).Value;
 
         Assert.Equal(user.UserName, usernameClaim);
         Assert.Equal(user.Guid.Value.ToString(), jtiClaim);

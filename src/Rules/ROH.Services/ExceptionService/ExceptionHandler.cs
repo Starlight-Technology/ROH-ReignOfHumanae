@@ -19,7 +19,7 @@ public class ExceptionHandler(ILogRepository logRepository, IConfiguration confi
 {
     private readonly bool _isDebugMode = configuration.GetValue<bool>("IsDebugMode");
 
-    private void LogException(string exception) => _logRepository.SaveLog(new Log(0, Severity.Error, exception));
+    private void LogException(string exception) => _logRepository.SaveLogAsync(new Log(0, Severity.Error, exception), CancellationToken.None);
 
     public DefaultResponse HandleException(Exception exception)
     {

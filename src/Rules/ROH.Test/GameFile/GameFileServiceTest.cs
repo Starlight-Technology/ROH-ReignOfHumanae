@@ -39,7 +39,7 @@ public class GameFileServiceTest
     }
 
     [Fact]
-    public async Task DownloadFile_ByGuid_ShouldHandle_Exceptions()
+    public async Task DownloadFileByGuidShouldHandleExceptions()
     {
         // Arrange
         _mockRepository.Setup(repo => repo.GetFileAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
@@ -49,7 +49,7 @@ public class GameFileServiceTest
             .Returns(new DefaultResponse(null, HttpStatusCode.InternalServerError, "Internal server error"));
 
         // Act
-        DefaultResponse result = await _service.DownloadFile(_testGuid);
+        DefaultResponse result = await _service.DownloadFileAsync(_testGuid, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.Equal(HttpStatusCode.InternalServerError, result.HttpStatus);
@@ -57,16 +57,16 @@ public class GameFileServiceTest
     }
 
     [Fact]
-    public async Task DownloadFile_ByGuid_ShouldReturn_FileContent_WhenFileExists()
+    public async Task DownloadFileByGuidShouldReturnFileContentWhenFileExists()
     {
         // Arrange
         _mockRepository.Setup(repo => repo.GetFileAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(_testFile);
 
         string filePath = Path.Combine(_testFile.Path, _testFile.Name);
-        await File.WriteAllTextAsync(filePath, "Test content");
+        await File.WriteAllTextAsync(filePath, "Test content", cancellationToken: CancellationToken.None).ConfigureAwait(true);
 
         // Act
-        DefaultResponse result = await _service.DownloadFile(_testFile.Guid);
+        DefaultResponse result = await _service.DownloadFileAsync(_testFile.Guid, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, result.HttpStatus);
@@ -74,7 +74,7 @@ public class GameFileServiceTest
         GameFileModel fileModel = Assert.IsType<GameFileModel>(result.ObjectResponse);
         Assert.Equal("testFile.txt", fileModel.Name);
         Assert.Equal("txt", fileModel.Format);
-        Assert.Equal(await File.ReadAllBytesAsync(filePath), fileModel.Content);
+        Assert.Equal(await File.ReadAllBytesAsync(filePath, cancellationToken: CancellationToken.None).ConfigureAwait(true), fileModel.Content);
 
         // Cleanup
         if (File.Exists(filePath))
@@ -84,14 +84,14 @@ public class GameFileServiceTest
     }
 
     [Fact]
-    public async Task DownloadFile_ByGuid_ShouldReturn_FileNotFound_WhenFileDoesNotExist()
+    public async Task DownloadFileByGuidShouldReturnFileNotFoundWhenFileDoesNotExist()
     {
         // Arrange
         _mockRepository.Setup(repo => repo.GetFileAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Domain.GameFiles.GameFile?)null);
 
         // Act
-        DefaultResponse result = await _service.DownloadFile(_testGuid);
+        DefaultResponse result = await _service.DownloadFileAsync(_testGuid, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, result.HttpStatus);
@@ -99,16 +99,16 @@ public class GameFileServiceTest
     }
 
     [Fact]
-    public async Task DownloadFile_ById_ShouldReturn_FileContent_WhenFileExists()
+    public async Task DownloadFileByIdShouldReturnFileContentWhenFileExists()
     {
         // Arrange
         _mockRepository.Setup(repo => repo.GetFileAsync(It.IsAny<long>(), It.IsAny<CancellationToken>())).ReturnsAsync(_testFile);
 
         string filePath = Path.Combine(_testFile.Path, _testFile.Name);
-        await File.WriteAllTextAsync(filePath, "Test content");
+        await File.WriteAllTextAsync(filePath, "Test content", cancellationToken: CancellationToken.None).ConfigureAwait(true);
 
         // Act
-        DefaultResponse result = await _service.DownloadFile(1);
+        DefaultResponse result = await _service.DownloadFileAsync(1, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, result.HttpStatus);
@@ -116,7 +116,7 @@ public class GameFileServiceTest
         GameFileModel fileModel = Assert.IsType<GameFileModel>(result.ObjectResponse);
         Assert.Equal("testFile.txt", fileModel.Name);
         Assert.Equal("txt", fileModel.Format);
-        Assert.Equal(await File.ReadAllBytesAsync(filePath), fileModel.Content);
+        Assert.Equal(await File.ReadAllBytesAsync(filePath, cancellationToken: CancellationToken.None).ConfigureAwait(true), fileModel.Content);
 
         // Cleanup
         if (File.Exists(filePath))
@@ -126,14 +126,14 @@ public class GameFileServiceTest
     }
 
     [Fact]
-    public async Task DownloadFile_ById_ShouldReturn_FileNotFound_WhenFileDoesNotExist()
+    public async Task DownloadFileByIdShouldReturnFileNotFoundWhenFileDoesNotExist()
     {
         // Arrange
         _mockRepository.Setup(repo => repo.GetFileAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Domain.GameFiles.GameFile?)null);
 
         // Act
-        DefaultResponse result = await _service.DownloadFile(1);
+        DefaultResponse result = await _service.DownloadFileAsync(1, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, result.HttpStatus);
@@ -141,7 +141,7 @@ public class GameFileServiceTest
     }
 
     [Fact]
-    public async Task DownloadFile_ShouldReturnErrorResponse_WhenExceptionIsThrown()
+    public async Task DownloadFileShouldReturnErrorResponseWhenExceptionIsThrown()
     {
         // Arrange
         long fileId = 1;
@@ -156,7 +156,7 @@ public class GameFileServiceTest
         _mockExceptionHandler.Setup(handler => handler.HandleException(testException)).Returns(expectedResponse);
 
         // Act
-        DefaultResponse result = await _service.DownloadFile(fileId);
+        DefaultResponse result = await _service.DownloadFileAsync(fileId, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.Equal(HttpStatusCode.InternalServerError, result.HttpStatus);
@@ -167,7 +167,7 @@ public class GameFileServiceTest
     }
 
     [Fact]
-    public async Task GetGameFile_ShouldHandleException_WhenReadingFileFails()
+    public async Task GetGameFileShouldHandleExceptionWhenReadingFileFails()
     {
         // Arrange
         Domain.GameFiles.GameFile testFile = _testFile with
@@ -184,7 +184,7 @@ public class GameFileServiceTest
             .Returns(new DefaultResponse(null, HttpStatusCode.InternalServerError, "File read error"));
 
         // Act
-        DefaultResponse result = await _service.DownloadFile(_testGuid);
+        DefaultResponse result = await _service.DownloadFileAsync(_testGuid, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.Equal(HttpStatusCode.InternalServerError, result.HttpStatus);
@@ -192,14 +192,14 @@ public class GameFileServiceTest
     }
 
     [Fact]
-    public async Task GetGameFile_ShouldReturnNotFound_WhenFileDoesNotExist()
+    public async Task GetGameFileShouldReturnNotFoundWhenFileDoesNotExist()
     {
         // Arrange
         _mockRepository.Setup(repo => repo.GetFileAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(_testFile with { Path = string.Empty });
 
         // Act
-        DefaultResponse result = await _service.DownloadFile(1);
+        DefaultResponse result = await _service.DownloadFileAsync(1, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, result.HttpStatus);
@@ -207,7 +207,7 @@ public class GameFileServiceTest
     }
 
     [Fact]
-    public async Task MakeFileHasDeprecatedAsync_ShouldHandleException_WhenExceptionOccurs()
+    public async Task MakeFileHasDeprecatedAsyncShouldHandleExceptionWhenExceptionOccurs()
     {
         // Arrange
         _mockRepository.Setup(repo => repo.GetFileAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ThrowsAsync(new Exception("Error message"));
@@ -216,7 +216,7 @@ public class GameFileServiceTest
             .Returns(new DefaultResponse(null, HttpStatusCode.InternalServerError, "Error message"));
 
         // Act
-        DefaultResponse result = await _service.MakeFileHasDeprecatedAsync(_testGuid);
+        DefaultResponse result = await _service.MakeFileHasDeprecatedAsync(_testGuid, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.Equal(HttpStatusCode.InternalServerError, result.HttpStatus);
@@ -224,14 +224,14 @@ public class GameFileServiceTest
     }
 
     [Fact]
-    public async Task MakeFileHasDeprecatedAsync_ShouldReturnNotFound_WhenFileDoesNotExist()
+    public async Task MakeFileHasDeprecatedAsyncShouldReturnNotFoundWhenFileDoesNotExist()
     {
         //  Arrange
         _mockRepository.Setup(repo => repo.GetFileAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Domain.GameFiles.GameFile?)null);
 
         // Act
-        DefaultResponse result = await _service.MakeFileHasDeprecatedAsync(_testGuid);
+        DefaultResponse result = await _service.MakeFileHasDeprecatedAsync(_testGuid, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, result.HttpStatus);
@@ -239,7 +239,7 @@ public class GameFileServiceTest
     }
 
     [Fact]
-    public async Task MakeFileHasDeprecatedAsync_ShouldReturnSuccessMessage_WhenFileHasMarkedAsDeprecated()
+    public async Task MakeFileHasDeprecatedAsyncShouldReturnSuccessMessageWhenFileHasMarkedAsDeprecated()
     {
         // Arrange
         _mockRepository.Setup(repo => repo.GetFileAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
@@ -248,7 +248,7 @@ public class GameFileServiceTest
         _mockRepository.Setup(repo => repo.UpdateFileAsync(It.IsAny<Domain.GameFiles.GameFile>(), It.IsAny<CancellationToken>()));
 
         // Act
-        DefaultResponse result = await _service.MakeFileHasDeprecatedAsync(_testGuid);
+        DefaultResponse result = await _service.MakeFileHasDeprecatedAsync(_testGuid, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, result.HttpStatus);
@@ -256,21 +256,21 @@ public class GameFileServiceTest
     }
 
     [Fact]
-    public async Task SaveFileAsync_ShouldDeleteFile_WhenItAlreadyExists()
+    public async Task SaveFileAsyncShouldDeleteFileWhenItAlreadyExists()
     {
         // Arrange
         byte[] content = Encoding.UTF8.GetBytes("New content");
         string filePath = Path.Combine(_testFile.Path, _testFile.Name);
 
         // Pre-create the file to test deletion
-        await File.WriteAllTextAsync(filePath, "Old content");
+        await File.WriteAllTextAsync(filePath, "Old content", cancellationToken: CancellationToken.None).ConfigureAwait(true);
 
         // Act
-        await _service.SaveFileAsync(_testFile, content);
+        await _service.SaveFileAsync(_testFile, content, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.True(File.Exists(filePath));
-        Assert.Equal("New content", await File.ReadAllTextAsync(filePath));
+        Assert.Equal("New content", await File.ReadAllTextAsync(filePath, cancellationToken: CancellationToken.None).ConfigureAwait(true));
         _mockRepository.Verify(repo => repo.SaveFileAsync(It.IsAny<Domain.GameFiles.GameFile>(), It.IsAny<CancellationToken>()), Times.Once);
 
         // Cleanup
@@ -281,7 +281,7 @@ public class GameFileServiceTest
     }
 
     [Fact]
-    public async Task SaveFileAsync_ShouldHandle_Exceptions()
+    public async Task SaveFileAsyncShouldHandleExceptions()
     {
         // Arrange
         _mockRepository.Setup(repo => repo.SaveFileAsync(It.IsAny<Domain.GameFiles.GameFile>(), It.IsAny<CancellationToken>()))
@@ -294,7 +294,7 @@ public class GameFileServiceTest
         string filePath = Path.Combine(_testFile.Path, _testFile.Name);
 
         // Act
-        await _service.SaveFileAsync(_testFile, content);
+        await _service.SaveFileAsync(_testFile, content, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         _mockExceptionHandler.Verify(handler => handler.HandleException(It.IsAny<Exception>()), Times.Once);
@@ -307,7 +307,7 @@ public class GameFileServiceTest
     }
 
     [Fact]
-    public async Task SaveFileAsync_ShouldSaveFile_WhenCalled()
+    public async Task SaveFileAsyncShouldSaveFileWhenCalled()
     {
         // Arrange
         byte[] content = Encoding.UTF8.GetBytes("Test content");
@@ -316,11 +316,11 @@ public class GameFileServiceTest
         File.Delete(filePath);
 
         // Act
-        await _service.SaveFileAsync(_testFile, content);
+        await _service.SaveFileAsync(_testFile, content, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.True(File.Exists(filePath));
-        Assert.Equal("Test content", await File.ReadAllTextAsync(filePath));
+        Assert.Equal("Test content", await File.ReadAllTextAsync(filePath, cancellationToken: CancellationToken.None).ConfigureAwait(true));
         _mockRepository.Verify(repo => repo.SaveFileAsync(It.IsAny<Domain.GameFiles.GameFile>(), It.IsAny<CancellationToken>()), Times.Once);
 
         // Cleanup

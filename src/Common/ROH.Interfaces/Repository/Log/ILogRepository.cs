@@ -9,5 +9,5 @@ namespace ROH.Interfaces.Repository.Log;
 
 public interface ILogRepository
 {
-    Task SaveLog(Domain.Logging.Log log, CancellationToken cancellationToken = default);
+    Task SaveLogAsync(Domain.Logging.Log log, CancellationToken cancellationToken = default);
 }

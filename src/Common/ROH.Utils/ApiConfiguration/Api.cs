@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 using static ROH.Utils.ApiConfiguration.ApiConfigReader;
@@ -79,7 +80,7 @@ namespace ROH.Utils.ApiConfiguration
             (type == JTokenType.Date) ||
             (type == JTokenType.Guid);
 
-        public async Task<string> Delete<T>(Services service, T parametersObject)
+        public async Task<string> DeleteAsync<T>(Services service, T parametersObject, CancellationToken cancellationToken = default)
         {
             using HttpClient client = new HttpClient();
 
@@ -90,12 +91,12 @@ namespace ROH.Utils.ApiConfiguration
                 param = GetParams(parametersObject!);
             }
 
-            HttpResponseMessage response = await client.DeleteAsync($"{_servicesUrl.GetValueOrDefault(service)}{param}");
+            HttpResponseMessage response = await client.DeleteAsync($"{_servicesUrl.GetValueOrDefault(service)}{param}", cancellationToken).ConfigureAwait(true);
 
-            return await response.Content.ReadAsStringAsync();
+            return await response.Content.ReadAsStringAsync().ConfigureAwait(true);
         }
 
-        public async Task<string> GetAsync<T>(Services service, T parametersObject)
+        public async Task<string> GetAsync<T>(Services service, T parametersObject, CancellationToken cancellationToken = default)
 
         {
             using HttpClient client = new HttpClient();
@@ -106,9 +107,9 @@ namespace ROH.Utils.ApiConfiguration
                 param = GetParams(parametersObject!);
             }
 
-            HttpResponseMessage response = await client.GetAsync($"{_servicesUrl.GetValueOrDefault(service)}{param}");
+            HttpResponseMessage response = await client.GetAsync($"{_servicesUrl.GetValueOrDefault(service)}{param}", cancellationToken).ConfigureAwait(true);
 
-            return await response.Content.ReadAsStringAsync();
+            return await response.Content.ReadAsStringAsync().ConfigureAwait(true);
         }
 
         public string GetParams(object parametersObject)
@@ -141,19 +142,19 @@ namespace ROH.Utils.ApiConfiguration
             return parameters.ToString();
         }
 
-        public async Task<string> Post(Services service, object objectToSend)
+        public async Task<string> PostAsync(Services service, object objectToSend, CancellationToken cancellationToken = default)
         {
             using HttpClient client = new HttpClient();
 
             string jsonContent = JsonConvert.SerializeObject(objectToSend);
             StringContent httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-            HttpResponseMessage response = await client.PostAsync(_servicesUrl.GetValueOrDefault(service), httpContent);
+            HttpResponseMessage response = await client.PostAsync(_servicesUrl.GetValueOrDefault(service), httpContent, cancellationToken).ConfigureAwait(true);
 
-            return await response.Content.ReadAsStringAsync();
+            return await response.Content.ReadAsStringAsync().ConfigureAwait(true);
         }
 
-        public async Task<string> Update(Services service, object objectToSend)
+        public async Task<string> UpdateAsync(Services service, object objectToSend, CancellationToken cancellationToken = default)
         {
             using HttpClient client = new HttpClient();
 
@@ -161,9 +162,9 @@ namespace ROH.Utils.ApiConfiguration
 
             StringContent httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-            HttpResponseMessage response = await client.PutAsync(_servicesUrl.GetValueOrDefault(service), httpContent);
+            HttpResponseMessage response = await client.PutAsync(_servicesUrl.GetValueOrDefault(service), httpContent, cancellationToken).ConfigureAwait(true);
 
-            return await response.Content.ReadAsStringAsync();
+            return await response.Content.ReadAsStringAsync().ConfigureAwait(true);
         }
 
         public enum Services

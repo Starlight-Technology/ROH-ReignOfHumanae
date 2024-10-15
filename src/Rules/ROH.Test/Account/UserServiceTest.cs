@@ -49,21 +49,21 @@ public class UserServiceTest
     }
 
     [Fact]
-    public async Task FindUserByEmail_ShouldReturn_Null_WhenUserNotFound()
+    public async Task FindUserByEmailShouldReturnNullWhenUserNotFound()
     {
         // Arrange
         UserService service = new(_mockExceptionHandler.Object, _userValidator, _mockRepository.Object, _mapper);
         _ = _mockRepository.Setup(x => x.FindUserByEmailAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(() => null);
 
         // Act
-        UserModel? result = await service.FindUserByEmail("test");
+        UserModel? result = await service.FindUserByEmailAsync("test", CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.Null(result);
     }
 
     [Fact]
-    public async Task FindUserByEmail_ShouldReturn_User_WhenUserFound()
+    public async Task FindUserByEmailShouldReturnUserWhenUserFound()
     {
         // Arrange
         UserService service = new(_mockExceptionHandler.Object, _userValidator, _mockRepository.Object, _mapper);
@@ -73,14 +73,14 @@ public class UserServiceTest
         _ = _mockRepository.Setup(x => x.FindUserByEmailAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(userTest);
 
         // Act
-        UserModel? result = await service.FindUserByEmail("test");
+        UserModel? result = await service.FindUserByEmailAsync("test", CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.Equivalent(result, userModelTest);
     }
 
     [Fact]
-    public async Task FindUserByGuid_ShouldReturn_User()
+    public async Task FindUserByGuidShouldReturnUser()
     {
         // Arrange
         UserService service = new(_mockExceptionHandler.Object, _userValidator, _mockRepository.Object, _mapper);
@@ -90,28 +90,28 @@ public class UserServiceTest
         _ = _mockRepository.Setup(x => x.GetUserByGuidAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(userTest);
 
         // Act
-        UserModel? result = await service.GetUserByGuid(guidTest);
+        UserModel? result = await service.GetUserByGuidAsync(guidTest, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.Equivalent(result, userModelTest);
     }
 
     [Fact]
-    public async Task FindUserByUserName_ShouldReturn_Null_WhenUserNotFound()
+    public async Task FindUserByUserNameShouldReturnNullWhenUserNotFound()
     {
         // Arrange
         UserService service = new(_mockExceptionHandler.Object, _userValidator, _mockRepository.Object, _mapper);
         _ = _mockRepository.Setup(x => x.FindUserByUserNameAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(() => null);
 
         // Act
-        UserModel? result = await service.FindUserByUserName("test");
+        UserModel? result = await service.FindUserByUserNameAsync("test", CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.Null(result);
     }
 
     [Fact]
-    public async Task FindUserByUserName_ShouldReturn_User_WhenUserFound()
+    public async Task FindUserByUserNameShouldReturnUserWhenUserFound()
     {
         // Arrange
         UserService service = new(_mockExceptionHandler.Object, _userValidator, _mockRepository.Object, _mapper);
@@ -121,14 +121,14 @@ public class UserServiceTest
         _ = _mockRepository.Setup(x => x.FindUserByUserNameAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(userTest);
 
         // Act
-        UserModel? result = await service.FindUserByUserName("test");
+        UserModel? result = await service.FindUserByUserNameAsync("test", CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.Equivalent(result, userModelTest);
     }
 
     [Fact]
-    public async Task NewUser_ShouldHandle_Exception()
+    public async Task NewUserShouldHandleException()
     {
         // Arrange
         UserService service = new(_mockExceptionHandler.Object, _userValidator, _mockRepository.Object, _mapper);
@@ -140,7 +140,7 @@ public class UserServiceTest
                 new DefaultResponse(httpStatus: HttpStatusCode.InternalServerError, message: "Internal Server Error"));
 
         // Act
-        DefaultResponse result = await service.NewUser(userModel);
+        DefaultResponse result = await service.NewUserAsync(userModel, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.Equal(HttpStatusCode.InternalServerError, result.HttpStatus);
@@ -148,7 +148,7 @@ public class UserServiceTest
     }
 
     [Fact]
-    public async Task NewUser_ShouldReturn_Error_WhenEmailAreAlreadyUsed()
+    public async Task NewUserShouldReturnErrorWhenEmailAreAlreadyUsed()
     {
         // Arrange
         UserService service = new(_mockExceptionHandler.Object, _userValidator, _mockRepository.Object, _mapper);
@@ -158,21 +158,21 @@ public class UserServiceTest
         DefaultResponse expected = new(httpStatus: HttpStatusCode.Conflict, message: "The email are currently in use.");
 
         // Act
-        DefaultResponse result = await service.NewUser(userModel);
+        DefaultResponse result = await service.NewUserAsync(userModel, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.Equivalent(expected, result);
     }
 
     [Fact]
-    public async Task NewUser_ShouldReturn_Error_WhenUserModelNotValid()
+    public async Task NewUserShouldReturnErrorWhenUserModelNotValid()
     {
         // Arrange
         UserService service = new(_mockExceptionHandler.Object, _userValidator, _mockRepository.Object, _mapper);
         UserModel userModel = new();
 
         // Act
-        DefaultResponse result = await service.NewUser(userModel);
+        DefaultResponse result = await service.NewUserAsync(userModel, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, result.HttpStatus);
@@ -180,7 +180,7 @@ public class UserServiceTest
     }
 
     [Fact]
-    public async Task NewUser_ShouldReturn_NewUser_WhenNewUserIsValid()
+    public async Task NewUserShouldReturnNewUserWhenNewUserIsValid()
     {
         // Arrange
         UserService service = new(_mockExceptionHandler.Object, _userValidator, _mockRepository.Object, _mapper);
@@ -190,14 +190,14 @@ public class UserServiceTest
         DefaultResponse expected = new(httpStatus: HttpStatusCode.OK, message: "Account has been created!");
 
         // Act
-        DefaultResponse result = await service.NewUser(userModel);
+        DefaultResponse result = await service.NewUserAsync(userModel, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.Equivalent(expected, result);
     }
 
     [Fact]
-    public async Task ValidatePassword_ShouldReturn_False_WhenPasswordIsInvalid()
+    public async Task ValidatePasswordShouldReturnFalseWhenPasswordIsInvalid()
     {
         // Arrange
         UserService service = new(_mockExceptionHandler.Object, _userValidator, _mockRepository.Object, _mapper);
@@ -207,14 +207,14 @@ public class UserServiceTest
         _ = _mockRepository.Setup(x => x.GetUserByGuidAsync(guidTest, CancellationToken.None)).ReturnsAsync(userTest);
 
         // Act
-        bool isValid = await service.ValidatePassword("wrongPassword", guidTest);
+        bool isValid = await service.ValidatePasswordAsync("wrongPassword", guidTest, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.False(isValid);
     }
 
     [Fact]
-    public async Task ValidatePassword_ShouldReturn_True_WhenPasswordIsValid()
+    public async Task ValidatePasswordShouldReturnTrueWhenPasswordIsValid()
     {
         // Arrange
         UserService service = new(_mockExceptionHandler.Object, _userValidator, _mockRepository.Object, _mapper);
@@ -224,7 +224,7 @@ public class UserServiceTest
         _ = _mockRepository.Setup(x => x.GetUserByGuidAsync(guidTest, CancellationToken.None)).ReturnsAsync(userTest);
 
         // Act
-        bool isValid = await service.ValidatePassword("test123", guidTest);
+        bool isValid = await service.ValidatePasswordAsync("test123", guidTest, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.True(isValid);

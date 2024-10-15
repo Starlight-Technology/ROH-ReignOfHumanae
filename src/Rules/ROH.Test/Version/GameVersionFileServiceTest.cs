@@ -24,7 +24,7 @@ using System.Net;
 
 namespace ROH.Test.Version;
 
-public class GameVersionFileServiceTests
+public class GameVersionFileServiceTest
 {
     private readonly Mock<IExceptionHandler> _mockExceptionHandler;
     private readonly Mock<IGameFileService> _mockGameFileService;
@@ -34,7 +34,7 @@ public class GameVersionFileServiceTests
     private readonly Mock<IValidator<GameVersionFileModel>> _mockValidator;
     private readonly GameVersionFileService _service;
 
-    public GameVersionFileServiceTests()
+    public GameVersionFileServiceTest()
     {
         _mockGameVersionFileRepository = new Mock<IGameVersionFileRepository>();
         _mockGameFileService = new Mock<IGameFileService>();
@@ -53,15 +53,15 @@ public class GameVersionFileServiceTests
     }
 
     [Fact]
-    public async Task DownloadFile_ByGuid_FileNotFound()
+    public async Task DownloadFileByGuidFileNotFound()
     {
         // Arrange
         Guid fileGuid = Guid.NewGuid();
 
-        _mockGameVersionFileRepository.Setup(repo => repo.GetFile(fileGuid, It.IsAny<CancellationToken>())).ReturnsAsync((GameVersionFile?)null);
+        _mockGameVersionFileRepository.Setup(repo => repo.GetFileAsync(fileGuid, It.IsAny<CancellationToken>())).ReturnsAsync((GameVersionFile?)null);
 
         // Act
-        DefaultResponse result = await _service.DownloadFile(fileGuid);
+        DefaultResponse result = await _service.DownloadFileAsync(fileGuid, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.NotNull(result);
@@ -70,20 +70,20 @@ public class GameVersionFileServiceTests
     }
 
     [Fact]
-    public async Task DownloadFile_ByGuid_ReturnsFileSuccessfully()
+    public async Task DownloadFileByGuidReturnsFileSuccessfully()
     {
         // Arrange
         Guid fileGuid = Guid.NewGuid();
         Domain.GameFiles.GameFile gameFile = new() { Guid = fileGuid };
         GameVersionFile versionFile = new() { GameFile = gameFile };
 
-        _mockGameVersionFileRepository.Setup(repo => repo.GetFile(fileGuid, It.IsAny<CancellationToken>())).ReturnsAsync(versionFile);
+        _mockGameVersionFileRepository.Setup(repo => repo.GetFileAsync(fileGuid, It.IsAny<CancellationToken>())).ReturnsAsync(versionFile);
 
-        _mockGameFileService.Setup(service => service.DownloadFile(fileGuid))
+        _mockGameFileService.Setup(service => service.DownloadFileAsync(fileGuid, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new DefaultResponse(HttpStatusCode.OK));
 
         // Act
-        DefaultResponse result = await _service.DownloadFile(fileGuid);
+        DefaultResponse result = await _service.DownloadFileAsync(fileGuid, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.NotNull(result);
@@ -91,18 +91,18 @@ public class GameVersionFileServiceTests
     }
 
     [Fact]
-    public async Task DownloadFile_ByGuid_ShouldHandleException()
+    public async Task DownloadFileByGuidShouldHandleException()
     {
         // Arrange
         Guid fileGuid = Guid.NewGuid();
 
-        _mockGameVersionFileRepository.Setup(repo => repo.GetFile(fileGuid, It.IsAny<CancellationToken>())).ThrowsAsync(new Exception());
+        _mockGameVersionFileRepository.Setup(repo => repo.GetFileAsync(fileGuid, It.IsAny<CancellationToken>())).ThrowsAsync(new Exception());
         _mockExceptionHandler.Setup(x => x.HandleException(It.IsAny<Exception>()))
             .Returns(
                 new DefaultResponse(httpStatus: HttpStatusCode.InternalServerError, message: "Internal Server Error"));
 
         // Act
-        DefaultResponse result = await _service.DownloadFile(fileGuid);
+        DefaultResponse result = await _service.DownloadFileAsync(fileGuid, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.NotNull(result);
@@ -111,15 +111,15 @@ public class GameVersionFileServiceTests
     }
 
     [Fact]
-    public async Task DownloadFile_ById_FileNotFound()
+    public async Task DownloadFileByIdFileNotFound()
     {
         // Arrange
         long fileId = 1;
 
-        _mockGameVersionFileRepository.Setup(repo => repo.GetFile(fileId, It.IsAny<CancellationToken>())).ReturnsAsync((GameVersionFile?)null);
+        _mockGameVersionFileRepository.Setup(repo => repo.GetFileAsync(fileId, It.IsAny<CancellationToken>())).ReturnsAsync((GameVersionFile?)null);
 
         // Act
-        DefaultResponse result = await _service.DownloadFile(fileId);
+        DefaultResponse result = await _service.DownloadFileAsync(fileId, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.NotNull(result);
@@ -128,20 +128,20 @@ public class GameVersionFileServiceTests
     }
 
     [Fact]
-    public async Task DownloadFile_ById_ReturnsFileSuccessfully()
+    public async Task DownloadFileByIdReturnsFileSuccessfully()
     {
         // Arrange
         long fileId = 1;
         Domain.GameFiles.GameFile gameFile = new() { Id = fileId };
         GameVersionFile versionFile = new() { GameFile = gameFile };
 
-        _mockGameVersionFileRepository.Setup(repo => repo.GetFile(fileId, It.IsAny<CancellationToken>())).ReturnsAsync(versionFile);
+        _mockGameVersionFileRepository.Setup(repo => repo.GetFileAsync(fileId, It.IsAny<CancellationToken>())).ReturnsAsync(versionFile);
 
-        _mockGameFileService.Setup(service => service.DownloadFile(fileId))
+        _mockGameFileService.Setup(service => service.DownloadFileAsync(fileId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new DefaultResponse(HttpStatusCode.OK));
 
         // Act
-        DefaultResponse result = await _service.DownloadFile(fileId);
+        DefaultResponse result = await _service.DownloadFileAsync(fileId, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.NotNull(result);
@@ -149,18 +149,18 @@ public class GameVersionFileServiceTests
     }
 
     [Fact]
-    public async Task DownloadFile_ById_ShouldHandleException()
+    public async Task DownloadFileByIdShouldHandleException()
     {
         // Arrange
         long fileId = 1;
 
-        _mockGameVersionFileRepository.Setup(repo => repo.GetFile(fileId, It.IsAny<CancellationToken>())).ThrowsAsync(new Exception());
+        _mockGameVersionFileRepository.Setup(repo => repo.GetFileAsync(fileId, It.IsAny<CancellationToken>())).ThrowsAsync(new Exception());
         _mockExceptionHandler.Setup(x => x.HandleException(It.IsAny<Exception>()))
             .Returns(
                 new DefaultResponse(httpStatus: HttpStatusCode.InternalServerError, message: "Internal Server Error"));
 
         // Act
-        DefaultResponse result = await _service.DownloadFile(fileId);
+        DefaultResponse result = await _service.DownloadFileAsync(fileId, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.NotNull(result);
@@ -169,19 +169,19 @@ public class GameVersionFileServiceTests
     }
 
     [Fact]
-    public async Task GetFiles_ShouldHandleException()
+    public async Task GetFilesShouldHandleException()
     {
         // Arrange
         string versionGuid = Guid.NewGuid().ToString();
 
-        _mockGameVersionService.Setup(service => service.VerifyIfVersionExist(versionGuid)).ThrowsAsync(new Exception());
+        _mockGameVersionService.Setup(service => service.VerifyIfVersionExistAsync(versionGuid, It.IsAny<CancellationToken>())).ThrowsAsync(new Exception());
 
         _mockExceptionHandler.Setup(x => x.HandleException(It.IsAny<Exception>()))
             .Returns(
                 new DefaultResponse(httpStatus: HttpStatusCode.InternalServerError, message: "Internal Server Error"));
 
         // Act
-        DefaultResponse result = await _service.GetFiles(versionGuid);
+        DefaultResponse result = await _service.GetFilesAsync(versionGuid, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.NotNull(result);
@@ -190,7 +190,7 @@ public class GameVersionFileServiceTests
     }
 
     [Fact]
-    public async Task GetFiles_VersionExists_ReturnsFiles()
+    public async Task GetFilesVersionExistsReturnsFiles()
     {
         // Arrange
         string versionGuid = Guid.NewGuid().ToString();
@@ -199,12 +199,12 @@ public class GameVersionFileServiceTests
 
         _mockMapper.Setup(mapper => mapper.Map<List<GameVersionFileModel>>(files)).Returns(filesModel);
 
-        _mockGameVersionService.Setup(service => service.VerifyIfVersionExist(versionGuid)).ReturnsAsync(true);
+        _mockGameVersionService.Setup(service => service.VerifyIfVersionExistAsync(versionGuid, It.IsAny<CancellationToken>())).ReturnsAsync(true);
 
-        _mockGameVersionFileRepository.Setup(repo => repo.GetFiles(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(files);
+        _mockGameVersionFileRepository.Setup(repo => repo.GetFilesAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(files);
 
         // Act
-        DefaultResponse result = await _service.GetFiles(versionGuid);
+        DefaultResponse result = await _service.GetFilesAsync(versionGuid, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.NotNull(result);
@@ -213,15 +213,15 @@ public class GameVersionFileServiceTests
     }
 
     [Fact]
-    public async Task GetFiles_VersionNotExists_ReturnsNotFound()
+    public async Task GetFilesVersionNotExistsReturnsNotFound()
     {
         // Arrange
         string versionGuid = Guid.NewGuid().ToString();
 
-        _mockGameVersionService.Setup(service => service.VerifyIfVersionExist(versionGuid)).ReturnsAsync(false);
+        _mockGameVersionService.Setup(service => service.VerifyIfVersionExistAsync(versionGuid, It.IsAny<CancellationToken>())).ReturnsAsync(false);
 
         // Act
-        DefaultResponse result = await _service.GetFiles(versionGuid);
+        DefaultResponse result = await _service.GetFilesAsync(versionGuid, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.NotNull(result);
@@ -229,13 +229,13 @@ public class GameVersionFileServiceTests
     }
 
     [Fact]
-    public async Task NewFile_FileContentIsNull_ReturnsBadRequest()
+    public async Task NewFileFileContentIsNullReturnsBadRequest()
     {
         // Arrange
         GameVersionFileModel fileModel = new();
 
         // Act
-        DefaultResponse result = await _service.NewFile(fileModel);
+        DefaultResponse result = await _service.NewFileAsync(fileModel, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.NotNull(result);
@@ -244,7 +244,7 @@ public class GameVersionFileServiceTests
     }
 
     [Fact]
-    public async Task NewFile_OldVersion_ReturnsBadRequest()
+    public async Task NewFileOldVersionReturnsBadRequest()
     {
         // Arrange
         GameVersionFileModel fileModel = new()
@@ -260,15 +260,15 @@ public class GameVersionFileServiceTests
         _mockValidator.Setup(validator => validator.ValidateAsync(fileModel, default))
             .ReturnsAsync(new ValidationResult());
 
-        _mockGameVersionService.Setup(service => service.VerifyIfVersionExist(fileModel.GameVersion!))
+        _mockGameVersionService.Setup(service => service.VerifyIfVersionExistAsync(fileModel.GameVersion!, It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
-        _mockGameVersionService.Setup(service => service.GetCurrentVersion())
+        _mockGameVersionService.Setup(service => service.GetCurrentVersionAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(
                 new DefaultResponse(
                     objectResponse: new GameVersion(VersionDate: DateTime.Now.AddDays(2)) { Released = true }));
 
         // Act
-        DefaultResponse result = await _service.NewFile(fileModel);
+        DefaultResponse result = await _service.NewFileAsync(fileModel, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.NotNull(result);
@@ -279,7 +279,7 @@ public class GameVersionFileServiceTests
     }
 
     [Fact]
-    public async Task NewFile_ShouldHandleException()
+    public async Task NewFileShouldHandleException()
     {
         // Arrange
         GameVersionFileModel fileModel = new()
@@ -295,16 +295,16 @@ public class GameVersionFileServiceTests
         _mockValidator.Setup(validator => validator.ValidateAsync(fileModel, default))
             .ReturnsAsync(new ValidationResult());
 
-        _mockGameVersionService.Setup(service => service.VerifyIfVersionExist(fileModel.GameVersion!))
+        _mockGameVersionService.Setup(service => service.VerifyIfVersionExistAsync(fileModel.GameVersion!, It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
-        _mockGameVersionService.Setup(service => service.GetCurrentVersion()).ThrowsAsync(new Exception());
+        _mockGameVersionService.Setup(service => service.GetCurrentVersionAsync(It.IsAny<CancellationToken>())).ThrowsAsync(new Exception());
 
         _mockExceptionHandler.Setup(x => x.HandleException(It.IsAny<Exception>()))
             .Returns(
                 new DefaultResponse(httpStatus: HttpStatusCode.InternalServerError, message: "Internal Server Error"));
 
         // Act
-        DefaultResponse result = await _service.NewFile(fileModel);
+        DefaultResponse result = await _service.NewFileAsync(fileModel, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.NotNull(result);
@@ -313,7 +313,7 @@ public class GameVersionFileServiceTests
     }
 
     [Fact]
-    public async Task NewFile_SuccessfullySavesFile()
+    public async Task NewFileSuccessfullySavesFile()
     {
         // Arrange
         GameVersionFileModel fileModel = new()
@@ -329,22 +329,22 @@ public class GameVersionFileServiceTests
 
         _mockMapper.Setup(mapper => mapper.Map<GameVersionFile>(fileModel)).Returns(versionFile);
 
-        _mockGameVersionService.Setup(service => service.VerifyIfVersionExist(fileModel.GameVersion!)).ReturnsAsync(true);
+        _mockGameVersionService.Setup(service => service.VerifyIfVersionExistAsync(fileModel.GameVersion!, It.IsAny<CancellationToken>())).ReturnsAsync(true);
 
-        _mockGameVersionService.Setup(service => service.GetCurrentVersion())
+        _mockGameVersionService.Setup(service => service.GetCurrentVersionAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(new DefaultResponse(objectResponse: gameVersion));
 
         _mockMapper.Setup(mapper => mapper.Map<Domain.GameFiles.GameFile>(fileModel))
             .Returns(new Domain.GameFiles.GameFile());
 
         _mockGameFileService.Setup(
-            service => service.SaveFileAsync(It.IsAny<Domain.GameFiles.GameFile>(), fileModel.Content!))
+            service => service.SaveFileAsync(It.IsAny<Domain.GameFiles.GameFile>(), fileModel.Content!, It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
-        _mockGameVersionFileRepository.Setup(repo => repo.SaveFile(versionFile, It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+        _mockGameVersionFileRepository.Setup(repo => repo.SaveFileAsync(versionFile, It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
         // Act
-        DefaultResponse result = await _service.NewFile(fileModel);
+        DefaultResponse result = await _service.NewFileAsync(fileModel, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.NotNull(result);
@@ -352,7 +352,7 @@ public class GameVersionFileServiceTests
     }
 
     [Fact]
-    public async Task NewFile_ValidationFails_ReturnsBadRequest()
+    public async Task NewFileValidationFailsReturnsBadRequest()
     {
         // Arrange
         GameVersionFileModel fileModel = new() { Content = [1, 2, 3] };
@@ -362,7 +362,7 @@ public class GameVersionFileServiceTests
         _mockValidator.Setup(validator => validator.ValidateAsync(fileModel, default)).ReturnsAsync(validationResult);
 
         // Act
-        DefaultResponse result = await _service.NewFile(fileModel);
+        DefaultResponse result = await _service.NewFileAsync(fileModel, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.NotNull(result);
@@ -371,7 +371,7 @@ public class GameVersionFileServiceTests
     }
 
     [Fact]
-    public async Task NewFile_VersionNotFound_ReturnsBadRequest()
+    public async Task NewFileVersionNotFoundReturnsBadRequest()
     {
         // Arrange
         GameVersionFileModel fileModel = new()
@@ -387,11 +387,11 @@ public class GameVersionFileServiceTests
         _mockValidator.Setup(validator => validator.ValidateAsync(fileModel, default))
             .ReturnsAsync(new ValidationResult());
 
-        _mockGameVersionService.Setup(service => service.VerifyIfVersionExist(fileModel.GameVersion!))
+        _mockGameVersionService.Setup(service => service.VerifyIfVersionExistAsync(fileModel.GameVersion!, It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
 
         // Act
-        DefaultResponse result = await _service.NewFile(fileModel);
+        DefaultResponse result = await _service.NewFileAsync(fileModel, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.NotNull(result);
@@ -400,7 +400,7 @@ public class GameVersionFileServiceTests
     }
 
     [Fact]
-    public async Task NewFile_VersionReleased_ReturnsBadRequest()
+    public async Task NewFileVersionReleasedReturnsBadRequest()
     {
         // Arrange
         GameVersionFileModel fileModel = new()
@@ -416,11 +416,11 @@ public class GameVersionFileServiceTests
         _mockValidator.Setup(validator => validator.ValidateAsync(fileModel, default))
             .ReturnsAsync(new ValidationResult());
 
-        _mockGameVersionService.Setup(service => service.VerifyIfVersionExist(fileModel.GameVersion!))
+        _mockGameVersionService.Setup(service => service.VerifyIfVersionExistAsync(fileModel.GameVersion!, It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
 
         // Act
-        DefaultResponse result = await _service.NewFile(fileModel);
+        DefaultResponse result = await _service.NewFileAsync(fileModel, CancellationToken.None).ConfigureAwait(true);
 
         // Assert
         Assert.NotNull(result);

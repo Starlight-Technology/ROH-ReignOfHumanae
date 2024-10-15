@@ -13,6 +13,7 @@ using Assets.Scripts.Models.Version;
 
 using Newtonsoft.Json;
 
+using System.Threading;
 using System.Threading.Tasks;
 
 using UnityEngine;
@@ -23,9 +24,15 @@ namespace Assets.Scripts.Connection.Api
     {
         private ApiClient _apiClient;
 
-        public async Task<FileModel> DownloadFile(string guid)
+        public Task<FileModel> DownloadFileAsync(string guid, CancellationToken cancellationToken = default)
         {
             TaskCompletionSource<FileModel> tcs = new();
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                tcs.SetCanceled();
+                return tcs.Task;
+            }
 
             _apiClient.Get<DefaultResponse>(
                 $"api/VersionFile/DownloadFile?fileGuid={guid}",
@@ -44,11 +51,14 @@ namespace Assets.Scripts.Connection.Api
                     }
                 });
 
-            return await tcs.Task;
+            return tcs.Task;
         }
 
-        public Task GetCurrentVersion()
+        public Task GetCurrentVersionAsync(CancellationToken cancellationToken = default)
         {
+            if (cancellationToken.IsCancellationRequested)
+                return Task.FromCanceled(cancellationToken);
+
             _apiClient.Get<DefaultResponse>(
                 "Api/Version/GetCurrentVersion",
                 (response) =>
@@ -73,9 +83,15 @@ namespace Assets.Scripts.Connection.Api
             return Task.CompletedTask;
         }
 
-        public async Task<PaginatedModel> GetReleasedVersions()
+        public Task<PaginatedModel> GetReleasedVersionsAsync(CancellationToken cancellationToken = default)
         {
             TaskCompletionSource<PaginatedModel> tcs = new();
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                tcs.SetCanceled();
+                return tcs.Task;
+            }
 
             _apiClient.Get<DefaultResponse>(
                 "Api/Version/GetAllReleasedVersionsPaginated",
@@ -93,12 +109,18 @@ namespace Assets.Scripts.Connection.Api
                     }
                 });
 
-            return await tcs.Task;
+            return tcs.Task;
         }
 
-        public async Task<DefaultResponse> GetVersionFiles(string guid)
+        public Task<DefaultResponse> GetVersionFilesAsync(string guid, CancellationToken cancellationToken = default)
         {
             TaskCompletionSource<DefaultResponse> tcs = new();
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                tcs.SetCanceled();
+                return tcs.Task;
+            }
 
             _apiClient.Get<DefaultResponse>(
                 $"api/VersionFile/GetAllVersionFiles?versionGuid={guid}",
@@ -115,7 +137,7 @@ namespace Assets.Scripts.Connection.Api
                     }
                 });
 
-            return await tcs.Task;
+            return tcs.Task;
         }
 
         public void Start()

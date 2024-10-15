@@ -42,13 +42,13 @@ namespace Assets.Scripts.Update
             _txtUpdateBackground.SetValue(text);
         }
 
-        private async Task DownloadFile(GameVersionFileModel file)
+        private async Task DownloadFileAsync(GameVersionFileModel file, CancellationToken cancellationToken = default)
         {
-            FileModel download = await _apiService.DownloadFile(file.Guid.ToString());
+            FileModel download = await _apiService.DownloadFileAsync(file.Guid.ToString(), cancellationToken).ConfigureAwait(true);
             if (download != null)
             {
                 file.Content = download.Content;
-                await SaveFileAsync(file);
+                await SaveFileAsync(file, cancellationToken).ConfigureAwait(true);
             }
         }
 
@@ -59,7 +59,7 @@ namespace Assets.Scripts.Update
                 (currentGameVersion.Review > gameVersion.Review);
         }
 
-        private async Task LookForUpdate()
+        private async Task LookForUpdateAsync(CancellationToken cancellationToken = default)
         {
             GameVersionModel gameVersion = new()
             {
@@ -70,7 +70,7 @@ namespace Assets.Scripts.Update
 
             ChangeText("Verifying version...");
 
-            await _apiService.GetCurrentVersion();
+            await _apiService.GetCurrentVersionAsync(cancellationToken).ConfigureAwait(true);
 
             GameVersionModel currentGameVersion = new()
             {
@@ -80,13 +80,13 @@ namespace Assets.Scripts.Update
             };
 
             if (HasNewVersion(gameVersion, currentGameVersion))
-                await VerifyFiles();
+                await VerifyFilesAsync(cancellationToken).ConfigureAwait(true);
         }
 
         private static bool ResponseHasGameVersions(PaginatedModel response)
         { return (response != null) && (response.ObjectResponse != null) && response.ObjectResponse.Any(); }
 
-        private async Task SaveFileAsync(GameVersionFileModel file)
+        private async Task SaveFileAsync(GameVersionFileModel file, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -102,7 +102,7 @@ namespace Assets.Scripts.Update
                 }
 
                 using FileStream fs = File.Create(file.Path);
-                await fs.WriteAsync(file.Content.AsMemory(), CancellationToken.None);
+                await fs.WriteAsync(file.Content.AsMemory(), cancellationToken).ConfigureAwait(true);
             }
             catch (Exception ex)
             {
@@ -110,23 +110,32 @@ namespace Assets.Scripts.Update
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Async/await", "CRR0034:An asynchronous method's name is missing an 'Async' suffix", Justification = "<Is a default for unity>")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Is a default for unity.>")]
         private async void Start()
-        {
-            GameObject versionService = new("verServiceObject");
-            versionService.AddComponent<ApiVersionService>();
-            _apiService = versionService.GetComponent<ApiVersionService>();
-            _apiService.Start();
-
-            ChangeText("Connecting to server...");
-            filePath = Application.persistentDataPath;
-            await LookForUpdate();
-        }
-
-        private async Task VerifyFiles()
         {
             try
             {
-                PaginatedModel response = await _apiService.GetReleasedVersions();
+                GameObject versionService = new("verServiceObject");
+                versionService.AddComponent<ApiVersionService>();
+                _apiService = versionService.GetComponent<ApiVersionService>();
+                _apiService.Start();
+
+                ChangeText("Connecting to server...");
+                filePath = Application.persistentDataPath;
+                await LookForUpdateAsync(CancellationToken.None).ConfigureAwait(true);
+            }
+            catch (Exception)
+            {
+                ChangeText("An unexpected error has occurred.");
+            }
+        }
+
+        private async Task VerifyFilesAsync(CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                PaginatedModel response = await _apiService.GetReleasedVersionsAsync(cancellationToken).ConfigureAwait(true);
                 if (ResponseHasGameVersions(response))
                 {
                     string json = JsonConvert.SerializeObject(response.ObjectResponse);
@@ -134,7 +143,7 @@ namespace Assets.Scripts.Update
                         json);
                     foreach (GameVersionModel version in versions)
                     {
-                        await VerifyIfFileExist(version);
+                        await VerifyIfFileExistAsync(version, cancellationToken).ConfigureAwait(true);
                     }
                 }
                 else
@@ -148,9 +157,9 @@ namespace Assets.Scripts.Update
             }
         }
 
-        private async Task VerifyIfFileExist(GameVersionModel version)
+        private async Task VerifyIfFileExistAsync(GameVersionModel version, CancellationToken cancellationToken = default)
         {
-            DefaultResponse response = await _apiService.GetVersionFiles(version.Guid.ToString());
+            DefaultResponse response = await _apiService.GetVersionFilesAsync(version.Guid.ToString(), cancellationToken).ConfigureAwait(true);
             string json = JsonConvert.SerializeObject(response.ObjectResponse);
             ICollection<GameVersionFileModel> files = JsonConvert.DeserializeObject<ICollection<GameVersionFileModel>>(
                 json);
@@ -168,7 +177,7 @@ namespace Assets.Scripts.Update
                 if (file.Active)
                 {
                     if (!File.Exists(file.Path))
-                        await DownloadFile(file);
+                        await DownloadFileAsync(file, cancellationToken).ConfigureAwait(true);
                 }
                 else if (File.Exists(file.Path))
                     File.Delete(file.Path);

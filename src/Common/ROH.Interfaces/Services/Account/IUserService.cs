@@ -11,13 +11,13 @@ namespace ROH.Interfaces.Services.Account;
 
 public interface IUserService
 {
-    Task<UserModel?> FindUserByEmail(string email);
+    Task<UserModel?> FindUserByEmailAsync(string email, CancellationToken cancellationToken = default);
 
-    Task<UserModel?> FindUserByUserName(string userName);
+    Task<UserModel?> FindUserByUserNameAsync(string userName, CancellationToken cancellationToken = default);
 
-    Task<UserModel> GetUserByGuid(Guid userGuid);
+    Task<UserModel> GetUserByGuidAsync(Guid userGuid, CancellationToken cancellationToken = default);
 
-    Task<DefaultResponse> NewUser(UserModel userModel);
+    Task<DefaultResponse> NewUserAsync(UserModel userModel, CancellationToken cancellationToken = default);
 
-    Task<bool> ValidatePassword(string password, Guid userGuid);
+    Task<bool> ValidatePasswordAsync(string password, Guid userGuid, CancellationToken cancellationToken = default);
 }

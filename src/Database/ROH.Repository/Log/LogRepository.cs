@@ -11,7 +11,7 @@ namespace ROH.Repository.Log;
 
 public class LogRepository(ISqlContext context) : ILogRepository
 {
-    public async Task SaveLog(Domain.Logging.Log log, CancellationToken cancellationToken = default)
+    public async Task SaveLogAsync(Domain.Logging.Log log, CancellationToken cancellationToken = default)
     {
         _ = await context.Logs.AddAsync(log, cancellationToken).ConfigureAwait(true);
         _ = await context.SaveChangesAsync(cancellationToken).ConfigureAwait(true);

@@ -26,24 +26,24 @@ public class UserService(
     IUserRepository repository,
     IMapper mapper) : IUserService
 {
-    public async Task<UserModel?> FindUserByEmail(string email) => mapper.Map<UserModel>(
-        await repository.FindUserByEmailAsync(email));
+    public async Task<UserModel?> FindUserByEmailAsync(string email, CancellationToken cancellationToken = default) => mapper.Map<UserModel>(
+        await repository.FindUserByEmailAsync(email, cancellationToken).ConfigureAwait(true));
 
-    public async Task<UserModel?> FindUserByUserName(string userName) => mapper.Map<UserModel>(
-        await repository.FindUserByUserNameAsync(userName));
+    public async Task<UserModel?> FindUserByUserNameAsync(string userName, CancellationToken cancellationToken = default) => mapper.Map<UserModel>(
+        await repository.FindUserByUserNameAsync(userName, cancellationToken).ConfigureAwait(true));
 
-    public async Task<UserModel> GetUserByGuid(Guid userGuid) => mapper.Map<UserModel>(
-        await repository.GetUserByGuidAsync(userGuid));
+    public async Task<UserModel> GetUserByGuidAsync(Guid userGuid, CancellationToken cancellationToken = default) => mapper.Map<UserModel>(
+        await repository.GetUserByGuidAsync(userGuid, cancellationToken).ConfigureAwait(true));
 
-    public async Task<DefaultResponse> NewUser(UserModel userModel)
+    public async Task<DefaultResponse> NewUserAsync(UserModel userModel, CancellationToken cancellationToken = default)
     {
         try
         {
-            ValidationResult validation = await userValidator.ValidateAsync(userModel);
+            ValidationResult validation = await userValidator.ValidateAsync(userModel, cancellationToken).ConfigureAwait(true);
             if ((validation != null) && !validation.IsValid && (validation.Errors.Count > 0))
                 return new DefaultResponse(null, HttpStatusCode.BadRequest, validation.Errors.ToString()!);
 
-            if (await repository.EmailInUseAsync(userModel.Email!))
+            if (await repository.EmailInUseAsync(userModel.Email!, cancellationToken).ConfigureAwait(true))
                 return new DefaultResponse(
                     httpStatus: HttpStatusCode.Conflict,
                     message: "The email are currently in use.");
@@ -52,7 +52,7 @@ public class UserService(
 
             user.SetPassword(userModel.Password!);
 
-            _ = await repository.CreateNewUserAsync(user);
+            _ = await repository.CreateNewUserAsync(user, cancellationToken).ConfigureAwait(true);
 
             return new DefaultResponse(httpStatus: HttpStatusCode.OK, message: "Account has been created!");
         }
@@ -62,9 +62,9 @@ public class UserService(
         }
     }
 
-    public async Task<bool> ValidatePassword(string password, Guid userGuid)
+    public async Task<bool> ValidatePasswordAsync(string password, Guid userGuid, CancellationToken cancellationToken = default)
     {
-        User user = await repository.GetUserByGuidAsync(userGuid);
+        User user = await repository.GetUserByGuidAsync(userGuid, cancellationToken).ConfigureAwait(true);
 
         return user.VerifyPassword(password);
     }

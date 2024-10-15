@@ -23,12 +23,14 @@ public class LoginService(
     IUserService userService,
     IAuthService authService) : ILoginService
 {
-    private async Task<UserModel?> FindUser(LoginModel loginModel) => await userService.FindUserByEmail(loginModel.Login!) ??
-        await userService.FindUserByUserName(loginModel.Login!);
+    private async Task<UserModel?> FindUserAsync(LoginModel loginModel, CancellationToken cancellationToken = default)
+        => await userService.FindUserByEmailAsync(loginModel.Login!, cancellationToken).ConfigureAwait(true)
+        ?? await userService.FindUserByUserNameAsync(loginModel.Login!, cancellationToken).ConfigureAwait(true);
 
-    private async Task<DefaultResponse> ValidatePassword(UserModel user, LoginModel loginModel) => (await userService.ValidatePassword(
+    private async Task<DefaultResponse> ValidatePasswordAsync(UserModel user, LoginModel loginModel, CancellationToken cancellationToken = default) => (await userService.ValidatePasswordAsync(
             loginModel.Password!,
-            user.Guid!.Value))
+            user.Guid!.Value,
+            cancellationToken).ConfigureAwait(true))
         ? new DefaultResponse(
             objectResponse: new UserModel
             {
@@ -39,19 +41,19 @@ public class LoginService(
             })
         : new DefaultResponse(httpStatus: HttpStatusCode.Unauthorized, message: "Invalid password!");
 
-    public async Task<DefaultResponse> Login(LoginModel loginModel)
+    public async Task<DefaultResponse> LoginAsync(LoginModel loginModel, CancellationToken cancellationToken = default)
     {
         try
         {
-            ValidationResult validation = await loginValidator.ValidateAsync(loginModel);
+            ValidationResult validation = await loginValidator.ValidateAsync(loginModel, cancellationToken).ConfigureAwait(true);
             if ((validation != null) && !validation.IsValid && (validation.Errors.Count > 0))
                 return new DefaultResponse(null, HttpStatusCode.BadRequest, validation.Errors.ToString()!);
 
-            UserModel? user = await FindUser(loginModel);
+            UserModel? user = await FindUserAsync(loginModel, cancellationToken).ConfigureAwait(true);
 
             return (user is null)
                 ? new DefaultResponse(httpStatus: HttpStatusCode.NotFound, message: "User not found.")
-                : (await ValidatePassword(user, loginModel));
+                : (await ValidatePasswordAsync(user, loginModel, cancellationToken).ConfigureAwait(true));
         }
         catch (Exception e)
         {

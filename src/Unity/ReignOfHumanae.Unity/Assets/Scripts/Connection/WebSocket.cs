@@ -25,7 +25,7 @@ namespace Assets.Scripts.Connection
             WebSocketCloseStatus closeStatus,
             string statusDescription,
             CancellationToken cancellationToken)
-        { await _webSocket.CloseAsync(closeStatus, statusDescription, cancellationToken); }
+        { await _webSocket.CloseAsync(closeStatus, statusDescription, cancellationToken).ConfigureAwait(true); }
 
         /// <summary>
         /// Connect to WebSocket
@@ -34,7 +34,7 @@ namespace Assets.Scripts.Connection
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         public async Task ConnectAsync(Uri uri, CancellationToken cancellationToken)
-        { await _webSocket.ConnectAsync(uri, cancellationToken); }
+        { await _webSocket.ConnectAsync(uri, cancellationToken).ConfigureAwait(true); }
 
         public async Task SendJsonAsync(object payload, CancellationToken cancellationToken)
         {
@@ -44,7 +44,7 @@ namespace Assets.Scripts.Connection
                 new ArraySegment<byte>(buffer),
                 WebSocketMessageType.Text,
                 true,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(true);
         }
     }
 }

@@ -18,11 +18,11 @@ namespace ROH.Services.Account;
 
 public class AccountService(IExceptionHandler handler, IAccountRepository repository, IMapper mapper) : IAccountService
 {
-    public async Task<DefaultResponse> GetAccountByUserGuid(Guid userGuid)
+    public async Task<DefaultResponse> GetAccountByUserGuidAsync(Guid userGuid, CancellationToken cancellationToken = default)
     {
         try
         {
-            Domain.Accounts.Account? account = await repository.GetAccountByUserGuidAsync(userGuid);
+            Domain.Accounts.Account? account = await repository.GetAccountByUserGuidAsync(userGuid, cancellationToken).ConfigureAwait(true);
 
             if (account is null)
                 return new DefaultResponse(httpStatus: HttpStatusCode.NotFound);
@@ -37,11 +37,11 @@ public class AccountService(IExceptionHandler handler, IAccountRepository reposi
         }
     }
 
-    public async Task<DefaultResponse> UpdateAccount(AccountModel accountModel)
+    public async Task<DefaultResponse> UpdateAccountAsync(AccountModel accountModel, CancellationToken cancellationToken = default)
     {
         try
         {
-            Domain.Accounts.Account? account = await repository.GetAccountByGuidAsync(accountModel.Guid);
+            Domain.Accounts.Account? account = await repository.GetAccountByGuidAsync(accountModel.Guid, cancellationToken).ConfigureAwait(true);
             if (account is null)
                 return new DefaultResponse(httpStatus: HttpStatusCode.NotFound, message: "Account not found.");
 
@@ -52,7 +52,7 @@ public class AccountService(IExceptionHandler handler, IAccountRepository reposi
                                                                                                     accountModel.RealName,
             };
 
-            await repository.UpdateAccountAsync(account);
+            await repository.UpdateAccountAsync(account, cancellationToken).ConfigureAwait(true);
 
             return new DefaultResponse(message: "Account has been updated.");
         }

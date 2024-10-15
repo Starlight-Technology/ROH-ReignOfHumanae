@@ -11,5 +11,5 @@ namespace ROH.Interfaces.Services.Account;
 
 public interface ILoginService
 {
-    Task<DefaultResponse> Login(LoginModel loginModel);
+    Task<DefaultResponse> LoginAsync(LoginModel loginModel, CancellationToken cancellationToken = default);
 }

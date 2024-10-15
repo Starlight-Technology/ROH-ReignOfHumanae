@@ -68,32 +68,32 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapPost("CreateNewVersion", async (IGameVersionService gameVersionService, GameVersionModel model) =>
-    await gameVersionService.NewVersion(model).ConfigureAwait(false)
+    await gameVersionService.NewVersionAsync(model).ConfigureAwait(false)
 ).WithName("CreateNewVersion")
 .WithOpenApi();
 
 app.MapPut("ReleaseVersion", async (IGameVersionService gameVersionService, [FromBody] GameVersionModel gameVersion) =>
-    await gameVersionService.SetReleased(gameVersion.Guid.ToString()).ConfigureAwait(false)
+    await gameVersionService.SetReleasedAsync(gameVersion.Guid.ToString()).ConfigureAwait(false)
 ).WithName("ReleaseVersion")
 .WithOpenApi();
 
 app.MapGet("GetCurrentVersion", (IGameVersionService gameVersionService) =>
-    gameVersionService.GetCurrentVersion().Result.MapObjectResponse<GameVersionModel>()
+    gameVersionService.GetCurrentVersionAsync().Result.MapObjectResponse<GameVersionModel>()
 ).WithName("GetCurrentVersion")
 .WithOpenApi();
 
 app.MapGet("GetAllVersionsPaginated", async (IGameVersionService gameVersionService, int page, int take) =>
-    await gameVersionService.GetAllVersions(page: page, take: take).ConfigureAwait(false)
+    await gameVersionService.GetAllVersionsAsync(page: page, take: take).ConfigureAwait(false)
 ).WithName("GetAllVersionsPaginated")
 .WithOpenApi();
 
 app.MapGet("GetAllReleasedVersionsPaginated", async (IGameVersionService gameVersionService, int page, int take) =>
-    await gameVersionService.GetAllReleasedVersions(page: page, take: take).ConfigureAwait(false)
+    await gameVersionService.GetAllReleasedVersionsAsync(page: page, take: take).ConfigureAwait(false)
 ).WithName("GetAllReleasedVersionsPaginated")
 .WithOpenApi();
 
 app.MapGet("GetVersionDetails", async (IGameVersionService gameVersionService, string guid) =>
-    await gameVersionService.GetVersionByGuid(guid).ConfigureAwait(false)
+    await gameVersionService.GetVersionByGuidAsync(guid).ConfigureAwait(false)
 ).WithName("GetVersionDetails")
 .WithOpenApi();
 
