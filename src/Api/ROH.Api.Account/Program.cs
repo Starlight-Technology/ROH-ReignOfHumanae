@@ -64,21 +64,21 @@ if (app.Environment.IsDevelopment())
 
 app.MapPost(
     "CreateNewUser",
-    async (IUserService userService, UserModel model) => await userService.NewUser(model).ConfigureAwait(false)
+    async (IUserService userService, UserModel model) => await userService.NewUserAsync(model).ConfigureAwait(false)
 )
     .WithName("CreateNewUser")
     .WithOpenApi();
 
 app.MapGet(
     "FindUserByEmail",
-    async (IUserService userService, string email) => await userService.FindUserByEmail(email).ConfigureAwait(false)
+    async (IUserService userService, string email) => await userService.FindUserByEmailAsync(email).ConfigureAwait(false)
 )
     .WithName("FindUserByEmail")
     .WithOpenApi();
 
 app.MapGet(
     "FindUserByUserName",
-    async (IUserService userService, string userName) => await userService.FindUserByUserName(userName)
+    async (IUserService userService, string userName) => await userService.FindUserByUserNameAsync(userName)
         .ConfigureAwait(false)
 )
     .WithName("FindUserByUserName")
@@ -86,14 +86,14 @@ app.MapGet(
 
 app.MapGet(
     "GetUserByGuid",
-    async (IUserService userService, Guid guid) => await userService.GetUserByGuid(guid).ConfigureAwait(false)
+    async (IUserService userService, Guid guid) => await userService.GetUserByGuidAsync(guid).ConfigureAwait(false)
 )
     .WithName("GetUserByGuid")
     .WithOpenApi();
 
 app.MapGet(
     "GetAccountByUserGuid",
-    async (IAccountService accountService, Guid guid) => await accountService.GetAccountByUserGuid(guid)
+    async (IAccountService accountService, Guid guid) => await accountService.GetAccountByUserGuidAsync(guid)
         .ConfigureAwait(false)
 )
     .WithName("GetAccountByUserGuid")
@@ -101,7 +101,7 @@ app.MapGet(
 
 app.MapPut(
     "UpdateAccount",
-    async (IAccountService accountService, AccountModel model) => await accountService.UpdateAccount(model)
+    async (IAccountService accountService, AccountModel model) => await accountService.UpdateAccountAsync(model)
         .ConfigureAwait(false)
 )
     .WithName("UpdateAccount")

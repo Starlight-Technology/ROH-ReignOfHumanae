@@ -75,7 +75,7 @@ if (app.Environment.IsDevelopment())
 
 app.MapPost(
     "UploadFile",
-    async (IGameVersionFileService gameVersionFileService, GameVersionFileModel file) => await gameVersionFileService.NewFile(
+    async (IGameVersionFileService gameVersionFileService, GameVersionFileModel file) => await gameVersionFileService.NewFileAsync(
         file)
         .ConfigureAwait(false)
 )
@@ -84,7 +84,7 @@ app.MapPost(
 
 app.MapGet(
     "GetAllVersionFiles",
-    async (IGameVersionFileService gameVersionFileService, string versionGuid) => await gameVersionFileService.GetFiles(
+    async (IGameVersionFileService gameVersionFileService, string versionGuid) => await gameVersionFileService.GetFilesAsync(
         versionGuid)
         .ConfigureAwait(false)
 )
@@ -93,7 +93,7 @@ app.MapGet(
 
 app.MapGet(
     "DownloadFile",
-    async (IGameVersionFileService gameVersionFileService, string fileGuid) => await gameVersionFileService.DownloadFile(
+    async (IGameVersionFileService gameVersionFileService, string fileGuid) => await gameVersionFileService.DownloadFileAsync(
         new Guid(fileGuid))
         .ConfigureAwait(false)
 )

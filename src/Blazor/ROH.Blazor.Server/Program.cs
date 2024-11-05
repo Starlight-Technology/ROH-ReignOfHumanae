@@ -95,4 +95,4 @@ app.UseRouting();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
-await app.RunAsync();
+await app.RunAsync().ConfigureAwait(true);

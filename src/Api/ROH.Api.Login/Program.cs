@@ -67,7 +67,7 @@ if (app.Environment.IsDevelopment())
 
 app.MapPost(
     "Login",
-    async (ILoginService loginService, LoginModel model) => await loginService.Login(model).ConfigureAwait(false)
+    async (ILoginService loginService, LoginModel model) => await loginService.LoginAsync(model).ConfigureAwait(false)
 )
     .WithName("Login")
     .WithOpenApi();
