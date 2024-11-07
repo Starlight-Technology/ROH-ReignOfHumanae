@@ -6,7 +6,7 @@
 //-----------------------------------------------------------------------
 using ROH.StandardModels.Response;
 
-namespace ROH.Interfaces.Services.GameFile;
+namespace ROH.Service.File.Interface;
 
 public interface IGameFileService
 {

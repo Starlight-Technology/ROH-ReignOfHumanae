@@ -12,13 +12,9 @@ using ROH.Context.PostgreSQLContext;
 using ROH.Interfaces;
 using ROH.Interfaces.Repository.Account;
 using ROH.Interfaces.Repository.Log;
-using ROH.Interfaces.Services.Account;
-using ROH.Interfaces.Services.ExceptionService;
 using ROH.Mapping.Account;
 using ROH.Repository.Account;
 using ROH.Repository.Log;
-using ROH.Services.Account;
-using ROH.Services.ExceptionService;
 using ROH.StandardModels.Account;
 using ROH.Validations.Account;
 

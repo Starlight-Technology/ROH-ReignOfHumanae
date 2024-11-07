@@ -1,14 +1,14 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="IExceptionHandler.cs" company="Starlight-Technology">
+// <copyright file="IAuthService.cs" company="Starlight-Technology">
 //     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
 //     Copyright (c) Starlight-Technology. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-using ROH.StandardModels.Response;
+using ROH.StandardModels.Account;
 
-namespace ROH.Interfaces.Services.ExceptionService;
+namespace ROH.Service.Authentication.Interface;
 
-public interface IExceptionHandler
+public interface IAuthService
 {
-    DefaultResponse HandleException(Exception exception);
+    string GenerateJwtToken(UserModel user);
 }

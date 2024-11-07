@@ -1,15 +1,14 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="ILoginService.cs" company="Starlight-Technology">
+// <copyright file="IExceptionHandler.cs" company="Starlight-Technology">
 //     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae
 //     Copyright (c) Starlight-Technology. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-using ROH.StandardModels.Account;
 using ROH.StandardModels.Response;
 
-namespace ROH.Interfaces.Services.Account;
+namespace ROH.Service.Exception.Interface;
 
-public interface ILoginService
+public interface IExceptionHandler
 {
-    Task<DefaultResponse> LoginAsync(LoginModel loginModel, CancellationToken cancellationToken = default);
+    DefaultResponse HandleException(Exception exception);
 }

@@ -21,7 +21,6 @@
     <ProjectReference Include="..\..\Database\ROH.Context\ROH.Context.csproj" />
     <ProjectReference Include="..\..\Common\ROH.Interfaces\ROH.Interfaces.csproj" />
     <ProjectReference Include="..\..\Database\ROH.Repository\ROH.Repository.csproj" />
-    <ProjectReference Include="..\..\Rules\ROH.Services\ROH.Services.csproj" />
   </ItemGroup>
 
 </Project>

@@ -7,7 +7,7 @@
 using ROH.StandardModels.Response;
 using ROH.StandardModels.Version;
 
-namespace ROH.Interfaces.Services.Version;
+namespace ROH.Service.File.Interface;
 
 public interface IGameVersionFileService
 {

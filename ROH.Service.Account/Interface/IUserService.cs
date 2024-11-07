@@ -7,7 +7,7 @@
 using ROH.StandardModels.Account;
 using ROH.StandardModels.Response;
 
-namespace ROH.Interfaces.Services.Account;
+namespace ROH.Service.Account.Interface;
 
 public interface IUserService
 {
