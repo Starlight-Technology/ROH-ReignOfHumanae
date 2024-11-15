@@ -7,7 +7,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using ROH.Context.Account.Entities;
+using ROH.Context.Account.Entity;
 
 namespace ROH.Context.Account.TypeConfiguration;
 

@@ -10,7 +10,7 @@ using System.Collections;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace ROH.Context.Account.Entities;
+namespace ROH.Context.Account.Entity;
 
 public record User(long Id = 0, long IdAccount = 0, Guid Guid = default, string? Email = null, string? UserName = null)
 {

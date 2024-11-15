@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-using ROH.Context.Account.Entities;
+using ROH.Context.Account.Entity;
+using ROH.Context.Account.Interface;
 using ROH.Context.Account.TypeConfiguration;
 
 namespace ROH.Context.Account;
 
-public class AccountContext : DbContext
+public class AccountContext : DbContext, IAccountContext
 {
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -23,6 +24,6 @@ public class AccountContext : DbContext
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => base.SaveChangesAsync(cancellationToken);
 
-    public DbSet<Entities.Account> Accounts { get; set; }
+    public DbSet<Entity.Account> Accounts { get; set; }
     public DbSet<User> Users { get; set; }
 }

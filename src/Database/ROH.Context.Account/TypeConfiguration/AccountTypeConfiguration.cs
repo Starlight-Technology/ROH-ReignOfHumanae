@@ -10,13 +10,13 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ROH.Context.Account.TypeConfiguration;
 
-public class AccountTypeConfiguration : IEntityTypeConfiguration<Entities.Account>
+public class AccountTypeConfiguration : IEntityTypeConfiguration<Entity.Account>
 {
-    public void Configure(EntityTypeBuilder<Entities.Account> builder)
+    public void Configure(EntityTypeBuilder<Entity.Account> builder)
     {
         _ = builder.HasKey(a => a.Id);
 
-        _ = builder.HasOne(a => a.User).WithOne(u => u.Account).HasForeignKey<Entities.Account>(a => a.IdUser);
+        _ = builder.HasOne(a => a.User).WithOne(u => u.Account).HasForeignKey<Entity.Account>(a => a.IdUser);
 
         _ = builder.Property(g => g.Guid).HasDefaultValueSql("gen_random_uuid()");
     }

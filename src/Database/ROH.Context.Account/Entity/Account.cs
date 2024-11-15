@@ -4,7 +4,7 @@
 //     Copyright (c) Starlight-Technology. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace ROH.Context.Account.Entities;
+namespace ROH.Context.Account.Entity;
 
 public record Account(
     long Id = 0,
