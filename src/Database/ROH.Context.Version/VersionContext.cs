@@ -25,7 +25,6 @@ public class VersionContext : DbContext, IVersionContext
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => base.SaveChangesAsync(cancellationToken);
 
-
-    public DbSet<GameVersion> GameVersions { get; set; }
+    public required DbSet<GameVersion> GameVersions { get; set; }
 
 }

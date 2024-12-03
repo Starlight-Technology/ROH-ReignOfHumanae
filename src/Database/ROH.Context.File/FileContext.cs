@@ -25,8 +25,8 @@ public class FileContext : DbContext, IFileContext
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => base.SaveChangesAsync(cancellationToken);
 
-    public DbSet<GameFile> GameFiles { get; set; }
+    public required DbSet<GameFile> GameFiles { get; set; }
 
-    public DbSet<GameVersionFile> GameVersionFiles { get; set; }
+    public required DbSet<GameVersionFile> GameVersionFiles { get; set; }
 
 }

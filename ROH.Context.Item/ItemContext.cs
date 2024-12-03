@@ -25,9 +25,9 @@ public class ItemContext : DbContext
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => base.SaveChangesAsync(cancellationToken);
 
-    public DbSet<Enchantment> Enchantments { get; set; }
+    public required DbSet<Enchantment> Enchantments { get; set; }
 
-    public DbSet<ItemEnchantment> ItemEnchantments { get; set; }
+    public required DbSet<ItemEnchantment> ItemEnchantments { get; set; }
 
-    public DbSet<Item.Entities.Item> Items { get; set; }
+    public required DbSet<Item.Entities.Item> Items { get; set; }
 }
