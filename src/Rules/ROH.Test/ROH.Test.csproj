@@ -24,7 +24,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Database\ROH.Domain\ROH.Domain.csproj" />
     <ProjectReference Include="..\ROH.Services\ROH.Services.csproj" />
   </ItemGroup>
 </Project>

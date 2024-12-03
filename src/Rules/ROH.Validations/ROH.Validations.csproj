@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\ROH.StandardModels\ROH.StandardModels.csproj" />
-    <ProjectReference Include="..\..\Database\ROH.Domain\ROH.Domain.csproj" />
   </ItemGroup>
 
 </Project>
