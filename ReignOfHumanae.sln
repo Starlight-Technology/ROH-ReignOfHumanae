@@ -95,6 +95,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Service.File", "src\Ser
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Service.Version", "src\Service\ROH.Service.Version\ROH.Service.Version.csproj", "{B5480900-F652-434D-B3E4-BF0D63BFED9F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Context.Item", "ROH.Context.Item\ROH.Context.Item.csproj", "{B4485698-E5A0-4883-AA53-6F514E79C20A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -269,6 +271,12 @@ Global
 		{B5480900-F652-434D-B3E4-BF0D63BFED9F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B5480900-F652-434D-B3E4-BF0D63BFED9F}.Test|Any CPU.ActiveCfg = Debug|Any CPU
 		{B5480900-F652-434D-B3E4-BF0D63BFED9F}.Test|Any CPU.Build.0 = Debug|Any CPU
+		{B4485698-E5A0-4883-AA53-6F514E79C20A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4485698-E5A0-4883-AA53-6F514E79C20A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4485698-E5A0-4883-AA53-6F514E79C20A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4485698-E5A0-4883-AA53-6F514E79C20A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4485698-E5A0-4883-AA53-6F514E79C20A}.Test|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4485698-E5A0-4883-AA53-6F514E79C20A}.Test|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -312,6 +320,7 @@ Global
 		{57D7C6C9-A1AA-49BE-BB6A-2E693B2EB11B} = {AF54ADB7-357D-4157-9B4B-421DABC0C845}
 		{B3198C23-CE7C-46F6-9C9E-59169F0DF8D4} = {AF54ADB7-357D-4157-9B4B-421DABC0C845}
 		{B5480900-F652-434D-B3E4-BF0D63BFED9F} = {AF54ADB7-357D-4157-9B4B-421DABC0C845}
+		{B4485698-E5A0-4883-AA53-6F514E79C20A} = {69C2FA84-4DA4-4FA5-863D-B2DBC93B25B9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {27EDF35D-5831-479E-BF70-D6CB24952E66}
