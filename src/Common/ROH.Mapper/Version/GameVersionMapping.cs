@@ -6,7 +6,7 @@
 //-----------------------------------------------------------------------
 using AutoMapper;
 
-using ROH.Domain.Version;
+using ROH.Context.Version.Entities;
 using ROH.StandardModels.Version;
 
 namespace ROH.Mapping.Version;

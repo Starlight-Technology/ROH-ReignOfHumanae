@@ -19,7 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\ROH.Interfaces\ROH.Interfaces.csproj" />
     <ProjectReference Include="..\..\Rules\ROH.Validations\ROH.Validations.csproj" />
   </ItemGroup>
 

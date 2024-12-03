@@ -14,9 +14,9 @@ public class AccountMapping : Profile
 {
     public AccountMapping()
     {
-        _ = CreateMap<Domain.Accounts.Account, AccountModel>()
+        _ = CreateMap<Context.Account.Entity.Account, AccountModel>()
             .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate.ToDateTime(new TimeOnly(0, 0))));
-        _ = CreateMap<AccountModel, Domain.Accounts.Account>()
+        _ = CreateMap<AccountModel, Context.Account.Entity.Account>()
             .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
     }
 }

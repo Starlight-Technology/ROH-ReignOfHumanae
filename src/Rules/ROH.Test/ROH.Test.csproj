@@ -11,6 +11,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="xunit" Version="2.9.2" />
@@ -24,6 +25,12 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ROH.Services\ROH.Services.csproj" />
+    <ProjectReference Include="..\..\..\ROH.Context.Item\ROH.Context.Item.csproj" />
+    <ProjectReference Include="..\..\Database\ROH.Context.Account\ROH.Context.Account.csproj" />
+    <ProjectReference Include="..\..\Database\ROH.Context.Character\ROH.Context.Character.csproj" />
+    <ProjectReference Include="..\..\Database\ROH.Context.File\ROH.Context.File.csproj" />
+    <ProjectReference Include="..\..\Database\ROH.Context.Log\ROH.Context.Log.csproj" />
+    <ProjectReference Include="..\..\Database\ROH.Context.Player\ROH.Context.Player.csproj" />
+    <ProjectReference Include="..\..\Database\ROH.Context.Version\ROH.Context.Version.csproj" />
   </ItemGroup>
 </Project>

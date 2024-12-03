@@ -12,5 +12,5 @@ namespace ROH.Mapping.GameFile;
 
 public class GameFileMapping : Profile
 {
-    public GameFileMapping() => CreateMap<Domain.GameFiles.GameFile, GameVersionFileModel>().ReverseMap();
+    public GameFileMapping() => CreateMap<Context.File.Entities.GameFile, GameVersionFileModel>().ReverseMap();
 }
