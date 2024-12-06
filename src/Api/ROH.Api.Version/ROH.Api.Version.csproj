@@ -23,6 +23,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Common\ROH.Mapper\ROH.Mapping.csproj" />
     <ProjectReference Include="..\..\Common\ROH.Utils\ROH.Utils.csproj" />
+    <ProjectReference Include="..\..\Database\ROH.Context.Version\ROH.Context.Version.csproj" />
+    <ProjectReference Include="..\..\Service\ROH.Service.Exception\ROH.Service.Exception.csproj" />
+    <ProjectReference Include="..\..\Service\ROH.Service.Version\ROH.Service.Version.csproj" />
   </ItemGroup>
 
 </Project>
