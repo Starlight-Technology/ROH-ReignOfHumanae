@@ -10,5 +10,5 @@ namespace ROH.Service.Exception.Interface;
 
 public interface IExceptionHandler
 {
-    DefaultResponse HandleException(Exception exception);
+    DefaultResponse HandleException(System.Exception exception);
 }

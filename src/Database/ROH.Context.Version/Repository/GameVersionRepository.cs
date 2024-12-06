@@ -13,6 +13,7 @@ using ROH.Context.Version.Paginator;
 namespace ROH.Context.Version.Repository;
 
 public class GameVersionRepository(IVersionContext context)
+: IGameVersionRepository
 {
     public async Task<Paginated> GetAllReleasedVersionsAsync(int take = 10, int skip = 0, CancellationToken cancellationToken = default)
     {
@@ -25,7 +26,7 @@ public class GameVersionRepository(IVersionContext context)
             .Take(take)
             .ToListAsync(cancellationToken)
             .ConfigureAwait(true);
-        int total = await context.GameVersions.CountAsync(cancellationToken).ConfigureAwait(true);
+        int total = versions.Count;
         return new(total, versions.Cast<dynamic>().ToList());
     }
 

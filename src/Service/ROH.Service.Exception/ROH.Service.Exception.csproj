@@ -6,4 +6,30 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.29.1" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.67.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.68.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\ROH.StandardModels\ROH.StandardModels.csproj" />
+    <ProjectReference Include="..\..\Database\ROH.Context.Log\ROH.Context.Log.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Protos\LogServiceApi.proto">
+      <GrpcServices>Client</GrpcServices>
+    </None>
+  </ItemGroup>
+
+	<ItemGroup>
+		<Protobuf Include="Protos\LogServiceApi.proto" GrpcServices="Client" />
+	</ItemGroup>
+
 </Project>

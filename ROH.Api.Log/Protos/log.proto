@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option csharp_namespace = "LogServiceApi";
+
+message LogRequest {
+    string message = 1;
+}
+
+message LogResponse {
+    bool success = 1; 
+}
+
+service LogService {
+    rpc Log (LogRequest) returns (LogResponse);
+}

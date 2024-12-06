@@ -6,10 +6,10 @@
 //-----------------------------------------------------------------------
 using AutoMapper;
 
-using ROH.Domain.Paginator;
-using ROH.Domain.Version;
-using ROH.Interfaces.Repository.Version;
-using ROH.Interfaces.Services.ExceptionService;
+using ROH.Context.Version.Entities;
+using ROH.Context.Version.Interface;
+using ROH.Context.Version.Paginator;
+using ROH.Service.Exception.Interface;
 using ROH.Service.Version.Interface;
 using ROH.StandardModels.Paginator;
 using ROH.StandardModels.Response;
@@ -42,7 +42,7 @@ public class GameVersionService(
 
             return new DefaultResponse(message: "The version has been set as release.");
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             return exceptionHandler.HandleException(ex);
         }
@@ -78,7 +78,7 @@ public class GameVersionService(
 
             return new DefaultResponse(objectResponse: paginatedModel, message: "That are all released versions");
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             return exceptionHandler.HandleException(ex);
         }
@@ -105,7 +105,7 @@ public class GameVersionService(
 
             return new DefaultResponse(objectResponse: paginatedModel);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             return exceptionHandler.HandleException(ex);
         }
@@ -118,7 +118,7 @@ public class GameVersionService(
             GameVersion? version = await versionRepository.GetCurrentGameVersionAsync(cancellationToken).ConfigureAwait(true);
             return new DefaultResponse(objectResponse: version);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             return exceptionHandler.HandleException(ex);
         }
@@ -136,7 +136,7 @@ public class GameVersionService(
 
             return await ReturnGuidInvalidAsync(cancellationToken).ConfigureAwait(true);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             return exceptionHandler.HandleException(ex);
         }
@@ -153,7 +153,7 @@ public class GameVersionService(
 
             return new DefaultResponse(httpStatus: HttpStatusCode.Created, message: "New game version created.");
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             return exceptionHandler.HandleException(ex);
         }
