@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ROH.Service.Log\ROH.Service.Log.csproj" />
+    <ProjectReference Include="..\..\Service\ROH.Service.Log\ROH.Service.Log.csproj" />
   </ItemGroup>
 
 	<ItemGroup>

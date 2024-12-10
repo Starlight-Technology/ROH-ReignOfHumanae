@@ -2,8 +2,8 @@
 
 using LogServiceApi;
 
-using ROH.Context.Log.Interface;
 using ROH.Service.Log;
+
 
 namespace ROH.Api.Log.Services;
 

@@ -1,6 +1,7 @@
-using Grpc.Core;
+using Microsoft.EntityFrameworkCore;
 
 using ROH.Api.Log.Services;
+using ROH.Context.Log;
 using ROH.Context.Log.Interface;
 using ROH.Context.Log.Repository;
 using ROH.Service.Log;
@@ -11,11 +12,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+//Registry Interfaces
+
+builder.Services.AddScoped<ILogContext, LogContext>();
+
 builder.Services.AddScoped<ILogRepository, LogRepository>();
 builder.Services.AddScoped<ILogService, LogService>();
 
 builder.Services.AddGrpc();
-builder.Services.AddScoped<ILogRepository, LogRepository>(); // Your repository implementation
 
 
 var app = builder.Build();

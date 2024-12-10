@@ -85,11 +85,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Service.File", "src\Ser
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Service.Version", "src\Service\ROH.Service.Version\ROH.Service.Version.csproj", "{B5480900-F652-434D-B3E4-BF0D63BFED9F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Context.Item", "ROH.Context.Item\ROH.Context.Item.csproj", "{B4485698-E5A0-4883-AA53-6F514E79C20A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Context.Item", "src\Database\ROH.Context.Item\ROH.Context.Item.csproj", "{B4485698-E5A0-4883-AA53-6F514E79C20A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Service.Log", "ROH.Service.Log\ROH.Service.Log.csproj", "{5AAFC6B2-949D-49DB-A29F-50D25CD22017}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Service.Log", "src\Service\ROH.Service.Log\ROH.Service.Log.csproj", "{5AAFC6B2-949D-49DB-A29F-50D25CD22017}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Api.Log", "ROH.Api.Log\ROH.Api.Log.csproj", "{67531643-22EC-4C13-83FC-2C2601E4694E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Api.Log", "src\Api\ROH.Api.Log\ROH.Api.Log.csproj", "{67531643-22EC-4C13-83FC-2C2601E4694E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

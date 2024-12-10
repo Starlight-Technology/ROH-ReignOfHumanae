@@ -60,7 +60,9 @@ public class GameVersionService(
     {
         try
         {
-            int skip = take * (page - 1);
+            int skip = Math.Max(0, take * (page - 1));
+
+            take = Math.Max(1, take);
 
             Paginated result = await versionRepository.GetAllReleasedVersionsAsync(take, skip, cancellationToken).ConfigureAwait(true);
 
@@ -88,7 +90,9 @@ public class GameVersionService(
     {
         try
         {
-            int skip = take * (page - 1);
+            int skip = Math.Max(0, take * (page - 1));
+
+            take = Math.Max(1, take);
 
             Paginated result = await versionRepository.GetAllVersionsAsync(take, skip, cancellationToken).ConfigureAwait(true);
 
