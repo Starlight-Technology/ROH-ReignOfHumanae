@@ -4,6 +4,7 @@
 //     Copyright (c) Starlight-Technology. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
+using ROH.Context.File.Entities;
 using ROH.StandardModels.Response;
 
 namespace ROH.Service.File.Interface;
@@ -14,5 +15,5 @@ public interface IGameFileService
 
     Task<DefaultResponse> DownloadFileAsync(long id, CancellationToken cancellationToken = default);
 
-    Task SaveFileAsync(Domain.GameFiles.GameFile file, byte[] content, CancellationToken cancellationToken = default);
+    Task SaveFileAsync(GameFile file, byte[] content, CancellationToken cancellationToken = default);
 }

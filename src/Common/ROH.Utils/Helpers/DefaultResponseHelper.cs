@@ -47,5 +47,41 @@ namespace ROH.Utils.Helpers
                 throw new InvalidCastException($"Can't convert object response to {typeof(T)}.");
             }
         }
+
+        public static T JsonToObject<T>(this string json)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                throw new ArgumentException("Input JSON string cannot be null or whitespace.", nameof(json));
+            }
+
+            try
+            {
+                string objectJson = JsonConvert.SerializeObject(json);
+                T result = JsonConvert.DeserializeObject<T>(objectJson)
+                           ?? throw new InvalidCastException($"Deserialization resulted in a null object for type {typeof(T)}.");
+
+                return result;
+            }
+            catch (Exception)
+            {
+                throw new InvalidCastException($"Can't convert Json to {typeof(T)}.");
+            }
+        }
+
+        public static string ObjectToJson(this object obj)
+        {
+            try
+            {
+                if (obj == null)
+                    return string.Empty;
+
+                return JsonConvert.SerializeObject(obj);
+            }
+            catch (Exception)
+            {
+                throw new InvalidCastException($"Can't convert object to Json.");
+            }
+        }
     }
 }

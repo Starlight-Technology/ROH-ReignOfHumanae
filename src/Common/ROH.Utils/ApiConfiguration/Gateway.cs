@@ -30,10 +30,8 @@ namespace ROH.Utils.ApiConfiguration
         private static readonly ApiConfigReader _apiConfig = new ApiConfigReader();
         private static readonly Dictionary<ApiUrl, Uri> _apiUrl = _apiConfig.GetApiUrl();
 
-        private static readonly Dictionary<Services, Uri> _gatewayServiceUrl = new Dictionary<Services, Uri>
-        {
+        private static readonly Dictionary<Services, Uri> _gatewayServiceUrl = new Dictionary<Services, Uri> {
             #region VERSION
-
             {
                 Services.GetCurrentVersion,
                 new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay), "Api/Version/GetCurrentVersion")
@@ -58,11 +56,9 @@ namespace ROH.Utils.ApiConfiguration
                 Services.ReleaseVersion,
                 new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay), "Api/Version/ReleaseVersion")
             },
-
             #endregion VERSION
 
             #region FILES
-
             { Services.UploadFile, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay), "Api/VersionFile/UploadFile") },
             {
                 Services.GetAllVersionFiles,
@@ -72,11 +68,9 @@ namespace ROH.Utils.ApiConfiguration
                 Services.DownloadFile,
                 new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay), "Api/VersionFile/DownloadFile")
             },
-
             #endregion FILES
 
             #region ACCOUNT
-
             { Services.CreateNewUser, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay), "Api/Account/CreateNewUser") },
             {
                 Services.FindUserByEmail,
@@ -95,9 +89,9 @@ namespace ROH.Utils.ApiConfiguration
             #endregion ACCOUNT
 
             #region LOGIN
-
             { Services.Login, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay), "Api/Account/Login") },
             #endregion LOGIN
+               
         };
 
         private readonly Api _api = new Api();
@@ -262,9 +256,15 @@ namespace ROH.Utils.ApiConfiguration
 
             #region LOGIN
 
-            Login
+            Login,
 
             #endregion LOGIN
+
+            #region LOG
+
+            Log
+
+            #endregion LOG
         }
     }
 }

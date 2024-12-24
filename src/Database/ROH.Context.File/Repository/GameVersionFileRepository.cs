@@ -34,9 +34,9 @@ public class GameVersionFileRepository(IFileContext context)
         return gameVersionFile;
     }
 
-    public async Task<List<GameVersionFile>> GetFilesAsync(long versionId, CancellationToken cancellationToken = default)
+    public async Task<List<GameVersionFile>> GetFilesAsync(Guid versionGuid, CancellationToken cancellationToken = default)
     {
-        var result = await context.GameVersionFiles.Where(v => v.IdVersion == versionId)
+        var result = await context.GameVersionFiles.Where(v => v.GuidVersion == versionGuid)
                                              .ToListAsync(cancellationToken: cancellationToken)
                                              .ConfigureAwait(true);
 

@@ -25,7 +25,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\ROH.Context.Item\ROH.Context.Item.csproj" />
+    <ProjectReference Include="..\..\Database\ROH.Context.Item\ROH.Context.Item.csproj" />
     <ProjectReference Include="..\..\Database\ROH.Context.Account\ROH.Context.Account.csproj" />
     <ProjectReference Include="..\..\Database\ROH.Context.Character\ROH.Context.Character.csproj" />
     <ProjectReference Include="..\..\Database\ROH.Context.File\ROH.Context.File.csproj" />

@@ -13,9 +13,14 @@ using System.Net;
 
 namespace ROH.Service.Exception;
 
-public class ExceptionHandler(ILogService logService, IConfiguration configuration) : IExceptionHandler
+public class ExceptionHandler(ILogService logService) : IExceptionHandler
 {
-    private readonly bool _isDebugMode = configuration.GetValue<bool>("IsDebugMode");
+    private readonly bool _isDebugMode =
+#if DEBUG
+        true;
+#else
+        false;
+#endif
 
     private void LogException(string exception) => logService.SaveLog(exception).ConfigureAwait(true);
 

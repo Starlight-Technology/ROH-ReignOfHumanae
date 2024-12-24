@@ -13,7 +13,7 @@
 //-----------------------------------------------------------------------
 namespace ROH.Context.File.Entities;
 
-public record GameVersionFile(long Id = 0, long IdVersion = 0, long IdGameFile = 0, Guid Guid = default)
+public record GameVersionFile(long Id = 0, Guid GuidVersion = default, long IdGameFile = 0, Guid Guid = default)
 {
     public virtual GameFile? GameFile { get; set; }
 

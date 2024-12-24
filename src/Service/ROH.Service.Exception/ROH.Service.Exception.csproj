@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\ROH.StandardModels\ROH.StandardModels.csproj" />
+    <ProjectReference Include="..\..\Common\ROH.Utils\ROH.Utils.csproj" />
     <ProjectReference Include="..\..\Database\ROH.Context.Log\ROH.Context.Log.csproj" />
   </ItemGroup>
 

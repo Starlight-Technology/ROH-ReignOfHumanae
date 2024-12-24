@@ -5,6 +5,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+using ROH.Api.Version.Services;
 using ROH.Context.Version;
 using ROH.Context.Version.Interface;
 using ROH.Context.Version.Repository;
@@ -18,6 +19,8 @@ using ROH.Service.Version.Interface;
 using ROH.StandardModels.Version;
 using ROH.Utils.Helpers;
 using ROH.Validations.Version;
+
+using VersionServiceApi;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -49,7 +52,9 @@ builder.Services.AddScoped<IExceptionHandler, ExceptionHandler>();
 
 builder.Services.AddScoped<IValidator<GameVersionModel>, GameVersionModelValidator>();
 
-builder.Services.AddScoped<IGameVersionService, GameVersionService>();
+builder.Services.AddScoped<IGameVersionService, ROH.Service.Version.GameVersionService>();
+
+builder.Services.AddGrpc();
 
 // Auto Mapper Configurations
 MapperConfiguration mappingConfig = new(mc =>
@@ -70,6 +75,8 @@ if (app.Environment.IsDevelopment())
     _ = app.UseSwagger();
     _ = app.UseSwaggerUI();
 }
+
+app.MapGrpcService<VersionServiceImplementation>();
 
 app.MapPost("CreateNewVersion", async (IGameVersionService gameVersionService, GameVersionModel model) =>
     await gameVersionService.NewVersionAsync(model).ConfigureAwait(false)

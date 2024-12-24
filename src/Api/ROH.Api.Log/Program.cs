@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-
 using ROH.Api.Log.Services;
 using ROH.Context.Log;
 using ROH.Context.Log.Interface;

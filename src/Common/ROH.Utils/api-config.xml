@@ -7,7 +7,7 @@
 			<Service name="VersionFile" url="https://localhost:7068/" />
 			<Service name="Account" url="https://localhost:7211/" />
 			<Service name="Login" url="https://localhost:7031" />
-			<Service name="Log" url="http://localhost:5213" />
+			<Service name="Log" url="https://localhost:7044" />
 		</ServiceUrls>
 	</Develop>
 	<Test>
