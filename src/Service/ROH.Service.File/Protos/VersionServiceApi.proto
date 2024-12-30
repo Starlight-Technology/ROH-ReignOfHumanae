@@ -20,5 +20,5 @@ message BooleanResponse{
 
 service GameVersionService {
     rpc GetCurrentVersion (Empty) returns (DefaultResponse);
-    rpc VerifyIfVersionExistAsync (Guid) returns (BooleanResponse);
+    rpc VerifyIfVersionExist (Guid) returns (BooleanResponse);
 }

@@ -4,8 +4,6 @@
 //     Copyright (c) Starlight-Technology. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-using Microsoft.Extensions.Configuration;
-
 using ROH.Service.Exception.Interface;
 using ROH.StandardModels.Response;
 
@@ -38,5 +36,4 @@ public class ExceptionHandler(ILogService logService) : IExceptionHandler
                 httpStatus: HttpStatusCode.InternalServerError,
                 message: "An error has occurred. Don't be afraid! An email with the error details has been sent to your developers.");
     }
-
 }

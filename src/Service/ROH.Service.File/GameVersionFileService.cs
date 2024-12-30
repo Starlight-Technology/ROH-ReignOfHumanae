@@ -41,7 +41,7 @@ public class GameVersionFileService(
         {
             HttpStatus = (HttpStatusCode)response.StatusCode,
             Message = response.Message,
-            ObjectResponse = response.ObjectResponse.JsonToObject<object?>()
+            ObjectResponse = response.ObjectResponse.JsonToObject<dynamic?>()
         };
 
         GameVersionModel? version = defaultResponse.MapObjectResponse<GameVersionModel>().ObjectResponse as GameVersionModel;
@@ -172,12 +172,9 @@ public class GameVersionFileService(
             GameVersionFile versionFile = mapper.Map<GameVersionFile>(fileModel);
             GameVersionModel? currentVersion = await GetCurrentVersionAsync(cancellationToken).ConfigureAwait(true);
 
-            if (versionFile is not null && await gameVersion.VerifyIfVersionExistAsync(fileModel.GameVersion!.Guid, cancellationToken).ConfigureAwait(true))
-                return await SaveFileAsync(fileModel, versionFile, currentVersion, cancellationToken).ConfigureAwait(true);
-            else
-            {
-                return new DefaultResponse(null, HttpStatusCode.BadRequest, "Game Version Not Found.");
-            }
+            return versionFile is not null && await gameVersion.VerifyIfVersionExistAsync(fileModel.GameVersion!.Guid, cancellationToken).ConfigureAwait(true)
+                ? await SaveFileAsync(fileModel, versionFile, currentVersion, cancellationToken).ConfigureAwait(true)
+                : new DefaultResponse(null, HttpStatusCode.BadRequest, "Game Version Not Found.");
         }
         catch (System.Exception ex)
         {

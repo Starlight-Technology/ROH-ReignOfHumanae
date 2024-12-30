@@ -28,5 +28,4 @@ public class FileContext : DbContext, IFileContext
     public required DbSet<GameFile> GameFiles { get; set; }
 
     public required DbSet<GameVersionFile> GameVersionFiles { get; set; }
-
 }

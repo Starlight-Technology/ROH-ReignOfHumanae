@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ROH.Context.File;
@@ -11,9 +12,11 @@ using ROH.Context.File;
 namespace ROH.Context.File.Migrations
 {
     [DbContext(typeof(FileContext))]
-    partial class FileContextModelSnapshot : ModelSnapshot
+    [Migration("20241230171354_FixVersionRelationMigration")]
+    partial class FixVersionRelationMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

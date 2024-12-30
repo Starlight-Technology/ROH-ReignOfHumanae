@@ -9,5 +9,4 @@ namespace ROH.Context.Character.Entities;
 public record CharacterInventory(long Id, long IdItem, long IdCharacter)
 {
     public virtual Character? Character { get; set; }
-
 }

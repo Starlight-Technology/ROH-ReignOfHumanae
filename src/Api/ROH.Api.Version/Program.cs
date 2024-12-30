@@ -14,13 +14,10 @@ using ROH.Mapping.Version;
 using ROH.Service.Exception;
 using ROH.Service.Exception.Communication;
 using ROH.Service.Exception.Interface;
-using ROH.Service.Version;
 using ROH.Service.Version.Interface;
 using ROH.StandardModels.Version;
 using ROH.Utils.Helpers;
 using ROH.Validations.Version;
-
-using VersionServiceApi;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 

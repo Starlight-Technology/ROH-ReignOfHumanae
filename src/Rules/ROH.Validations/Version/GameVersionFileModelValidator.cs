@@ -16,7 +16,7 @@ public class GameVersionFileModelValidator : AbstractValidator<GameVersionFileMo
     {
         _ = RuleFor(f => f.GameVersion)
             .NotNull()
-            .SetValidator(new GameVersionModelValidator() as IValidator<GameVersionModel?>);
+            .SetValidator(new GameVersionModelValidator()!);
         _ = RuleFor(f => f.Content).NotEmpty();
         _ = RuleFor(f => f.Format).NotEmpty();
         _ = RuleFor(f => f.Name).NotEmpty();

@@ -10,5 +10,4 @@ namespace ROH.Context.Player.Entities.Characters;
 public record HandRing(long Id, long IdEquippedItems, long IdItem)
 {
     public virtual EquippedItems? EquippedItems { get; set; }
-
 }

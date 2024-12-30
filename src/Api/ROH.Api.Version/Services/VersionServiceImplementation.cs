@@ -1,16 +1,22 @@
-﻿using ROH.Service.Version.Interface;
+﻿using Grpc.Core;
+
+using ROH.Service.Version.Interface;
 using ROH.Utils.Helpers;
 
 using System.Net;
+
+using VersionServiceApi;
 
 namespace ROH.Api.Version.Services;
 
 public class VersionServiceImplementation(IGameVersionService service) : VersionServiceApi.GameVersionService.GameVersionServiceBase
 {
-    public async Task<VersionServiceApi.DefaultResponse> GetCurrentVersion()
+    public async override Task<VersionServiceApi.DefaultResponse> GetCurrentVersion(Empty request, ServerCallContext context)
     {
         try
         {
+            ArgumentNullException.ThrowIfNull(request);
+
             var currentVersion = await service.GetCurrentVersionAsync();
 
             return new VersionServiceApi.DefaultResponse()
@@ -26,8 +32,14 @@ public class VersionServiceImplementation(IGameVersionService service) : Version
             {
                 Message = ex.Message,
                 StatusCode = (int)HttpStatusCode.BadRequest
-
             };
         }
+    }
+
+    public async override Task<BooleanResponse> VerifyIfVersionExist(VersionServiceApi.Guid request, ServerCallContext context)
+    {
+        var response = await service.VerifyIfVersionExistAsync(request.Guid_);
+
+        return new BooleanResponse { Result = response };
     }
 }

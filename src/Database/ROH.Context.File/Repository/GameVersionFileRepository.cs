@@ -16,7 +16,7 @@ public class GameVersionFileRepository(IFileContext context)
 {
     public async Task<GameVersionFile?> GetFileAsync(long id, CancellationToken cancellationToken = default)
     {
-        GameVersionFile? gameVersionFile = await context.GameVersionFiles.FindAsync([id, cancellationToken], cancellationToken: cancellationToken)
+        GameVersionFile? gameVersionFile = await context.GameVersionFiles.FirstOrDefaultAsync(a => a.IdGameFile == id, cancellationToken: cancellationToken)
                                                                          .ConfigureAwait(true);
         gameVersionFile!.GameFile = await context.GameFiles.FindAsync([gameVersionFile.IdGameFile], cancellationToken: cancellationToken)
                                                            .ConfigureAwait(true);

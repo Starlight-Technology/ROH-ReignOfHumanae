@@ -23,5 +23,4 @@ public class LogContext : DbContext, ILogContext
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => base.SaveChangesAsync(cancellationToken);
 
     public required DbSet<Entities.Log> Logs { get; set; }
-
 }

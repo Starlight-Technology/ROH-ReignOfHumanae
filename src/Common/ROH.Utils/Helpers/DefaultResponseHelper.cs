@@ -48,17 +48,17 @@ namespace ROH.Utils.Helpers
             }
         }
 
-        public static T JsonToObject<T>(this string json)
+        public static object JsonToObject<T>(this string json)
         {
-            if (string.IsNullOrWhiteSpace(json))
-            {
-                throw new ArgumentException("Input JSON string cannot be null or whitespace.", nameof(json));
-            }
 
             try
             {
-                string objectJson = JsonConvert.SerializeObject(json);
-                T result = JsonConvert.DeserializeObject<T>(objectJson)
+                if (string.IsNullOrWhiteSpace(json))
+                {
+                    throw new ArgumentException("Input JSON string cannot be null or whitespace.", nameof(json));
+                }
+
+                T result = JsonConvert.DeserializeObject<T>(json)
                            ?? throw new InvalidCastException($"Deserialization resulted in a null object for type {typeof(T)}.");
 
                 return result;
@@ -73,10 +73,7 @@ namespace ROH.Utils.Helpers
         {
             try
             {
-                if (obj == null)
-                    return string.Empty;
-
-                return JsonConvert.SerializeObject(obj);
+                return obj == null ? string.Empty : JsonConvert.SerializeObject(obj);
             }
             catch (Exception)
             {

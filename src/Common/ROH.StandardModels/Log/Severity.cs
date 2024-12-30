@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ROH.StandardModels.Log
+﻿namespace ROH.StandardModels.Log
 {
     public enum Severity
     {

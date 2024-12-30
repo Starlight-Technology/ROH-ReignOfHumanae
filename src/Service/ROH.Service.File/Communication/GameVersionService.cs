@@ -3,8 +3,6 @@
 using ROH.Service.File.Interface;
 using ROH.Utils.ApiConfiguration;
 
-using VersionServiceApi;
-
 using static ROH.Utils.ApiConfiguration.ApiConfigReader;
 
 namespace ROH.Service.File.Communication;
@@ -15,8 +13,6 @@ public class GameVersionService : IGameVersionService
 
     public async Task<VersionServiceApi.DefaultResponse> GetCurrentVersionAsync(CancellationToken cancellationToken = default)
     {
-
-
 #pragma warning disable S4830 // Server certificates should be verified during SSL/TLS connections
         var channel = GrpcChannel.ForAddress(
             _apiUrl.GetValueOrDefault(ApiUrl.Version) ?? new Uri(string.Empty),
@@ -49,9 +45,8 @@ public class GameVersionService : IGameVersionService
 #pragma warning restore S4830 // Server certificates should be verified during SSL/TLS connections
         var client = new VersionServiceApi.GameVersionService.GameVersionServiceClient(channel);
 
-        var response = await client.VerifyIfVersionExistAsyncAsync(new VersionServiceApi.Guid() { Guid_ = versionGuid.ToString() }, cancellationToken: cancellationToken).ConfigureAwait(true);
+        var response = await client.VerifyIfVersionExistAsync(new VersionServiceApi.Guid() { Guid_ = versionGuid.ToString() }, cancellationToken: cancellationToken).ConfigureAwait(true);
 
         return response.Result;
     }
-
 }

@@ -10,6 +10,15 @@ message DefaultResponse {
     string object_response = 3; // Serialized object response (as a string for flexibility)
 }
 
+message Guid{
+    string Guid = 1;
+}
+
+message BooleanResponse{
+   bool result = 1;
+}
+
 service GameVersionService {
     rpc GetCurrentVersion (Empty) returns (DefaultResponse);
+    rpc VerifyIfVersionExist (Guid) returns (BooleanResponse);
 }

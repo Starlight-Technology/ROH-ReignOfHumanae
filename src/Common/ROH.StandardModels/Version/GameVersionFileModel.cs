@@ -30,6 +30,6 @@ namespace ROH.StandardModels.Version
 
         public string Path { get; set; } = string.Empty;
 
-        public long Size { get; set; } 
+        public long Size { get; set; }
     }
 }

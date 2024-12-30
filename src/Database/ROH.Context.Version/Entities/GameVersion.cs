@@ -28,5 +28,4 @@ public record GameVersion(
     public bool Released { get; set; } = false;
 
     public DateTime? ReleaseDate { get; set; }
-
 }

@@ -10,7 +10,7 @@ namespace ROH.Context.Character.Entities;
 
 public record Character(long Id, long IdAccount, long? IdGuild, long IdKingdom, Guid Guid, string? Name, Race Race)
 {
-    DateTime dateCreated;
+    private DateTime dateCreated;
 
     public Character(
         long id,

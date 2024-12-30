@@ -10,8 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 using ROH.StandardModels.Version;
 using ROH.Utils.ApiConfiguration;
 
-using System.Threading;
-
 namespace ROH.Gateway.Controllers.Version;
 
 [Route("api/[controller]")]
@@ -67,5 +65,4 @@ public class VersionFileController : ControllerBase
             return StatusCode(408, "The request timed out.");
         }
     }
-
 }
