@@ -4,7 +4,6 @@ using LogServiceApi;
 
 using ROH.Service.Log;
 
-
 namespace ROH.Api.Log.Services;
 
 public class LogServiceImplementation(ILogService service) : LogServiceApi.LogService.LogServiceBase
@@ -13,7 +12,7 @@ public class LogServiceImplementation(ILogService service) : LogServiceApi.LogSe
     {
         try
         {
-            await service.LogException(request.Message);
+            await service.LogException(request.Message).ConfigureAwait(true);
             return new LogResponse { Success = true };
         }
         catch (Exception ex)

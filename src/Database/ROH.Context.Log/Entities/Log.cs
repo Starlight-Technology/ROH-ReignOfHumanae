@@ -5,7 +5,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-
 using ROH.Context.Log.Enums;
 
 namespace ROH.Context.Log.Entities;

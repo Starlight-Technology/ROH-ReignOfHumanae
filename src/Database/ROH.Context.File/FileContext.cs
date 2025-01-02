@@ -8,7 +8,6 @@ namespace ROH.Context.File;
 
 public class FileContext : DbContext, IFileContext
 {
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         string? connectionString = Environment.GetEnvironmentVariable("ROH_DATABASE_CONNECTION_STRING_FILE");
@@ -25,7 +24,7 @@ public class FileContext : DbContext, IFileContext
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => base.SaveChangesAsync(cancellationToken);
 
-    public required DbSet<GameFile> GameFiles { get; set; }
+    public DbSet<GameFile> GameFiles { get; set; }
 
-    public required DbSet<GameVersionFile> GameVersionFiles { get; set; }
+    public DbSet<GameVersionFile> GameVersionFiles { get; set; }
 }

@@ -19,7 +19,6 @@ builder.Services.AddScoped<ILogService, LogService>();
 
 builder.Services.AddGrpc();
 
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -32,5 +31,3 @@ app.UseHttpsRedirection();
 app.MapGrpcService<LogServiceImplementation>();
 
 await app.RunAsync().ConfigureAwait(true);
-
-

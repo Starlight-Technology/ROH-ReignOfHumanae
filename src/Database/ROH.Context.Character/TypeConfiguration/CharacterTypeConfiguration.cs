@@ -19,7 +19,6 @@ public class CharacterTypeConfiguration : IEntityTypeConfiguration<Entities.Char
 
         _ = builder.Property(g => g.Guid).HasDefaultValueSql("gen_random_uuid()");
 
-
         _ = builder.HasOne(c => c.AttackStatus)
             .WithOne(a => a.Character)
             .HasForeignKey<AttackStatus>(a => a.IdCharacter);

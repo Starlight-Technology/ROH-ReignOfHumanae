@@ -7,7 +7,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-
 namespace ROH.Context.Account.TypeConfiguration;
 
 public class AccountTypeConfiguration : IEntityTypeConfiguration<Entity.Account>

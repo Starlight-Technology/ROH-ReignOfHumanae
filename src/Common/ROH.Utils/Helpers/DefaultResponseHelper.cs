@@ -50,7 +50,6 @@ namespace ROH.Utils.Helpers
 
         public static object JsonToObject<T>(this string json)
         {
-
             try
             {
                 if (string.IsNullOrWhiteSpace(json))

@@ -67,6 +67,7 @@ namespace ROH.Utils.ApiConfiguration
             #endregion LOGIN
 
             #region LOG
+
             { Services.Log, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Login), "Log") }
             #endregion LOG
         };

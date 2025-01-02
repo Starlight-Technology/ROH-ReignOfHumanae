@@ -4,16 +4,7 @@
 //     Copyright (c) Starlight-Technology. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-using FluentValidation;
-using FluentValidation.Results;
-
-using ROH.Interfaces.Authentication;
-using ROH.Interfaces.Services.ExceptionService;
 using ROH.Service.Account.Interface;
-using ROH.StandardModels.Account;
-using ROH.StandardModels.Response;
-
-using System.Net;
 
 namespace ROH.Service.Account;
 

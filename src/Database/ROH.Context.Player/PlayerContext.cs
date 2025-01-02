@@ -11,7 +11,6 @@ namespace ROH.Context.Player;
 
 public class PlayerContext : DbContext
 {
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         string? connectionString = Environment.GetEnvironmentVariable("ROH_DATABASE_CONNECTION_STRING_PLAYER");
@@ -35,37 +34,36 @@ public class PlayerContext : DbContext
         _ = modelBuilder.ApplyConfiguration(new KingdomTypeConfiguration());
         _ = modelBuilder.ApplyConfiguration(new RelationTypeConfiguration());
 
-
         base.OnModelCreating(modelBuilder);
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => base.SaveChangesAsync(cancellationToken);
 
-    public required DbSet<AttackStatus> AttackStatuses { get; set; }
+    public DbSet<AttackStatus> AttackStatuses { get; set; }
 
-    public required DbSet<Champion> Champions { get; set; }
+    public DbSet<Champion> Champions { get; set; }
 
-    public required DbSet<CharacterInventory> CharacterInventory { get; set; }
+    public DbSet<CharacterInventory> CharacterInventory { get; set; }
 
-    public required DbSet<Character> Characters { get; set; }
+    public DbSet<Character> Characters { get; set; }
 
-    public required DbSet<CharacterSkill> CharacterSkills { get; set; }
+    public DbSet<CharacterSkill> CharacterSkills { get; set; }
 
-    public required DbSet<DefenseStatus> DefenseStatuses { get; set; }
+    public DbSet<DefenseStatus> DefenseStatuses { get; set; }
 
-    public required DbSet<EquippedItems> EquippedItems { get; set; }
+    public DbSet<EquippedItems> EquippedItems { get; set; }
 
-    public required DbSet<Guild> Guilds { get; set; }
+    public DbSet<Guild> Guilds { get; set; }
 
-    public required DbSet<KingdomRelation> KingdomRelations { get; set; }
+    public DbSet<KingdomRelation> KingdomRelations { get; set; }
 
-    public required DbSet<Kingdom> Kingdoms { get; set; }
+    public DbSet<Kingdom> Kingdoms { get; set; }
 
-    public required DbSet<MembersPosition> MembersPositions { get; set; }
+    public DbSet<MembersPosition> MembersPositions { get; set; }
 
-    public required DbSet<HandRing> RingsEquipped { get; set; }
+    public DbSet<HandRing> RingsEquipped { get; set; }
 
-    public required DbSet<Skill> Skills { get; set; }
+    public DbSet<Skill> Skills { get; set; }
 
-    public required DbSet<Status> Statuses { get; set; }
+    public DbSet<Status> Statuses { get; set; }
 }

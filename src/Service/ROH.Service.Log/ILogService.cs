@@ -1,5 +1,4 @@
-﻿
-namespace ROH.Service.Log;
+﻿namespace ROH.Service.Log;
 
 public interface ILogService
 {

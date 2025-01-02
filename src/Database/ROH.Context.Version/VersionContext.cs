@@ -28,6 +28,3 @@ public class VersionContext(DbContextOptions<VersionContext> options) : DbContex
 
     public DbSet<GameVersion> GameVersions { get; set; } = null!;
 }
-
-
-

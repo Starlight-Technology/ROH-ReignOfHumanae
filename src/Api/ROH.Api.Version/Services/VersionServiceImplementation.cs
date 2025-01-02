@@ -11,13 +11,13 @@ namespace ROH.Api.Version.Services;
 
 public class VersionServiceImplementation(IGameVersionService service) : VersionServiceApi.GameVersionService.GameVersionServiceBase
 {
-    public async override Task<VersionServiceApi.DefaultResponse> GetCurrentVersion(Empty request, ServerCallContext context)
+    public override async Task<VersionServiceApi.DefaultResponse> GetCurrentVersion(Empty request, ServerCallContext context)
     {
         try
         {
             ArgumentNullException.ThrowIfNull(request);
 
-            var currentVersion = await service.GetCurrentVersionAsync();
+            var currentVersion = await service.GetCurrentVersionAsync().ConfigureAwait(true);
 
             return new VersionServiceApi.DefaultResponse()
             {
@@ -36,9 +36,9 @@ public class VersionServiceImplementation(IGameVersionService service) : Version
         }
     }
 
-    public async override Task<BooleanResponse> VerifyIfVersionExist(VersionServiceApi.Guid request, ServerCallContext context)
+    public override async Task<BooleanResponse> VerifyIfVersionExist(VersionServiceApi.Guid request, ServerCallContext context)
     {
-        var response = await service.VerifyIfVersionExistAsync(request.Guid_);
+        var response = await service.VerifyIfVersionExistAsync(request.Guid_).ConfigureAwait(true);
 
         return new BooleanResponse { Result = response };
     }

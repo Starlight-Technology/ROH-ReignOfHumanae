@@ -16,6 +16,7 @@ public class ExceptionHandler(ILogService logService) : IExceptionHandler
     private readonly bool _isDebugMode =
 #if DEBUG
         true;
+
 #else
         false;
 #endif

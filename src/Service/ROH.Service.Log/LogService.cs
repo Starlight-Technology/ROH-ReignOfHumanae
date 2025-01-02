@@ -1,5 +1,4 @@
-﻿
-using ROH.Context.Log.Enums;
+﻿using ROH.Context.Log.Enums;
 using ROH.Context.Log.Interface;
 
 namespace ROH.Service.Log;

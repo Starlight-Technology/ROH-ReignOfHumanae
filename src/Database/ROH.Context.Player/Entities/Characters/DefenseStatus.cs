@@ -5,8 +5,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-
-
 //-----------------------------------------------------------------------
 // <copyright file="DefenseStatus.cs" company="Starlight-Technology">
 //     Author: https://github.com/Starlight-Technology/ROH-ReignOfHumanae

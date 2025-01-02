@@ -7,7 +7,6 @@ namespace ROH.Context.Item;
 
 public class ItemContext : DbContext
 {
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         string? connectionString = Environment.GetEnvironmentVariable("ROH_DATABASE_CONNECTION_STRING_ITEM");
@@ -25,9 +24,9 @@ public class ItemContext : DbContext
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => base.SaveChangesAsync(cancellationToken);
 
-    public required DbSet<Enchantment> Enchantments { get; set; }
+    public DbSet<Enchantment> Enchantments { get; set; }
 
-    public required DbSet<ItemEnchantment> ItemEnchantments { get; set; }
+    public DbSet<ItemEnchantment> ItemEnchantments { get; set; }
 
-    public required DbSet<Item.Entities.Item> Items { get; set; }
+    public DbSet<Item.Entities.Item> Items { get; set; }
 }

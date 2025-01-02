@@ -18,7 +18,6 @@ public record EquippedItems(
     long? IdNecklace,
     long? IdRightBracelet)
 {
-
     public virtual Character? Character { get; set; }
 
     public virtual ICollection<HandRing>? LeftHandRings { get; set; }

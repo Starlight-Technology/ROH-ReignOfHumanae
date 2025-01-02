@@ -35,7 +35,6 @@ public record Character(long Id, long IdAccount, long? IdGuild, long IdKingdom, 
 
     public virtual EquippedItems? EquippedItems { get; set; }
 
-
     public virtual ICollection<CharacterInventory>? Inventory { get; set; }
 
     public virtual ICollection<CharacterSkill>? Skills { get; set; }

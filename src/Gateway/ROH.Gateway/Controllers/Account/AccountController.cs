@@ -32,7 +32,6 @@ public class AccountController : ControllerBase
         catch (OperationCanceledException)
         {
             return StatusCode(408, "The request timed out.");
-
         }
     }
 
@@ -48,7 +47,6 @@ public class AccountController : ControllerBase
         catch (OperationCanceledException)
         {
             return StatusCode(408, "The request timed out.");
-
         }
     }
 

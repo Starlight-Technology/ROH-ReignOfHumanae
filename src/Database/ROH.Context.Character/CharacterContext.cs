@@ -31,21 +31,21 @@ public class CharacterContext : DbContext, ICharacterContext
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => base.SaveChangesAsync(cancellationToken);
 
-    public required DbSet<AttackStatus> AttackStatuses { get; set; }
+    public DbSet<AttackStatus> AttackStatuses { get; set; }
 
-    public required DbSet<CharacterInventory> CharacterInventory { get; set; }
+    public DbSet<CharacterInventory> CharacterInventory { get; set; }
 
-    public required DbSet<Entities.Character> Characters { get; set; }
+    public DbSet<Entities.Character> Characters { get; set; }
 
-    public required DbSet<CharacterSkill> CharacterSkills { get; set; }
+    public DbSet<CharacterSkill> CharacterSkills { get; set; }
 
-    public required DbSet<DefenseStatus> DefenseStatuses { get; set; }
+    public DbSet<DefenseStatus> DefenseStatuses { get; set; }
 
-    public required DbSet<EquippedItems> EquippedItems { get; set; }
+    public DbSet<EquippedItems> EquippedItems { get; set; }
 
-    public required DbSet<HandRing> RingsEquipped { get; set; }
+    public DbSet<HandRing> RingsEquipped { get; set; }
 
-    public required DbSet<Skill> Skills { get; set; }
+    public DbSet<Skill> Skills { get; set; }
 
-    public required DbSet<Status> Statuses { get; set; }
+    public DbSet<Status> Statuses { get; set; }
 }

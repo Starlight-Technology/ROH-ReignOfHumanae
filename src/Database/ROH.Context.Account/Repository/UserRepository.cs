@@ -31,5 +31,4 @@ public class UserRepository(IAccountContext context) : IUserRepository
 
     public Task<User> GetUserByGuidAsync(Guid userGuid, CancellationToken cancellationToken = default)
         => context.Users.FirstAsync(u => u.Guid == userGuid, cancellationToken);
-
 }

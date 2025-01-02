@@ -24,6 +24,6 @@ public class AccountContext : DbContext, IAccountContext
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => base.SaveChangesAsync(cancellationToken);
 
-    public required DbSet<Entity.Account> Accounts { get; set; }
-    public required DbSet<User> Users { get; set; }
+    public DbSet<Entity.Account> Accounts { get; set; }
+    public DbSet<User> Users { get; set; }
 }

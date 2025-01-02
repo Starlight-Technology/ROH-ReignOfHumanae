@@ -6,6 +6,7 @@ using ROH.Utils.ApiConfiguration;
 using static ROH.Utils.ApiConfiguration.ApiConfigReader;
 
 namespace ROH.Service.File.Communication;
+
 public class GameVersionService : IGameVersionService
 {
     private static readonly ApiConfigReader _apiConfig = new();

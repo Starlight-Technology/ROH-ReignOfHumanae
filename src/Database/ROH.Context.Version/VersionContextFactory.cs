@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Design;
 
 namespace ROH.Context.Version;
+
 public class VersionContextFactory : IDesignTimeDbContextFactory<VersionContext>
 {
     public VersionContext CreateDbContext(string[] args)

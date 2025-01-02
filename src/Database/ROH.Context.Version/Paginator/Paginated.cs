@@ -6,7 +6,6 @@
 //-----------------------------------------------------------------------
 // Ignore Spelling: Paginator
 
-
 namespace ROH.Context.Version.Paginator;
 
 public record Paginated(int Total, ICollection<dynamic> ObjectResponse);

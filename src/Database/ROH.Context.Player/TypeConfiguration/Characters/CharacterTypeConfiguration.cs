@@ -32,6 +32,5 @@ public class CharacterTypeConfiguration : IEntityTypeConfiguration<Character>
 
         _ = builder.HasMany(c => c.Skills).WithOne(s => s.Character).HasForeignKey(c => c.IdCharacter);
         _ = builder.HasMany(c => c.Inventory).WithOne(i => i.Character).HasForeignKey(i => i.IdCharacter);
-
     }
 }
