@@ -8,19 +8,16 @@ using AutoMapper;
 
 using FluentValidation;
 
-using ROH.Context.PostgreSQLContext;
-using ROH.Interfaces;
-using ROH.Interfaces.Authentication;
-using ROH.Interfaces.Repository.Account;
-using ROH.Interfaces.Repository.Log;
-using ROH.Interfaces.Services.Account;
-using ROH.Interfaces.Services.ExceptionService;
+using ROH.Context.Account;
+using ROH.Context.Account.Interface;
+using ROH.Context.Account.Repository;
 using ROH.Mapping.Account;
-using ROH.Repository.Account;
-using ROH.Repository.Log;
-using ROH.Services.Account;
-using ROH.Services.Authentication;
-using ROH.Services.ExceptionService;
+using ROH.Service.Account;
+using ROH.Service.Account.Interface;
+using ROH.Service.Authentication;
+using ROH.Service.Authentication.Interface;
+using ROH.Service.Exception;
+using ROH.Service.Exception.Interface;
 using ROH.StandardModels.Account;
 using ROH.Validations.Account;
 
@@ -32,8 +29,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //Registry Interfaces
-builder.Services.AddScoped<ISqlContext, SqlContext>();
-builder.Services.AddScoped<ILogRepository, LogRepository>();
+builder.Services.AddScoped<IAccountContext, AccountContext>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddScoped<ILoginService, LoginService>();
