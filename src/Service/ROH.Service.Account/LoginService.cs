@@ -4,7 +4,16 @@
 //     Copyright (c) Starlight-Technology. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
+using FluentValidation;
+using FluentValidation.Results;
+
 using ROH.Service.Account.Interface;
+using ROH.Service.Authentication.Interface;
+using ROH.Service.Exception.Interface;
+using ROH.StandardModels.Account;
+using ROH.StandardModels.Response;
+
+using System.Net;
 
 namespace ROH.Service.Account;
 
@@ -46,7 +55,7 @@ public class LoginService(
                 ? new DefaultResponse(httpStatus: HttpStatusCode.NotFound, message: "User not found.")
                 : await ValidatePasswordAsync(user, loginModel, cancellationToken).ConfigureAwait(true);
         }
-        catch (Exception e)
+        catch (System.Exception e)
         {
             return handler.HandleException(e);
         }

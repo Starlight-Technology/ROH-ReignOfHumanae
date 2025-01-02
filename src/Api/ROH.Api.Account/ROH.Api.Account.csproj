@@ -19,7 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Database\ROH.Context.Account\ROH.Context.Account.csproj" />
     <ProjectReference Include="..\..\Rules\ROH.Validations\ROH.Validations.csproj" />
+    <ProjectReference Include="..\..\Service\ROH.Service.Account\ROH.Service.Account.csproj" />
   </ItemGroup>
 
 </Project>

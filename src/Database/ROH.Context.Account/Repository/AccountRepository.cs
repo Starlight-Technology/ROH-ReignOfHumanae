@@ -11,7 +11,7 @@ using ROH.Context.Account.Interface;
 
 namespace ROH.Context.Account.Repository;
 
-public class AccountRepository(IAccountContext context)
+public class AccountRepository(IAccountContext context) : IAccountRepository
 {
     public Task<Entity.Account?> GetAccountByGuidAsync(Guid guid, CancellationToken cancellationToken = default) => context.Accounts
         .AsNoTracking()

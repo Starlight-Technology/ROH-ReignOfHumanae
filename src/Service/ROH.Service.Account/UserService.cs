@@ -9,10 +9,10 @@ using AutoMapper;
 using FluentValidation;
 using FluentValidation.Results;
 
-using ROH.Domain.Accounts;
-using ROH.Interfaces.Repository.Account;
-using ROH.Interfaces.Services.ExceptionService;
+using ROH.Context.Account.Entity;
+using ROH.Context.Account.Interface;
 using ROH.Service.Account.Interface;
+using ROH.Service.Exception.Interface;
 using ROH.StandardModels.Account;
 using ROH.StandardModels.Response;
 
@@ -56,7 +56,7 @@ public class UserService(
 
             return new DefaultResponse(httpStatus: HttpStatusCode.OK, message: "Account has been created!");
         }
-        catch (Exception e)
+        catch (System.Exception e)
         {
             return handler.HandleException(e);
         }

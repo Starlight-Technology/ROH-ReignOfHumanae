@@ -4,9 +4,12 @@
 //     Copyright (c) Starlight-Technology. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-using ROH.Interfaces.Repository.Account;
+using AutoMapper;
+
+using ROH.Context.Account.Interface;
 using ROH.Service.Account.Interface;
 using ROH.Service.Exception.Interface;
+using ROH.StandardModels.Account;
 using ROH.StandardModels.Response;
 
 using System.Net;
@@ -19,7 +22,7 @@ public class AccountService(IExceptionHandler handler, IAccountRepository reposi
     {
         try
         {
-            Domain.Accounts.Account? account = await repository.GetAccountByUserGuidAsync(userGuid, cancellationToken).ConfigureAwait(true);
+            Context.Account.Entity.Account? account = await repository.GetAccountByUserGuidAsync(userGuid, cancellationToken).ConfigureAwait(true);
 
             if (account is null)
                 return new DefaultResponse(httpStatus: HttpStatusCode.NotFound);
@@ -28,7 +31,7 @@ public class AccountService(IExceptionHandler handler, IAccountRepository reposi
 
             return new DefaultResponse(objectResponse: model);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             return handler.HandleException(ex);
         }
@@ -38,7 +41,7 @@ public class AccountService(IExceptionHandler handler, IAccountRepository reposi
     {
         try
         {
-            Domain.Accounts.Account? account = await repository.GetAccountByGuidAsync(accountModel.Guid, cancellationToken).ConfigureAwait(true);
+            Context.Account.Entity.Account? account = await repository.GetAccountByGuidAsync(accountModel.Guid, cancellationToken).ConfigureAwait(true);
             if (account is null)
                 return new DefaultResponse(httpStatus: HttpStatusCode.NotFound, message: "Account not found.");
 
@@ -53,7 +56,7 @@ public class AccountService(IExceptionHandler handler, IAccountRepository reposi
 
             return new DefaultResponse(message: "Account has been updated.");
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             return handler.HandleException(ex);
         }
