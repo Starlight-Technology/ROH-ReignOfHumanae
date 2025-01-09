@@ -20,7 +20,7 @@
 		<ProjectReference Include="..\..\Common\ROH.StandardModels\ROH.StandardModels.csproj" />
 		<ProjectReference Include="..\..\Common\ROH.Utils\ROH.Utils.csproj" />
 		<ProjectReference Include="..\..\Database\ROH.Context.Version\ROH.Context.Version.csproj" />
-		<ProjectReference Include="..\..\Rules\ROH.Validations\ROH.Validations.csproj" />
+		<ProjectReference Include="..\..\Validation\ROH.Validations\ROH.Validations.csproj" />
 		<ProjectReference Include="..\ROH.Service.Exception\ROH.Service.Exception.csproj" />
 	</ItemGroup>
 

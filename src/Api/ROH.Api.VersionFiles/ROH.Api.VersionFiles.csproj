@@ -21,7 +21,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Common\ROH.Mapper\ROH.Mapping.csproj" />
     <ProjectReference Include="..\..\Common\ROH.Utils\ROH.Utils.csproj" />
-    <ProjectReference Include="..\..\Rules\ROH.Validations\ROH.Validations.csproj" />
     <ProjectReference Include="..\..\Service\ROH.Service.Exception\ROH.Service.Exception.csproj" />
     <ProjectReference Include="..\..\Service\ROH.Service.File\ROH.Service.File.csproj" />
     <ProjectReference Include="..\..\Validation\ROH.Validations\ROH.Validations.csproj" />
