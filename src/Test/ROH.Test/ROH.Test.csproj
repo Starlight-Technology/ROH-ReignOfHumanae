@@ -7,6 +7,7 @@
     <Configurations>Debug;Release;Test</Configurations>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="coverlet.msbuild" Version="6.0.2">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -25,6 +26,8 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\ROH.StandardModels\ROH.StandardModels.csproj" />
+    <ProjectReference Include="..\..\Common\ROH.Utils\ROH.Utils.csproj" />
     <ProjectReference Include="..\..\Database\ROH.Context.Item\ROH.Context.Item.csproj" />
     <ProjectReference Include="..\..\Database\ROH.Context.Account\ROH.Context.Account.csproj" />
     <ProjectReference Include="..\..\Database\ROH.Context.Character\ROH.Context.Character.csproj" />
@@ -32,5 +35,12 @@
     <ProjectReference Include="..\..\Database\ROH.Context.Log\ROH.Context.Log.csproj" />
     <ProjectReference Include="..\..\Database\ROH.Context.Player\ROH.Context.Player.csproj" />
     <ProjectReference Include="..\..\Database\ROH.Context.Version\ROH.Context.Version.csproj" />
+    <ProjectReference Include="..\..\Service\ROH.Service.Account\ROH.Service.Account.csproj" />
+    <ProjectReference Include="..\..\Service\ROH.Service.Authentication\ROH.Service.Authentication.csproj" />
+    <ProjectReference Include="..\..\Service\ROH.Service.Exception\ROH.Service.Exception.csproj" />
+    <ProjectReference Include="..\..\Service\ROH.Service.File\ROH.Service.File.csproj" />
+    <ProjectReference Include="..\..\Service\ROH.Service.Log\ROH.Service.Log.csproj" />
+    <ProjectReference Include="..\..\Service\ROH.Service.Version\ROH.Service.Version.csproj" />
+    <ProjectReference Include="..\..\Validation\ROH.Validations\ROH.Validations.csproj" />
   </ItemGroup>
 </Project>

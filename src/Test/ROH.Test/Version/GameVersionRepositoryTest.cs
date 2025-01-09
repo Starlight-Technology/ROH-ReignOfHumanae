@@ -50,7 +50,7 @@ public class GameVersionRepositoryTests
 
         // Act
         var result = await repository.GetAllReleasedVersionsAsync();
-        List<GameVersion>? versions = result.ObjectResponse.Cast<GameVersion>().ToList();
+        List<GameVersion>? versions = [.. result.ObjectResponse.Cast<GameVersion>()];
 
         // Assert
         Assert.Equal(2, result.Total);
@@ -94,7 +94,7 @@ public class GameVersionRepositoryTests
 
         // Act
         var result = await repository.GetAllVersionsAsync();
-        List<GameVersion>? versions = result.ObjectResponse.Cast<GameVersion>().ToList();
+        List<GameVersion>? versions = [.. result.ObjectResponse.Cast<GameVersion>()];
 
         // Assert
         Assert.Equal(4, result.Total);

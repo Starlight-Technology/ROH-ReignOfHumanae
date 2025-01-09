@@ -23,7 +23,7 @@ public class VersionServiceImplementation(IGameVersionService service) : Version
             {
                 Message = currentVersion.Message,
                 StatusCode = (int)currentVersion.HttpStatus,
-                ObjectResponse = currentVersion.ObjectResponse?.ObjectToJson()
+                ObjectResponse = currentVersion.ObjectResponse?.ToJson()
             };
         }
         catch (Exception ex)

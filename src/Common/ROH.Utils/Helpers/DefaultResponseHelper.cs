@@ -68,7 +68,7 @@ namespace ROH.Utils.Helpers
             }
         }
 
-        public static string ObjectToJson(this object obj)
+        public static string ToJson(this object obj)
         {
             try
             {

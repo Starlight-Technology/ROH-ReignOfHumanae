@@ -24,6 +24,7 @@
     <ProjectReference Include="..\..\Rules\ROH.Validations\ROH.Validations.csproj" />
     <ProjectReference Include="..\..\Service\ROH.Service.Exception\ROH.Service.Exception.csproj" />
     <ProjectReference Include="..\..\Service\ROH.Service.File\ROH.Service.File.csproj" />
+    <ProjectReference Include="..\..\Validation\ROH.Validations\ROH.Validations.csproj" />
   </ItemGroup>
 
 </Project>

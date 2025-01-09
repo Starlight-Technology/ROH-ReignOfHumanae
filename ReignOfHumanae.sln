@@ -56,9 +56,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "src\Unity\ReignOfHumanae.Unity\Assembly-CSharp.csproj", "{A92ECAAB-BAC2-0858-4DFD-D6E0FBAC429B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{1A67CC29-259C-4581-804D-8FEAB0517DB6}"
-	ProjectSection(SolutionItems) = preProject
-		src\Test\ROH.Test\ROH.Test.csproj = src\Test\ROH.Test\ROH.Test.csproj
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Validation", "Validation", "{ED7F77A8-31C1-4E26-8E12-D9C385088FDE}"
 EndProject
@@ -91,6 +88,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Api.Log", "src\Api\ROH.Api.Log\ROH.Api.Log.csproj", "{67531643-22EC-4C13-83FC-2C2601E4694E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Validations", "src\Validation\ROH.Validations\ROH.Validations.csproj", "{335197A9-E0D7-3F02-4460-CF30D69B05FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Test", "src\Test\ROH.Test\ROH.Test.csproj", "{C10F2178-4B25-9FEC-C118-C0FD56D52480}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -254,6 +253,12 @@ Global
 		{335197A9-E0D7-3F02-4460-CF30D69B05FE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{335197A9-E0D7-3F02-4460-CF30D69B05FE}.Test|Any CPU.ActiveCfg = Test|Any CPU
 		{335197A9-E0D7-3F02-4460-CF30D69B05FE}.Test|Any CPU.Build.0 = Test|Any CPU
+		{C10F2178-4B25-9FEC-C118-C0FD56D52480}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C10F2178-4B25-9FEC-C118-C0FD56D52480}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C10F2178-4B25-9FEC-C118-C0FD56D52480}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C10F2178-4B25-9FEC-C118-C0FD56D52480}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C10F2178-4B25-9FEC-C118-C0FD56D52480}.Test|Any CPU.ActiveCfg = Test|Any CPU
+		{C10F2178-4B25-9FEC-C118-C0FD56D52480}.Test|Any CPU.Build.0 = Test|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -294,6 +299,7 @@ Global
 		{5AAFC6B2-949D-49DB-A29F-50D25CD22017} = {AF54ADB7-357D-4157-9B4B-421DABC0C845}
 		{67531643-22EC-4C13-83FC-2C2601E4694E} = {E032234B-EEAA-4BC3-B24B-2C2793642015}
 		{335197A9-E0D7-3F02-4460-CF30D69B05FE} = {ED7F77A8-31C1-4E26-8E12-D9C385088FDE}
+		{C10F2178-4B25-9FEC-C118-C0FD56D52480} = {1A67CC29-259C-4581-804D-8FEAB0517DB6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {27EDF35D-5831-479E-BF70-D6CB24952E66}
