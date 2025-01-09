@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AutoMapper" Version="13.0.1" />
+		<PackageReference Include="FluentValidation" Version="11.11.0" />
+		<PackageReference Include="Google.Protobuf" Version="3.29.2" />
+		<PackageReference Include="Grpc.Net.Client" Version="2.67.0" />
+		<PackageReference Include="Grpc.Tools" Version="2.68.1">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Common\ROH.StandardModels\ROH.StandardModels.csproj" />
+		<ProjectReference Include="..\..\Common\ROH.Utils\ROH.Utils.csproj" />
+		<ProjectReference Include="..\..\Database\ROH.Context.File\ROH.Context.File.csproj" />
+		<ProjectReference Include="..\ROH.Service.Exception\ROH.Service.Exception.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Protos\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Protobuf Include="Protos\VersionServiceApi.proto" GrpcServices="Client" />
+	</ItemGroup>
+
+</Project>

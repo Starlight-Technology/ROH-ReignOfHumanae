@@ -6,7 +6,7 @@
 //-----------------------------------------------------------------------
 using AutoMapper;
 
-using ROH.Domain.Accounts;
+using ROH.Context.Account.Entity;
 using ROH.StandardModels.Account;
 
 namespace ROH.Mapping.Account;

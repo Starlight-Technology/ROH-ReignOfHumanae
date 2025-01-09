@@ -3,23 +3,18 @@ using AutoMapper;
 using FluentValidation;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
-using ROH.Context.PostgreSQLContext;
-using ROH.Interfaces;
-using ROH.Interfaces.Repository.GameFile;
-using ROH.Interfaces.Repository.Log;
-using ROH.Interfaces.Repository.Version;
-using ROH.Interfaces.Services.ExceptionService;
-using ROH.Interfaces.Services.GameFile;
-using ROH.Interfaces.Services.Version;
+using ROH.Api.Version.Services;
+using ROH.Context.Version;
+using ROH.Context.Version.Interface;
+using ROH.Context.Version.Repository;
 using ROH.Mapping.GameFile;
 using ROH.Mapping.Version;
-using ROH.Repository.GameFile;
-using ROH.Repository.Log;
-using ROH.Repository.Version;
-using ROH.Services.ExceptionService;
-using ROH.Services.GameFile;
-using ROH.Services.Version;
+using ROH.Service.Exception;
+using ROH.Service.Exception.Communication;
+using ROH.Service.Exception.Interface;
+using ROH.Service.Version.Interface;
 using ROH.StandardModels.Version;
 using ROH.Utils.Helpers;
 using ROH.Validations.Version;
@@ -32,20 +27,31 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //Registry Interfaces
-builder.Services.AddScoped<ISqlContext, SqlContext>();
-builder.Services.AddScoped<IGameVersionFileRepository, GameVersionFileRepository>();
+builder.Services.AddDbContext<VersionContext>(options =>
+{
+    var connectionString = Environment.GetEnvironmentVariable("ROH_DATABASE_CONNECTION_STRING_VERSION");
+    if (string.IsNullOrEmpty(connectionString))
+    {
+        throw new InvalidOperationException("Database connection string not found in environment variables.");
+    }
+
+    options.UseNpgsql(connectionString);
+});
+
+// Register the DbContext with the interface
+builder.Services.AddScoped<IVersionContext>(provider => provider.GetRequiredService<VersionContext>());
+
 builder.Services.AddScoped<IGameVersionRepository, GameVersionRepository>();
-builder.Services.AddScoped<IGameFileRepository, GameFileRepository>();
-builder.Services.AddScoped<ILogRepository, LogRepository>();
 
-builder.Services.AddScoped<IGameVersionService, GameVersionService>();
-builder.Services.AddScoped<IGameVersionFileService, GameVersionFileService>();
-builder.Services.AddScoped<IGameFileService, GameFileService>();
-
-builder.Services.AddScoped<IValidator<GameVersionModel>, GameVersionModelValidator>();
-builder.Services.AddScoped<IValidator<GameVersionFileModel>, GameVersionFileModelValidator>();
+builder.Services.AddScoped<ILogService, LogService>();
 
 builder.Services.AddScoped<IExceptionHandler, ExceptionHandler>();
+
+builder.Services.AddScoped<IValidator<GameVersionModel>, GameVersionModelValidator>();
+
+builder.Services.AddScoped<IGameVersionService, ROH.Service.Version.GameVersionService>();
+
+builder.Services.AddGrpc();
 
 // Auto Mapper Configurations
 MapperConfiguration mappingConfig = new(mc =>
@@ -66,6 +72,8 @@ if (app.Environment.IsDevelopment())
     _ = app.UseSwagger();
     _ = app.UseSwaggerUI();
 }
+
+app.MapGrpcService<VersionServiceImplementation>();
 
 app.MapPost("CreateNewVersion", async (IGameVersionService gameVersionService, GameVersionModel model) =>
     await gameVersionService.NewVersionAsync(model).ConfigureAwait(false)

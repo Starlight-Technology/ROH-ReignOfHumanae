@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <Configurations>Debug;Release;Test</Configurations>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="coverlet.msbuild" Version="6.0.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="Moq" Version="4.20.72" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector" Version="6.0.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\ROH.StandardModels\ROH.StandardModels.csproj" />
+    <ProjectReference Include="..\..\Common\ROH.Utils\ROH.Utils.csproj" />
+    <ProjectReference Include="..\..\Database\ROH.Context.Item\ROH.Context.Item.csproj" />
+    <ProjectReference Include="..\..\Database\ROH.Context.Account\ROH.Context.Account.csproj" />
+    <ProjectReference Include="..\..\Database\ROH.Context.Character\ROH.Context.Character.csproj" />
+    <ProjectReference Include="..\..\Database\ROH.Context.File\ROH.Context.File.csproj" />
+    <ProjectReference Include="..\..\Database\ROH.Context.Log\ROH.Context.Log.csproj" />
+    <ProjectReference Include="..\..\Database\ROH.Context.Player\ROH.Context.Player.csproj" />
+    <ProjectReference Include="..\..\Database\ROH.Context.Version\ROH.Context.Version.csproj" />
+    <ProjectReference Include="..\..\Service\ROH.Service.Account\ROH.Service.Account.csproj" />
+    <ProjectReference Include="..\..\Service\ROH.Service.Authentication\ROH.Service.Authentication.csproj" />
+    <ProjectReference Include="..\..\Service\ROH.Service.Exception\ROH.Service.Exception.csproj" />
+    <ProjectReference Include="..\..\Service\ROH.Service.File\ROH.Service.File.csproj" />
+    <ProjectReference Include="..\..\Service\ROH.Service.Log\ROH.Service.Log.csproj" />
+    <ProjectReference Include="..\..\Service\ROH.Service.Version\ROH.Service.Version.csproj" />
+    <ProjectReference Include="..\..\Validation\ROH.Validations\ROH.Validations.csproj" />
+  </ItemGroup>
+</Project>

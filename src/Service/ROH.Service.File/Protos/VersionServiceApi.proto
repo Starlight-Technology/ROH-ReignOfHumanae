@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option csharp_namespace = "VersionServiceApi";
+
+message Empty{}
+
+message DefaultResponse {
+    int32 status_code = 1;      // Equivalent to HttpStatusCode
+    string message = 2;         // Message for the response
+    string object_response = 3; // Serialized object response (as a string for flexibility)
+}
+
+message Guid{
+    string Guid = 1;
+}
+
+message BooleanResponse{
+   bool result = 1;
+}
+
+service GameVersionService {
+    rpc GetCurrentVersion (Empty) returns (DefaultResponse);
+    rpc VerifyIfVersionExist (Guid) returns (BooleanResponse);
+}

@@ -32,7 +32,6 @@ public class AccountController : ControllerBase
         catch (OperationCanceledException)
         {
             return StatusCode(408, "The request timed out.");
-
         }
     }
 
@@ -48,9 +47,7 @@ public class AccountController : ControllerBase
         catch (OperationCanceledException)
         {
             return StatusCode(408, "The request timed out.");
-
         }
-
     }
 
     [HttpGet("FindUserByUserName")]
@@ -81,7 +78,6 @@ public class AccountController : ControllerBase
         {
             return StatusCode(408, "The request timed out.");
         }
-
     }
 
     [HttpGet("GetUserByGuid")]
@@ -97,7 +93,6 @@ public class AccountController : ControllerBase
         {
             return StatusCode(408, "The request timed out.");
         }
-
     }
 
     [AllowAnonymous]
@@ -129,6 +124,5 @@ public class AccountController : ControllerBase
         {
             return StatusCode(408, "The request timed out.");
         }
-
     }
 }

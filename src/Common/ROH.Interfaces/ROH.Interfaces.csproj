@@ -8,11 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Database\ROH.Domain\ROH.Domain.csproj" />
     <ProjectReference Include="..\ROH.StandardModels\ROH.StandardModels.csproj" />
   </ItemGroup>
 

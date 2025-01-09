@@ -32,14 +32,8 @@ namespace ROH.Utils.ApiConfiguration
 
             { Services.GetCurrentVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version), "GetCurrentVersion") },
             { Services.CreateNewVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version), "CreateNewVersion") },
-            {
-                Services.GetAllVersionsPaginated,
-                new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version), "GetAllVersionsPaginated")
-            },
-            {
-                Services.GetAllReleasedVersionsPaginated,
-                new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version), "GetAllReleasedVersionsPaginated")
-            },
+            { Services.GetAllVersionsPaginated, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version), "GetAllVersionsPaginated") },
+            { Services.GetAllReleasedVersionsPaginated, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version), "GetAllReleasedVersionsPaginated")},
             { Services.GetVersionDetails, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version), "GetVersionDetails") },
             { Services.ReleaseVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version), "ReleaseVersion") },
             #endregion VERSION
@@ -69,8 +63,13 @@ namespace ROH.Utils.ApiConfiguration
 
             #region LOGIN
 
-            { Services.Login, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Login), "Login") }
+            { Services.Login, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Login), "Login") },
             #endregion LOGIN
+
+            #region LOG
+
+            { Services.Log, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Login), "Log") }
+            #endregion LOG
         };
 
         private static bool IsSimpleType(JTokenType type) => (type == JTokenType.String) ||
@@ -187,7 +186,9 @@ namespace ROH.Utils.ApiConfiguration
             GetAccountByUserGuid,
             UpdateAccount,
 
-            Login
+            Login,
+
+            Log
         }
     }
 }

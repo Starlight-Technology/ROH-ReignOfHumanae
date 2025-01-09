@@ -10,8 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 using ROH.StandardModels.Version;
 using ROH.Utils.ApiConfiguration;
 
-using System.Threading;
-
 namespace ROH.Gateway.Controllers.Version;
 
 [Route("api/[controller]")]
@@ -20,6 +18,7 @@ namespace ROH.Gateway.Controllers.Version;
 public class VersionFileController : ControllerBase
 {
     private readonly Api _api = new();
+
     [HttpGet("DownloadFile")]
     public async Task<IActionResult> DownloadFileAsync(string fileGuid, CancellationToken cancellationToken = default)
     {
@@ -67,5 +66,4 @@ public class VersionFileController : ControllerBase
             return StatusCode(408, "The request timed out.");
         }
     }
-
 }

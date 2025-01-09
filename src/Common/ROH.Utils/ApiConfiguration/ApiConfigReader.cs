@@ -62,7 +62,8 @@ namespace ROH.Utils.ApiConfiguration
             VersionFile,
             GateWay,
             Account,
-            Login
+            Login,
+            Log
         }
     }
 }

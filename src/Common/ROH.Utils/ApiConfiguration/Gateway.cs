@@ -30,8 +30,8 @@ namespace ROH.Utils.ApiConfiguration
         private static readonly ApiConfigReader _apiConfig = new ApiConfigReader();
         private static readonly Dictionary<ApiUrl, Uri> _apiUrl = _apiConfig.GetApiUrl();
 
-        private static readonly Dictionary<Services, Uri> _gatewayServiceUrl = new Dictionary<Services, Uri>
-        {
+        private static readonly Dictionary<Services, Uri> _gatewayServiceUrl = new Dictionary<Services, Uri> {
+
             #region VERSION
 
             {
@@ -262,9 +262,15 @@ namespace ROH.Utils.ApiConfiguration
 
             #region LOGIN
 
-            Login
+            Login,
 
             #endregion LOGIN
+
+            #region LOG
+
+            Log
+
+            #endregion LOG
         }
     }
 }
