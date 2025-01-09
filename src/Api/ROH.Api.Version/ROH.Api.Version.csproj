@@ -37,6 +37,7 @@
 		<ProjectReference Include="..\..\Database\ROH.Context.Version\ROH.Context.Version.csproj" />
 		<ProjectReference Include="..\..\Service\ROH.Service.Exception\ROH.Service.Exception.csproj" />
 		<ProjectReference Include="..\..\Service\ROH.Service.Version\ROH.Service.Version.csproj" />
+		<ProjectReference Include="..\..\Validation\ROH.Validations\ROH.Validations.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
