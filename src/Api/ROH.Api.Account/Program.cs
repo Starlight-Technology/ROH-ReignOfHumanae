@@ -14,6 +14,7 @@ using ROH.Context.Account.Repository;
 using ROH.Mapping.Account;
 using ROH.Service.Account;
 using ROH.Service.Account.Interface;
+using ROH.Service.Exception.Communication;
 using ROH.Service.Exception.Interface;
 using ROH.StandardModels.Account;
 using ROH.Validations.Account;
@@ -36,6 +37,7 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IValidator<UserModel>, UserModelValidator>();
 
 builder.Services.AddScoped<IExceptionHandler, ROH.Service.Exception.ExceptionHandler>();
+builder.Services.AddScoped<ILogService, LogService>();
 
 // Auto Mapper Configurations
 MapperConfiguration mappingConfig = new(
