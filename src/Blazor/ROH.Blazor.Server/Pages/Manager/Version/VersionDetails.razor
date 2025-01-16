@@ -4,6 +4,7 @@
 
 @using ROH.Blazor.Server.Interfaces.Api;
 @using ROH.Blazor.Server.Interfaces.Helpers;
+@using ROH.StandardModels.Response
 @using ROH.StandardModels.Version;
 @using ROH.Utils.Helpers;
 @using Microsoft.AspNetCore.Components.Forms;
@@ -14,48 +15,51 @@
 @inject ISweetAlertService _sweetAlert;
 
 <Pages.Components.AuthorizeComponent>
-    <Pages.Components.CardComponent Header="Version">
-        <div class="row">
-            <div class="col-sm-1">
-                <label for="Version">Version:</label>
-            </div>
-            <div class="col-sm-1">
-                <input type="number" id="Version" class="form-control" @bind="gameVersion.Version" readonly />
-            </div>
-
-            <div class="col-sm-1">
-                <label for="Release">Release:</label>
-            </div>
-            <div class="col-sm-1">
-                <input type="number" id="Release" class="form-control" @bind="gameVersion.Release" readonly />
-            </div>
-
-            <div class="col-sm-1">
-                <label for="Review">Review:</label>
-            </div>
-            <div class="col-sm-1">
-                <input type="number" id="Review" class="form-control" @bind="gameVersion.Review" readonly />
-            </div>
-
-            @if (!gameVersion.Released)
-            {
-                <div class="col-sm-2">
-                    <button class="btn btn-outline-primary" @onclick="ReleaseVersion"> Release Version </button>
-                </div>
-            }
-
-            @if (gameVersion.ReleaseDate.HasValue)
-            {
+    @if (gameVersion is not null)
+    {
+        <Pages.Components.CardComponent Header="Version">
+            <div class="row">
                 <div class="col-sm-1">
-                    <label for="ReleaseDate">Released Date:</label>
+                    <label for="Version">Version:</label>
                 </div>
-                <div class="col-sm-3">
-                    <input type="date" id="ReleaseDate" class="form-control" @bind="gameVersion.ReleaseDate" readonly />
+                <div class="col-sm-1">
+                    <input type="number" id="Version" class="form-control" @bind="gameVersion.Version" readonly />
                 </div>
-            }
 
-        </div>
-    </Pages.Components.CardComponent>
+                <div class="col-sm-1">
+                    <label for="Release">Release:</label>
+                </div>
+                <div class="col-sm-1">
+                    <input type="number" id="Release" class="form-control" @bind="gameVersion.Release" readonly />
+                </div>
+
+                <div class="col-sm-1">
+                    <label for="Review">Review:</label>
+                </div>
+                <div class="col-sm-1">
+                    <input type="number" id="Review" class="form-control" @bind="gameVersion.Review" readonly />
+                </div>
+
+                @if (!gameVersion.Released)
+                {
+                    <div class="col-sm-2">
+                        <button class="btn btn-outline-primary" @onclick="ReleaseVersion"> Release Version </button>
+                    </div>
+                }
+
+                @if (gameVersion.ReleaseDate.HasValue)
+                {
+                    <div class="col-sm-1">
+                        <label for="ReleaseDate">Released Date:</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="date" id="ReleaseDate" class="form-control" @bind="gameVersion.ReleaseDate" readonly />
+                    </div>
+                }
+
+            </div>
+        </Pages.Components.CardComponent>
+    }
 
     <Pages.Components.CardComponent Header="Upload File">
         <EditForm Model="gameVersionFile" OnValidSubmit="HandleSubmit" style="margin:20px">
@@ -98,27 +102,31 @@
     [Parameter]
     public string? versionGuid { get; set; }
 
-    private GameVersionModel gameVersion = new();
+    private GameVersionModel? gameVersion = null;
     private readonly ICollection<GameVersionFileModel> gameVersionFile = new List<GameVersionFileModel>();
     private IReadOnlyList<IBrowserFile>? selectedFiles;
     private bool isUploading = false;
     private double uploadProgress = 0;
+    private DefaultResponse? defaultResponse = new();
 
     protected override async Task OnInitializedAsync()
     {
         await GetVersionByGuid();
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            await HandleGetVersionResponse(defaultResponse);
+        }
+    }
+
     private async Task GetVersionByGuid()
     {
         if (Guid.TryParse(versionGuid, out Guid guid))
         {
-            var response = await _versionService.GetVersionDetails(guid);
-
-            if (response != null && response.HttpStatus.IsSuccessStatusCode())
-                gameVersion = response?.ResponseToModel<GameVersionModel>() ?? new();
-            else if (response != null)
-                await _sweetAlert.ShowResponse(response);
+            defaultResponse = await _versionService.GetVersionDetails(guid);
         }
         else
         {
@@ -172,14 +180,15 @@
                             StateHasChanged();
 
                             var responseUpload = await _versionFileService.UploadVersionFile(
-                            new GameVersionFileModel (){
-                            Guid = Guid.Empty,
-                            Name= fileName,
-                            Format = fileExtension,
-                            Content = fileContent,
-                            Size = fileSize,
+                            new GameVersionFileModel()
+                                {
+                                    Guid = Guid.Empty,
+                                    Name = fileName,
+                                    Format = fileExtension,
+                                    Content = fileContent,
+                                    Size = fileSize,
                                     GameVersion = gameVersion
-                            }
+                                }
                             );
 
                             if (responseUpload != null && !responseUpload.HttpStatus.IsSuccessStatusCode())
@@ -209,9 +218,25 @@
 
     private async Task ReleaseVersion(MouseEventArgs e)
     {
+        if (gameVersion is null)
+            return;
+
         var response = await _versionService.ReleaseVersion(gameVersion);
 
         if (response is not null)
+            await _sweetAlert.ShowResponse(response);
+
+        StateHasChanged();
+    }
+
+    private async Task HandleGetVersionResponse(DefaultResponse? response)
+    {
+        if (response is not null
+            && response.HttpStatus.IsSuccessStatusCode()
+            && response.ObjectResponse is not null
+            && gameVersion is null)
+            gameVersion = response?.ResponseToModel<GameVersionModel>() ?? new();
+        else if (response is not null)
             await _sweetAlert.ShowResponse(response);
 
         StateHasChanged();

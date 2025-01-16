@@ -14,12 +14,22 @@
         <table class="table">
             <thead>
                 <tr>
-                    @foreach (var property in GetProperties().Where(p =>
-                   !p.Contains(DETAILS_LINK, StringComparison.OrdinalIgnoreCase) &&
-                   !p.Contains(DOWNLOAD_FILE, StringComparison.OrdinalIgnoreCase) &&
-                   !p.Contains(GUID_ITEM, StringComparison.OrdinalIgnoreCase)))
+                    @foreach (var property in GetProperties())
                     {
-                        <th>@property</th>
+                        if (
+                        !property.Contains(DETAILS_LINK, StringComparison.OrdinalIgnoreCase) &&
+                        !property.Contains(DOWNLOAD_FILE, StringComparison.OrdinalIgnoreCase) &&
+                        !property.Contains(GUID_ITEM, StringComparison.OrdinalIgnoreCase))
+                        {
+                            <th>@property</th>
+                        }
+                        else
+                        {
+                            if (!property.Equals(ITEM_GUID))
+                            {
+                                <th></th>
+                            }
+                        }
                     }
                 </tr>
             </thead>
@@ -66,6 +76,7 @@
 
                                     continue;
                                 }
+
                                 <td>@(GetPropertyValue<string>(item, property))</td>
                             }
                         </tr>
@@ -101,6 +112,7 @@
 
     const string DETAILS_LINK = "DetailsLink";
     const string GUID_ITEM = "guid";
+    const string ITEM_GUID = "FileGuid";
     const string DOWNLOAD_FILE = "DownloadFile";
 
     private IEnumerable<string> GetProperties()
@@ -125,6 +137,11 @@
             {
                 if (typeof(string).IsAssignableFrom(typeof(TProperty)))
                 {
+                    if (propertyValue is DateTime dateTimeValue)
+                    {
+                        return (TProperty)(object)dateTimeValue.ToString("yyyy-MM-dd");
+                    }
+
                     return (TProperty)Convert.ChangeType(propertyValue?.ToString()!, typeof(TProperty));
                 }
                 else

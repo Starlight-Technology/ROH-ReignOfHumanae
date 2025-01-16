@@ -9,6 +9,7 @@
 
 @inject IVersionService _versionService;
 @inject ISweetAlertService _sweetAlert;
+@inject NavigationManager Navigation;
 
 <Pages.Components.CardComponent Header="Current Version">
     @if (isLoadingCurrentVersion)
@@ -83,9 +84,10 @@
 
         if (currentVersionResponse != null && !currentVersionResponse.HttpStatus.IsSuccessStatusCode())
             await _sweetAlert.ShowResponse(currentVersionResponse);
+
         else if (currentVersionResponse != null && currentVersionResponse.ObjectResponse != null)
-            currentVersion = JsonConvert.DeserializeObject<GameVersionModel>(currentVersionResponse.ObjectResponse.ToString()!);     
-                    
+            currentVersion = JsonConvert.DeserializeObject<GameVersionModel>(currentVersionResponse.ObjectResponse.ToString()!);
+
         isLoadingCurrentVersion = false;
         StateHasChanged();
     }

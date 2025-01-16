@@ -80,7 +80,7 @@ public class CustomAuthenticationStateProvider(ILocalStorageService localStorage
 
     public async Task MarkUserAsLoggedOut()
     {
-        await localStorage.RemoveItemAsync("authToken");
+        await localStorage.RemoveItemAsync("authToken").ConfigureAwait(false);
 
         ClaimsPrincipal anonymousUser = new(new ClaimsIdentity());
 
