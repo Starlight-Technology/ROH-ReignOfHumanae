@@ -81,7 +81,12 @@ namespace ROH.Utils.ApiConfiguration
 
         public async Task<string> DeleteAsync<T>(Services service, T parametersObject, CancellationToken cancellationToken = default)
         {
-            using HttpClient client = new HttpClient();
+            var handler = new HttpClientHandler();
+#if DEBUG
+            handler.ServerCertificateCustomValidationCallback =
+                (httpRequestMessage, cert, cetChain, policyErrors) => true;
+#endif
+            using HttpClient client = new HttpClient(handler);
 
             string param = string.Empty;
 
@@ -98,7 +103,12 @@ namespace ROH.Utils.ApiConfiguration
         public async Task<string> GetAsync<T>(Services service, T parametersObject, CancellationToken cancellationToken = default)
 
         {
-            using HttpClient client = new HttpClient();
+            var handler = new HttpClientHandler();
+#if DEBUG
+            handler.ServerCertificateCustomValidationCallback =
+                (httpRequestMessage, cert, cetChain, policyErrors) => true;
+#endif
+            using HttpClient client = new HttpClient(handler);
             string param = string.Empty;
 
             if (!Equals(parametersObject, default(T)))
@@ -143,7 +153,12 @@ namespace ROH.Utils.ApiConfiguration
 
         public async Task<string> PostAsync(Services service, object objectToSend, CancellationToken cancellationToken = default)
         {
-            using HttpClient client = new HttpClient();
+            var handler = new HttpClientHandler();
+#if DEBUG
+            handler.ServerCertificateCustomValidationCallback =
+                (httpRequestMessage, cert, cetChain, policyErrors) => true;
+#endif
+            using HttpClient client = new HttpClient(handler);
 
             string jsonContent = JsonConvert.SerializeObject(objectToSend);
             StringContent httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
@@ -155,7 +170,12 @@ namespace ROH.Utils.ApiConfiguration
 
         public async Task<string> UpdateAsync(Services service, object objectToSend, CancellationToken cancellationToken = default)
         {
-            using HttpClient client = new HttpClient();
+            var handler = new HttpClientHandler();
+#if DEBUG
+            handler.ServerCertificateCustomValidationCallback =
+                (httpRequestMessage, cert, cetChain, policyErrors) => true;
+#endif
+            using HttpClient client = new HttpClient(handler);
 
             string jsonContent = JsonConvert.SerializeObject(objectToSend);
 

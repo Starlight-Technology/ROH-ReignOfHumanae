@@ -103,7 +103,7 @@ public class GameVersionService(
                 pages = (int)Math.Ceiling((double)total / take);
 
             List<GameVersionModel> versionModels = mapper.Map<List<GameVersionModel>>(versions);
-            List<object> versionObjects = versionModels.Cast<object>().ToList();
+            List<object> versionObjects = [.. versionModels.Cast<object>()];
 
             PaginatedModel paginatedModel = new() { TotalPages = pages, ObjectResponse = versionObjects };
 

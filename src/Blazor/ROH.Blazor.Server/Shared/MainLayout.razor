@@ -1,6 +1,9 @@
 ﻿@inherits LayoutComponentBase
 @using MatBlazor
+@using ROH.Blazor.Server.Interfaces.Helpers
 @inject NavigationManager Navigation;
+@inject ICustomAuthenticationStateProvider CustomAuthStateProvider
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <MatAppBarContainer>
     <MatAppBar Fixed="true">
@@ -24,6 +27,17 @@
                     <MatNavItem Href="/races">Races</MatNavItem>
                     <MatNavItem Href="/crafting">Crafting</MatNavItem>
                     <MatNavItem Href="/magic-skills">Magic & Skills</MatNavItem>
+                    @if (IsAuthorized)
+                    {
+                        <MatNavSubMenu>
+                            <MatNavSubMenuHeader>
+                                <MatNavItem AllowSelection="false"><MatIcon Icon="settings"></MatIcon>Manager</MatNavItem>
+                            </MatNavSubMenuHeader>
+                            <MatNavSubMenuList>
+                                <MatNavItem Href="/Manager/Version/VersionManager"><MatIcon Icon="system_update"></MatIcon> Manage Version </MatNavItem>
+                            </MatNavSubMenuList>
+                        </MatNavSubMenu>
+                    }
                 </MatNavMenu>
             </MatDrawer>
             <MatDrawerContent class="scrollable-content">
@@ -43,8 +57,27 @@
 @code {
     private bool _drawerOpen = true;
 
+    private bool IsAuthorized { get; set; } = false;
+
     private void ToggleDrawer()
     {
         _drawerOpen = !_drawerOpen;
     }
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsAuthorized = !string.IsNullOrWhiteSpace(await CustomAuthStateProvider.GetToken());
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            CustomAuthStateProvider.Initialize();
+            var token = await CustomAuthStateProvider.GetToken();
+            IsAuthorized = !string.IsNullOrWhiteSpace(await CustomAuthStateProvider.GetToken());
+            StateHasChanged();
+        }
+    }
+}
 }

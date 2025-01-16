@@ -112,9 +112,15 @@ namespace ROH.Utils.ApiConfiguration
 
         public async Task<DefaultResponse?> DeleteAsync<T>(Services service, T parametersObject, string token = "", CancellationToken cancellationToken = default)
         {
-            using HttpClient client = new HttpClient();
+            var handler = new HttpClientHandler();
+#if DEBUG
+            handler.ServerCertificateCustomValidationCallback =
+                (httpRequestMessage, cert, cetChain, policyErrors) => true;
+#endif
+            using HttpClient client = new HttpClient(handler);
 
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
 
             string param = string.Empty;
 
@@ -143,7 +149,12 @@ namespace ROH.Utils.ApiConfiguration
         {
             try
             {
-                using HttpClient client = new HttpClient();
+                var handler = new HttpClientHandler();
+#if DEBUG
+                handler.ServerCertificateCustomValidationCallback =
+                    (httpRequestMessage, cert, cetChain, policyErrors) => true;
+#endif
+                using HttpClient client = new HttpClient(handler);
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
@@ -177,7 +188,12 @@ namespace ROH.Utils.ApiConfiguration
 
         public async Task<DefaultResponse?> PostAsync(Services service, object objectToSend, string token = "", CancellationToken cancellationToken = default)
         {
-            using HttpClient client = new HttpClient();
+            var handler = new HttpClientHandler();
+#if DEBUG
+            handler.ServerCertificateCustomValidationCallback =
+                (httpRequestMessage, cert, cetChain, policyErrors) => true;
+#endif
+            using HttpClient client = new HttpClient(handler);
 
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
@@ -203,7 +219,12 @@ namespace ROH.Utils.ApiConfiguration
 
         public async Task<DefaultResponse?> UpdateAsync(Services service, object objectToSend, string token = "", CancellationToken cancellationToken = default)
         {
-            using HttpClient client = new HttpClient();
+            var handler = new HttpClientHandler();
+#if DEBUG
+            handler.ServerCertificateCustomValidationCallback =
+                (httpRequestMessage, cert, cetChain, policyErrors) => true;
+#endif
+            using HttpClient client = new HttpClient(handler);
 
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
