@@ -5,6 +5,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 using Assets.Scripts.Configurations;
+using Assets.Scripts.Helpers;
 using Assets.Scripts.Models.Configuration;
 
 using Newtonsoft.Json;
@@ -12,6 +13,10 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+using Unity.VisualScripting.Antlr3.Runtime;
 
 using UnityEngine;
 using UnityEngine.Networking;
@@ -21,11 +26,20 @@ namespace Assets.Scripts.Connection.ApiConfiguration
     public class ApiClient : MonoBehaviour
     {
         private Uri _baseUrl;
-        private readonly InitialConfiguration _initialConfiguration = new();
 
         private IEnumerator DeleteRequest(string endpoint, Action<bool> callback)
         {
+            string token = string.Empty;
+
             UnityWebRequest webRequest = UnityWebRequest.Delete(new Uri(_baseUrl, endpoint));
+
+            PlayerPrefs.GetString("Token", token);
+
+            if (string.IsNullOrWhiteSpace(token))
+                token = DataManager.LoadData<ConfigurationModel>(DataManager.configurationPath).JwToken;
+
+            webRequest.SetRequestHeader("Authorization", $"Bearer {token}");
+
             yield return webRequest.SendWebRequest();
 
             if (webRequest.result != UnityWebRequest.Result.Success)
@@ -41,7 +55,17 @@ namespace Assets.Scripts.Connection.ApiConfiguration
 
         private IEnumerator GetRequest<T>(string endpoint, Action<T> callback)
         {
+            string token = string.Empty;
+
             UnityWebRequest webRequest = UnityWebRequest.Get(new Uri(_baseUrl, endpoint));
+
+            PlayerPrefs.GetString("Token", token);
+
+            if (string.IsNullOrWhiteSpace(token))
+                token = DataManager.GetConfiguration().JwToken;
+
+            webRequest.SetRequestHeader("Authorization", $"Bearer {token}");
+
             yield return webRequest.SendWebRequest();
 
             if (webRequest.result != UnityWebRequest.Result.Success)
@@ -59,11 +83,19 @@ namespace Assets.Scripts.Connection.ApiConfiguration
         private IEnumerator PostRequest<T>(string endpoint, object data, Action<T> callback)
         {
             string jsonData = JsonConvert.SerializeObject(data);
+            string token = string.Empty;
             UnityWebRequest webRequest = new(new Uri(_baseUrl, endpoint), "POST");
             byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
             webRequest.uploadHandler = new UploadHandlerRaw(bodyRaw);
             webRequest.downloadHandler = new DownloadHandlerBuffer();
             webRequest.SetRequestHeader("Content-Type", "application/json");
+
+            PlayerPrefs.GetString("Token", token);
+
+            if (string.IsNullOrWhiteSpace(token))
+                token = DataManager.LoadData<ConfigurationModel>(DataManager.configurationPath).JwToken;
+
+            webRequest.SetRequestHeader("Authorization", $"Bearer {token}");
 
             yield return webRequest.SendWebRequest();
 
@@ -82,11 +114,19 @@ namespace Assets.Scripts.Connection.ApiConfiguration
         private IEnumerator PutRequest<T>(string endpoint, object data, Action<T> callback)
         {
             string jsonData = JsonConvert.SerializeObject(data);
+            string token = string.Empty;
             UnityWebRequest webRequest = new(new Uri(_baseUrl, endpoint), "PUT");
             byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
             webRequest.uploadHandler = new UploadHandlerRaw(bodyRaw);
             webRequest.downloadHandler = new DownloadHandlerBuffer();
             webRequest.SetRequestHeader("Content-Type", "application/json");
+
+            PlayerPrefs.GetString("Token", token);
+
+            if (string.IsNullOrWhiteSpace(token))
+                token = DataManager.LoadData<ConfigurationModel>(DataManager.configurationPath).JwToken;
+
+            webRequest.SetRequestHeader("Authorization", $"Bearer {token}");
 
             yield return webRequest.SendWebRequest();
 
@@ -114,9 +154,40 @@ namespace Assets.Scripts.Connection.ApiConfiguration
         public void Put<T>(string endpoint, object data, Action<T> callback)
         { StartCoroutine(PutRequest(endpoint, data, callback)); }
 
+        public async Task<T> PostAsync<T>(string endpoint, object data)
+        {
+            string jsonData = JsonConvert.SerializeObject(data);
+            string token = string.Empty;
+            UnityWebRequest webRequest = new UnityWebRequest(new Uri(_baseUrl, endpoint), "POST");
+            byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
+            webRequest.uploadHandler = new UploadHandlerRaw(bodyRaw);
+            webRequest.downloadHandler = new DownloadHandlerBuffer();
+            webRequest.SetRequestHeader("Content-Type", "application/json");
+
+            PlayerPrefs.GetString("Token", token);
+
+            if (string.IsNullOrWhiteSpace(token))
+                token = DataManager.LoadData<ConfigurationModel>(DataManager.configurationPath).JwToken;
+
+            webRequest.SetRequestHeader("Authorization", $"Bearer {token}");
+
+            // Use UnityWebRequest's SendWebRequest as a task
+            await webRequest.SendWebRequest();
+
+            if (webRequest.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError($"POST Error: {webRequest.error}");
+                return default;
+            }
+
+            // Deserialize the response
+            return JsonConvert.DeserializeObject<T>(webRequest.downloadHandler.text);
+        }
+
+
         public void Start()
         {
-            ConfigurationModel config = _initialConfiguration.GetInitialConfiguration();
+            ConfigurationModel config = InitialConfiguration.GetInitialConfiguration();
             _baseUrl = new Uri(config.ServerUrl);
         }
     }

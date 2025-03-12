@@ -4,6 +4,8 @@
 //     Copyright (c) Starlight-Technology. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
+using Assets.Scripts.Models.Configuration;
+
 using System;
 using System.IO;
 
@@ -11,9 +13,13 @@ using UnityEngine;
 
 namespace Assets.Scripts.Helpers
 {
-    public class DataManager : MonoBehaviour
+    public static class DataManager
     {
-        public T LoadData<T>(string filePath)
+        public static string assetsFolderPath = Application.dataPath;
+        public static string rootFolder = Directory.GetParent(assetsFolderPath).FullName;
+        public static string configurationPath = $"{rootFolder}config";
+
+        public static T LoadData<T>(string filePath)
         {
             if (File.Exists(filePath))
             {
@@ -28,16 +34,17 @@ namespace Assets.Scripts.Helpers
             }
         }
 
-        public void SaveData<T>(object data, string filePath)
+        public static ConfigurationModel GetConfiguration() => LoadData<ConfigurationModel>(configurationPath);
+
+        public static void UpdateConfiguration(ConfigurationModel config) => SaveData<ConfigurationModel>(
+            config,
+            configurationPath);
+
+        public static void SaveData<T>(object data, string filePath)
         {
             T dataToSerialize = (T)Convert.ChangeType(data, typeof(T));
             string json = JsonUtility.ToJson(dataToSerialize);
             File.WriteAllText(filePath, json);
-        }
-
-        public void Start()
-        {
-            // Method intentionally left empty.
         }
     }
 }

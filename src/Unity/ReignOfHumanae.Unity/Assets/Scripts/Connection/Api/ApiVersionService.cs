@@ -142,8 +142,13 @@ namespace Assets.Scripts.Connection.Api
 
         public void Start()
         {
-            GameObject apiClientObject = new("apiClientObj");
-            apiClientObject.AddComponent<ApiClient>();
+            GameObject apiClientObject = GameObject.Find("apiClientObj");
+
+            if (apiClientObject == null)
+            {
+                apiClientObject = new("apiClientObj");
+                apiClientObject.AddComponent<ApiClient>();
+            }
 
             _apiClient = apiClientObject.GetComponent<ApiClient>();
             _apiClient.Start();

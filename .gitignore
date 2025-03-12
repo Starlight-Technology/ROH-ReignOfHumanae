@@ -380,6 +380,11 @@ Icon?
 ehthumbs.db
 Thumbs.db
 
+#Unity files
+*.asset
+*.prefab
+*.unity
+
 # Exclude these files for security reasons
 *.unityproj.user
 *.booproj.user

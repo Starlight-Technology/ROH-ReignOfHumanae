@@ -110,9 +110,7 @@ namespace Assets.Scripts.Update
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Async/await", "CRR0034:An asynchronous method's name is missing an 'Async' suffix", Justification = "<Is a default for unity>")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Is a default for unity.>")]
-        private async void Start()
+        public async Task RunUpdaterAsync()
         {
             try
             {
@@ -141,8 +139,10 @@ namespace Assets.Scripts.Update
                     string json = JsonConvert.SerializeObject(response.ObjectResponse);
                     ICollection<GameVersionModel> versions = JsonConvert.DeserializeObject<ICollection<GameVersionModel>>(
                         json);
+
                     foreach (GameVersionModel version in versions)
                     {
+                        ChangeText("Checking files...");
                         await VerifyIfFileExistAsync(version, cancellationToken).ConfigureAwait(true);
                     }
                 }
@@ -177,7 +177,10 @@ namespace Assets.Scripts.Update
                 if (file.Active)
                 {
                     if (!File.Exists(file.Path))
+                    {
+                        ChangeText($"Downloading file: {file.Name}");
                         await DownloadFileAsync(file, cancellationToken).ConfigureAwait(true);
+                    }
                 }
                 else if (File.Exists(file.Path))
                     File.Delete(file.Path);

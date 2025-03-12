@@ -13,23 +13,16 @@ using UnityEngine;
 
 namespace Assets.Scripts.Configurations
 {
-    public class InitialConfiguration : MonoBehaviour
+    public static class InitialConfiguration
     {
-        public ConfigurationModel GetInitialConfiguration()
+        public static ConfigurationModel GetInitialConfiguration()
         {
-            GameObject dataManagerObject = new("dataManagerObj");
-            dataManagerObject.AddComponent<DataManager>();
 
-            DataManager dataManager = dataManagerObject.GetComponent<DataManager>();
-
-            string assetsFolderPath = Application.dataPath;
-            string rootFolder = Directory.GetParent(assetsFolderPath).FullName;
-            string configurationPath = $"{rootFolder}config";
-            ConfigurationModel config = dataManager.LoadData<ConfigurationModel>(configurationPath) ??
+            ConfigurationModel config = DataManager.LoadData<ConfigurationModel>(DataManager.configurationPath) ??
                 new ConfigurationModel();
             config.ServerUrl ??= "http://localhost:9001";
 
-            dataManager.SaveData<ConfigurationModel>(config, configurationPath);
+            DataManager.SaveData<ConfigurationModel>(config, DataManager.configurationPath);
 
             return config;
         }

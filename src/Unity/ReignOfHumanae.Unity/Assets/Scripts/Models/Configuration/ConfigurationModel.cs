@@ -13,6 +13,6 @@ namespace Assets.Scripts.Models.Configuration
     {
         public string ServerUrl;
 
-        public string JwToken { get; set; }
+        public string JwToken;
     }
 }

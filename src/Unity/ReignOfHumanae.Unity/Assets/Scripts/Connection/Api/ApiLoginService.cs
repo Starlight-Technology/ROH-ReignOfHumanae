@@ -10,6 +10,7 @@ using Assets.Scripts.Models.Response;
 
 using Newtonsoft.Json;
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,46 +22,41 @@ namespace Assets.Scripts.Connection.Api
     {
         private ApiClient _apiClient;
 
-        public Task<DefaultResponse> LoginAsync(LoginModel loginModel, CancellationToken cancellationToken = default)
+        public async Task<DefaultResponse> LoginAsync(LoginModel loginModel, CancellationToken cancellationToken = default)
         {
-            TaskCompletionSource<DefaultResponse> tcs = new();
-
-            // Check if cancellation is requested before starting the operation
+            // Cancel the task if requested
             if (cancellationToken.IsCancellationRequested)
             {
-                tcs.SetCanceled();
-                return tcs.Task;
+                return null;
             }
 
-            // Register the cancellation token to handle the cancellation request
-            using (cancellationToken.Register(() => tcs.TrySetCanceled()))
+            try
             {
-                _apiClient.Post<DefaultResponse>(
-                    "Api/Account/Login",
-                    loginModel,
-                    (response) =>
-                    {
-                        if (response != null)
-                        {
-                            string json = JsonConvert.SerializeObject(response);
-                            DefaultResponse resp = JsonConvert.DeserializeObject<DefaultResponse>(json);
-                            tcs.TrySetResult(resp);
-                        }
-                        else
-                        {
-                            Debug.LogError("Failed to retrieve response.");
-                            tcs.TrySetResult(null);
-                        }
-                    });
+                var response = await _apiClient.PostAsync<DefaultResponse>("Api/Account/Login", loginModel);
 
-                return tcs.Task;
+                if (response == null)
+                {
+                    Debug.LogError("Failed to retrieve response.");
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"An error occurred: {ex.Message}");
+                return null;
             }
         }
 
         public void Start()
         {
-            GameObject apiClientObject = new("apiClientObj");
-            apiClientObject.AddComponent<ApiClient>();
+            GameObject apiClientObject = GameObject.Find("apiClientObj");
+
+            if (apiClientObject == null)
+            {
+                apiClientObject = new("apiClientObj");
+                apiClientObject.AddComponent<ApiClient>();
+            }
 
             _apiClient = apiClientObject.GetComponent<ApiClient>();
             _apiClient.Start();
