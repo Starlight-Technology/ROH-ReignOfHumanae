@@ -22,16 +22,27 @@ docker run -d --name ROH.Blazor --network $NETWORK_NAME -p 9010:9010 roh.blazor.
 
 # Build and run the ROH.Api.VersionFiles Dockerfile
 docker build -t roh.api.versionfiles -f ./src/Api/ROH.Api.VersionFiles/Dockerfile .
-docker run -d --name ROH.Api.VersionFiles --network $NETWORK_NAME -v /home/roh:/app/ROH/updateFiles -u roh -e ROH_DATABASE_CONNECTION_STRING="Host=localhost;Port=5432;Database=ROH;Username=postgres;Password=postgres123;" roh.api.versionfiles 
+docker run -d --name ROH.Api.VersionFiles --network $NETWORK_NAME -v /home/roh:/app/ROH/updateFiles -u roh -e ROH_DATABASE_CONNECTION_STRING_FILE="Host=localhost;Port=5432;Database=ROH.FILE;Username=postgres;Password=postgres123;" roh.api.versionfiles 
+
+# Build and run the ROH.Api.Version Dockerfile
+docker build -t roh.api.version -f ./src/Api/ROH.Api.Version/Dockerfile .
+docker run -d --name ROH.Api.Version --network $NETWORK_NAME  -u roh -e ROH_DATABASE_CONNECTION_STRING_VERSION="Host=localhost;Port=5432;Database=ROH.VERSION;Username=postgres;Password=postgres123;" roh.api.version 
+
+# Build and run the ROH.Api.Account Dockerfile
+docker build -t roh.api.account -f ./src/Api/ROH.Api.Account/Dockerfile .
+docker run -d --name ROH.Api.Account --network $NETWORK_NAME  -u roh -e ROH_DATABASE_CONNECTION_STRING_ACCOUNT="Host=localhost;Port=5432;Database=ROH.ACCOUNT;Username=postgres;Password=postgres123;" roh.api.account 
+
+# Build and run the ROH.Api.Login Dockerfile
+docker build -t roh.api.login -f ./src/Api/ROH.Api.Login/Dockerfile .
+docker run -d --name ROH.Api.Login --network $NETWORK_NAME  -u roh -e ROH_DATABASE_CONNECTION_STRING_ACCOUNT="Host=localhost;Port=5432;Database=ROH.ACCOUNT;Username=postgres;Password=postgres123;" roh.api.login 
+
+# Build and run the ROH.Api.Log Dockerfile
+docker build -t roh.api.log -f ./src/Api/ROH.Api.Log/Dockerfile .
+docker run -d --name ROH.Api.Log --network $NETWORK_NAME  -u roh -e ROH_DATABASE_CONNECTION_STRING_LOG="Host=localhost;Port=5432;Database=ROH.LOG;Username=postgres;Password=postgres123;" roh.api.log 
 
 
-# Iterate through other projects and build/run their Dockerfiles
-for project in $(find . -type f -name "Dockerfile" -not -path "./src/Gateway/ROH.Gateway*" -not -path "./src/Blazor/ROH.Blazor.Server*" -not -path "./src/Api/ROH.Api.VersionFiles*"); do
-  project_name=$(dirname $project)
-  image_name="$(basename $project_name | tr '[:upper:]' '[:lower:]')"  # Ensure lowercase image name
-  docker build -t $image_name -f $project .
-  docker run -d --name $(basename $project_name) --network $NETWORK_NAME -e ROH_DATABASE_CONNECTION_STRING="Host=localhost;Port=5432;Database=ROH;Username=postgres;Password=postgres123;" $image_name
-done
+
+
 
 
 
