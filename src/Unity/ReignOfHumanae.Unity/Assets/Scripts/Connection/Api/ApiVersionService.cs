@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 using Assets.Scripts.Connection.ApiConfiguration;
 using Assets.Scripts.Helpers;
+using Assets.Scripts.Models.Configuration;
 using Assets.Scripts.Models.File;
 using Assets.Scripts.Models.Response;
 
@@ -70,9 +71,11 @@ namespace Assets.Scripts.Connection.Api
                         if ((gameVersion != null) && !gameVersion.Released)
                             return;
 
-                        PlayerPrefs.SetInt("current-version-version", gameVersion!.Version);
-                        PlayerPrefs.SetInt("current-version-release", gameVersion.Release);
-                        PlayerPrefs.SetInt("current-version-review", gameVersion.Review);
+                        var config = DataManager.GetConfiguration();
+
+                        config.ServerVersion = gameVersion;
+
+                        config.SaveData<ConfigurationModel>(DataManager.configurationPath);
                     }
                     else
                     {

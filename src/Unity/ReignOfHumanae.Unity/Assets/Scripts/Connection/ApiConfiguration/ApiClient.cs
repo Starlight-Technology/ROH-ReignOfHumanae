@@ -7,6 +7,7 @@
 using Assets.Scripts.Configurations;
 using Assets.Scripts.Helpers;
 using Assets.Scripts.Models.Configuration;
+using Assets.Scripts.PopUp;
 
 using Newtonsoft.Json;
 
@@ -25,6 +26,10 @@ namespace Assets.Scripts.Connection.ApiConfiguration
 {
     public class ApiClient : MonoBehaviour
     {
+        public GameObject AlertPopUpPrefab;
+        public GameObject ErrorPopUpPrefab;
+        public GameObject SuccessPopUpPrefab;
+
         private Uri _baseUrl;
 
         private IEnumerator DeleteRequest(string endpoint, Action<bool> callback)
@@ -45,6 +50,7 @@ namespace Assets.Scripts.Connection.ApiConfiguration
             if (webRequest.result != UnityWebRequest.Result.Success)
             {
                 Debug.LogError($"DELETE Error: {webRequest.error}");
+                ErrorPopUpPrefab.GetComponent<PopUpService>().ShowPopup(webRequest.error);
                 callback(false);
             }
             else
@@ -71,6 +77,7 @@ namespace Assets.Scripts.Connection.ApiConfiguration
             if (webRequest.result != UnityWebRequest.Result.Success)
             {
                 Debug.LogError($"GET Error: {webRequest.error}");
+                ErrorPopUpPrefab.GetComponent<PopUpService>().ShowPopup(webRequest.error);
                 callback(default);
             }
             else
@@ -102,6 +109,7 @@ namespace Assets.Scripts.Connection.ApiConfiguration
             if (webRequest.result != UnityWebRequest.Result.Success)
             {
                 Debug.LogError($"POST Error: {webRequest.error}");
+                ErrorPopUpPrefab.GetComponent<PopUpService>().ShowPopup(webRequest.error);
                 callback(default);
             }
             else
@@ -133,6 +141,7 @@ namespace Assets.Scripts.Connection.ApiConfiguration
             if (webRequest.result != UnityWebRequest.Result.Success)
             {
                 Debug.LogError($"PUT Error: {webRequest.error}");
+                ErrorPopUpPrefab.GetComponent<PopUpService>().ShowPopup(webRequest.error);
                 callback(default);
             }
             else
@@ -177,6 +186,7 @@ namespace Assets.Scripts.Connection.ApiConfiguration
             if (webRequest.result != UnityWebRequest.Result.Success)
             {
                 Debug.LogError($"POST Error: {webRequest.error}");
+                ErrorPopUpPrefab.GetComponent<PopUpService>().ShowPopup(webRequest.error);
                 return default;
             }
 
@@ -189,6 +199,12 @@ namespace Assets.Scripts.Connection.ApiConfiguration
         {
             ConfigurationModel config = InitialConfiguration.GetInitialConfiguration();
             _baseUrl = new Uri(config.ServerUrl);
+
+            Canvas canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
+
+            SuccessPopUpPrefab = canvas.transform.Find("SuccessPopUp").gameObject;
+            AlertPopUpPrefab = canvas.transform.Find("AlertPopUp").gameObject;
+            ErrorPopUpPrefab = canvas.transform.Find("ErrorPopUp").gameObject;
         }
     }
 }

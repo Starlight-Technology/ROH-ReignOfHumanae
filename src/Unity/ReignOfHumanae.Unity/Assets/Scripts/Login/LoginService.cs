@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using Unity.VisualScripting;
 
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.Login
@@ -41,10 +42,11 @@ namespace Assets.Scripts.Login
 
             try
             {
+                LoginUiObj.SetActive(false);
                 var loginResult = await _loginService.LoginAsync(new LoginModel { Login = loginText, Password = passwordText }, CancellationToken.None).ConfigureAwait(true);
 
 
-                if (loginResult.HttpStatus == System.Net.HttpStatusCode.OK)
+                if (loginResult != null && loginResult.HttpStatus == System.Net.HttpStatusCode.OK)
                 {
                     var user = loginResult.ResponseToModel<UserModel>();
                     // Ensure this runs on the main thread
@@ -57,15 +59,14 @@ namespace Assets.Scripts.Login
                         config.JwToken = user.Token;
                         DataManager.UpdateConfiguration(config);
                         Debug.Log(PlayerPrefs.GetString("Token"));
-                        SuccessPopUpObj.GetComponent<SuccessPopUp>().ShowPopup($"Welcome, {user.UserName}!");
-                        LoginUiObj.SetActive(false);
+                        SuccessPopUpObj.GetComponent<PopUpService>().ShowPopup($"Welcome, {user.UserName}!");
                         UpdaterObj.SetActive(true);
                         UpdaterObj.GetComponent<UpdateService>().RunUpdaterAsync().ConfigureAwait(false);
                     });
                 }
                 else
                 {
-                    Debug.LogError($"Login failed: {loginResult.Message}");
+                    Debug.LogError($"Login failed: {loginResult?.Message ?? string.Empty}");
                 }
 
             }
@@ -75,7 +76,15 @@ namespace Assets.Scripts.Login
             }
         }
 
+        public void ShowLogin()
+        {
+            LoginUiObj.SetActive(true);
+        }
 
+        public async void LoadGameScene()
+        {
+            await SceneManager.LoadSceneAsync("MainWorld");
+        }
 
         public void Start()
         {

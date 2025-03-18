@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.PopUp
 {
-    public class SuccessPopUp : MonoBehaviour
+    public class PopUpService : MonoBehaviour
     {
         public GameObject PopupPanel;
         public Text PopupMessage;
@@ -24,5 +18,8 @@ namespace Assets.Scripts.PopUp
         {
             PopupPanel.SetActive(false);
         }
+
+        public static bool QuestionNo() => false; public static bool QuestionYes() => true;
+
     }
 }

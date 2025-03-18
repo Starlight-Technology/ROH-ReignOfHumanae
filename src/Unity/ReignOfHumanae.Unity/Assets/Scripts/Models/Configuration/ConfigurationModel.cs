@@ -4,6 +4,8 @@
 //     Copyright (c) Starlight-Technology. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
+using Assets.Scripts.Models.Version;
+
 using System;
 
 namespace Assets.Scripts.Models.Configuration
@@ -14,5 +16,9 @@ namespace Assets.Scripts.Models.Configuration
         public string ServerUrl;
 
         public string JwToken;
+
+        public GameVersionModel LocalVersion;
+
+        public GameVersionModel ServerVersion;
     }
 }

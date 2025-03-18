@@ -31,6 +31,10 @@ namespace Assets.Scripts.Update
         private readonly ObjectPropertyGetter<Text> _txtUpdateBackground = new() { ObjectName = "txtUpdateBackground" };
         private string filePath;
 
+        public Canvas canvas;
+        public GameObject alertPopUp;
+        public Text alertPopUpMessage;
+
         private void ChangeText(string text)
         {
             if (string.IsNullOrEmpty(text))
@@ -38,8 +42,7 @@ namespace Assets.Scripts.Update
                 return;
             }
 
-            _txtUpdate.SetValue(text);
-            _txtUpdateBackground.SetValue(text);
+            alertPopUpMessage.text = text;
         }
 
         private async Task DownloadFileAsync(GameVersionFileModel file, CancellationToken cancellationToken = default)
@@ -52,34 +55,34 @@ namespace Assets.Scripts.Update
             }
         }
 
-        private bool HasNewVersion(GameVersionModel gameVersion, GameVersionModel currentGameVersion)
+        private bool HasNewVersion(GameVersionModel localVersion, GameVersionModel serverVersion)
         {
-            return (currentGameVersion.Version > gameVersion.Version) ||
-                (currentGameVersion.Release > gameVersion.Release) ||
-                (currentGameVersion.Review > gameVersion.Review);
+            if (serverVersion.Version > localVersion.Version)
+                return true;
+
+            if (serverVersion.Version == localVersion.Version)
+            {
+                if (serverVersion.Release > localVersion.Release)
+                    return true;
+
+                if ((serverVersion.Release == localVersion.Release) && (serverVersion.Review > localVersion.Review))
+                    return true;
+            }
+
+            return false;
         }
 
         private async Task LookForUpdateAsync(CancellationToken cancellationToken = default)
         {
-            GameVersionModel gameVersion = new()
-            {
-                Version = PlayerPrefs.GetInt("version-version"),
-                Release = PlayerPrefs.GetInt("version-release"),
-                Review = PlayerPrefs.GetInt("version-review")
-            };
+            GameVersionModel localVersion = DataManager.GetConfiguration().LocalVersion;
 
             ChangeText("Verifying version...");
 
             await _apiService.GetCurrentVersionAsync(cancellationToken).ConfigureAwait(true);
 
-            GameVersionModel currentGameVersion = new()
-            {
-                Version = PlayerPrefs.GetInt("current-version-version"),
-                Release = PlayerPrefs.GetInt("current-version-release"),
-                Review = PlayerPrefs.GetInt("current-version-review")
-            };
+            GameVersionModel currentGameVersion = DataManager.GetConfiguration().ServerVersion;
 
-            if (HasNewVersion(gameVersion, currentGameVersion))
+            if (HasNewVersion(localVersion, currentGameVersion))
                 await VerifyFilesAsync(cancellationToken).ConfigureAwait(true);
         }
 
@@ -114,6 +117,10 @@ namespace Assets.Scripts.Update
         {
             try
             {
+                alertPopUp.SetActive(true);
+                var alertButton = alertPopUp.GetComponentInChildren<Button>();
+                alertButton.enabled = false;
+
                 GameObject versionService = new("verServiceObject");
                 versionService.AddComponent<ApiVersionService>();
                 _apiService = versionService.GetComponent<ApiVersionService>();
@@ -126,6 +133,10 @@ namespace Assets.Scripts.Update
             catch (Exception)
             {
                 ChangeText("An unexpected error has occurred.");
+            }
+            finally
+            {
+                alertPopUp.SetActive(false);
             }
         }
 

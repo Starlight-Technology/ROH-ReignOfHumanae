@@ -28,6 +28,8 @@ namespace ROH.StandardModels.Version
 
         public string Size { get; set; }
 
+        public bool Active { get; set; }
+
         public Func<Task<DefaultResponse?>>? DownloadFile { get; set; }
     }
 }

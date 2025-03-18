@@ -40,7 +40,7 @@ namespace Assets.Scripts.Helpers
             config,
             configurationPath);
 
-        public static void SaveData<T>(object data, string filePath)
+        public static void SaveData<T>(this object data, string filePath)
         {
             T dataToSerialize = (T)Convert.ChangeType(data, typeof(T));
             string json = JsonUtility.ToJson(dataToSerialize);
