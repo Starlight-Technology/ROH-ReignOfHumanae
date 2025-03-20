@@ -46,8 +46,11 @@ public class LoginService(
         try
         {
             ValidationResult validation = await loginValidator.ValidateAsync(loginModel, cancellationToken).ConfigureAwait(true);
-            if (validation != null && !validation.IsValid && validation.Errors.Count > 0)
-                return new DefaultResponse(null, HttpStatusCode.BadRequest, validation.Errors.ToString()!);
+            if (validation is not null && !validation.IsValid && validation.Errors.Count > 0)
+            {
+                string errorMessages = string.Join("; ", validation.Errors.Select(e => e.ErrorMessage));
+                return new DefaultResponse(null, HttpStatusCode.BadRequest, errorMessages);
+            }
 
             UserModel? user = await FindUserAsync(loginModel, cancellationToken).ConfigureAwait(true);
 

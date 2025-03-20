@@ -40,8 +40,11 @@ public class UserService(
         try
         {
             ValidationResult validation = await userValidator.ValidateAsync(userModel, cancellationToken).ConfigureAwait(true);
-            if (validation != null && !validation.IsValid && validation.Errors.Count > 0)
-                return new DefaultResponse(null, HttpStatusCode.BadRequest, validation.Errors.ToString()!);
+            if (validation is not null && !validation.IsValid && validation.Errors.Count > 0)
+            {
+                string errorMessages = string.Join("; ", validation.Errors.Select(e => e.ErrorMessage));
+                return new DefaultResponse(null, HttpStatusCode.BadRequest, errorMessages);
+            }
 
             if (await repository.EmailInUseAsync(userModel.Email!, cancellationToken).ConfigureAwait(true))
                 return new DefaultResponse(
