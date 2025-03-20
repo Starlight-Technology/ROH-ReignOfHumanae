@@ -782,11 +782,11 @@ PlayerSettings:
   m_MobileRenderingPath: 1
   metroPackageName: ReignOfHumanae
   metroPackageVersion: 1.0.0.0
-  metroCertificatePath: 
+  metroCertificatePath: Assets/WSATestCertificate.pfx
   metroCertificatePassword: 
-  metroCertificateSubject: 
-  metroCertificateIssuer: 
-  metroCertificateNotAfter: 0000000000000000
+  metroCertificateSubject: StarLight
+  metroCertificateIssuer: StarLight
+  metroCertificateNotAfter: 804e644c0db8dc01
   metroApplicationDescription: ReignOfHumanae
   wsaImages: {}
   metroTileShortName: ReignOfHumanae

@@ -14,6 +14,7 @@ using Assets.Scripts.PopUp;
 using Assets.Scripts.Update;
 
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -32,6 +33,7 @@ namespace Assets.Scripts.Login
         public InputField LoginField;
         public InputField PasswordField;
         public GameObject SuccessPopUpObj;
+        public GameObject ErrorPopUpObj;
         public GameObject LoginUiObj;
         public GameObject UpdaterObj;
 
@@ -45,6 +47,7 @@ namespace Assets.Scripts.Login
                 LoginUiObj.SetActive(false);
                 var loginResult = await _loginService.LoginAsync(new LoginModel { Login = loginText, Password = passwordText }, CancellationToken.None).ConfigureAwait(true);
 
+                Debug.LogError(DataManager.configurationPath);
 
                 if (loginResult != null && loginResult.HttpStatus == System.Net.HttpStatusCode.OK)
                 {
@@ -58,7 +61,6 @@ namespace Assets.Scripts.Login
                         var config = DataManager.GetConfiguration();
                         config.JwToken = user.Token;
                         DataManager.UpdateConfiguration(config);
-                        Debug.Log(PlayerPrefs.GetString("Token"));
                         SuccessPopUpObj.GetComponent<PopUpService>().ShowPopup($"Welcome, {user.UserName}!");
                         UpdaterObj.SetActive(true);
                         UpdaterObj.GetComponent<UpdateService>().RunUpdaterAsync().ConfigureAwait(false);
@@ -67,12 +69,17 @@ namespace Assets.Scripts.Login
                 else
                 {
                     Debug.LogError($"Login failed: {loginResult?.Message ?? string.Empty}");
+                    ErrorPopUpObj.GetComponent<PopUpService>().ShowPopup($"Login failed: {loginResult?.Message ?? string.Empty}");
                 }
 
             }
             catch (Exception ex)
             {
                 Debug.LogError($"An exception occurred during login: {ex.Message}");
+
+                ErrorPopUpObj.GetComponent<PopUpService>().ShowPopup("An error occurred during login. Please try again.");
+
+                LoginUiObj.SetActive(true);
             }
         }
 
@@ -84,6 +91,11 @@ namespace Assets.Scripts.Login
         public async void LoadGameScene()
         {
             await SceneManager.LoadSceneAsync("MainWorld");
+        }
+
+        public void ExitGame()
+        {
+            Application.Quit();
         }
 
         public void Start()

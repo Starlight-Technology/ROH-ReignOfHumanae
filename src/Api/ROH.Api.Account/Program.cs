@@ -104,6 +104,4 @@ app.MapPut(
     .WithName("UpdateAccount")
     .WithOpenApi();
 
-app.UseHttpsRedirection();
-
 await app.RunAsync().ConfigureAwait(false);

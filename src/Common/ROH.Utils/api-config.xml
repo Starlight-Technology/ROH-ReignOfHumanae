@@ -12,7 +12,7 @@
 	</Develop>
 	<Test>
 		<ServiceUrls>
-			<Service name="GateWay" url="http://192.168.0.37:9001/" />
+			<Service name="GateWay" url="http://192.168.0.65:9001/" />
 			<Service name="Version" url="http://ROH.Api.Version:8080/" />
 			<Service name="VersionFile" url="http://ROH.Api.VersionFiles:8080/" />
 			<Service name="Account" url="http://ROH.Api.Account:8080/" />

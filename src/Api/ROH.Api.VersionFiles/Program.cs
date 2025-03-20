@@ -93,4 +93,5 @@ app.MapGet(
 )
     .WithName("DownloadFile")
     .WithOpenApi();
+
 await app.RunAsync().ConfigureAwait(false);

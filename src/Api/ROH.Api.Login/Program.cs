@@ -70,6 +70,4 @@ app.MapPost(
     .WithName("Login")
     .WithOpenApi();
 
-app.UseHttpsRedirection();
-
 await app.RunAsync().ConfigureAwait(false);

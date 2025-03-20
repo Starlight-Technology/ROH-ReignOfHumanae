@@ -17,7 +17,7 @@ namespace Assets.Scripts.Helpers
     {
         public static string assetsFolderPath = Application.dataPath;
         public static string rootFolder = Directory.GetParent(assetsFolderPath).FullName;
-        public static string configurationPath = $"{rootFolder}config";
+        public static string configurationPath = $"{assetsFolderPath}/config";
 
         public static T LoadData<T>(string filePath)
         {

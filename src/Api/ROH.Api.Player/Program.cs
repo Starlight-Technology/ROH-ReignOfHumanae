@@ -20,6 +20,5 @@ if (app.Environment.IsDevelopment())
     _ = app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
 
 await app.RunAsync().ConfigureAwait(false);

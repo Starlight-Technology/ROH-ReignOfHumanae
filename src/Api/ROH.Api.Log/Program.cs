@@ -27,7 +27,6 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
 app.MapGrpcService<LogServiceImplementation>();
 
 await app.RunAsync().ConfigureAwait(true);
