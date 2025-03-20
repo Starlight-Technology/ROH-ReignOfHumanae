@@ -18,7 +18,7 @@ public class ExceptionHandler(ILogService logService) : IExceptionHandler
         true;
 
 #else
-        false;
+        true;
 #endif
 
     private void LogException(string exception) => logService.SaveLog(exception).ConfigureAwait(true);
