@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+
 using ROH.Api.Log.Services;
 using ROH.Context.Log;
 using ROH.Context.Log.Interface;
@@ -18,6 +20,15 @@ builder.Services.AddScoped<ILogRepository, LogRepository>();
 builder.Services.AddScoped<ILogService, LogService>();
 
 builder.Services.AddGrpc();
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(8080, listenOptions =>
+    {
+        listenOptions.Protocols = HttpProtocols.Http1AndHttp2; // Supports both protocols
+    });
+});
+
 
 var app = builder.Build();
 

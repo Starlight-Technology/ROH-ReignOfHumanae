@@ -8,6 +8,8 @@ using AutoMapper;
 
 using FluentValidation;
 
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+
 using ROH.Context.File;
 using ROH.Context.File.Interface;
 using ROH.Context.File.Repository;
@@ -43,6 +45,15 @@ builder.Services.AddScoped<IValidator<GameVersionFileModel>, GameVersionFileMode
 
 builder.Services.AddScoped<ILogService, LogService>();
 builder.Services.AddScoped<IExceptionHandler, ExceptionHandler>();
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(8080, listenOptions =>
+    {
+        listenOptions.Protocols = HttpProtocols.Http1AndHttp2; // Supports both protocols
+    });
+});
+
 
 // Auto Mapper Configurations
 MapperConfiguration mappingConfig = new(

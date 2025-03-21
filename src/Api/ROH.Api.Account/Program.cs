@@ -8,6 +8,8 @@ using AutoMapper;
 
 using FluentValidation;
 
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+
 using ROH.Context.Account;
 using ROH.Context.Account.Interface;
 using ROH.Context.Account.Repository;
@@ -38,6 +40,14 @@ builder.Services.AddScoped<IValidator<UserModel>, UserModelValidator>();
 
 builder.Services.AddScoped<IExceptionHandler, ROH.Service.Exception.ExceptionHandler>();
 builder.Services.AddScoped<ILogService, LogService>();
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(8080, listenOptions =>
+    {
+        listenOptions.Protocols = HttpProtocols.Http1AndHttp2; // Supports both protocols
+    });
+});
 
 // Auto Mapper Configurations
 MapperConfiguration mappingConfig = new(

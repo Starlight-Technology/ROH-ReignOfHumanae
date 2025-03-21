@@ -3,6 +3,7 @@ using AutoMapper;
 using FluentValidation;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 
 using ROH.Api.Version.Services;
@@ -52,6 +53,15 @@ builder.Services.AddScoped<IValidator<GameVersionModel>, GameVersionModelValidat
 builder.Services.AddScoped<IGameVersionService, ROH.Service.Version.GameVersionService>();
 
 builder.Services.AddGrpc();
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(8080, listenOptions =>
+    {
+        listenOptions.Protocols = HttpProtocols.Http1AndHttp2; // Supports both protocols
+    });
+});
+
 
 // Auto Mapper Configurations
 MapperConfiguration mappingConfig = new(mc =>

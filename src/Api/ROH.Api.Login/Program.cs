@@ -8,6 +8,8 @@ using AutoMapper;
 
 using FluentValidation;
 
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+
 using ROH.Context.Account;
 using ROH.Context.Account.Interface;
 using ROH.Context.Account.Repository;
@@ -53,6 +55,15 @@ MapperConfiguration mappingConfig = new(
 
 IMapper mapper = mappingConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(8080, listenOptions =>
+    {
+        listenOptions.Protocols = HttpProtocols.Http1AndHttp2; // Supports both protocols
+    });
+});
+
 
 WebApplication app = builder.Build();
 
