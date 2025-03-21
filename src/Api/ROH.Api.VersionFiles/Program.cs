@@ -52,6 +52,7 @@ builder.WebHost.ConfigureKestrel(options =>
     {
         listenOptions.Protocols = HttpProtocols.Http1AndHttp2; // Supports both protocols
     });
+    options.Limits.MaxRequestBodySize = null;
 });
 
 
@@ -66,8 +67,6 @@ MapperConfiguration mappingConfig = new(
 
 IMapper mapper = mappingConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
-
-builder.WebHost.ConfigureKestrel(options => options.Limits.MaxRequestBodySize = null);
 
 WebApplication app = builder.Build();
 
