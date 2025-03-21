@@ -3,31 +3,31 @@
 	<Develop>
 		<ServiceUrls>
 			<Service name="GateWay" url="http://localhost:9001/" />
-			<Service name="Version" url="https://localhost:7240/" />
-			<Service name="VersionFile" url="https://localhost:7068/" />
-			<Service name="Account" url="https://localhost:7211/" />
-			<Service name="Login" url="https://localhost:7031" />
-			<Service name="Log" url="https://localhost:7044" />
+			<Service name="Version" url="https://localhost:9101/" />
+			<Service name="VersionFile" url="https://localhost:9100/" />
+			<Service name="Account" url="https://localhost:9102/" />
+			<Service name="Login" url="https://localhost:9103" />
+			<Service name="Log" url="https://localhost:9104" />
 		</ServiceUrls>
 	</Develop>
 	<Test>
 		<ServiceUrls>
 			<Service name="GateWay" url="http://192.168.0.65:9001/" />
-			<Service name="Version" url="http://ROH.Api.Version:8080/" />
-			<Service name="VersionFile" url="http://ROH.Api.VersionFiles:8080/" />
-			<Service name="Account" url="http://ROH.Api.Account:8080/" />
-			<Service name="Login" url="http://ROH.Api.Login:8080/" />
-			<Service name="Log" url="http://ROH.Api.Log:8080/" />
+			<Service name="Version" url="http://ROH.Api.Version:9101/" />
+			<Service name="VersionFile" url="http://ROH.Api.VersionFiles:9100/" />
+			<Service name="Account" url="http://ROH.Api.Account:9102/" />
+			<Service name="Login" url="http://ROH.Api.Login:9103/" />
+			<Service name="Log" url="http://ROH.Api.Log:9104/" />
 		</ServiceUrls>
 	</Test>
 	<Release>
 		<ServiceUrls>
 			<Service name="GateWay" url="http://ROH.Gateway:9001/" />
-			<Service name="Version" url="http://ROH.Api.Version:8080/" />
-			<Service name="VersionFile" url="http://ROH.Api.VersionFiles:8080/" />
-			<Service name="Account" url="http://ROH.Api.Account:8080/" />
-			<Service name="Login" url="http://ROH.Api.Login:8080/" />
-			<Service name="Log" url="http://ROH.Api.Log:8080/" />
+			<Service name="Version" url="http://ROH.Api.Version:9101/" />
+			<Service name="VersionFile" url="http://ROH.Api.VersionFiles:9100/" />
+			<Service name="Account" url="http://ROH.Api.Account:9102/" />
+			<Service name="Login" url="http://ROH.Api.Login:9103/" />
+			<Service name="Log" url="http://ROH.Api.Log:9104/" />
 		</ServiceUrls>
 	</Release>
 </ApiConfig>

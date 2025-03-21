@@ -23,7 +23,7 @@ builder.Services.AddGrpc();
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenAnyIP(8080, listenOptions =>
+    options.ListenAnyIP(9104, listenOptions =>
     {
         listenOptions.Protocols = HttpProtocols.Http1AndHttp2; // Supports both protocols
     });

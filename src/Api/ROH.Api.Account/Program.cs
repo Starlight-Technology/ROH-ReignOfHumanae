@@ -43,7 +43,7 @@ builder.Services.AddScoped<ILogService, LogService>();
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenAnyIP(8080, listenOptions =>
+    options.ListenAnyIP(9102, listenOptions =>
     {
         listenOptions.Protocols = HttpProtocols.Http1AndHttp2; // Supports both protocols
     });
