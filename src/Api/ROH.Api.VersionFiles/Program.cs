@@ -52,6 +52,10 @@ builder.WebHost.ConfigureKestrel(options =>
     {
         listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
     });
+    options.ListenAnyIP(9200, listenOptions =>
+    {
+        listenOptions.Protocols = HttpProtocols.Http2;
+    });
     options.Limits.MaxRequestBodySize = null;
 });
 

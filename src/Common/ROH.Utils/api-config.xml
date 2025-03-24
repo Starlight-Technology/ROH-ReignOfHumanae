@@ -4,30 +4,45 @@
 		<ServiceUrls>
 			<Service name="GateWay" url="http://localhost:9001/" />
 			<Service name="Version" url="https://localhost:9101/" />
+			<Service name="VersionGrpc" url="https://localhost:9201/" />
 			<Service name="VersionFile" url="https://localhost:9100/" />
+			<Service name="VersionFileGrpc" url="https://localhost:9200/" />
 			<Service name="Account" url="https://localhost:9102/" />
+			<Service name="AccountGrpc" url="https://localhost:9202/" />
 			<Service name="Login" url="https://localhost:9103" />
+			<Service name="LoginGrpc" url="https://localhost:9203" />
 			<Service name="Log" url="https://localhost:9104" />
+			<Service name="LogGrpc" url="https://localhost:9204" />
 		</ServiceUrls>
 	</Develop>
 	<Test>
 		<ServiceUrls>
 			<Service name="GateWay" url="http://192.168.0.65:9001/" />
 			<Service name="Version" url="http://ROH.Api.Version:9101/" />
+			<Service name="VersionGrpc" url="http://ROH.Api.Version:9201/" />
 			<Service name="VersionFile" url="http://ROH.Api.VersionFiles:9100/" />
+			<Service name="VersionFileGrpc" url="http://ROH.Api.VersionFiles:9200/" />
 			<Service name="Account" url="http://ROH.Api.Account:9102/" />
+			<Service name="AccountGrpc" url="http://ROH.Api.Account:9202/" />
 			<Service name="Login" url="http://ROH.Api.Login:9103/" />
+			<Service name="LoginGrpc" url="http://ROH.Api.Login:9203/" />
 			<Service name="Log" url="http://ROH.Api.Log:9104/" />
+			<Service name="LogGrpc" url="http://ROH.Api.Log:9204/" />
 		</ServiceUrls>
 	</Test>
 	<Release>
 		<ServiceUrls>
 			<Service name="GateWay" url="http://ROH.Gateway:9001/" />
 			<Service name="Version" url="http://ROH.Api.Version:9101/" />
+			<Service name="VersionGrpc" url="http://ROH.Api.Version:9201/" />
 			<Service name="VersionFile" url="http://ROH.Api.VersionFiles:9100/" />
+			<Service name="VersionFileGrpc" url="http://ROH.Api.VersionFiles:9200/" />
 			<Service name="Account" url="http://ROH.Api.Account:9102/" />
+			<Service name="AccountGrpc" url="http://ROH.Api.Account:9202/" />
 			<Service name="Login" url="http://ROH.Api.Login:9103/" />
+			<Service name="LoginGrpc" url="http://ROH.Api.Login:9203/" />
 			<Service name="Log" url="http://ROH.Api.Log:9104/" />
+			<Service name="LogGrpc" url="http://ROH.Api.Log:9204/" />
 		</ServiceUrls>
 	</Release>
 </ApiConfig>

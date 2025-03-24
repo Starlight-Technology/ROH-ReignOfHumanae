@@ -16,7 +16,7 @@ public class GameVersionService : IGameVersionService
     {
 #pragma warning disable S4830 // Server certificates should be verified during SSL/TLS connections
         var channel = GrpcChannel.ForAddress(
-            _apiUrl.GetValueOrDefault(ApiUrl.Version) ?? new Uri(string.Empty),
+            _apiUrl.GetValueOrDefault(ApiUrl.VersionGrpc) ?? new Uri(string.Empty),
             new GrpcChannelOptions
             {
                 HttpHandler = new HttpClientHandler
@@ -34,7 +34,7 @@ public class GameVersionService : IGameVersionService
     public async Task<bool> VerifyIfVersionExistAsync(System.Guid versionGuid, CancellationToken cancellationToken = default)
     {
 #pragma warning disable S4830 // Server certificates should be verified during SSL/TLS connections -- need to be fixed in production
-        var channel = GrpcChannel.ForAddress(_apiUrl.GetValueOrDefault(ApiUrl.Version) ?? new Uri(string.Empty),
+        var channel = GrpcChannel.ForAddress(_apiUrl.GetValueOrDefault(ApiUrl.VersionGrpc) ?? new Uri(string.Empty),
             new GrpcChannelOptions
             {
                 HttpHandler = new HttpClientHandler
@@ -43,6 +43,7 @@ public class GameVersionService : IGameVersionService
                         HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
                 }
             });
+
 #pragma warning restore S4830 // Server certificates should be verified during SSL/TLS connections
         var client = new VersionServiceApi.GameVersionService.GameVersionServiceClient(channel);
 

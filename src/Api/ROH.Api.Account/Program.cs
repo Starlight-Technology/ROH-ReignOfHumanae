@@ -47,6 +47,10 @@ builder.WebHost.ConfigureKestrel(options =>
     {
         listenOptions.Protocols = HttpProtocols.Http1AndHttp2; // Supports both protocols
     });
+    options.ListenAnyIP(9202, listenOptions =>
+    {
+        listenOptions.Protocols = HttpProtocols.Http2;
+    });
 });
 
 // Auto Mapper Configurations

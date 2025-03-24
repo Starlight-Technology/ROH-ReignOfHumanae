@@ -17,7 +17,7 @@ public class LogService : ILogService
     public async Task SaveLog(string message)
     {
 #pragma warning disable S4830 // Server certificates should be verified during SSL/TLS connections
-        var channel = GrpcChannel.ForAddress(_apiUrl.GetValueOrDefault(ApiUrl.Log) ?? new Uri(string.Empty),
+        var channel = GrpcChannel.ForAddress(_apiUrl.GetValueOrDefault(ApiUrl.LogGrpc) ?? new Uri(string.Empty),
             new GrpcChannelOptions
             {
                 HttpHandler = new HttpClientHandler

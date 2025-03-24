@@ -59,11 +59,17 @@ namespace ROH.Utils.ApiConfiguration
         public enum ApiUrl
         {
             Version,
+            VersionGrpc,
             VersionFile,
+            VersionFileGrpc,
             GateWay,
+            GateWayGrpc,
             Account,
+            AccountGrpc,
             Login,
-            Log
+            LoginGrpc,
+            Log,
+            LogGrpc
         }
     }
 }
