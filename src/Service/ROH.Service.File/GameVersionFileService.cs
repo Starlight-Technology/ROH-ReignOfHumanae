@@ -37,6 +37,9 @@ public class GameVersionFileService(
         if (response is null)
             return null;
 
+        if (string.IsNullOrWhiteSpace(response.ObjectResponse))
+            return null;
+
         DefaultResponse defaultResponse = new()
         {
             HttpStatus = (HttpStatusCode)response.StatusCode,

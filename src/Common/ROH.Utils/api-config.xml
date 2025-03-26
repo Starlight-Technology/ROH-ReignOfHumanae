@@ -3,16 +3,16 @@
 	<Develop>
 		<ServiceUrls>
 			<Service name="GateWay" url="http://localhost:9001/" />
-			<Service name="Version" url="https://localhost:9101/" />
-			<Service name="VersionGrpc" url="https://localhost:9201/" />
-			<Service name="VersionFile" url="https://localhost:9100/" />
-			<Service name="VersionFileGrpc" url="https://localhost:9200/" />
-			<Service name="Account" url="https://localhost:9102/" />
-			<Service name="AccountGrpc" url="https://localhost:9202/" />
-			<Service name="Login" url="https://localhost:9103" />
-			<Service name="LoginGrpc" url="https://localhost:9203" />
-			<Service name="Log" url="https://localhost:9104" />
-			<Service name="LogGrpc" url="https://localhost:9204" />
+			<Service name="Version" url="http://localhost:9101/" />
+			<Service name="VersionGrpc" url="http://localhost:9201/" />
+			<Service name="VersionFile" url="http://localhost:9100/" />
+			<Service name="VersionFileGrpc" url="http://localhost:9200/" />
+			<Service name="Account" url="http://localhost:9102/" />
+			<Service name="AccountGrpc" url="http://localhost:9202/" />
+			<Service name="Login" url="http://localhost:9103" />
+			<Service name="LoginGrpc" url="http://localhost:9203" />
+			<Service name="Log" url="http://localhost:9104" />
+			<Service name="LogGrpc" url="http://localhost:9204" />
 		</ServiceUrls>
 	</Develop>
 	<Test>

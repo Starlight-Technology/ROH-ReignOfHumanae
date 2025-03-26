@@ -62,13 +62,17 @@ namespace ROH.Utils.Helpers
 
                 return result;
             }
+            catch (ArgumentException)
+            {
+                throw;
+            }
             catch (Exception)
             {
                 throw new InvalidCastException($"Can't convert Json to {typeof(T)}.");
             }
         }
 
-        public static string ToJson(this object obj)
+        public static string ToJson(this object? obj)
         {
             try
             {
