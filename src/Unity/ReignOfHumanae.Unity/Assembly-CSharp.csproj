@@ -159,6 +159,7 @@
     <Compile Include="Assets\Waldemarst\Broccoli\Controller\BroccoTreeController_1_2_5.cs" />
     <Compile Include="Assets\ForestVision\Scripts\Tools\TreeCreator\Scripts\FV_Items.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_UiFrameRateCounter.cs" />
+    <Compile Include="Assets\DoubleL\Demo\DemoCameraController.cs" />
     <Compile Include="Assets\Scripts\Models\Response\DefaultResponse.cs" />
     <Compile Include="Assets\ForestVision\Scripts\Tools\TreeCreator\Scripts\FBXExporter.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_B.cs" />
