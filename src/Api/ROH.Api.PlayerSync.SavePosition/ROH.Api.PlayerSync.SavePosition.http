@@ -1,0 +1,6 @@
+@ROH.Api.PlayerSync.SavePosition_HostAddress = http://localhost:5145
+
+GET {{ROH.Api.PlayerSync.SavePosition_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
