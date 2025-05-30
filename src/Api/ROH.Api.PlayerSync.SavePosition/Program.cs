@@ -1,10 +1,50 @@
-var builder = WebApplication.CreateBuilder(args);
+
+
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+
+using ROH.Context.Player.Mongo;
+using ROH.Context.Player.Mongo.Interface;
+using ROH.Context.Player.Mongo.Repository;
+using ROH.Service.Exception;
+using ROH.Service.Exception.Communication;
+using ROH.Service.Exception.Interface;
+using ROH.Service.Player.Characters;
+
+using static ROH.Protos.Player.PlayerService;
+
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-var app = builder.Build();
+builder.Services.AddScoped<ILogService, LogService>();
+
+builder.Services.AddScoped<IExceptionHandler, ExceptionHandler>();
+
+builder.Services.AddScoped<IPositionRepository, PositionRepository>();
+
+builder.Services.AddScoped<IPlayerMongoContext, PlayerMongoContext>();
+
+builder.Services.AddGrpc();
+
+builder.WebHost
+    .ConfigureKestrel(
+        options =>
+        { 
+            options.ListenAnyIP(
+                9210,
+                listenOptions =>
+                {
+                    listenOptions.Protocols = HttpProtocols.Http2;
+                });
+            options.Limits.MaxRequestBodySize = null;
+        });
+
+
+WebApplication app = builder.Build();
+
+app.MapGrpcService<PositionService>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -12,6 +52,11 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
+// Em Program.cs ou Startup.cs da API gRPC
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
-app.Run();
+
+await app.RunAsync().ConfigureAwait(true);

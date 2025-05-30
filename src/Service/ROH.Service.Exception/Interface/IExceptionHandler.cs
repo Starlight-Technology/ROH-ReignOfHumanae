@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 using ROH.StandardModels.Response;
 
+
 namespace ROH.Service.Exception.Interface;
 
 public interface IExceptionHandler

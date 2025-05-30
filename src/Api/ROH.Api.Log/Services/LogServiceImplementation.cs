@@ -1,4 +1,10 @@
-﻿using Grpc.Core;
+﻿//-----------------------------------------------------------------------
+// <copyright file="LogServiceImplementation.cs" company="">
+//     Author:  
+//     Copyright (c) . All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using Grpc.Core;
 
 using LogServiceApi;
 

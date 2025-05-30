@@ -1,20 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace ROH.Context.Player.Mongo.Entities;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
 
 public class PlayerPosition
 {
     [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; }
+    public ObjectId Id { get; set; }
 
     public string PlayerId { get; set; }
-    public Position Position { get; set; }
-    public Rotation Rotation { get; set; }
+
+    public float PositionX { get; set; }
+    public float PositionY { get; set; }
+    public float PositionZ { get; set; }
+
+    public float RotationX { get; set; }
+    public float RotationY { get; set; }
+    public float RotationZ { get; set; }
+    public float RotationW { get; set; }
+
+    public DateTime Timestamp { get; set; } = DateTime.UtcNow;
 }

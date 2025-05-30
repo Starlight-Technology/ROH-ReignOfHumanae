@@ -17,7 +17,7 @@ namespace ROH.Context.Player.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("ProductVersion", "9.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -60,13 +60,13 @@ namespace ROH.Context.Player.Migrations
                         .HasColumnType("uuid")
                         .HasDefaultValueSql("gen_random_uuid()");
 
-                    b.Property<long>("IdAccount")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("GuidAccount")
+                        .HasColumnType("uuid");
 
                     b.Property<long?>("IdGuild")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("IdKingdom")
+                    b.Property<long?>("IdKingdom")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Name")
@@ -221,6 +221,85 @@ namespace ROH.Context.Player.Migrations
                     b.HasIndex("IdEquippedItems");
 
                     b.ToTable("RingsEquipped");
+                });
+
+            modelBuilder.Entity("ROH.Context.Player.Entities.Characters.PlayerPosition", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("IdPlayer")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("PositionId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("RotationId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdPlayer")
+                        .IsUnique();
+
+                    b.HasIndex("PositionId");
+
+                    b.HasIndex("RotationId");
+
+                    b.ToTable("PlayersPosition");
+                });
+
+            modelBuilder.Entity("ROH.Context.Player.Entities.Characters.Position", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("IdPlayer")
+                        .HasColumnType("bigint");
+
+                    b.Property<float>("X")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Y")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Z")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Positions");
+                });
+
+            modelBuilder.Entity("ROH.Context.Player.Entities.Characters.Rotation", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<float>("W")
+                        .HasColumnType("real");
+
+                    b.Property<float>("X")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Y")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Z")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Rotations");
                 });
 
             modelBuilder.Entity("ROH.Context.Player.Entities.Characters.Skill", b =>
@@ -412,6 +491,8 @@ namespace ROH.Context.Player.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("IdKingdom");
+
                     b.HasIndex("IdKingdom2");
 
                     b.ToTable("KingdomRelations");
@@ -421,9 +502,7 @@ namespace ROH.Context.Player.Migrations
                 {
                     b.HasOne("ROH.Context.Player.Entities.Characters.Character", "Character")
                         .WithOne("AttackStatus")
-                        .HasForeignKey("ROH.Context.Player.Entities.Characters.AttackStatus", "IdCharacter")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ROH.Context.Player.Entities.Characters.AttackStatus", "IdCharacter");
 
                     b.Navigation("Character");
                 });
@@ -436,9 +515,7 @@ namespace ROH.Context.Player.Migrations
 
                     b.HasOne("ROH.Context.Player.Entities.Kingdoms.Kingdom", "Kingdom")
                         .WithMany("Citizens")
-                        .HasForeignKey("IdKingdom")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdKingdom");
 
                     b.Navigation("Guild");
 
@@ -449,9 +526,7 @@ namespace ROH.Context.Player.Migrations
                 {
                     b.HasOne("ROH.Context.Player.Entities.Characters.Character", "Character")
                         .WithMany("Inventory")
-                        .HasForeignKey("IdCharacter")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdCharacter");
 
                     b.Navigation("Character");
                 });
@@ -460,9 +535,7 @@ namespace ROH.Context.Player.Migrations
                 {
                     b.HasOne("ROH.Context.Player.Entities.Characters.Character", "Character")
                         .WithMany("Skills")
-                        .HasForeignKey("IdCharacter")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdCharacter");
 
                     b.HasOne("ROH.Context.Player.Entities.Characters.Skill", "Skill")
                         .WithMany()
@@ -479,9 +552,7 @@ namespace ROH.Context.Player.Migrations
                 {
                     b.HasOne("ROH.Context.Player.Entities.Characters.Character", "Character")
                         .WithOne("DefenseStatus")
-                        .HasForeignKey("ROH.Context.Player.Entities.Characters.DefenseStatus", "IdCharacter")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ROH.Context.Player.Entities.Characters.DefenseStatus", "IdCharacter");
 
                     b.Navigation("Character");
                 });
@@ -490,9 +561,7 @@ namespace ROH.Context.Player.Migrations
                 {
                     b.HasOne("ROH.Context.Player.Entities.Characters.Character", "Character")
                         .WithOne("EquippedItems")
-                        .HasForeignKey("ROH.Context.Player.Entities.Characters.EquippedItems", "IdCharacter")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ROH.Context.Player.Entities.Characters.EquippedItems", "IdCharacter");
 
                     b.Navigation("Character");
                 });
@@ -508,13 +577,36 @@ namespace ROH.Context.Player.Migrations
                     b.Navigation("EquippedItems");
                 });
 
+            modelBuilder.Entity("ROH.Context.Player.Entities.Characters.PlayerPosition", b =>
+                {
+                    b.HasOne("ROH.Context.Player.Entities.Characters.Character", "Player")
+                        .WithOne("PlayerPosition")
+                        .HasForeignKey("ROH.Context.Player.Entities.Characters.PlayerPosition", "IdPlayer");
+
+                    b.HasOne("ROH.Context.Player.Entities.Characters.Position", "Position")
+                        .WithMany()
+                        .HasForeignKey("PositionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ROH.Context.Player.Entities.Characters.Rotation", "Rotation")
+                        .WithMany()
+                        .HasForeignKey("RotationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Player");
+
+                    b.Navigation("Position");
+
+                    b.Navigation("Rotation");
+                });
+
             modelBuilder.Entity("ROH.Context.Player.Entities.Characters.Status", b =>
                 {
                     b.HasOne("ROH.Context.Player.Entities.Characters.Character", "Character")
                         .WithOne("Status")
-                        .HasForeignKey("ROH.Context.Player.Entities.Characters.Status", "IdCharacter")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ROH.Context.Player.Entities.Characters.Status", "IdCharacter");
 
                     b.Navigation("Character");
                 });
@@ -570,13 +662,21 @@ namespace ROH.Context.Player.Migrations
 
             modelBuilder.Entity("ROH.Context.Player.Entities.Kingdoms.KingdomRelation", b =>
                 {
-                    b.HasOne("ROH.Context.Player.Entities.Kingdoms.Kingdom", "Kingdom2")
-                        .WithMany("KingdomRelations")
-                        .HasForeignKey("IdKingdom2")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("ROH.Context.Player.Entities.Kingdoms.Kingdom", "SourceKingdom")
+                        .WithMany("OutgoingRelations")
+                        .HasForeignKey("IdKingdom")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Kingdom2");
+                    b.HasOne("ROH.Context.Player.Entities.Kingdoms.Kingdom", "TargetKingdom")
+                        .WithMany("IncomingRelations")
+                        .HasForeignKey("IdKingdom2")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("SourceKingdom");
+
+                    b.Navigation("TargetKingdom");
                 });
 
             modelBuilder.Entity("ROH.Context.Player.Entities.Characters.Character", b =>
@@ -588,6 +688,8 @@ namespace ROH.Context.Player.Migrations
                     b.Navigation("EquippedItems");
 
                     b.Navigation("Inventory");
+
+                    b.Navigation("PlayerPosition");
 
                     b.Navigation("Skills");
 
@@ -612,7 +714,9 @@ namespace ROH.Context.Player.Migrations
 
                     b.Navigation("Citizens");
 
-                    b.Navigation("KingdomRelations");
+                    b.Navigation("IncomingRelations");
+
+                    b.Navigation("OutgoingRelations");
                 });
 #pragma warning restore 612, 618
         }

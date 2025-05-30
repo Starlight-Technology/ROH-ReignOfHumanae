@@ -1,4 +1,10 @@
-﻿using Grpc.Net.Client;
+﻿//-----------------------------------------------------------------------
+// <copyright file="LogService.cs" company="Starlight-Technology">
+//     Author:  
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using Grpc.Net.Client;
 
 using LogServiceApi;
 
@@ -11,27 +17,26 @@ namespace ROH.Service.Exception.Communication;
 
 public class LogService : ILogService
 {
-    private static readonly ApiConfigReader _apiConfig = new();
-    private static readonly Dictionary<ApiUrl, Uri> _apiUrl = _apiConfig.GetApiUrl();
+    static readonly ApiConfigReader _apiConfig = new();
+    static readonly Dictionary<ApiUrl, Uri> _apiUrl = _apiConfig.GetApiUrl();
 
     public async Task SaveLog(string message)
     {
 #pragma warning disable S4830 // Server certificates should be verified during SSL/TLS connections
-        var channel = GrpcChannel.ForAddress(_apiUrl.GetValueOrDefault(ApiUrl.LogGrpc) ?? new Uri(string.Empty),
+        GrpcChannel channel = GrpcChannel.ForAddress(
+            _apiUrl.GetValueOrDefault(ApiUrl.LogGrpc) ?? new Uri(string.Empty),
             new GrpcChannelOptions
             {
-                HttpHandler = new HttpClientHandler
-                {
-                    ServerCertificateCustomValidationCallback =
-                        HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-                }
+                HttpHandler =
+                    new HttpClientHandler
+                        {
+                            ServerCertificateCustomValidationCallback =
+                                HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                        }
             });
 #pragma warning restore S4830 // Server certificates should be verified during SSL/TLS connections
-        var client = new LogServiceApi.LogService.LogServiceClient(channel);
+        LogServiceApi.LogService.LogServiceClient client = new LogServiceApi.LogService.LogServiceClient(channel);
 
-        await client.LogAsync(new LogRequest
-        {
-            Message = message
-        });
+        await client.LogAsync(new LogRequest { Message = message });
     }
 }

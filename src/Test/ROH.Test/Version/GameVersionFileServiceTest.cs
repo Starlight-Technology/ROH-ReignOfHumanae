@@ -10,7 +10,6 @@ using FluentValidation;
 using FluentValidation.Results;
 
 using Moq;
-using Moq.Language.Flow;
 
 using ROH.Context.File.Entities;
 using ROH.Context.File.Interface;
@@ -23,7 +22,6 @@ using ROH.StandardModels.Version;
 using ROH.Utils.Helpers;
 
 using System.Net;
-using System.Xml.Linq;
 
 namespace ROH.Test.Version;
 
@@ -257,7 +255,7 @@ public class GameVersionFileServiceTest
             Content = [1, 2, 3],
             GameVersion = new GameVersionModel() { Guid = testGuid }
         };
-        GameVersion gameVersion = new(VersionDate: DateTime.Now.AddDays(1), Guid: testGuid);
+        GameVersion gameVersion = new(VersionDate: DateTime.UtcNow.AddDays(1), Guid: testGuid);
         GameVersionFile versionFile = new() { GuidVersion = gameVersion.Guid };
 
         _mockMapper.Setup(mapper => mapper.Map<GameVersionFile>(fileModel)).Returns(versionFile);
@@ -273,9 +271,8 @@ public class GameVersionFileServiceTest
                 new VersionServiceApi.DefaultResponse()
                 {
                     ObjectResponse =
-                        (new GameVersion(VersionDate: DateTime.Now.AddDays(2)) { Released = true }).ToJson()
+                        new GameVersion(VersionDate: DateTime.UtcNow.AddDays(2)) { Released = true }.ToJson()
                 });
-
 
         // Act
         DefaultResponse result = await _service.NewFileAsync(fileModel, CancellationToken.None).ConfigureAwait(true);
@@ -297,7 +294,7 @@ public class GameVersionFileServiceTest
             Content = [1, 2, 3],
             GameVersion = null
         };
-        GameVersion gameVersion = new(VersionDate: DateTime.Now.AddDays(1), Guid: Guid.NewGuid());
+        GameVersion gameVersion = new(VersionDate: DateTime.UtcNow.AddDays(1), Guid: Guid.NewGuid());
         GameVersionFile versionFile = new() { GuidVersion = gameVersion.Guid };
 
         _mockMapper.Setup(mapper => mapper.Map<GameVersionFile>(fileModel)).Returns(versionFile);
@@ -331,9 +328,9 @@ public class GameVersionFileServiceTest
         GameVersionFileModel fileModel = new()
         {
             Content = [1, 2, 3],
-            GameVersion = new GameVersionModel() { Guid = testGuid, VersionDate = DateTime.Now.AddDays(2) }
+            GameVersion = new GameVersionModel() { Guid = testGuid, VersionDate = DateTime.UtcNow.AddDays(2) }
         };
-        GameVersion gameVersion = new(VersionDate: DateTime.Now.AddDays(1), Guid: testGuid);
+        GameVersion gameVersion = new(VersionDate: DateTime.UtcNow.AddDays(1), Guid: testGuid);
         GameVersionFile versionFile = new() { GuidVersion = gameVersion.Guid };
 
         _mockValidator.Setup(validator => validator.ValidateAsync(fileModel, default))
@@ -391,7 +388,7 @@ public class GameVersionFileServiceTest
             Content = [1, 2, 3],
             GameVersion = new GameVersionModel() { Guid = Guid.NewGuid() }
         };
-        GameVersion gameVersion = new(VersionDate: DateTime.Now.AddDays(1), Guid: Guid.NewGuid());
+        GameVersion gameVersion = new(VersionDate: DateTime.UtcNow.AddDays(1), Guid: Guid.NewGuid());
         GameVersionFile versionFile = new() { GuidVersion = gameVersion.Guid };
 
         _mockMapper.Setup(mapper => mapper.Map<GameVersionFile>(fileModel)).Returns(versionFile);
@@ -422,7 +419,7 @@ public class GameVersionFileServiceTest
             Content = [1, 2, 3],
             GameVersion = new GameVersionModel() { Guid = testGuid, Released = true }
         };
-        GameVersion gameVersion = new(VersionDate: DateTime.Now.AddDays(1), Guid: testGuid) { Released = true };
+        GameVersion gameVersion = new(VersionDate: DateTime.UtcNow.AddDays(1), Guid: testGuid) { Released = true };
         GameVersionFile versionFile = new() { GuidVersion = gameVersion.Guid };
 
         _mockMapper.Setup(mapper => mapper.Map<GameVersionFile>(fileModel)).Returns(versionFile);

@@ -14,6 +14,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Database\ROH.Context.Account\ROH.Context.Account.csproj" />
     <ProjectReference Include="..\..\Database\ROH.Context.File\ROH.Context.File.csproj" />
+    <ProjectReference Include="..\..\Database\ROH.Context.Item\ROH.Context.Item.csproj" />
+    <ProjectReference Include="..\..\Database\ROH.Context.Player\ROH.Context.Player.csproj" />
     <ProjectReference Include="..\..\Database\ROH.Context.Version\ROH.Context.Version.csproj" />
     <ProjectReference Include="..\ROH.StandardModels\ROH.StandardModels.csproj" />
   </ItemGroup>

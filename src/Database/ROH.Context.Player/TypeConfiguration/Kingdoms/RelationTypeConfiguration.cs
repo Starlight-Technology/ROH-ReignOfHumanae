@@ -15,11 +15,16 @@ public class RelationTypeConfiguration : IEntityTypeConfiguration<KingdomRelatio
 {
     public void Configure(EntityTypeBuilder<KingdomRelation> builder)
     {
-        _ = builder.HasKey(k => k.Id);
+        builder.HasKey(k => k.Id);
 
-        _ = builder.HasOne(k => k.Kingdom).WithMany(k => k.KingdomRelations).HasForeignKey(k => k.IdKingdom);
-        _ = builder.Ignore(k => k.Kingdom);
+        builder.HasOne(k => k.SourceKingdom)
+            .WithMany(k => k.OutgoingRelations)
+            .HasForeignKey(k => k.IdKingdom)
+            .OnDelete(DeleteBehavior.Restrict);
 
-        _ = builder.HasOne(k => k.Kingdom2).WithMany(k => k.KingdomRelations).HasForeignKey(k => k.IdKingdom2);
+        builder.HasOne(k => k.TargetKingdom)
+            .WithMany(k => k.IncomingRelations)
+            .HasForeignKey(k => k.IdKingdom2)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

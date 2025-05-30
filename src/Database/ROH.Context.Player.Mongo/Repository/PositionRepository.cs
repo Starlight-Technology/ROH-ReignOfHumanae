@@ -1,31 +1,28 @@
 ﻿using MongoDB.Driver;
 
 using ROH.Context.Player.Mongo.Entities;
+using ROH.Context.Player.Mongo.Interface;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Numerics;
 
 namespace ROH.Context.Player.Mongo.Repository;
-public class PositionRepository
+
+public class PositionRepository(IPlayerMongoContext context) : IPositionRepository
 {
-    private readonly IMongoCollection<PlayerPosition> _collection;
+    private readonly IMongoCollection<PlayerPosition> _collection = context.PlayerPositionCollection;
 
-    public PositionRepository(PlayerMongoContext context)
+    public async Task SavePlayerPositionAsync(PlayerPosition data, CancellationToken cancellationToken = default)
     {
-        _collection = context.PlayerPositionCollection;
+        await _collection.ReplaceOneAsync(
+        filter: Builders<PlayerPosition>.Filter.Eq(p => p.PlayerId, data.PlayerId),
+        replacement: data,
+        options: new ReplaceOptions { IsUpsert = true },
+        cancellationToken: cancellationToken).ConfigureAwait(false);
+
     }
 
-    public async Task SavePlayerPosition(PlayerPosition data)
+    public async Task<List<PlayerPosition>> GetAllPlayersAsync(CancellationToken cancellationToken = default)
     {
-        await _collection.InsertOneAsync(data);
+        return await _collection.Find(_ => true).ToListAsync(cancellationToken).ConfigureAwait(true);
     }
-
-    public async Task<List<PlayerPosition>> GetAllPlayers()
-    {
-        return await _collection.Find(_ => true).ToListAsync();
-    }
-
 }

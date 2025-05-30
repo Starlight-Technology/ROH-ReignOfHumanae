@@ -5,10 +5,19 @@
 // </copyright>
 //-----------------------------------------------------------------------
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
+using ROH.Gateway.Grpc.Player;
+using ROH.Protos.Player;
+using ROH.Utils.ApiConfiguration;
+
+using System.Collections.Generic;
 using System.Text;
+
+using static ROH.Protos.Player.PlayerService;
+using static ROH.Utils.ApiConfiguration.ApiConfigReader;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -72,11 +81,41 @@ builder.WebHost
     .ConfigureKestrel(
         options =>
         {
-            options.ListenAnyIP(9001);
             options.Limits.MaxRequestBodySize = null;
+            options.ListenAnyIP
+                (
+                    9001,
+                    listenOptions =>
+                    {
+                        listenOptions.Protocols = HttpProtocols.Http1; // Supports both protocols
+                    }
+                );
+            options.ListenAnyIP
+                (
+                    9002,
+                    listenOptions =>
+                    {
+                        listenOptions.Protocols = HttpProtocols.Http2;
+                    }
+                );
         });
+builder.Services.AddGrpc();
+
+builder.Services.AddGrpcClient<ROH.Protos.Player.PlayerService.PlayerServiceClient>(o =>
+{
+    if (Api._apiUrl.TryGetValue(ApiUrl.PlayerSavePosition, out var grpcUri))
+    {
+        o.Address = grpcUri;
+    }
+    else
+    {
+        throw new InvalidOperationException("URL para PlayerGrpc não encontrada na configuração.");
+    }
+});
 
 WebApplication app = builder.Build();
+
+app.MapGrpcService<PlayerServiceForwarder>();
 
 app.UseSwagger();
 app.UseSwaggerUI();

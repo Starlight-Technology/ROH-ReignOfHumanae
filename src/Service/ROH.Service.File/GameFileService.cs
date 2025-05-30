@@ -17,7 +17,7 @@ namespace ROH.Service.File;
 
 public class GameFileService(IGameFileRepository gameFileRepository, IExceptionHandler exceptionHandler) : IGameFileService
 {
-    private async Task<DefaultResponse> GetGameFileAsync(GameFile gameFile, CancellationToken cancellationToken = default)
+    async Task<DefaultResponse> GetGameFileAsync(GameFile gameFile, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -28,7 +28,9 @@ public class GameFileService(IGameFileRepository gameFileRepository, IExceptionH
 
             if (System.IO.File.Exists(filePath))
             {
-                byte[] fileContent = await System.IO.File.ReadAllBytesAsync(filePath, cancellationToken).ConfigureAwait(true);
+                byte[] fileContent = await System.IO.File
+                    .ReadAllBytesAsync(filePath, cancellationToken)
+                    .ConfigureAwait(true);
 
                 return new DefaultResponse(
                     new GameFileModel(
@@ -56,9 +58,9 @@ public class GameFileService(IGameFileRepository gameFileRepository, IExceptionH
         {
             GameFile? file = await gameFileRepository.GetFileAsync(fileGuid, cancellationToken).ConfigureAwait(true);
 
-            return file is null
-                ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File Not Found.")
-                : await GetGameFileAsync(file, cancellationToken).ConfigureAwait(true);
+            return (file is null)
+                ? (new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File Not Found."))
+                : (await GetGameFileAsync(file, cancellationToken).ConfigureAwait(true));
         }
         catch (System.Exception ex)
         {
@@ -72,9 +74,9 @@ public class GameFileService(IGameFileRepository gameFileRepository, IExceptionH
         {
             GameFile? file = await gameFileRepository.GetFileAsync(id, cancellationToken).ConfigureAwait(true);
 
-            return file is null
-                ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File Not Found.")
-                : await GetGameFileAsync(file, cancellationToken).ConfigureAwait(true);
+            return (file is null)
+                ? (new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File Not Found."))
+                : (await GetGameFileAsync(file, cancellationToken).ConfigureAwait(true));
         }
         catch (System.Exception ex)
         {
@@ -82,7 +84,9 @@ public class GameFileService(IGameFileRepository gameFileRepository, IExceptionH
         }
     }
 
-    public async Task<DefaultResponse> MakeFileHasDeprecatedAsync(Guid fileGuid, CancellationToken cancellationToken = default)
+    public async Task<DefaultResponse> MakeFileHasDeprecatedAsync(
+        Guid fileGuid,
+        CancellationToken cancellationToken = default)
     {
         try
         {
