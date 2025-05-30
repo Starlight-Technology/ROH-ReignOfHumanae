@@ -15,6 +15,8 @@ namespace Assets.Scripts.Models.Configuration
     {
         public string ServerUrl;
 
+        public string ServerUrlGrpc;
+
         public string JwToken;
 
         public GameVersionModel LocalVersion;

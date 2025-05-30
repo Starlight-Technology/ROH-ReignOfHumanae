@@ -42,6 +42,7 @@ namespace Assets.Scripts.Player
 
         void Update()
         {
+            float speed = 0;
             float moveX = Input.GetAxis("Horizontal");
             float moveZ = Input.GetAxis("Vertical");
             bool jumpPressed = Input.GetButton("Jump");
@@ -51,12 +52,12 @@ namespace Assets.Scripts.Player
             isGrounded = controller.isGrounded;
 
             // Alternar modo de voo (tecla V)
-            if (Input.GetKeyDown(KeyCode.V))
-            {
-                isFlying = !isFlying;
-                currentMode = isFlying ? MovementMode.Flying : (inWater ? MovementMode.Swimming : MovementMode.Ground);
-                animator.SetBool("IsFlying", isFlying);
-            }
+            //if (Input.GetKeyDown(KeyCode.V))
+            //{
+            //    isFlying = !isFlying;
+            //    currentMode = isFlying ? MovementMode.Flying : (inWater ? MovementMode.Swimming : MovementMode.Ground);
+            //    animator.SetBool("IsFlying", isFlying);
+            //}
 
             // Alternar animações com base no modo
             animator.SetBool("IsSwimming", currentMode == MovementMode.Swimming);
@@ -73,14 +74,16 @@ namespace Assets.Scripts.Player
                     yVelocity = 0f;
 
                 animator.SetFloat("SwimVerticalSpeed", math.abs(yVelocity));
+                if (!usingManualInput)
+                    animator.SetFloat("Speed", 0);
             }
 
             // Se estiver voando
             if (currentMode == MovementMode.Flying)
             {
                 float flyY = 0f;
-                if (Input.GetKey(KeyCode.E)) flyY = 1f;
-                else if (Input.GetKey(KeyCode.Q)) flyY = -1f;
+                if (Input.GetKey(KeyCode.E)) flyY = 5f;
+                else if (Input.GetKey(KeyCode.Q)) flyY = -5f;
 
                 Vector3 flyDir = new Vector3(moveX, flyY, moveZ);
                 MoveCharacter(flyDir, flySpeed);
@@ -88,10 +91,31 @@ namespace Assets.Scripts.Player
                 return;
             }
 
+            if (currentMode == MovementMode.Ground && isGrounded && !usingManualInput)
+            {
+                animator.SetFloat("Speed", 0);
+                agent.enabled = true;
+            }
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+                if (Physics.Raycast(ray, out RaycastHit hit))
+                {
+                    agent.SetDestination(hit.point);
+                }
+                agent.isStopped = false;
+            }
+
+
             // Se input manual
             if (usingManualInput)
             {
-                MoveCharacter(new Vector3(moveX, 0, moveZ), Input.GetKey(KeyCode.LeftShift) ? runSpeed : moveSpeed);
+                MoveCharacter(new Vector3(moveX, 0, moveZ), WalkingOrRun(moveSpeed, runSpeed));
+
+                // Atualiza velocidade para animação
+                speed = new Vector2(moveX, moveZ).magnitude;
+                animator.SetFloat("Speed", speed < 0.1 ? 0 : WalkingOrRun());
 
                 if (agent.enabled && isGrounded)
                 {
@@ -99,6 +123,8 @@ namespace Assets.Scripts.Player
                     agent.nextPosition = transform.position;
                 }
             }
+
+
             // Movimento automático via agent
             else if (agent.enabled && !agent.isStopped && agent.hasPath)
             {
@@ -108,6 +134,17 @@ namespace Assets.Scripts.Player
                 RotateTowards(agent.desiredVelocity);
                 agent.nextPosition = transform.position;
             }
+
+            if (!usingManualInput && agent.enabled)
+            {
+                bool isAgentStopped = agent.isStopped || !agent.hasPath || agent.remainingDistance <= agent.stoppingDistance;
+
+                if (isAgentStopped)
+                    animator.SetFloat("Speed", 0);
+                else
+                    animator.SetFloat("Speed", WalkingOrRun());
+            }
+
 
             // Pular no modo terrestre
             if (jumpPressed && isGrounded && currentMode == MovementMode.Ground)
@@ -126,13 +163,11 @@ namespace Assets.Scripts.Player
             if (isGrounded && yVelocity < 0.1f)
                 animator.SetBool("IsJumping", false);
 
-            // Atualiza velocidade para animação
-            float speed = new Vector2(moveX, moveZ).magnitude;
-            animator.SetFloat("Speed", speed < 0.1 ? 0 : Input.GetKey(KeyCode.LeftShift) ? runSpeed : moveSpeed);
-
             if (agent.enabled)
                 CheckAgentRecovery();
         }
+
+        private static float WalkingOrRun(float walking = 0.5f, float running = 1f) => Input.GetKey(KeyCode.LeftShift) ? running : walking;
 
         void MoveCharacter(Vector3 inputDir, float speed)
         {
@@ -146,6 +181,7 @@ namespace Assets.Scripts.Player
 
             Vector3 finalMove = (moveDir * speed + Vector3.up * vertical * speed + Vector3.up * yVelocity);
             controller.Move(finalMove * Time.deltaTime);
+
         }
 
         void RotateTowards(Vector3 direction)

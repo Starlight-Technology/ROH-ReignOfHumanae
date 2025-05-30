@@ -21,6 +21,7 @@ namespace Assets.Scripts.Configurations
             ConfigurationModel config = DataManager.LoadData<ConfigurationModel>(DataManager.configurationPath) ??
                 new ConfigurationModel();
             config.ServerUrl ??= "http://localhost:9001";
+            config.ServerUrlGrpc ??= "localhost:9002";
 
             DataManager.SaveData<ConfigurationModel>(config, DataManager.configurationPath);
 

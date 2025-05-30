@@ -4,89 +4,56 @@ namespace Assets.Scripts.Player
 {
     public class CameraMovements : MonoBehaviour
     {
-        public Vector3 offset;
+        public Vector3 offset = new Vector3(0, 2f, 0);
         public float sensitivity = 100f;
         public float zoomSpeed = 4f;
-        public float minZoom = -15f;
+        public float minZoom = 2f;
         public float maxZoom = 15f;
         public float pitchMin = -20f;
         public float pitchMax = 60f;
 
         public Transform player;
+        public LayerMask collisionMask;
+
         private float currentZoom = 10f;
-        private float initialMouseX;
-        private float initialMouseY;
-        private float pitch = 0f;
-        private bool isRotating = false;
-
-        void Start()
-        {
-            if (player == null)
-            {
-                Debug.LogError("Player not found! Make sure the camera is a child of the player.");
-            }
-        }
-
-        void Update()
-        {
-            Zoom();
-            Rotate();
-        }
+        private float pitch = 20f;
+        private float yaw = 0f;
 
         void LateUpdate()
         {
-            if (player != null)
-            {
-                // Calculate desired position based on offset and zoom
-                Vector3 desiredPosition = player.position - transform.forward * currentZoom + Vector3.up * offset.y;
-                transform.position = desiredPosition;
+            if (player == null) return;
 
-                transform.LookAt(player.position + Vector3.up * offset.y);
-            }
-        }
-
-        void Zoom()
-        {
+            // Zoom
             float scroll = Input.GetAxis("Mouse ScrollWheel");
             currentZoom -= scroll * zoomSpeed;
             currentZoom = Mathf.Clamp(currentZoom, minZoom, maxZoom);
-        }
 
-        void Rotate()
-        {
-            if (Input.GetMouseButtonDown(1)) // Right mouse button pressed
+            // Rotation input
+            if (Input.GetMouseButton(1))
             {
-                initialMouseX = Input.mousePosition.x;
-                initialMouseY = Input.mousePosition.y;
-                isRotating = true;
+                yaw += Input.GetAxis("Mouse X") * sensitivity * Time.deltaTime;
+                pitch -= Input.GetAxis("Mouse Y") * sensitivity * Time.deltaTime;
+                pitch = Mathf.Clamp(pitch, pitchMin, pitchMax);
             }
 
-            if (Input.GetMouseButton(1) && isRotating) // Right mouse button held down
+            // Calculate desired camera direction and position
+            Quaternion rotation = Quaternion.Euler(pitch, yaw, 0);
+            Vector3 desiredCameraDir = rotation * Vector3.back;
+            Vector3 targetPosition = player.position + offset;
+            Vector3 desiredPosition = targetPosition + desiredCameraDir * currentZoom;
+
+            // Collision check (raycast from target to camera)
+            RaycastHit hit;
+            float adjustedZoom = currentZoom;
+            if (Physics.Raycast(targetPosition, desiredCameraDir, out hit, currentZoom, collisionMask))
             {
-                float currentMouseX = Input.mousePosition.x;
-                float currentMouseY = Input.mousePosition.y;
-                float xDelta = currentMouseX - initialMouseX;
-                float yDelta = initialMouseY - currentMouseY; // Invert Y for natural pitch control
-
-                float rotationAmountX = xDelta * sensitivity * Time.deltaTime;
-                float rotationAmountY = yDelta * sensitivity * Time.deltaTime;
-
-                // Rotate around the player's local Y axis (yaw)
-                transform.RotateAround(player.position, player.up, rotationAmountX);
-
-                // Rotate around the player's local X axis (pitch)
-                transform.RotateAround(player.position, transform.right, rotationAmountY);
-
-                pitch = Mathf.Clamp(pitch - yDelta * sensitivity * Time.deltaTime, pitchMin, pitchMax); // Clamp the pitch angle
-
-                initialMouseX = currentMouseX; // Update initialMouseX to allow continuous rotation
-                initialMouseY = currentMouseY; // Update initialMouseY to allow continuous rotation
+                adjustedZoom = hit.distance - 0.1f;
+                adjustedZoom = Mathf.Clamp(adjustedZoom, minZoom, maxZoom);
+                desiredPosition = targetPosition + desiredCameraDir * adjustedZoom;
             }
 
-            if (Input.GetMouseButtonUp(1)) // Right mouse button released
-            {
-                isRotating = false;
-            }
+            transform.position = desiredPosition;
+            transform.LookAt(targetPosition);
         }
     }
 }
