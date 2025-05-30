@@ -19,7 +19,8 @@ namespace Assets.Scripts.PopUp
             PopupPanel.SetActive(false);
         }
 
-        public static bool QuestionNo() => false; public static bool QuestionYes() => true;
+        public static bool QuestionNo() => false;
+        public static bool QuestionYes() => true;
 
     }
 }

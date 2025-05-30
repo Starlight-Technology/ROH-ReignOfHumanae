@@ -9,7 +9,6 @@ namespace ROH.Context.Player.Entities.Kingdoms;
 
 public record KingdomRelation(long Id, long IdKingdom, long IdKingdom2, Situation Situation)
 {
-    public virtual Kingdom? Kingdom { get; set; }
-
-    public virtual Kingdom? Kingdom2 { get; set; }
+    public virtual Kingdom? SourceKingdom { get; set; }
+    public virtual Kingdom? TargetKingdom { get; set; }
 }

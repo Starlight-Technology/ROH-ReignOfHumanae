@@ -3,17 +3,18 @@
 using ROH.Context.Player.Entities.Characters;
 using ROH.Context.Player.Entities.Guilds;
 using ROH.Context.Player.Entities.Kingdoms;
+using ROH.Context.Player.Interface;
 using ROH.Context.Player.TypeConfiguration.Characters;
 using ROH.Context.Player.TypeConfiguration.Guilds;
 using ROH.Context.Player.TypeConfiguration.Kingdoms;
 
 namespace ROH.Context.Player;
 
-public class PlayerContext : DbContext
+public class PlayerContext : DbContext, IPlayerContext
 {
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        string? connectionString = Environment.GetEnvironmentVariable("ROH_DATABASE_CONNECTION_STRING_PLAYER");
+        string? connectionString = "Host=192.168.0.65;Port=5432;Database=ROH.PLAYER;Username=postgres;Password=postgres123;";
         _ = optionsBuilder.UseNpgsql(connectionString);
     }
 
@@ -33,6 +34,9 @@ public class PlayerContext : DbContext
         _ = modelBuilder.ApplyConfiguration(new ChampionTypeConfiguration());
         _ = modelBuilder.ApplyConfiguration(new KingdomTypeConfiguration());
         _ = modelBuilder.ApplyConfiguration(new RelationTypeConfiguration());
+        _ = modelBuilder.ApplyConfiguration(new PlayerPositionTypeConfiguration());
+        _ = modelBuilder.ApplyConfiguration(new PositionTypeConfiguration());
+        _ = modelBuilder.ApplyConfiguration(new RotationTypeConfiguration());
 
         base.OnModelCreating(modelBuilder);
     }
@@ -66,4 +70,10 @@ public class PlayerContext : DbContext
     public DbSet<Skill> Skills { get; set; }
 
     public DbSet<Status> Statuses { get; set; }
+
+    public DbSet<PlayerPosition> PlayersPosition { get; set; }
+
+    public DbSet<Player.Entities.Characters.Position> Positions { get; set; }
+
+    public DbSet<Rotation> Rotations { get; set; }
 }

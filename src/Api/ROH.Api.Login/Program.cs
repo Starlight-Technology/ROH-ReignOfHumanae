@@ -56,22 +56,23 @@ MapperConfiguration mappingConfig = new(
 IMapper mapper = mappingConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
-builder.WebHost.ConfigureKestrel(options =>
-    {
-        options.ListenAnyIP(
-            9103,
-            listenOptions =>
-            {
-                listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
-            });
-        options.ListenAnyIP(
-            9203,
-            listenOptions =>
-            {
-                listenOptions.Protocols = HttpProtocols.Http2;
-            });
-    });
-
+builder.WebHost
+    .ConfigureKestrel(
+        options =>
+        {
+            options.ListenAnyIP(
+                9103,
+                listenOptions =>
+                {
+                    listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
+                });
+            options.ListenAnyIP(
+                9203,
+                listenOptions =>
+                {
+                    listenOptions.Protocols = HttpProtocols.Http2;
+                });
+        });
 
 WebApplication app = builder.Build();
 

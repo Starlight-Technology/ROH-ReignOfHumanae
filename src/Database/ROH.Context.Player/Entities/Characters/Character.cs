@@ -7,32 +7,22 @@
 using ROH.Context.Player.Entities.Guilds;
 using ROH.Context.Player.Entities.Kingdoms;
 
-using System.Diagnostics.CodeAnalysis;
-
 namespace ROH.Context.Player.Entities.Characters;
-
-public record Character(long Id, long IdAccount, long? IdGuild, long IdKingdom, Guid Guid, string? Name, Race Race)
+/// <summary>
+/// 
+/// </summary>
+/// <param name="Id"></param>
+/// <param name="GuidAccount"></param> use GUID from User not account, temporary
+/// <param name="IdGuild"></param>
+/// <param name="IdKingdom"></param>
+/// <param name="Guid"></param>
+/// <param name="Name"></param>
+/// <param name="Race"></param>
+public record Character(long Id, Guid GuidAccount, long? IdGuild, long? IdKingdom, Guid Guid, string? Name, Race Race)
 {
-    private DateTime dateCreated;
-
-    public Character(
-        long id,
-        long idAccount,
-        long? idGuild,
-        long idKingdom,
-        Guid guid,
-        string? name,
-        Race race,
-        DateTime dateCreated) : this(id, idAccount, idGuild, idKingdom, guid, name, race) => this.dateCreated =
-        dateCreated;
+    public DateTime DateCreated { get; set; } = DateTime.UtcNow;
 
     public virtual AttackStatus? AttackStatus { get; set; }
-
-    [SuppressMessage(
-        "Blocker Code Smell",
-        "S3237:\"value\" parameters should be used",
-        Justification = "<Is defined on set.>")]
-    public DateTime DateCreated { get => dateCreated; private set => dateCreated = DateTime.Now; }
 
     public virtual DefenseStatus? DefenseStatus { get; set; }
 
@@ -47,4 +37,6 @@ public record Character(long Id, long IdAccount, long? IdGuild, long IdKingdom, 
     public virtual ICollection<CharacterSkill>? Skills { get; set; }
 
     public virtual Status? Status { get; set; }
+
+    public virtual PlayerPosition? PlayerPosition { get; set; }
 }

@@ -1,4 +1,10 @@
-﻿using Grpc.Core;
+﻿//-----------------------------------------------------------------------
+// <copyright file="VersionServiceImplementation.cs" company="">
+//     Author:  
+//     Copyright (c) . All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using Grpc.Core;
 
 using ROH.Service.Version.Interface;
 using ROH.Utils.Helpers;
@@ -9,7 +15,7 @@ using VersionServiceApi;
 
 namespace ROH.Api.Version.Services;
 
-public class VersionServiceImplementation(IGameVersionService service) : VersionServiceApi.GameVersionService.GameVersionServiceBase
+public class VersionServiceImplementation(IGameVersionService service) : GameVersionService.GameVersionServiceBase
 {
     public override async Task<DefaultResponse> GetCurrentVersion(Empty request, ServerCallContext context)
     {
@@ -17,9 +23,10 @@ public class VersionServiceImplementation(IGameVersionService service) : Version
         {
             ArgumentNullException.ThrowIfNull(request);
 
-            var currentVersion = await service.GetCurrentVersionAsync().ConfigureAwait(true);
+            StandardModels.Response.DefaultResponse currentVersion = await service.GetCurrentVersionAsync()
+                .ConfigureAwait(true);
 
-            return new DefaultResponse()
+            return new DefaultResponse
             {
                 Message = currentVersion.Message,
                 StatusCode = (int)currentVersion.HttpStatus,
@@ -28,17 +35,15 @@ public class VersionServiceImplementation(IGameVersionService service) : Version
         }
         catch (Exception ex)
         {
-            return new DefaultResponse()
-            {
-                Message = ex.Message,
-                StatusCode = (int)HttpStatusCode.BadRequest
-            };
+            return new DefaultResponse { Message = ex.Message, StatusCode = (int)HttpStatusCode.BadRequest };
         }
     }
 
-    public override async Task<BooleanResponse> VerifyIfVersionExist(VersionServiceApi.Guid request, ServerCallContext context)
+    public override async Task<BooleanResponse> VerifyIfVersionExist(
+        VersionServiceApi.Guid request,
+        ServerCallContext context)
     {
-        var response = await service.VerifyIfVersionExistAsync(request.Guid_).ConfigureAwait(true);
+        bool response = await service.VerifyIfVersionExistAsync(request.Guid_).ConfigureAwait(true);
 
         return new BooleanResponse { Result = response };
     }

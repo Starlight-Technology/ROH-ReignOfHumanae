@@ -9,7 +9,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{A92ECAAB-BAC2-0858-4DFD-D6E0FBAC429B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -55,163 +56,174 @@
     <UnityVersion>6000.0.41f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Analyzer Include="Assets\Plugins\Grpc\Google.Protobuf.dll" />
+    <Analyzer Include="Assets\Plugins\Grpc\Grpc.Core.dll" />
+    <Analyzer Include="Assets\Plugins\Grpc\System.Interactive.Async.dll" />
     <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Preview\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.0.41f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.SourceGenerators.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.0.41f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.0.41f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
-    <Analyzer Include="C:\Users\rodri\OneDrive\StarLight\Projetos\MMORPG\ROH\src\Unity\ReignOfHumanae.Unity\Library\PackageCache\com.unity.entities@732b1f537003\Unity.Entities\SourceGenerators\AspectGenerator.dll" />
-    <Analyzer Include="C:\Users\rodri\OneDrive\StarLight\Projetos\MMORPG\ROH\src\Unity\ReignOfHumanae.Unity\Library\PackageCache\com.unity.entities@732b1f537003\Unity.Entities\SourceGenerators\JobEntityGenerator.dll" />
-    <Analyzer Include="C:\Users\rodri\OneDrive\StarLight\Projetos\MMORPG\ROH\src\Unity\ReignOfHumanae.Unity\Library\PackageCache\com.unity.entities@732b1f537003\Unity.Entities\SourceGenerators\SystemGenerator.dll" />
-    <Analyzer Include="C:\Users\rodri\OneDrive\StarLight\Projetos\MMORPG\ROH\src\Unity\ReignOfHumanae.Unity\Library\PackageCache\com.unity.entities@732b1f537003\Unity.Entities\SourceGenerators\Unity.Entities.Analyzer.dll" />
-    <Analyzer Include="C:\Users\rodri\OneDrive\StarLight\Projetos\MMORPG\ROH\src\Unity\ReignOfHumanae.Unity\Library\PackageCache\com.unity.entities@732b1f537003\Unity.Entities\SourceGenerators\SystemGenerator.LambdaJobs.dll" />
-    <Analyzer Include="C:\Users\rodri\OneDrive\StarLight\Projetos\MMORPG\ROH\src\Unity\ReignOfHumanae.Unity\Library\PackageCache\com.unity.entities@732b1f537003\Unity.Entities\SourceGenerators\SystemGenerator.SystemAPI.QueryBuilder.dll" />
-    <Analyzer Include="C:\Users\rodri\OneDrive\StarLight\Projetos\MMORPG\ROH\src\Unity\ReignOfHumanae.Unity\Library\PackageCache\com.unity.entities@732b1f537003\Unity.Entities\SourceGenerators\SystemGenerator.SystemAPI.dll" />
-    <Analyzer Include="C:\Users\rodri\OneDrive\StarLight\Projetos\MMORPG\ROH\src\Unity\ReignOfHumanae.Unity\Library\PackageCache\com.unity.entities@732b1f537003\Unity.Entities\SourceGenerators\SystemGenerator.SystemAPI.Query.dll" />
-    <Analyzer Include="C:\Users\rodri\OneDrive\StarLight\Projetos\MMORPG\ROH\src\Unity\ReignOfHumanae.Unity\Library\PackageCache\com.unity.entities@732b1f537003\Unity.Entities\SourceGenerators\SystemGenerator.Common.dll" />
-    <Analyzer Include="C:\Users\rodri\OneDrive\StarLight\Projetos\MMORPG\ROH\src\Unity\ReignOfHumanae.Unity\Library\PackageCache\com.unity.entities@732b1f537003\Unity.Entities\SourceGenerators\Common.dll" />
-    <Analyzer Include="C:\Users\rodri\OneDrive\StarLight\Projetos\MMORPG\ROH\src\Unity\ReignOfHumanae.Unity\Library\PackageCache\com.unity.entities@732b1f537003\Unity.Entities\SourceGenerators\SystemGenerator.EntityQueryBulkOperations.dll" />
-    <Analyzer Include="C:\Users\rodri\OneDrive\StarLight\Projetos\MMORPG\ROH\src\Unity\ReignOfHumanae.Unity\Library\PackageCache\com.unity.entities@732b1f537003\Unity.Entities\SourceGenerators\Unity.Entities.Analyzer.CodeFixes.dll" />
+    <Analyzer Include="C:\Users\rodri\OneDrive\StarLight\Projetos\MMORPG\ROH\src\Unity\ReignOfHumanae.Unity\Library\PackageCache\com.unity.entities@e581b903be8e\Unity.Entities\SourceGenerators\AspectGenerator.dll" />
+    <Analyzer Include="C:\Users\rodri\OneDrive\StarLight\Projetos\MMORPG\ROH\src\Unity\ReignOfHumanae.Unity\Library\PackageCache\com.unity.entities@e581b903be8e\Unity.Entities\SourceGenerators\JobEntityGenerator.dll" />
+    <Analyzer Include="C:\Users\rodri\OneDrive\StarLight\Projetos\MMORPG\ROH\src\Unity\ReignOfHumanae.Unity\Library\PackageCache\com.unity.entities@e581b903be8e\Unity.Entities\SourceGenerators\SystemGenerator.dll" />
+    <Analyzer Include="C:\Users\rodri\OneDrive\StarLight\Projetos\MMORPG\ROH\src\Unity\ReignOfHumanae.Unity\Library\PackageCache\com.unity.entities@e581b903be8e\Unity.Entities\SourceGenerators\Unity.Entities.Analyzer.dll" />
+    <Analyzer Include="C:\Users\rodri\OneDrive\StarLight\Projetos\MMORPG\ROH\src\Unity\ReignOfHumanae.Unity\Library\PackageCache\com.unity.entities@e581b903be8e\Unity.Entities\SourceGenerators\SystemGenerator.LambdaJobs.dll" />
+    <Analyzer Include="C:\Users\rodri\OneDrive\StarLight\Projetos\MMORPG\ROH\src\Unity\ReignOfHumanae.Unity\Library\PackageCache\com.unity.entities@e581b903be8e\Unity.Entities\SourceGenerators\SystemGenerator.SystemAPI.QueryBuilder.dll" />
+    <Analyzer Include="C:\Users\rodri\OneDrive\StarLight\Projetos\MMORPG\ROH\src\Unity\ReignOfHumanae.Unity\Library\PackageCache\com.unity.entities@e581b903be8e\Unity.Entities\SourceGenerators\SystemGenerator.SystemAPI.dll" />
+    <Analyzer Include="C:\Users\rodri\OneDrive\StarLight\Projetos\MMORPG\ROH\src\Unity\ReignOfHumanae.Unity\Library\PackageCache\com.unity.entities@e581b903be8e\Unity.Entities\SourceGenerators\SystemGenerator.SystemAPI.Query.dll" />
+    <Analyzer Include="C:\Users\rodri\OneDrive\StarLight\Projetos\MMORPG\ROH\src\Unity\ReignOfHumanae.Unity\Library\PackageCache\com.unity.entities@e581b903be8e\Unity.Entities\SourceGenerators\SystemGenerator.Common.dll" />
+    <Analyzer Include="C:\Users\rodri\OneDrive\StarLight\Projetos\MMORPG\ROH\src\Unity\ReignOfHumanae.Unity\Library\PackageCache\com.unity.entities@e581b903be8e\Unity.Entities\SourceGenerators\Common.dll" />
+    <Analyzer Include="C:\Users\rodri\OneDrive\StarLight\Projetos\MMORPG\ROH\src\Unity\ReignOfHumanae.Unity\Library\PackageCache\com.unity.entities@e581b903be8e\Unity.Entities\SourceGenerators\SystemGenerator.EntityQueryBulkOperations.dll" />
+    <Analyzer Include="C:\Users\rodri\OneDrive\StarLight\Projetos\MMORPG\ROH\src\Unity\ReignOfHumanae.Unity\Library\PackageCache\com.unity.entities@e581b903be8e\Unity.Entities\SourceGenerators\Unity.Entities.Analyzer.CodeFixes.dll" />
     <Analyzer Include="C:\Users\rodri\OneDrive\StarLight\Projetos\MMORPG\ROH\src\Unity\ReignOfHumanae.Unity\Library\PackageCache\com.unity.muse.common@b7bfaecbfbef\ThirdParty\AppUI\Runtime\SourceGenerators\netstandard2.0\EnumToLowerCase.dll" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\ForestVision\Scripts\Tools\TreeCreator\FV_TreeTools.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventHandler.cs" />
+    <Compile Include="Assets\Scripts\Protos\PlayerPosition\PlayerPosition.cs" />
+    <Compile Include="Assets\Scripts\Protos\PlayerPosition\PlayerPositionGrpc.cs" />
+    <Compile Include="Assets\Scripts\Helpers\GameState.cs" />
+    <Compile Include="Assets\Scripts\Login\NewCharacter.cs" />
     <Compile Include="Assets\Scripts\Models\Configuration\ConfigurationModel.cs" />
+    <Compile Include="Assets\ExplosiveLLC\SuperCharacterController\SuperCharacterController\Core\SuperCollider.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerService.cs" />
     <Compile Include="Assets\Visual Design Cafe\Nature Renderer Demo\Scripts\OpenWebsiteButton.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark02.cs" />
+    <Compile Include="Assets\Scripts\Models\Character\CharacterInventory.cs" />
     <Compile Include="Assets\Scripts\Models\Version\GameVersionFileModel.cs" />
+    <Compile Include="Assets\ExplosiveLLC\SuperCharacterController\SuperCharacterController\Core\SuperCharacterController.cs" />
     <Compile Include="Assets\TerrainGenerator\Scripts\Maps\FalloffMap.cs" />
     <Compile Include="Assets\Scripts\Models\Account\UserModel.cs" />
+    <Compile Include="Assets\Scripts\Models\Character\PositionModel.cs" />
     <Compile Include="Assets\Scripts\Update\UpdateService.cs" />
+    <Compile Include="Assets\ExplosiveLLC\Warrior FREE\Code\WarriorInputSystemController.cs" />
     <Compile Include="Assets\Scripts\Player\ClickToMove.cs" />
     <Compile Include="Assets\EDEN_ErosionTools\Scripts\GPU\EDEN_ErosionTools.cs" />
-    <Compile Include="Assets\NeuralTerrainGeneration\Scripts\BicbubicUpSampler.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeB.cs" />
+    <Compile Include="Assets\ExplosiveLLC\Warrior FREE\Code\WarriorController.cs" />
     <Compile Include="Assets\Scripts\PopUp\PopUpService.cs" />
+    <Compile Include="Assets\ExplosiveLLC\SuperCharacterController\Code\PlayerInputController.cs" />
+    <Compile Include="Assets\ExplosiveLLC\Warrior FREE\Code\WarriorData.cs" />
     <Compile Include="Assets\EDEN_ErosionTools\Scripts\GPU\EDEN_Hydraulics.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexJitter.cs" />
+    <Compile Include="Assets\ExplosiveLLC\SuperCharacterController\Code\PlayerMachine.cs" />
     <Compile Include="Assets\Visual Design Cafe\Nature Renderer Demo\Scripts\CompileShaders.cs" />
-    <Compile Include="Assets\NeuralTerrainGeneration\Scripts\GaussianSmoother.cs" />
+    <Compile Include="Assets\ExplosiveLLC\SuperCharacterController\Code\Gravity.cs" />
     <Compile Include="Assets\EDEN_Painter\Scripts\EDEN_Terrain_Painter.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexZoom.cs" />
+    <Compile Include="Assets\ExplosiveLLC\SuperCharacterController\SuperCharacterController\DebugDraw.cs" />
     <Compile Include="Assets\TerrainGenerator\Scripts\Generators\GrassGenerator.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\SkewTextExample.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\WarpTextExample.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ShaderPropAnimator.cs" />
-    <Compile Include="Assets\NeuralTerrainGeneration\Scripts\NeuralTerrainGeneratorTool.cs" />
+    <Compile Include="Assets\ExplosiveLLC\SuperCharacterController\SuperCharacterController\Core\SuperMath.cs" />
+    <Compile Include="Assets\ExplosiveLLC\SuperCharacterController\SuperCharacterController\Core\BSPTree.cs" />
     <Compile Include="Assets\Visual Design Cafe\Nature Renderer\Runtime\NatureRenderer.SRP.cs" />
-    <Compile Include="Assets\NeuralTerrainGeneration\Scripts\DownSampler.cs" />
     <Compile Include="Assets\EDEN_Populator\Scripts\EDEN_Terrain_Populator.cs" />
     <Compile Include="Assets\TerrainGenerator\Scripts\Generators\TexturesGenerator.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeA.cs" />
+    <Compile Include="Assets\Scripts\Models\Character\CharacterSkill.cs" />
+    <Compile Include="Assets\Scripts\Models\Character\Status.cs" />
+    <Compile Include="Assets\ExplosiveLLC\Fighter Pack Bundle FREE\Demo Elements\Code\IKHands.cs" />
     <Compile Include="Assets\Scripts\Helpers\DefaultResponseHelper.cs" />
     <Compile Include="Assets\Scripts\Connection\Api\ApiLoginService.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01_UGUI.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\SimpleScript.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark04.cs" />
+    <Compile Include="Assets\Scripts\Models\Character\DefenseStatus.cs" />
+    <Compile Include="Assets\Scripts\Models\Character\PlayerPositionModel.cs" />
     <Compile Include="Assets\ForestVision\Scripts\Tools\TreeCreator\FV_SwitchMesh.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ChatController.cs" />
-    <Compile Include="Assets\NeuralTerrainGeneration\Scripts\Diffuser.cs" />
+    <Compile Include="Assets\Scripts\DayTime\DayNightCycleController.cs" />
     <Compile Include="Assets\Forst\CTI Runtime Components\CTI Runtime Components HDRP 12plus\Scripts\CTI_HDRP_CustomWind.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_FrameRateCounter.cs" />
-    <Compile Include="Assets\NeuralTerrainGeneration\Scripts\TensorMathHelper.cs" />
+    <Compile Include="Assets\Scripts\Models\Character\EffectType.cs" />
     <Compile Include="Assets\EDEN_Painter\Scripts\EDENTextureData.cs" />
+    <Compile Include="Assets\ExplosiveLLC\Fighter Pack Bundle FREE\Demo Elements\Code\FighterAnimationDemoFREE.cs" />
     <Compile Include="Assets\Scripts\Helpers\UnityMainThreadDispatcher.cs" />
-    <Compile Include="Assets\NeuralTerrainGeneration\Demo\Scripts\FirstPersonCharacterController.cs" />
+    <Compile Include="Assets\Idle MoCap\DemoScene\idle_mocap_follow_player.cs" />
+    <Compile Include="Assets\Scripts\Connection\Api\ApiCharacterService.cs" />
     <Compile Include="Assets\TerrainDemoScene_HDRP\Scripts\SceneAnnotation.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ObjectSpin.cs" />
     <Compile Include="Assets\Scripts\Helpers\ObjectPropertyGetter.cs" />
     <Compile Include="Assets\Scripts\Configurations\InitialConfiguration.cs" />
     <Compile Include="Assets\PalmTreePack\Offer\Asset_Store_Offers.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextConsoleSimulator.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TeleType.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
     <Compile Include="Assets\Scripts\Player\CameraMovements.cs" />
+    <Compile Include="Assets\ExplosiveLLC\Warrior FREE\Code\AnimatorParentMove.cs" />
     <Compile Include="Assets\Scripts\Connection\WebSocket.cs" />
     <Compile Include="Assets\TerrainDemoScene_HDRP\Scripts\TerrainTreeToggle.cs" />
-    <Compile Include="Assets\NeuralTerrainGeneration\Scripts\BarraUpSampler.cs" />
+    <Compile Include="Assets\ExplosiveLLC\Fighter Pack Bundle FREE\Demo Elements\Code\CrafterControllerFREE.cs" />
+    <Compile Include="Assets\Awesome Dog Mocap\Sample Dances\Demo\FlyCamera.cs" />
     <Compile Include="Assets\ForestVision\Scripts\Tools\FV_SwapMat.cs" />
+    <Compile Include="Assets\Scripts\Models\Character\Skill.cs" />
     <Compile Include="Assets\Visual Design Cafe\Nature Renderer Demo\Scripts\UseReferenceCamera.cs" />
-    <Compile Include="Assets\NeuralTerrainGeneration\Scripts\HeightmapGenerator.cs" />
     <Compile Include="Assets\Scripts\Models\Login\LoginModel.cs" />
     <Compile Include="Assets\Visual Design Cafe\Nature Renderer Demo\Scripts\CloneTerrain.cs" />
     <Compile Include="Assets\ForestVision\Scripts\FV_BranchRotation.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\EnvMapAnimator.cs" />
     <Compile Include="Assets\Scripts\Login\LoginService.cs" />
     <Compile Include="Assets\Forst\Lux Instant Vegetation\Core\Scripts\LuxInstantWind.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_A.cs" />
     <Compile Include="Assets\Visual Design Cafe\Nature Renderer Demo\Scripts\RuntimeEditing.cs" />
     <Compile Include="Assets\ForestVision\Scripts\FV_Wind.cs" />
     <Compile Include="Assets\Scripts\Connection\ApiConfiguration\ApiClient.cs" />
     <Compile Include="Assets\ForestVision\Scripts\Tools\TreeCreator\FV_Browser.cs" />
+    <Compile Include="Assets\Scripts\Login\CharacterListItem.cs" />
     <Compile Include="Assets\Scripts\Models\Response\PaginatedModel.cs" />
-    <Compile Include="Assets\NeuralTerrainGeneration\Demo\Scripts\ObjectRotator.cs" />
-    <Compile Include="Assets\NeuralTerrainGeneration\Scripts\NeighborBlender.cs" />
+    <Compile Include="Assets\ExplosiveLLC\SuperCharacterController\SuperCharacterController\Core\SuperCollisionType.cs" />
     <Compile Include="Assets\TreePackVol.1\Sample\LB_CameraMove.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerMovements.cs" />
     <Compile Include="Assets\Scripts\Helpers\DataManager.cs" />
+    <Compile Include="Assets\ExplosiveLLC\Fighter Pack Bundle FREE\Demo Elements\Code\SmoothFollow.cs" />
+    <Compile Include="Assets\ExplosiveLLC\SuperCharacterController\SuperCharacterController\Core\SuperStateMachine.cs" />
+    <Compile Include="Assets\ExplosiveLLC\Warrior FREE\Code\WarriorTiming.cs" />
+    <Compile Include="Assets\ExplosiveLLC\Warrior FREE\Code\IKHands.cs" />
     <Compile Include="Assets\TerrainGenerator\Scripts\Abstract\IGenerator.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_ExampleScript_01.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMPro_InstructionOverlay.cs" />
+    <Compile Include="Assets\Scripts\Models\Character\CharacterModel.cs" />
+    <Compile Include="Assets\ExplosiveLLC\SuperCharacterController\Code\PlayerMachineDebug.cs" />
+    <Compile Include="Assets\ExplosiveLLC\Warrior FREE\Code\WarriorInputController.cs" />
     <Compile Include="Assets\ForestVision\Scripts\Tools\FV_Tweaker.cs" />
+    <Compile Include="Assets\ExplosiveLLC\SuperCharacterController\SuperCharacterController\Math3d.cs" />
     <Compile Include="Assets\ForestVision\Scripts\Tools\TreeCreator\ExporterMenu.cs" />
+    <Compile Include="Assets\Mixamo\Magic Pack\Demo\CameraScroll.cs" />
+    <Compile Include="Assets\ExplosiveLLC\Fighter Pack Bundle FREE\Demo Elements\Code\CameraControl.cs" />
     <Compile Include="Assets\ForestVision\Scripts\Tools\TreeCreator\FV_Screenshots.cs" />
     <Compile Include="Assets\Waldemarst\Broccoli\Controller\BroccoTreeController_1_2_5.cs" />
     <Compile Include="Assets\ForestVision\Scripts\Tools\TreeCreator\Scripts\FV_Items.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_UiFrameRateCounter.cs" />
+    <Compile Include="Assets\Scripts\Models\Character\HandRing.cs" />
+    <Compile Include="Assets\DoubleL\Demo\DemoCameraController.cs" />
     <Compile Include="Assets\Scripts\Models\Response\DefaultResponse.cs" />
     <Compile Include="Assets\ForestVision\Scripts\Tools\TreeCreator\Scripts\FBXExporter.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_B.cs" />
-    <Compile Include="Assets\Mountain Terrain rocks and tree\Script\Camera\CameraControl.cs" />
+    <Compile Include="Assets\ExplosiveLLC\Warrior FREE\Code\WarriorAnimatorEvents.cs" />
     <Compile Include="Assets\TerrainGenerator\Scripts\Abstract\IMap.cs" />
     <Compile Include="Assets\Scripts\Models\Version\GameVersionModel.cs" />
-    <Compile Include="Assets\NeuralTerrainGeneration\Demo\Scripts\ObjectCycler.cs" />
+    <Compile Include="Assets\ExplosiveLLC\SuperCharacterController\Code\SimpleStateMachine.cs" />
     <Compile Include="Assets\ForestVision\Scripts\Tools\TreeCreator\Scripts\FBXUnityMaterialGetter.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />
+    <Compile Include="Assets\ExplosiveLLC\SuperCharacterController\Code\PlayerCamera.cs" />
+    <Compile Include="Assets\ExplosiveLLC\Demo Elements\Code\GUIControls.cs" />
     <Compile Include="Assets\Forst\Lux Instant Vegetation\Core\Scripts\LuxSyncWindSettings.cs" />
+    <Compile Include="Assets\Scripts\Models\Character\EquippedItems.cs" />
     <Compile Include="Assets\EDEN_ErosionTools\Scripts\GPU\EDEN_Wind.cs" />
     <Compile Include="Assets\ForestVision\Scripts\Tools\TreeCreator\FV_MenuItem.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_DigitValidator.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshSpawner.cs" />
     <Compile Include="Assets\Mountain Terrain rocks and tree\Script\Camera\FlyCameraControl.cs" />
     <Compile Include="Assets\ForestVision\Scripts\Tools\TreeCreator\FV_Renamer.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
+    <Compile Include="Assets\Scripts\Models\Character\RotationModel.cs" />
+    <Compile Include="Assets\Kevin Iglesias\Human Animations\Scripts\SpineProxy.cs" />
     <Compile Include="Assets\Scripts\Models\File\FileModel.cs" />
     <Compile Include="Assets\Visual Design Cafe\Nature Renderer Demo\Scripts\RenderPipelineLighting.cs" />
     <Compile Include="Assets\ForestVision\Scripts\Tools\TreeCreator\FV_Collapse.cs" />
+    <Compile Include="Assets\Scripts\Models\Character\Race.cs" />
+    <Compile Include="Assets\ExplosiveLLC\Warrior FREE\Code\WarriorMovementController.cs" />
     <Compile Include="Assets\Scripts\Models\Account\AccountModel.cs" />
+    <Compile Include="Assets\Scripts\Login\CharacterListUI.cs" />
     <Compile Include="Assets\TerrainGenerator\Scripts\Maps\PerlinMap.cs" />
     <Compile Include="Assets\TerrainGenerator\Scripts\Generators\TreeGenerator.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\DropdownSample.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexColorCycler.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_PhoneNumberValidator.cs" />
     <Compile Include="Assets\Scripts\TerrainHelper\TerrainConnector.cs" />
     <Compile Include="Assets\ForestVision\Scripts\Tools\TreeCreator\Scripts\FBXUnityMeshGetter.cs" />
-    <Compile Include="Assets\NeuralTerrainGeneration\Scripts\TerrainHelper.cs" />
-    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshProFloatingText.cs" />
+    <Compile Include="Assets\ExplosiveLLC\SuperCharacterController\SuperCharacterController\Core\BruteForceMesh.cs" />
     <Compile Include="Assets\ForestVision\Scripts\Tools\TreeCreator\FV_Tools.cs" />
+    <Compile Include="Assets\Scripts\Models\Character\AttackStatus.cs" />
     <Compile Include="Assets\TerrainGenerator\Scripts\Generators\HeightsGenerator.cs" />
     <Compile Include="Assets\Scripts\Connection\Api\ApiVersionService.cs" />
     <Compile Include="Assets\ForestVision\Scripts\Tools\TreeCreator\FV_Prefabber.cs" />
     <Compile Include="Assets\ForestVision\Scripts\Tools\TreeCreator\FV_edUtils.cs" />
+    <Compile Include="Assets\Martial Art Animations Sample\DisplayAnimation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\EDEN_ErosionTools\Scripts\GPU\ComputeShaders\EDEN_Hydraulics.compute" />
+    <None Include="Assets\Scripts\Protos\PlayerPosition\PlayerPosition.proto" />
     <None Include="Assets\TerrainDemoScene_HDRP\Notes\Stamps.txt" />
     <None Include="Assets\TerrainSampleAssets\ThirdPartyNotices.txt" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
     <None Include="Assets\EDEN_ErosionTools\EDEN_Documentation.txt" />
     <None Include="Assets\TerrainDemoScene_HDRP\Notes\FadeDistances.txt" />
     <None Include="Assets\TerrainDemoScene_HDRP\Notes\ImportingMaps.txt" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets\Visual Design Cafe\Nature Renderer\Plugins\VisualDesignCafe.Rendering.Nature.dll" />
     <None Include="Assets\TerrainDemoScene_HDRP\Notes\DiffusionProfiles.txt" />
     <None Include="Assets\Rocklynn Productions - Water Splash Pack\Read me.txt" />
     <None Include="Assets\Forst\Lux Instant Vegetation\Core\Shaders\Includes\URP Lighting.hlsl" />
-    <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Roboto-Bold - License.txt" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile-2-Pass.shader" />
     <None Include="Assets\UI Toolkit\Label.uxml" />
     <None Include="Assets\ALP_Assets\Big Oak Tree FREE\Shaders\Billboard_Instanced.shader" />
     <None Include="Assets\EDEN_ErosionTools\Scripts\GPU\ComputeShaders\EDEN_SmoothAndSharpen.compute" />
@@ -220,37 +232,31 @@
     <None Include="Assets\Visual Design Cafe\Nature Renderer Demo\Realistic\Third-Party Notices.txt" />
     <None Include="Assets\ForestVision\Scripts\Shaders\MobileSpecRim.shader" />
     <None Include="Assets\ForestVision\Scripts\Shaders\MobileWorldNormal.shader" />
-    <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Unity - OFL.txt" />
     <None Include="Assets\Visual Design Cafe\Nature Renderer\Resources\Nature Renderer Batcher.compute" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
     <None Include="Assets\ForestVision\Scripts\Shaders\ForestVision.shader" />
     <None Include="Assets\ALP_Assets\Big Oak Tree FREE\Shaders\ALP Billboard Cross Wind.shader" />
     <None Include="Assets\ForestVision\Scripts\Shaders\MobileRim.shader" />
-    <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Oswald-Bold - OFL.txt" />
-    <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Roboto-Bold - AFL.txt" />
     <None Include="Assets\Visual Design Cafe\Package Manager\VisualDesignCafe.Packages.dll" />
+    <None Include="Assets\BOXOPHOBIC\Utils\Shaders\Channel Preview.shader" />
     <None Include="Assets\Visual Design Cafe\Nature Renderer\Plugins\VisualDesignCafe.Rendering.Nature.Editor.dll" />
     <None Include="Assets\Visual Design Cafe\Nature Renderer Demo\Realistic\Shaders\Lit Simple HD.txt" />
-    <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Anton OFL.txt" />
     <None Include="Assets\ProceduralTerrainPainter\Shaders\Filters.hlsl" />
     <None Include="Assets\PalmTreePack\Shaders\Readme.txt" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
     <None Include="Assets\Visual Design Cafe\Nature Renderer\Plugins\VisualDesignCafe.Rendering.Instancing.Editor.dll" />
     <None Include="Assets\ForestVision\Scripts\Shaders\MobileSnow.shader" />
     <None Include="Assets\ForestVision\Scripts\Shaders\MobileBumpSpec.shader" />
     <None Include="Assets\Forst\Lux Instant Vegetation\Demo\Content\Shared\Sketchfab\Credits.txt" />
     <None Include="Assets\ForestVision\Scripts\Shaders\TrunkShader.shader" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
     <None Include="Assets\ForestVision\Scripts\Shaders\FV_Foliage.shader" />
     <None Include="Assets\TerrainDemoScene_HDRP\Scripts\Resources\SceneAnnotation.uxml" />
     <None Include="Assets\Forst\Lux Instant Vegetation\Core\Shaders\Includes\Utilities.hlsl" />
     <None Include="Assets\Forst\Conifers [BOTD]\Render Pipeline Support\HDRP\Known Issues.txt" />
+    <None Include="Assets\Frank_Mage\Documentation\Frank_Mage_Motion_List.txt" />
     <None Include="Assets\Visual Design Cafe\Package Manager\VisualDesignCafe.Editor.Community.dll" />
     <None Include="Assets\Coconut Palm Tree Pack\readme.txt" />
     <None Include="Assets\Visual Design Cafe\Nature Renderer\Resources\Nature Renderer VR.compute" />
     <None Include="Assets\Visual Design Cafe\Nature Renderer\Plugins\VisualDesignCafe.Memory.dll" />
     <None Include="Assets\ForestVision\Scripts\Shaders\MobileCrystal.shader" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
     <None Include="Assets\TerrainDemoScene_HDRP\Notes\Layers.txt" />
     <None Include="Assets\Visual Design Cafe\Nature Renderer Demo\Realistic\Shaders\Lit Alpha Built-in.txt" />
     <None Include="Assets\Forst\Lux Instant Vegetation\Core\Shaders\Includes\Debug.hlsl" />
@@ -259,7 +265,6 @@
     <None Include="Assets\ForestVision\Scripts\Shaders\MobileBlend.shader" />
     <None Include="Assets\EDEN_Populator\EDEN_DOCUMENTATION.txt" />
     <None Include="Assets\ForestVision\Scripts\Shaders\MobileFlat.shader" />
-    <None Include="Assets\TextMesh Pro\Shaders\SDFFunctions.hlsl" />
     <None Include="Assets\Visual Design Cafe\Nature Renderer\Resources\Nature Renderer Instancing.compute" />
     <None Include="Assets\ALP_Assets\Big Oak Tree FREE\Shaders\Billboard.shader" />
     <None Include="Assets\ForestVision\Documentation\ReadMe.txt" />
@@ -268,36 +273,28 @@
     <None Include="Assets\TerrainDemoScene_HDRP\Notes\Welcome.txt" />
     <None Include="Assets\ForestVision\Documentation\ForestVision 3_files\filelist.xml" />
     <None Include="Assets\EDEN_ErosionTools\Scripts\GPU\ComputeShaders\EDEN_SedimentLayers.compute" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
-    <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
     <None Include="Assets\ForestVision\Scripts\Shaders\MobileEmit.shader" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
     <None Include="Assets\Forst\CTI Runtime Components\CTI Runtime Components HDRP 12plus\Shaders\Includes\CTI_HDRP_12plus_BillboardVertexSimple.hlsl" />
     <None Include="Assets\TerrainDemoScene_HDRP\Notes\Reflections.txt" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF.shader" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile SSD.shader" />
     <None Include="Assets\ALP_Assets\Big Oak Tree FREE\Shaders\ALP Surface Detail.shader" />
-    <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
     <None Include="Assets\Coconut Palm Tree Pack\Shaders\TFP_treecreator\TFPTreeCreatorBarkOptimized.shader" />
     <None Include="Assets\Visual Design Cafe\Nature Renderer Demo\Realistic\Shaders\Lit Double-Sided Built-in.txt" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
     <None Include="Assets\Visual Design Cafe\Nature Renderer Demo\Realistic\Shaders\Lit Alpha Universal.txt" />
     <None Include="Assets\Forst\Lux Instant Vegetation\Demo\Fonts\ZwriteFont.shader" />
     <None Include="Assets\ProceduralTerrainPainter\_Demo\Textures\_LICENSE.txt" />
     <None Include="Assets\klen\Shaders\VegetationPBRBase.shader" />
     <None Include="Assets\TerrainDemoScene_HDRP\Scripts\Resources\SceneAnnotationUI.uss" />
     <None Include="Assets\Visual Design Cafe\Package Manager\VisualDesignCafe.Editor.PackageManager.dll" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
     <None Include="Assets\Forst\CTI Runtime Components\CTI Runtime Components HDRP 12plus\Known Issues.txt" />
     <None Include="Assets\TerrainDemoScene_HDRP\Notes\DenseDetails.txt" />
     <None Include="Assets\Forst\Lux Instant Vegetation\VersionInfo.txt" />
     <None Include="Assets\ALP_Assets\Big Oak Tree FREE\Shaders\ALP Water Gestner Waves.shader" />
     <None Include="Assets\PalmTreePack\Doc\QuickStart.txt" />
+    <None Include="Assets\Frank_RPG_2Handed\Documentation\Frank_RPG_2Handed.txt" />
     <None Include="Assets\Forst\Lux Instant Vegetation\Core\Shaders\Includes\InstantWind.hlsl" />
     <None Include="Assets\TerrainDemoScene_HDRP\Notes\ProxyTerrain.txt" />
     <None Include="Assets\ForestVision\Scripts\Shaders\BV_MultiBlend_1.shader" />
     <None Include="Assets\EDEN_Painter\EDEN_Terrain_Painter_Documentation.txt" />
-    <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
     <None Include="Assets\Visual Design Cafe\Nature Renderer Demo\Realistic\Shaders\Lit Double-Sided Universal.txt" />
     <None Include="Assets\Forst\CTI Runtime Components\CTI Runtime Components HDRP 12plus\Shaders\Includes\CTI_HDRP_12plus_Utils.hlsl" />
     <None Include="Assets\ForestVision\Scripts\Shaders\MobileColor.shader" />
@@ -308,9 +305,7 @@
     <None Include="Assets\Visual Design Cafe\Nature Renderer\Plugins\VisualDesignCafe.Rendering.Instancing.dll" />
     <None Include="Assets\ForestVision\Documentation\ForestVision 3_files\colorschememapping.xml" />
     <None Include="Assets\ForestVision\Scripts\Shaders\MobileAlpha.shader" />
-    <None Include="Assets\NeuralTerrainGeneration\LICENSE.txt" />
     <None Include="Assets\Forst\Lux Instant Vegetation\Core\Shaders\Includes\LODDithering.hlsl" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
     <None Include="Assets\TerrainDemoScene_HDRP\TextMeshPro\Fonts\License.txt" />
     <None Include="Assets\TerrainDemoScene_HDRP\Notes\Tiles.txt" />
     <None Include="Assets\Visual Design Cafe\Nature Renderer Demo\Realistic\Shaders\Lit Simple Universal.txt" />
@@ -319,22 +314,18 @@
     <None Include="Assets\Scripts\Library\Newtonsoft.Json.dll" />
     <None Include="Assets\ForestVision\Scripts\Shaders\MobileDiffuse.shader" />
     <None Include="Assets\Visual Design Cafe\Package Manager\VisualDesignCafe.Editor.Events.dll" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />
     <None Include="Assets\Visual Design Cafe\Nature Renderer Demo\Realistic\Shaders\Lit Alpha HD.txt" />
     <None Include="Assets\TerrainDemoScene_HDRP\Notes\SkyboxAssets.txt" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Mobile.shader" />
     <None Include="Assets\TerrainDemoScene_HDRP\Notes\WaterShader.txt" />
     <None Include="Assets\ForestVision\Scripts\Shaders\MobileAlphaBB.shader" />
-    <None Include="Assets\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
     <None Include="Assets\TerrainDemoScene_HDRP\Notes\SpeedTrees.txt" />
     <None Include="Assets\EDEN_Terrains\DOCUMENTATION.txt" />
     <None Include="Assets\ALP_Assets\Big Oak Tree FREE\Shaders\ALP Cutout Translucency Wind.shader" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile.shader" />
+    <None Include="Assets\ExplosiveLLC\SuperCharacterController\SuperCharacterController\README.txt" />
     <None Include="Assets\ProceduralTerrainPainter\Shaders\Modifier.shader" />
+    <None Include="Assets\Idle MoCap\Idle Package Description.txt" />
     <None Include="Assets\TerrainSampleAssets\ShaderGraphs\CustomFunctions\CustomLighting.hlsl" />
     <None Include="Assets\Forst\CTI Runtime Components\CTI Runtime Components HDRP 12plus\Shaders\Includes\CTI_HDRP_12plus_ColorVariation.hlsl" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_Sprite.shader" />
-    <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Bangers - OFL.txt" />
     <None Include="Assets\TerrainDemoScene_HDRP\Notes\ProceduralSkies.txt" />
     <None Include="Assets\Forst\CTI Runtime Components\CTI Runtime Components HDRP 12plus\Shaders\Includes\CTI_HDRP_12plus_Wind.hlsl" />
   </ItemGroup>
@@ -807,16 +798,12 @@
       <HintPath>C:\Program Files\Unity\Hub\Editor\6000.0.41f1\Editor\Data\Managed\UnityEngine\UnityEditor.XRModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Mono.Cecil.Pdb">
-      <HintPath>Library\PackageCache\com.unity.entities@732b1f537003\Unity.Entities.CodeGen\Mono.Cecil.Pdb.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="VisualDesignCafe.Rendering.Nature">
       <HintPath>Assets\Visual Design Cafe\Nature Renderer\Plugins\VisualDesignCafe.Rendering.Nature.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Cecil.Awesome">
-      <HintPath>Library\PackageCache\com.unity.entities@732b1f537003\Unity.Entities.CodeGen\Unity.Cecil.Awesome.dll</HintPath>
+      <HintPath>Library\PackageCache\com.unity.entities@e581b903be8e\Unity.Entities.CodeGen\Unity.Cecil.Awesome.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="VisualDesignCafe.Editor.Web">
@@ -828,7 +815,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Collections.LowLevel.ILSupport">
-      <HintPath>Library\PackageCache\com.unity.collections@e8c387a7c740\Unity.Collections.LowLevel.ILSupport\Unity.Collections.LowLevel.ILSupport.dll</HintPath>
+      <HintPath>Library\PackageCache\com.unity.collections@d49facba0036\Unity.Collections.LowLevel.ILSupport\Unity.Collections.LowLevel.ILSupport.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="nunit.framework">
@@ -859,16 +846,8 @@
       <HintPath>Assets\Visual Design Cafe\Nature Renderer\Plugins\VisualDesignCafe.Memory.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Mono.Cecil.Mdb">
-      <HintPath>Library\PackageCache\com.unity.entities@732b1f537003\Unity.Entities.CodeGen\Mono.Cecil.Mdb.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Mono.Cecil">
-      <HintPath>Library\PackageCache\com.unity.entities@732b1f537003\Unity.Entities.CodeGen\Mono.Cecil.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System.IO.Hashing">
-      <HintPath>Library\PackageCache\com.unity.collections@e8c387a7c740\Unity.Collections.Tests\System.IO.Hashing\System.IO.Hashing.dll</HintPath>
+      <HintPath>Library\PackageCache\com.unity.collections@d49facba0036\Unity.Collections.Tests\System.IO.Hashing\System.IO.Hashing.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="VisualDesignCafe.Editor.PackageManager">
@@ -883,10 +862,6 @@
       <HintPath>C:\Users\rodri\Downloads\barracuda-release-release-3.0.1\Barracuda\Runtime\Plugins\ProtoBuffer\Google.Protobuf.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Mono.Cecil.Rocks">
-      <HintPath>Library\PackageCache\com.unity.entities@732b1f537003\Unity.Entities.CodeGen\Mono.Cecil.Rocks.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="VisualDesignCafe.Rendering.Instancing">
       <HintPath>Assets\Visual Design Cafe\Nature Renderer\Plugins\VisualDesignCafe.Rendering.Instancing.dll</HintPath>
       <Private>False</Private>
@@ -895,8 +870,12 @@
       <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@74deb55db2a0\Runtime\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>Library\PackageCache\com.unity.nuget.mono-cecil@d78732e851eb\Mono.Cecil.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
-      <HintPath>Library\PackageCache\com.unity.collections@e8c387a7c740\Unity.Collections.Tests\System.Runtime.CompilerServices.Unsafe\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <HintPath>Library\PackageCache\com.unity.collections@d49facba0036\Unity.Collections.Tests\System.Runtime.CompilerServices.Unsafe\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="VisualDesignCafe.Editor.Events">
@@ -1893,6 +1872,29 @@
       <Project>{3BFD8063-9744-5603-7C2C-EE23A9957996}</Project>
       <Name>Boxophobic.TerrainDataBaker.Editor</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf">
+      <Version>3.31.1</Version>
+    </PackageReference>
+    <PackageReference Include="Grpc.Core">
+      <Version>2.46.6</Version>
+    </PackageReference>
+    <PackageReference Include="Grpc.Core.Api">
+      <Version>2.71.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions">
+      <Version>9.0.5</Version>
+    </PackageReference>
+    <PackageReference Include="System.Diagnostics.DiagnosticSource">
+      <Version>9.0.5</Version>
+    </PackageReference>
+    <PackageReference Include="System.IO.Pipelines">
+      <Version>9.0.5</Version>
+    </PackageReference>
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe">
+      <Version>6.1.2</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

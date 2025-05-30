@@ -3,6 +3,7 @@
 	<Develop>
 		<ServiceUrls>
 			<Service name="GateWay" url="http://localhost:9001/" />
+			<Service name="GateWayGrpc" url="http://localhost:9002/" />
 			<Service name="Version" url="http://localhost:9101/" />
 			<Service name="VersionGrpc" url="http://localhost:9201/" />
 			<Service name="VersionFile" url="http://localhost:9100/" />
@@ -13,11 +14,14 @@
 			<Service name="LoginGrpc" url="http://localhost:9203" />
 			<Service name="Log" url="http://localhost:9104" />
 			<Service name="LogGrpc" url="http://localhost:9204" />
+			<Service name="Player" url="http://localhost:9105" />
+			<Service name="PlayerSavePosition" url="http://localhost:9210/" />
 		</ServiceUrls>
 	</Develop>
 	<Test>
 		<ServiceUrls>
 			<Service name="GateWay" url="http://192.168.0.65:9001/" />
+			<Service name="GateWayGrpc" url="http://192.168.0.65:9002/" />
 			<Service name="Version" url="http://ROH.Api.Version:9101/" />
 			<Service name="VersionGrpc" url="http://ROH.Api.Version:9201/" />
 			<Service name="VersionFile" url="http://ROH.Api.VersionFiles:9100/" />
@@ -28,11 +32,14 @@
 			<Service name="LoginGrpc" url="http://ROH.Api.Login:9203/" />
 			<Service name="Log" url="http://ROH.Api.Log:9104/" />
 			<Service name="LogGrpc" url="http://ROH.Api.Log:9204/" />
+			<Service name="Player" url="http://ROH.Api.Player:9105/" />
+			<Service name="PlayerSavePosition" url="http://ROH.Api.PlayerSync.SavePosition:9210/" />
 		</ServiceUrls>
 	</Test>
 	<Release>
 		<ServiceUrls>
 			<Service name="GateWay" url="http://ROH.Gateway:9001/" />
+			<Service name="GateWayGrpc" url="http://ROH.Gateway:9002/" />
 			<Service name="Version" url="http://ROH.Api.Version:9101/" />
 			<Service name="VersionGrpc" url="http://ROH.Api.Version:9201/" />
 			<Service name="VersionFile" url="http://ROH.Api.VersionFiles:9100/" />
@@ -43,6 +50,8 @@
 			<Service name="LoginGrpc" url="http://ROH.Api.Login:9203/" />
 			<Service name="Log" url="http://ROH.Api.Log:9104/" />
 			<Service name="LogGrpc" url="http://ROH.Api.Log:9204/" />
+			<Service name="Player" url="http://ROH.Api.Player:9105/" />
+			<Service name="PlayerSavePosition" url="http://ROH.Api.PlayerSync.SavePosition:9210/" />
 		</ServiceUrls>
 	</Release>
 </ApiConfig>

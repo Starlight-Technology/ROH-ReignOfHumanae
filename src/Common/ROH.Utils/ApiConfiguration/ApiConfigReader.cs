@@ -69,7 +69,9 @@ namespace ROH.Utils.ApiConfiguration
             Login,
             LoginGrpc,
             Log,
-            LogGrpc
+            LogGrpc,
+            Player,
+            PlayerSavePosition
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MerryYellow.CodeAssist.Editor", "MerryYellow.CodeAssist.Editor.csproj", "{8D048D14-7D32-418D-716C-672910AD63F9}"
-EndProject
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36109.1 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{A92ECAAB-BAC2-0858-4DFD-D6E0FBAC429B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.Barracuda", "Unity.Barracuda.csproj", "{B9126A0D-45CC-A914-5796-D3266D87A61E}"
@@ -39,10 +39,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8D048D14-7D32-418D-716C-672910AD63F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8D048D14-7D32-418D-716C-672910AD63F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8D048D14-7D32-418D-716C-672910AD63F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8D048D14-7D32-418D-716C-672910AD63F9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A92ECAAB-BAC2-0858-4DFD-D6E0FBAC429B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A92ECAAB-BAC2-0858-4DFD-D6E0FBAC429B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A92ECAAB-BAC2-0858-4DFD-D6E0FBAC429B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -106,5 +102,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AE6CF195-1F5C-469C-A200-6C4DDBC1212C}
 	EndGlobalSection
 EndGlobal

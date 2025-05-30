@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.71.0" />
+    <PackageReference Include="Grpc.Core" Version="2.46.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\ROH.Protos\ROH.Protos.csproj" />
+    <ProjectReference Include="..\..\Common\ROH.StandardModels\ROH.StandardModels.csproj" />
+    <ProjectReference Include="..\..\Database\ROH.Context.Player.Mongo\ROH.Context.Player.Mongo.csproj" />
+    <ProjectReference Include="..\..\Database\ROH.Context.Player\ROH.Context.Player.csproj" />
+    <ProjectReference Include="..\ROH.Service.Exception\ROH.Service.Exception.csproj" />
+  </ItemGroup>
+
+ 	<ItemGroup>
+		<Folder Include="..\..\Common\ROH.Protos\Player" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Protobuf Include="..\..\Common\ROH.Protos\Player\PlayerPosition.proto" GrpcServices="Client" />
+	</ItemGroup>
+
+</Project>

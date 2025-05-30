@@ -21,16 +21,52 @@ public class CharacterTypeConfiguration : IEntityTypeConfiguration<Character>
 
         _ = builder.HasOne(c => c.AttackStatus)
             .WithOne(a => a.Character)
-            .HasForeignKey<AttackStatus>(a => a.IdCharacter);
+            .HasForeignKey<AttackStatus>(a => a.IdCharacter)
+            .IsRequired(false);
+
         _ = builder.HasOne(c => c.DefenseStatus)
             .WithOne(a => a.Character)
-            .HasForeignKey<DefenseStatus>(a => a.IdCharacter);
-        _ = builder.HasOne(c => c.Status).WithOne(a => a.Character).HasForeignKey<Status>(a => a.IdCharacter);
+            .HasForeignKey<DefenseStatus>(a => a.IdCharacter)
+            .IsRequired(false);
+
+        _ = builder.HasOne(c => c.Status)
+            .WithOne(a => a.Character)
+            .HasForeignKey<Status>(a => a.IdCharacter)
+            .IsRequired(false);
+
         _ = builder.HasOne(c => c.EquippedItems)
             .WithOne(a => a.Character)
-            .HasForeignKey<EquippedItems>(a => a.IdCharacter);
+            .HasForeignKey<EquippedItems>(a => a.IdCharacter)
+            .IsRequired(false);
 
-        _ = builder.HasMany(c => c.Skills).WithOne(s => s.Character).HasForeignKey(c => c.IdCharacter);
-        _ = builder.HasMany(c => c.Inventory).WithOne(i => i.Character).HasForeignKey(i => i.IdCharacter);
+        builder.HasOne(p => p.PlayerPosition)
+            .WithOne(p => p.Player)
+            .HasForeignKey<PlayerPosition>(p => p.IdPlayer)
+            .IsRequired(false);
+
+        _ = builder.HasMany(c => c.Skills)
+            .WithOne(s => s.Character)
+            .HasForeignKey(c => c.IdCharacter)
+            .IsRequired(false);
+
+        _ = builder.HasMany(c => c.Inventory)
+            .WithOne(i => i.Character)
+            .HasForeignKey(i => i.IdCharacter)
+            .IsRequired(false);
+
+        builder.HasOne(c => c.Guild)
+            .WithMany()
+            .HasForeignKey(c => c.IdGuild)
+            .IsRequired(false);
+
+        builder.HasOne(c => c.Kingdom)
+            .WithMany()
+            .HasForeignKey(c => c.IdKingdom)
+            .IsRequired(false);
+
+        builder.HasOne(c => c.Status)
+            .WithOne()
+            .HasForeignKey<Status>(s => s.IdCharacter)
+            .IsRequired(false);
     }
 }

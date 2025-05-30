@@ -30,7 +30,6 @@
     <ProjectReference Include="..\..\Common\ROH.Utils\ROH.Utils.csproj" />
     <ProjectReference Include="..\..\Database\ROH.Context.Item\ROH.Context.Item.csproj" />
     <ProjectReference Include="..\..\Database\ROH.Context.Account\ROH.Context.Account.csproj" />
-    <ProjectReference Include="..\..\Database\ROH.Context.Character\ROH.Context.Character.csproj" />
     <ProjectReference Include="..\..\Database\ROH.Context.File\ROH.Context.File.csproj" />
     <ProjectReference Include="..\..\Database\ROH.Context.Log\ROH.Context.Log.csproj" />
     <ProjectReference Include="..\..\Database\ROH.Context.Player\ROH.Context.Player.csproj" />

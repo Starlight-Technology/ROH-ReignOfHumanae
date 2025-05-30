@@ -105,7 +105,7 @@ namespace Assets.Scripts.Update
                 }
 
                 using FileStream fs = File.Create(file.Path);
-                await fs.WriteAsync(file.Content.AsMemory(), cancellationToken).ConfigureAwait(true);
+                await fs.WriteAsync(file.Content,0,file.Content.Length, cancellationToken).ConfigureAwait(true);
             }
             catch (Exception ex)
             {

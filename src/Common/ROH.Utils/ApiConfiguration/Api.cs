@@ -24,22 +24,25 @@ namespace ROH.Utils.ApiConfiguration
     public class Api
     {
         private static readonly ApiConfigReader _apiConfig = new ApiConfigReader();
-        private static readonly Dictionary<ApiUrl, Uri> _apiUrl = _apiConfig.GetApiUrl();
+        public static readonly Dictionary<ApiUrl, Uri> _apiUrl = _apiConfig.GetApiUrl();
 
-        private static readonly Dictionary<Services, Uri> _servicesUrl = new Dictionary<Services, Uri>
-        {
+        private static readonly Dictionary<Services, Uri> _servicesUrl = new Dictionary<Services, Uri> {
             #region VERSION
-
             { Services.GetCurrentVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version), "GetCurrentVersion") },
             { Services.CreateNewVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version), "CreateNewVersion") },
-            { Services.GetAllVersionsPaginated, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version), "GetAllVersionsPaginated") },
-            { Services.GetAllReleasedVersionsPaginated, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version), "GetAllReleasedVersionsPaginated")},
+            {
+                Services.GetAllVersionsPaginated,
+                new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version), "GetAllVersionsPaginated")
+            },
+            {
+                Services.GetAllReleasedVersionsPaginated,
+                new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version), "GetAllReleasedVersionsPaginated")
+            },
             { Services.GetVersionDetails, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version), "GetVersionDetails") },
             { Services.ReleaseVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version), "ReleaseVersion") },
             #endregion VERSION
 
             #region FILES
-
             { Services.UploadVersionFile, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.VersionFile), "UploadFile") },
             {
                 Services.GetAllVersionFiles,
@@ -49,7 +52,6 @@ namespace ROH.Utils.ApiConfiguration
             #endregion FILES
 
             #region ACCOUNT
-
             { Services.CreateNewUser, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Account), "CreateNewUser") },
             { Services.FindUserByEmail, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Account), "FindUserByEmail") },
             { Services.FindUserByUserName, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Account), "FindUserByUserName") },
@@ -62,14 +64,19 @@ namespace ROH.Utils.ApiConfiguration
             #endregion ACCOUNT
 
             #region LOGIN
-
             { Services.Login, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Login), "Login") },
             #endregion LOGIN
 
             #region LOG
-
-            { Services.Log, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Login), "Log") }
+            { Services.Log, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Login), "Log") },
             #endregion LOG
+
+            #region PLAYER
+            
+            { Services.CreateCharacter, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Player), "CreateCharacter") },
+            { Services.GetAccountCaracters, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Player), "GetAccountCaracters") },
+            { Services.GetCharacter, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Player), "GetCharacter") },
+            #endregion PLAYER
         };
 
         private static bool IsSimpleType(JTokenType type) => (type == JTokenType.String) ||
@@ -208,7 +215,11 @@ namespace ROH.Utils.ApiConfiguration
 
             Login,
 
-            Log
+            Log,
+
+            CreateCharacter,
+            GetAccountCaracters,
+            GetCharacter,
         }
     }
 }

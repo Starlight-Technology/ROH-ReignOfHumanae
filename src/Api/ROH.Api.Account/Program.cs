@@ -16,6 +16,7 @@ using ROH.Context.Account.Repository;
 using ROH.Mapping.Account;
 using ROH.Service.Account;
 using ROH.Service.Account.Interface;
+using ROH.Service.Exception;
 using ROH.Service.Exception.Communication;
 using ROH.Service.Exception.Interface;
 using ROH.StandardModels.Account;
@@ -38,20 +39,26 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 
 builder.Services.AddScoped<IValidator<UserModel>, UserModelValidator>();
 
-builder.Services.AddScoped<IExceptionHandler, ROH.Service.Exception.ExceptionHandler>();
+builder.Services.AddScoped<IExceptionHandler, ExceptionHandler>();
 builder.Services.AddScoped<ILogService, LogService>();
 
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.ListenAnyIP(9102, listenOptions =>
-    {
-        listenOptions.Protocols = HttpProtocols.Http1AndHttp2; // Supports both protocols
-    });
-    options.ListenAnyIP(9202, listenOptions =>
-    {
-        listenOptions.Protocols = HttpProtocols.Http2;
-    });
-});
+builder.WebHost
+    .ConfigureKestrel(
+        options =>
+        {
+            options.ListenAnyIP(
+                9102,
+                listenOptions =>
+                {
+                    listenOptions.Protocols = HttpProtocols.Http1AndHttp2; // Supports both protocols
+                });
+            options.ListenAnyIP(
+                9202,
+                listenOptions =>
+                {
+                    listenOptions.Protocols = HttpProtocols.Http2;
+                });
+        });
 
 // Auto Mapper Configurations
 MapperConfiguration mappingConfig = new(
@@ -82,7 +89,8 @@ app.MapPost(
 
 app.MapGet(
     "FindUserByEmail",
-    async (IUserService userService, string email) => await userService.FindUserByEmailAsync(email).ConfigureAwait(false)
+    async (IUserService userService, string email) => await userService.FindUserByEmailAsync(email)
+        .ConfigureAwait(false)
 )
     .WithName("FindUserByEmail")
     .WithOpenApi();

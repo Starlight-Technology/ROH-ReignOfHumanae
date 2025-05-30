@@ -79,3 +79,13 @@ docker run -d \
   -e ROH_DATABASE_CONNECTION_STRING_LOG="Host=192.168.0.65;Port=5432;Database=ROH.LOG;Username=postgres;Password=postgres123;" \
   -e DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT=true \
   roh.api.log
+
+# Build and run the ROH.Api.Player Dockerfile
+docker build -t roh.api.player -f ./src/Api/ROH.Api.Player/Dockerfile .
+docker run -d \
+  --name ROH.Api.Player \
+  --network $NETWORK_NAME \
+  -p 9105:9105 \
+  -e ROH_DATABASE_CONNECTION_STRING_LOG="Host=192.168.0.65;Port=5432;Database=ROH.PLAYER;Username=postgres;Password=postgres123;" \
+  -e DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT=true \
+  roh.api.player

@@ -98,6 +98,15 @@ namespace ROH.Utils.ApiConfiguration
 
             { Services.Login, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay), "Api/Account/Login") },
             #endregion LOGIN
+
+            #region PLAYER
+
+            { Services.CreateCharacter, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Player), "Api/Player/CreateCharacter")},
+            { Services.GetAccountCaracters, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Player), "Api/Player/GetAccountCaracters")},
+            { Services.GetCharacter, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Player), "Api/Player/GetCharacter")},
+            { Services.SavePosition, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.PlayerSavePosition), "")},
+            #endregion PLAYER
+
         };
 
         private readonly Api _api = new Api();
@@ -120,7 +129,6 @@ namespace ROH.Utils.ApiConfiguration
             using HttpClient client = new HttpClient(handler);
 
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
 
             string param = string.Empty;
 
@@ -289,9 +297,16 @@ namespace ROH.Utils.ApiConfiguration
 
             #region LOG
 
-            Log
+            Log,
 
             #endregion LOG
+
+            #region PLAYER
+            CreateCharacter,
+            GetAccountCaracters,
+            GetCharacter,
+            SavePosition,
+            #endregion PLAYER
         }
     }
 }

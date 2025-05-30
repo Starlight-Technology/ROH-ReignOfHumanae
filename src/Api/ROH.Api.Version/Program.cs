@@ -1,3 +1,9 @@
+//-----------------------------------------------------------------------
+// <copyright file="Program.cs" company="">
+//     Author:  
+//     Copyright (c) . All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
 using AutoMapper;
 
 using FluentValidation;
@@ -15,6 +21,7 @@ using ROH.Mapping.Version;
 using ROH.Service.Exception;
 using ROH.Service.Exception.Communication;
 using ROH.Service.Exception.Interface;
+using ROH.Service.Version;
 using ROH.Service.Version.Interface;
 using ROH.StandardModels.Version;
 using ROH.Utils.Helpers;
@@ -28,16 +35,18 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //Registry Interfaces
-builder.Services.AddDbContext<VersionContext>(options =>
-{
-    var connectionString = Environment.GetEnvironmentVariable("ROH_DATABASE_CONNECTION_STRING_VERSION");
-    if (string.IsNullOrEmpty(connectionString))
-    {
-        throw new InvalidOperationException("Database connection string not found in environment variables.");
-    }
+builder.Services
+    .AddDbContext<VersionContext>(
+        options =>
+        {
+            string? connectionString = Environment.GetEnvironmentVariable("ROH_DATABASE_CONNECTION_STRING_VERSION");
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                throw new InvalidOperationException("Database connection string not found in environment variables.");
+            }
 
-    options.UseNpgsql(connectionString);
-});
+            options.UseNpgsql(connectionString);
+        });
 
 // Register the DbContext with the interface
 builder.Services.AddScoped<IVersionContext>(provider => provider.GetRequiredService<VersionContext>());
@@ -50,30 +59,36 @@ builder.Services.AddScoped<IExceptionHandler, ExceptionHandler>();
 
 builder.Services.AddScoped<IValidator<GameVersionModel>, GameVersionModelValidator>();
 
-builder.Services.AddScoped<IGameVersionService, ROH.Service.Version.GameVersionService>();
+builder.Services.AddScoped<IGameVersionService, GameVersionService>();
 
 builder.Services.AddGrpc();
 
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.ListenAnyIP(9101, listenOptions =>
-    {
-        listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
-    });
-    options.ListenAnyIP(9201, listenOptions =>
-    {
-        listenOptions.Protocols = HttpProtocols.Http2;
-    });
-});
-
+builder.WebHost
+    .ConfigureKestrel(
+        options =>
+        {
+            options.ListenAnyIP(
+                9101,
+                listenOptions =>
+                {
+                    listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
+                });
+            options.ListenAnyIP(
+                9201,
+                listenOptions =>
+                {
+                    listenOptions.Protocols = HttpProtocols.Http2;
+                });
+        });
 
 // Auto Mapper Configurations
-MapperConfiguration mappingConfig = new(mc =>
-{
-    mc.AddProfile(new GameVersionFileMapping());
-    mc.AddProfile(new GameVersionMapping());
-    mc.AddProfile(new GameFileMapping());
-});
+MapperConfiguration mappingConfig = new(
+    mc =>
+    {
+        mc.AddProfile(new GameVersionFileMapping());
+        mc.AddProfile(new GameVersionMapping());
+        mc.AddProfile(new GameFileMapping());
+    });
 
 IMapper mapper = mappingConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
@@ -89,34 +104,58 @@ if (app.Environment.IsDevelopment())
 
 app.MapGrpcService<VersionServiceImplementation>();
 
-app.MapPost("CreateNewVersion", async (IGameVersionService gameVersionService, GameVersionModel model) =>
-    await gameVersionService.NewVersionAsync(model).ConfigureAwait(false)
-).WithName("CreateNewVersion")
-.WithOpenApi();
+app.MapPost(
+    "CreateNewVersion",
+    async (IGameVersionService gameVersionService, GameVersionModel model) => await gameVersionService.NewVersionAsync(
+        model)
+        .ConfigureAwait(false)
+)
+    .WithName("CreateNewVersion")
+    .WithOpenApi();
 
-app.MapPut("ReleaseVersion", async (IGameVersionService gameVersionService, [FromBody] GameVersionModel gameVersion) =>
-    await gameVersionService.SetReleasedAsync(gameVersion.Guid.ToString()).ConfigureAwait(false)
-).WithName("ReleaseVersion")
-.WithOpenApi();
+app.MapPut(
+    "ReleaseVersion",
+    async (IGameVersionService gameVersionService, [FromBody] GameVersionModel gameVersion) => await gameVersionService.SetReleasedAsync(
+        gameVersion.Guid.ToString())
+        .ConfigureAwait(false)
+)
+    .WithName("ReleaseVersion")
+    .WithOpenApi();
 
-app.MapGet("GetCurrentVersion", (IGameVersionService gameVersionService) =>
-    gameVersionService.GetCurrentVersionAsync().Result.MapObjectResponse<GameVersionModel>()
-).WithName("GetCurrentVersion")
-.WithOpenApi();
+app.MapGet(
+    "GetCurrentVersion",
+    (IGameVersionService gameVersionService) => gameVersionService.GetCurrentVersionAsync().Result
+        .MapObjectResponse<GameVersionModel>()
+)
+    .WithName("GetCurrentVersion")
+    .WithOpenApi();
 
-app.MapGet("GetAllVersionsPaginated", async (IGameVersionService gameVersionService, int page, int take) =>
-    await gameVersionService.GetAllVersionsAsync(page: page, take: take).ConfigureAwait(false)
-).WithName("GetAllVersionsPaginated")
-.WithOpenApi();
+app.MapGet(
+    "GetAllVersionsPaginated",
+    async (IGameVersionService gameVersionService, int page, int take) => await gameVersionService.GetAllVersionsAsync(
+        page: page,
+        take: take)
+        .ConfigureAwait(false)
+)
+    .WithName("GetAllVersionsPaginated")
+    .WithOpenApi();
 
-app.MapGet("GetAllReleasedVersionsPaginated", async (IGameVersionService gameVersionService, int page, int take) =>
-    await gameVersionService.GetAllReleasedVersionsAsync(page: page, take: take).ConfigureAwait(false)
-).WithName("GetAllReleasedVersionsPaginated")
-.WithOpenApi();
+app.MapGet(
+    "GetAllReleasedVersionsPaginated",
+    async (IGameVersionService gameVersionService, int page, int take) => await gameVersionService.GetAllReleasedVersionsAsync(
+        page: page,
+        take: take)
+        .ConfigureAwait(false)
+)
+    .WithName("GetAllReleasedVersionsPaginated")
+    .WithOpenApi();
 
-app.MapGet("GetVersionDetails", async (IGameVersionService gameVersionService, string guid) =>
-    await gameVersionService.GetVersionByGuidAsync(guid).ConfigureAwait(false)
-).WithName("GetVersionDetails")
-.WithOpenApi();
+app.MapGet(
+    "GetVersionDetails",
+    async (IGameVersionService gameVersionService, string guid) => await gameVersionService.GetVersionByGuidAsync(guid)
+        .ConfigureAwait(false)
+)
+    .WithName("GetVersionDetails")
+    .WithOpenApi();
 
 await app.RunAsync().ConfigureAwait(false);

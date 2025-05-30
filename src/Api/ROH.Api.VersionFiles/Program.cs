@@ -46,19 +46,24 @@ builder.Services.AddScoped<IValidator<GameVersionFileModel>, GameVersionFileMode
 builder.Services.AddScoped<ILogService, LogService>();
 builder.Services.AddScoped<IExceptionHandler, ExceptionHandler>();
 
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.ListenAnyIP(9100, listenOptions =>
-    {
-        listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
-    });
-    options.ListenAnyIP(9200, listenOptions =>
-    {
-        listenOptions.Protocols = HttpProtocols.Http2;
-    });
-    options.Limits.MaxRequestBodySize = null;
-});
-
+builder.WebHost
+    .ConfigureKestrel(
+        options =>
+        {
+            options.ListenAnyIP(
+                9100,
+                listenOptions =>
+                {
+                    listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
+                });
+            options.ListenAnyIP(
+                9200,
+                listenOptions =>
+                {
+                    listenOptions.Protocols = HttpProtocols.Http2;
+                });
+            options.Limits.MaxRequestBodySize = null;
+        });
 
 // Auto Mapper Configurations
 MapperConfiguration mappingConfig = new(
