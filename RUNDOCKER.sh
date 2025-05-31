@@ -89,3 +89,13 @@ docker run -d \
   -e ROH_DATABASE_CONNECTION_STRING_LOG="Host=192.168.0.65;Port=5432;Database=ROH.PLAYER;Username=postgres;Password=postgres123;" \
   -e DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT=true \
   roh.api.player
+
+# Build and run the ROH.Api.PlayerSync.SavePosition Dockerfile
+docker build -t roh.api.playersync.saveposition -f ./src/Api/ROH.Api.PlayerSync.SavePosition/Dockerfile .
+docker run -d \
+  --name ROH.Api.PlayerSync.SavePosition \
+  --network $NETWORK_NAME \
+  -p 9210:9210 \
+  -e ROH_MONGO_PLAYER_CONNECTION_STRING="mongodb://192.168.0.65:27017/?retryWrites=true&loadBalanced=false&serverSelectionTimeoutMS=5000&connectTimeoutMS=10000" \
+  -e DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT=true \
+  roh.api.playersync.saveposition
