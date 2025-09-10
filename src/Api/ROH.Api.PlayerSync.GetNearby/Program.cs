@@ -1,5 +1,3 @@
-
-
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 using ROH.Context.Player.Mongo;
@@ -10,9 +8,7 @@ using ROH.Service.Exception.Communication;
 using ROH.Service.Exception.Interface;
 using ROH.Service.Player.Grpc.Player;
 
-using static ROH.Protos.PlayerPosition.PlayerService;
-
-WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -31,9 +27,9 @@ builder.Services.AddGrpc();
 builder.WebHost
     .ConfigureKestrel(
         options =>
-        { 
+        {
             options.ListenAnyIP(
-                9210,
+                9211,
                 listenOptions =>
                 {
                     listenOptions.Protocols = HttpProtocols.Http2;
@@ -41,10 +37,9 @@ builder.WebHost
             options.Limits.MaxRequestBodySize = null;
         });
 
+var app = builder.Build();
 
-WebApplication app = builder.Build();
-
-app.MapGrpcService<SavePosition>();
+app.MapGrpcService<NearbyPlayers>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -52,11 +47,11 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-// Em Program.cs ou Startup.cs da API gRPC
 if (!app.Environment.IsDevelopment())
 {
     app.UseHttpsRedirection();
 }
 
-
 await app.RunAsync().ConfigureAwait(true);
+
+

@@ -95,6 +95,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Service.Player", "src\S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Service.Player.Grpc", "src\Service\ROH.Service.Player.Grpc\ROH.Service.Player.Grpc.csproj", "{EF50CD73-4427-42FF-B27E-599D49DCCF46}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Api.PlayerSync.GetNearby", "src\Api\ROH.Api.PlayerSync.GetNearby\ROH.Api.PlayerSync.GetNearby.csproj", "{C0D1B5F8-B6FD-45F3-B6EA-278AC1E6E082}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -282,6 +284,12 @@ Global
 		{EF50CD73-4427-42FF-B27E-599D49DCCF46}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EF50CD73-4427-42FF-B27E-599D49DCCF46}.Test|Any CPU.ActiveCfg = Debug|Any CPU
 		{EF50CD73-4427-42FF-B27E-599D49DCCF46}.Test|Any CPU.Build.0 = Debug|Any CPU
+		{C0D1B5F8-B6FD-45F3-B6EA-278AC1E6E082}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0D1B5F8-B6FD-45F3-B6EA-278AC1E6E082}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0D1B5F8-B6FD-45F3-B6EA-278AC1E6E082}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0D1B5F8-B6FD-45F3-B6EA-278AC1E6E082}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0D1B5F8-B6FD-45F3-B6EA-278AC1E6E082}.Test|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0D1B5F8-B6FD-45F3-B6EA-278AC1E6E082}.Test|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -325,6 +333,7 @@ Global
 		{FA1247EA-B8B8-8AB4-BD4C-A8B544CA00DE} = {69C2FA84-4DA4-4FA5-863D-B2DBC93B25B9}
 		{951FE83F-0A05-EE60-2D11-3F3A76ACC00F} = {AF54ADB7-357D-4157-9B4B-421DABC0C845}
 		{EF50CD73-4427-42FF-B27E-599D49DCCF46} = {AF54ADB7-357D-4157-9B4B-421DABC0C845}
+		{C0D1B5F8-B6FD-45F3-B6EA-278AC1E6E082} = {E032234B-EEAA-4BC3-B24B-2C2793642015}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {27EDF35D-5831-479E-BF70-D6CB24952E66}

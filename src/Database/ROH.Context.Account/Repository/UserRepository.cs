@@ -20,14 +20,16 @@ public class UserRepository(IAccountContext context) : IUserRepository
         return user;
     }
 
-    public Task<bool> EmailInUseAsync(string email, CancellationToken cancellationToken = default)
-        => context.Users.AnyAsync(u => string.Equals(u.Email, email), cancellationToken);
+    public Task<bool> EmailInUseAsync(string email, CancellationToken cancellationToken = default) => context.Users
+        .AnyAsync(u => string.Equals(u.Email, email), cancellationToken);
 
-    public Task<User?> FindUserByEmailAsync(string email, CancellationToken cancellationToken = default)
+    public  Task<User?> FindUserByEmailAsync(string email, CancellationToken cancellationToken = default)    
         => context.Users.FirstOrDefaultAsync(u => string.Equals(u.Email, email), cancellationToken);
+        
+    
 
-    public Task<User?> FindUserByUserNameAsync(string userName, CancellationToken cancellationToken = default)
-        => context.Users.FirstOrDefaultAsync(u => string.Equals(u.UserName, userName), cancellationToken);
+    public async Task<User?> FindUserByUserNameAsync(string userName, CancellationToken cancellationToken = default)
+        => await context.Users.FirstOrDefaultAsync(u => string.Equals(u.UserName, userName), cancellationToken);
 
     public Task<User> GetUserByGuidAsync(Guid userGuid, CancellationToken cancellationToken = default)
         => context.Users.FirstAsync(u => u.Guid == userGuid, cancellationToken);

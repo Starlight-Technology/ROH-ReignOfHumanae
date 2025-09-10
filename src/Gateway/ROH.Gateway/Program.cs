@@ -10,13 +10,14 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 using ROH.Gateway.Grpc.Player;
-using ROH.Protos.Player;
+using ROH.Protos.NearbyPlayer;
+using ROH.Protos.PlayerPosition;
 using ROH.Utils.ApiConfiguration;
 
 using System.Collections.Generic;
 using System.Text;
 
-using static ROH.Protos.Player.PlayerService;
+using static ROH.Protos.PlayerPosition.PlayerService;
 using static ROH.Utils.ApiConfiguration.ApiConfigReader;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -95,27 +96,33 @@ builder.WebHost
                     9002,
                     listenOptions =>
                     {
-                        listenOptions.Protocols = HttpProtocols.Http2;
+                        listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
                     }
                 );
         });
-builder.Services.AddGrpc();
 
-builder.Services.AddGrpcClient<ROH.Protos.Player.PlayerService.PlayerServiceClient>(o =>
+if (!Api._apiUrl.TryGetValue(ApiUrl.PlayerSavePosition, out var savePosUri))
+    throw new InvalidOperationException("URL para PlayerSavePosition não encontrada na configuração.");
+builder.Services.AddGrpcClient<PlayerService.PlayerServiceClient>(options =>
 {
-    if (Api._apiUrl.TryGetValue(ApiUrl.PlayerSavePosition, out var grpcUri))
-    {
-        o.Address = grpcUri;
-    }
-    else
-    {
-        throw new InvalidOperationException("URL para PlayerGrpc não encontrada na configuração.");
-    }
+    options.Address = savePosUri;
 });
+
+if (!Api._apiUrl.TryGetValue(ApiUrl.GetNearbyPlayer, out var nearbyUri))
+    throw new InvalidOperationException("URL para NearbyPlayerGrpc não encontrada na configuração.");
+builder.Services.AddGrpcClient<NearbyPlayerService.NearbyPlayerServiceClient>(options =>
+{
+    options.Address = nearbyUri;
+});
+
+builder.Services.AddGrpc();
 
 WebApplication app = builder.Build();
 
-app.MapGrpcService<PlayerServiceForwarder>();
+app.UseGrpcWeb(new GrpcWebOptions { DefaultEnabled = true });
+
+app.MapGrpcService<PlayerSavePositionServiceForwarder>().EnableGrpcWeb().AllowAnonymous();
+app.MapGrpcService<NearbyPlayerServiceForwarder>().EnableGrpcWeb().AllowAnonymous();
 
 app.UseSwagger();
 app.UseSwaggerUI();

@@ -35,9 +35,12 @@ namespace Assets.Scripts.Player
             if (mainCamera == null)
                 mainCamera = Camera.main;
 
-            agent.updatePosition = false;
-            agent.updateRotation = false;
-            agent.isStopped = true;
+            if (agent != null && agent.isOnNavMesh)
+            {
+                agent.updatePosition = false;
+                agent.updateRotation = false;
+                agent.isStopped = true;
+            }
         }
 
         void Update()
@@ -94,10 +97,12 @@ namespace Assets.Scripts.Player
             if (currentMode == MovementMode.Ground && isGrounded && !usingManualInput)
             {
                 animator.SetFloat("Speed", 0);
-                agent.enabled = true;
+
+                if(agent.isOnNavMesh)
+                    agent.enabled = true;
             }
 
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && agent.isOnNavMesh)
             {
                 Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(ray, out RaycastHit hit))

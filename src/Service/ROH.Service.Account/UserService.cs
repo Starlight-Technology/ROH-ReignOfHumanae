@@ -26,11 +26,28 @@ public class UserService(
     IUserRepository repository,
     IMapper mapper) : IUserService
 {
-    public async Task<UserModel?> FindUserByEmailAsync(string email, CancellationToken cancellationToken = default) => mapper.Map<UserModel>(
-        await repository.FindUserByEmailAsync(email, cancellationToken).ConfigureAwait(true));
+    public async Task<UserModel?> FindUserByEmailAsync(
+        string email, 
+        CancellationToken cancellationToken = default)
+    {
+        var user = await repository.FindUserByEmailAsync(email, cancellationToken).ConfigureAwait(true);
+        if (user is null)
+            return null;
 
-    public async Task<UserModel?> FindUserByUserNameAsync(string userName, CancellationToken cancellationToken = default) => mapper.Map<UserModel>(
-        await repository.FindUserByUserNameAsync(userName, cancellationToken).ConfigureAwait(true));
+        return mapper.Map<UserModel>(user);
+    }
+
+    public async Task<UserModel?> FindUserByUserNameAsync(
+        string userName,
+        CancellationToken cancellationToken = default)
+    {
+        var user = await repository.FindUserByUserNameAsync(userName, cancellationToken).ConfigureAwait(true);
+
+        if (user is null)
+            return null;
+
+        return mapper.Map<UserModel>(user);
+    }
 
     public async Task<UserModel> GetUserByGuidAsync(Guid userGuid, CancellationToken cancellationToken = default) => mapper.Map<UserModel>(
         await repository.GetUserByGuidAsync(userGuid, cancellationToken).ConfigureAwait(true));

@@ -14,7 +14,7 @@ public class PlayerContext : DbContext, IPlayerContext
 {
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        string? connectionString = "Host=192.168.0.65;Port=5432;Database=ROH.PLAYER;Username=postgres;Password=postgres123;";
+        string? connectionString = Environment.GetEnvironmentVariable("ROH_DATABASE_CONNECTION_STRING_PLAYER");
         _ = optionsBuilder.UseNpgsql(connectionString);
     }
 

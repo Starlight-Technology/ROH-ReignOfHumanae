@@ -16,6 +16,7 @@
 			<Service name="LogGrpc" url="http://localhost:9204" />
 			<Service name="Player" url="http://localhost:9105" />
 			<Service name="PlayerSavePosition" url="http://localhost:9210/" />
+			<Service name="GetNearbyPlayer" url="http://localhost:9211/" />
 		</ServiceUrls>
 	</Develop>
 	<Test>
@@ -34,6 +35,7 @@
 			<Service name="LogGrpc" url="http://ROH.Api.Log:9204/" />
 			<Service name="Player" url="http://ROH.Api.Player:9105/" />
 			<Service name="PlayerSavePosition" url="http://ROH.Api.PlayerSync.SavePosition:9210/" />
+			<Service name="GetNearbyPlayer" url="http://ROH.Api.PlayerSync.GetNearby:9211/" />
 		</ServiceUrls>
 	</Test>
 	<Release>
@@ -52,6 +54,7 @@
 			<Service name="LogGrpc" url="http://ROH.Api.Log:9204/" />
 			<Service name="Player" url="http://ROH.Api.Player:9105/" />
 			<Service name="PlayerSavePosition" url="http://ROH.Api.PlayerSync.SavePosition:9210/" />
+			<Service name="GetNearbyPlayer" url="http://ROH.Api.PlayerSync.GetNearby:9211/" />
 		</ServiceUrls>
 	</Release>
 </ApiConfig>

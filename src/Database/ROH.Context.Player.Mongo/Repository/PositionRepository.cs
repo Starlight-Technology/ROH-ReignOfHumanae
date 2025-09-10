@@ -25,4 +25,22 @@ public class PositionRepository(IPlayerMongoContext context) : IPositionReposito
     {
         return await _collection.Find(_ => true).ToListAsync(cancellationToken).ConfigureAwait(true);
     }
+
+    public async Task<List<PlayerPosition>> GetPlayersNearbyAsync(
+    string playerId,
+    Vector3 position,
+    float radiusMeters = 100f,
+    CancellationToken cancellationToken = default)
+    {
+        var filter = Builders<PlayerPosition>.Filter.And(
+            Builders<PlayerPosition>.Filter.Ne(p => p.PlayerId, playerId), // ignora o próprio
+            Builders<PlayerPosition>.Filter.Lt(p => Math.Sqrt(
+                Math.Pow(p.PositionX - position.X, 2) +
+                Math.Pow(p.PositionY - position.Y, 2) +
+                Math.Pow(p.PositionZ - position.Z, 2)), radiusMeters)
+        );
+
+        return await _collection.Find(filter).ToListAsync(cancellationToken).ConfigureAwait(true);
+    }
+
 }
