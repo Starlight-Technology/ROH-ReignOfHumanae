@@ -88,7 +88,6 @@ app.MapGet(
     async (ICharacterService service, Guid accountGuid) =>
     {
         return await service.GetAllCharactersAsync(accountGuid).ConfigureAwait(true);
-        ;
     });
 
 app.MapGet(
