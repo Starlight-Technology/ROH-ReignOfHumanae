@@ -64,7 +64,7 @@ namespace Assets.Scripts.Connection.Api
                 "Api/Version/GetCurrentVersion",
                 (response) =>
                 {
-                    if (response != null)
+                    if (response is not null && response.ObjectResponse is not null)
                     {
                         GameVersionModel gameVersion = response.ResponseToModel<GameVersionModel>();
 

@@ -10,14 +10,16 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 using ROH.Gateway.Grpc.Player;
+using ROH.Gateway.WebSocketGateway;
 using ROH.Protos.NearbyPlayer;
 using ROH.Protos.PlayerPosition;
+using ROH.Service.Exception;
+using ROH.Service.Exception.Communication;
+using ROH.Service.Exception.Interface;
 using ROH.Utils.ApiConfiguration;
 
-using System.Collections.Generic;
 using System.Text;
 
-using static ROH.Protos.PlayerPosition.PlayerService;
 using static ROH.Utils.ApiConfiguration.ApiConfigReader;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -115,14 +117,22 @@ builder.Services.AddGrpcClient<NearbyPlayerService.NearbyPlayerServiceClient>(op
     options.Address = nearbyUri;
 });
 
-builder.Services.AddGrpc();
+builder.Services.AddScoped<ILogService, LogService>();
+
+builder.Services.AddScoped<IExceptionHandler, ExceptionHandler>();
+
+
+builder.Services.AddScoped<PlayerSavePositionServiceForwarder>();
+builder.Services.AddScoped<NearbyPlayerServiceForwarder>();
+
+builder.Services.AddScoped<RealtimeConnectionManager>();
 
 WebApplication app = builder.Build();
 
-app.UseGrpcWeb(new GrpcWebOptions { DefaultEnabled = true });
-
-app.MapGrpcService<PlayerSavePositionServiceForwarder>().EnableGrpcWeb().AllowAnonymous();
-app.MapGrpcService<NearbyPlayerServiceForwarder>().EnableGrpcWeb().AllowAnonymous();
+app.UseWebSockets(new WebSocketOptions
+{
+    KeepAliveInterval = TimeSpan.FromSeconds(15)
+});
 
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -131,5 +141,23 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.Map("/ws", RealtimeWebSocketEndpoint);
 
 await app.RunAsync().ConfigureAwait(true);
+
+
+static async Task RealtimeWebSocketEndpoint(HttpContext context)
+{
+    if (!context.WebSockets.IsWebSocketRequest)
+    {
+        context.Response.StatusCode = 400;
+        return;
+    }
+
+    var socket = await context.WebSockets.AcceptWebSocketAsync();
+
+    var manager = context.RequestServices
+        .GetRequiredService<RealtimeConnectionManager>();
+
+    await manager.HandleClientAsync(context, socket);
+}

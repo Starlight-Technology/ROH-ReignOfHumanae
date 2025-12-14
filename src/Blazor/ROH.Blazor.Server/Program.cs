@@ -88,6 +88,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UsePathBase("/blazor");
+
 app.UseStaticFiles();
 
 app.UseRouting();

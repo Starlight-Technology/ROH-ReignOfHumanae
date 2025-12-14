@@ -20,6 +20,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="MessagePack" Version="3.1.4" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
@@ -28,6 +29,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Common\ROH.Protos\ROH.Protos.csproj" />
     <ProjectReference Include="..\..\Common\ROH.Utils\ROH.Utils.csproj" />
+    <ProjectReference Include="..\..\Service\ROH.Service.Exception\ROH.Service.Exception.csproj" />
   </ItemGroup>
 
 </Project>
