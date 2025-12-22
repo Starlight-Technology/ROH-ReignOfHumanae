@@ -5,12 +5,13 @@ using Microsoft.IdentityModel.Tokens;
 using ROH.Gateway.Grpc.Player;
 using ROH.Protos.NearbyPlayer;
 using ROH.Protos.PlayerPosition;
+using ROH.Service.Exception.Interface;
 using ROH.StandardModels.WebSocket;
 using ROH.StandardModels.WebSocket.Player;
-using ROH.Service.Exception.Interface;
 
 using System.Collections.Concurrent;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Security.Claims;
 using System.Text;
@@ -24,6 +25,7 @@ public class RealtimeConnectionManager
     private readonly PlayerSavePositionServiceForwarder _savePositionForwarder;
     private readonly NearbyPlayerServiceForwarder _nearbyForwarder;
     private readonly IExceptionHandler exceptionHandler;
+    string accountGuid;
 
     public RealtimeConnectionManager(
         PlayerSavePositionServiceForwarder savePositionForwarder,
@@ -35,11 +37,10 @@ public class RealtimeConnectionManager
 
     public async Task HandleClientAsync(HttpContext ctx, WebSocket socket)
     {
-        string playerId;
 
         try
         {
-            playerId = Authenticate(ctx);
+            accountGuid = Authenticate(ctx);
         }
         catch
         {
@@ -51,7 +52,7 @@ public class RealtimeConnectionManager
             return;
         }
 
-        _clients[playerId] = socket;
+        _clients[accountGuid] = socket;
 
         var buffer = new byte[8192];
 
@@ -69,10 +70,11 @@ public class RealtimeConnectionManager
                 var envelope = MessagePackSerializer
                     .Deserialize<RealtimeEnvelope>(data);
 
-                await HandleMessage(playerId, envelope);
+                await HandleMessage(envelope, socket);
             }
         }
-        catch (WebSocketException e){
+        catch (WebSocketException e)
+        {
             Console.WriteLine(e.WebSocketErrorCode);
         }
         catch (Exception e)
@@ -81,7 +83,7 @@ public class RealtimeConnectionManager
         }
         finally
         {
-            _clients.TryRemove(playerId, out _);
+            _clients.TryRemove(accountGuid, out _);
 
             if (socket.State == WebSocketState.Open)
             {
@@ -93,27 +95,29 @@ public class RealtimeConnectionManager
         }
     }
 
-    private async Task HandleMessage(string playerId, RealtimeEnvelope env)
+    private async Task HandleMessage(RealtimeEnvelope env, WebSocket socket)
     {
         switch (env.Type)
         {
             case "PlayerPosition":
-                await HandlePlayerPosition(playerId, env.Payload);
+                await HandlePlayerPosition(env.Payload, socket);
                 break;
         }
     }
 
-    private async Task HandlePlayerPosition(string playerId, byte[] payload)
+    private async Task HandlePlayerPosition(byte[] payload, WebSocket socket)
     {
         var msg = MessagePackSerializer.Deserialize<PlayerPositionMessage>(payload);
 
+        var clientKey = msg.PlayerId;
+        _clients[clientKey] = socket;
         // ------------------------------------------------------------------
         // 1️⃣ Salva posição (PlayerSync.SavePosition)
         // ------------------------------------------------------------------
         await _savePositionForwarder.SavePlayerData(
             new PlayerRequest
             {
-                PlayerId = playerId,
+                PlayerId = msg.PlayerId,
                 Position = new Position
                 {
                     X = msg.X,
@@ -127,7 +131,9 @@ public class RealtimeConnectionManager
                     Z = msg.RotZ,
                     W = msg.RotW
                 }
+
             },
+
             context: null! // Gateway não usa metadata aqui
         );
 
@@ -137,7 +143,7 @@ public class RealtimeConnectionManager
         var nearby = await _nearbyForwarder.GetNearbyPlayers(
             new NearbyPlayersRequest
             {
-                PlayerId = playerId,
+                PlayerId = msg.PlayerId,
                 X = msg.X,
                 Y = msg.Y,
                 Z = msg.Z,
@@ -149,11 +155,11 @@ public class RealtimeConnectionManager
         // ------------------------------------------------------------------
         // 3️⃣ Envia resposta apenas para o jogador solicitante
         // ------------------------------------------------------------------
-        if (_clients.TryGetValue(playerId, out var socket))
+        if (_clients.TryGetValue(msg.PlayerId, out socket))
         {
             var response = new NearbyPlayersMessage
             {
-                Players = nearby.Players.Select(p => new NearbyPlayerMessage
+                Players = [.. nearby.Players.Select(p => new NearbyPlayerMessage
                 {
                     PlayerId = p.PlayerId,
                     X = p.X,
@@ -165,7 +171,7 @@ public class RealtimeConnectionManager
                     RotW = p.RotW,
                     ModelName = p.ModelName,
                     AnimationState = p.AnimationState
-                }).ToList()
+                })]
             };
 
             await SendAsync(
@@ -233,13 +239,13 @@ public class RealtimeConnectionManager
         }
 
         // 🔑 playerId vem do JTI
-        string? playerId = principal.Claims
+        string? accountGuid = principal.Claims
             .FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)
             ?.Value;
 
-        if (string.IsNullOrWhiteSpace(playerId))
+        if (string.IsNullOrWhiteSpace(accountGuid))
             throw new UnauthorizedAccessException("JWT sem PlayerId.");
 
-        return playerId;
+        return accountGuid;
     }
 }

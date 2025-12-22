@@ -7,6 +7,7 @@
 using Assets.Scripts.Configurations;
 using Assets.Scripts.Connection;
 using Assets.Scripts.Connection.Api;
+using Assets.Scripts.Connection.WebSocket;
 using Assets.Scripts.Helpers;
 using Assets.Scripts.Models.Character;
 using Assets.Scripts.Models.Configuration;
@@ -155,7 +156,7 @@ namespace Assets.Scripts.Player
             _socket.OnError += error =>
             {
                 Debug.LogError($"[WS] Error: {error}");
-            };
+            };         
 
             _socket.OnMessage += HandleRealtimeMessage;
 
@@ -228,20 +229,41 @@ namespace Assets.Scripts.Player
 
         private void HandleRealtimeMessage(object data)
         {
-            if (data is not RealtimeEnvelope env)
+            if (data is not byte[] bytes)
+            {
+                Debug.LogWarning($"[WS] Unexpected message type: {data?.GetType()}");
                 return;
+            }
+
+            RealtimeEnvelope env;
+
+            try
+            {
+                env = MessagePackSerializer.Deserialize<RealtimeEnvelope>(bytes);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[WS] Failed to deserialize envelope: {ex}");
+                return;
+            }
 
             switch (env.Type)
             {
-                case "NearbyPlayer":
-                    var msg = MessagePackSerializer.Deserialize<NearbyPlayerMessage>(env.Payload);
-                    UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                case "NearbyPlayers":
                     {
-                        UpdateNearbyPlayer(msg);
-                    });
-                    break;
+                        var msg = MessagePackSerializer
+                            .Deserialize<NearbyPlayersMessage>(env.Payload);
+
+                        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                        {
+                            foreach (var playerInfo in msg.Players)
+                                UpdateNearbyPlayer(playerInfo);
+                        });
+                        break;
+                    }
             }
         }
+
 
         private void UpdateNearbyPlayer(NearbyPlayerMessage info)
         {

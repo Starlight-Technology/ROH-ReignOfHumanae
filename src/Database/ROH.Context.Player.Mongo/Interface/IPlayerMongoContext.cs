@@ -7,4 +7,5 @@ namespace ROH.Context.Player.Mongo.Interface;
 public interface IPlayerMongoContext
 {
     IMongoCollection<PlayerPosition> PlayerPositionCollection { get; }
+    IMongoCollection<PlayerPositionGeo> PlayerPositionGeoCollection { get; }
 }

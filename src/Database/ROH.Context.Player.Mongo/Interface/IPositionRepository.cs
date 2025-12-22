@@ -11,6 +11,7 @@ public interface IPositionRepository
     Task<List<PlayerPosition>> GetPlayersNearbyAsync(
     string playerId,
     Vector3 position,
-    float radiusMeters = 100f,
+    double radiusMeters = 100f,
+    float heightTolerance = 5f,
     CancellationToken cancellationToken = default);
 }

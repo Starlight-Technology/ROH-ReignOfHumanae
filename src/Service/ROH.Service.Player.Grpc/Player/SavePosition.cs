@@ -1,5 +1,7 @@
 ﻿using Grpc.Core;
 
+using MongoDB.Bson;
+
 using ROH.Context.Player.Mongo.Interface;
 using ROH.Protos.PlayerPosition;
 using ROH.Service.Exception.Interface;
@@ -13,6 +15,7 @@ public class SavePosition(IPositionRepository repository, IExceptionHandler hand
         {
             var position = new Context.Player.Mongo.Entities.PlayerPosition
             {
+                Id = ObjectId.GenerateNewId(),
                 PlayerId = request.PlayerId,
                 PositionX = request.Position.X,
                 PositionY = request.Position.Y,
@@ -20,7 +23,7 @@ public class SavePosition(IPositionRepository repository, IExceptionHandler hand
                 RotationX = request.Rotation.X,
                 RotationY = request.Rotation.Y,
                 RotationZ = request.Rotation.Z,
-                RotationW = request.Rotation.W
+                RotationW = request.Rotation.W,
             };
 
             await repository.SavePlayerPositionAsync(position, context.CancellationToken).ConfigureAwait(false);

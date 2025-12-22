@@ -17,4 +17,6 @@ public class PlayerMongoContext : IPlayerMongoContext
     }
 
     public IMongoCollection<PlayerPosition> PlayerPositionCollection => _database.GetCollection<PlayerPosition>("PlayerPositionCollection");
+    public IMongoCollection<PlayerPositionGeo> PlayerPositionGeoCollection => _database.GetCollection<PlayerPositionGeo>("player_positions");
+
 }

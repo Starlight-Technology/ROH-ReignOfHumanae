@@ -9,7 +9,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{A92ECAAB-BAC2-0858-4DFD-D6E0FBAC429B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -80,6 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\ForestVision\Scripts\Tools\TreeCreator\FV_TreeTools.cs" />
+    <Compile Include="Assets\Scripts\Connection\WebSocket\WebSocketService.cs" />
     <Compile Include="Assets\Scripts\Models\Configuration\ConfigurationModel.cs" />
     <Compile Include="Assets\Scripts\Models\Character\RealtimeEnvelope.cs" />
     <Compile Include="Assets\Visual Design Cafe\Nature Renderer Demo\Scripts\OpenWebsiteButton.cs" />
@@ -139,7 +141,6 @@
     <Compile Include="Assets\Forst\Lux Instant Vegetation\Core\Scripts\LuxInstantWind.cs" />
     <Compile Include="Assets\Visual Design Cafe\Nature Renderer Demo\Scripts\RuntimeEditing.cs" />
     <Compile Include="Assets\ForestVision\Scripts\FV_Wind.cs" />
-    <Compile Include="Assets\Scripts\Connection\WebSocket\WebSocket.cs" />
     <Compile Include="Assets\Scripts\Connection\ApiConfiguration\ApiClient.cs" />
     <Compile Include="Assets\ForestVision\Scripts\Tools\TreeCreator\FV_Browser.cs" />
     <Compile Include="Assets\Scripts\Login\CharacterListItem.cs" />

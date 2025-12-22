@@ -1,4 +1,5 @@
 using Assets.Scripts.Connection;
+using Assets.Scripts.Connection.WebSocket;
 
 using UnityEngine;
 

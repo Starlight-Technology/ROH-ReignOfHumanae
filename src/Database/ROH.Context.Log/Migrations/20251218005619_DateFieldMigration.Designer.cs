@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ROH.Context.Log;
@@ -11,9 +12,11 @@ using ROH.Context.Log;
 namespace ROH.Context.Log.Migrations
 {
     [DbContext(typeof(LogContext))]
-    partial class LogContextModelSnapshot : ModelSnapshot
+    [Migration("20251218005619_DateFieldMigration")]
+    partial class DateFieldMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
