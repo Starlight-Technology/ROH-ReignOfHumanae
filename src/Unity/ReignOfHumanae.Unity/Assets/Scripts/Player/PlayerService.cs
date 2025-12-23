@@ -50,6 +50,7 @@ namespace Assets.Scripts.Player
             apiCharacter = new GameObject("apiCharacter");
             var apiService = apiCharacter.AddComponent<ApiCharacterService>();
             apiService.Start();
+            MessagePackBootstrap.Initialize();
 
             try
             {
@@ -229,21 +230,9 @@ namespace Assets.Scripts.Player
 
         private void HandleRealtimeMessage(object data)
         {
-            if (data is not byte[] bytes)
+            if (data is not RealtimeEnvelope env)
             {
                 Debug.LogWarning($"[WS] Unexpected message type: {data?.GetType()}");
-                return;
-            }
-
-            RealtimeEnvelope env;
-
-            try
-            {
-                env = MessagePackSerializer.Deserialize<RealtimeEnvelope>(bytes);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"[WS] Failed to deserialize envelope: {ex}");
                 return;
             }
 

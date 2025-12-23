@@ -81,6 +81,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\ForestVision\Scripts\Tools\TreeCreator\FV_TreeTools.cs" />
+    <Compile Include="Assets\Scripts\Connection\WebSocket\RealtimeEnvelopeFormatter.cs" />
+    <Compile Include="Assets\Scripts\Connection\WebSocket\GameMessagePackResolver.cs" />
     <Compile Include="Assets\Scripts\Connection\WebSocket\MessagePackBootstrap.cs" />
     <Compile Include="Assets\Scripts\Connection\WebSocket\WebSocketService.cs" />
     <Compile Include="Assets\Scripts\Models\Configuration\ConfigurationModel.cs" />
@@ -92,13 +94,11 @@
     <Compile Include="Assets\Scripts\Models\Version\GameVersionFileModel.cs" />
     <Compile Include="Assets\Scripts\Connection\WebSocket\IRealtimeSocket.cs" />
     <Compile Include="Assets\TerrainGenerator\Scripts\Maps\FalloffMap.cs" />
-    <Compile Include="Assets\Scripts\Protos\PlayerPosition\PlayerPosition.cs" />
     <Compile Include="Assets\Scripts\Models\Account\UserModel.cs" />
     <Compile Include="Assets\Scripts\Models\Character\Position\PositionModel.cs" />
     <Compile Include="Assets\Scripts\Update\UpdateService.cs" />
     <Compile Include="Assets\Scripts\Player\ClickToMove.cs" />
     <Compile Include="Assets\EDEN_ErosionTools\Scripts\GPU\EDEN_ErosionTools.cs" />
-    <Compile Include="Assets\Scripts\Protos\NearbyPlayers\NearbyPlayerGrpc.cs" />
     <Compile Include="Assets\Scripts\PopUp\PopUpService.cs" />
     <Compile Include="Assets\EDEN_ErosionTools\Scripts\GPU\EDEN_Hydraulics.cs" />
     <Compile Include="Assets\Visual Design Cafe\Nature Renderer Demo\Scripts\CompileShaders.cs" />
@@ -152,7 +152,6 @@
     <Compile Include="Assets\Scripts\Player\PlayerMovements.cs" />
     <Compile Include="Assets\Scripts\Helpers\DataManager.cs" />
     <Compile Include="Assets\ExplosiveLLC\Fighter Pack Bundle FREE\Demo Elements\Code\SmoothFollow.cs" />
-    <Compile Include="Assets\Scripts\Protos\NearbyPlayers\NearbyPlayer.cs" />
     <Compile Include="Assets\TerrainGenerator\Scripts\Abstract\IGenerator.cs" />
     <Compile Include="Assets\Scripts\Models\Character\CharacterModel.cs" />
     <Compile Include="Assets\ForestVision\Scripts\Tools\FV_Tweaker.cs" />
@@ -170,7 +169,6 @@
     <Compile Include="Assets\TerrainGenerator\Scripts\Abstract\IMap.cs" />
     <Compile Include="Assets\Scripts\Models\Version\GameVersionModel.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerService.cs" />
-    <Compile Include="Assets\Scripts\Protos\PlayerPosition\PlayerPositionGrpc.cs" />
     <Compile Include="Assets\ForestVision\Scripts\Tools\TreeCreator\Scripts\FBXUnityMaterialGetter.cs" />
     <Compile Include="Assets\Forst\Lux Instant Vegetation\Core\Scripts\LuxSyncWindSettings.cs" />
     <Compile Include="Assets\Scripts\Models\Character\EquippedItems.cs" />
@@ -200,6 +198,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\EDEN_ErosionTools\Scripts\GPU\ComputeShaders\EDEN_Hydraulics.compute" />
+    <None Include="Assets\Scripts\Models\Websocket\ROH.Shared.asmdef" />
     <None Include="Assets\TerrainDemoScene_HDRP\Notes\Stamps.txt" />
     <None Include="Assets\TerrainSampleAssets\ThirdPartyNotices.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

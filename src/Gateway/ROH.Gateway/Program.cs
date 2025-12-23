@@ -4,6 +4,9 @@
 //     Copyright (c) Starlight-Technology. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
+using MessagePack;
+using MessagePack.Resolvers;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.IdentityModel.Tokens;
@@ -23,6 +26,11 @@ using System.Text;
 using static ROH.Utils.ApiConfiguration.ApiConfigReader;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+MessagePackSerializer.DefaultOptions =
+    MessagePackSerializerOptions.Standard
+        .WithResolver(StandardResolver.Instance)
+        .WithSecurity(MessagePackSecurity.UntrustedData);
 
 // Add services to the container.
 builder.Services.AddControllers();

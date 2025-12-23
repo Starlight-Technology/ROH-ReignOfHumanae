@@ -67,8 +67,8 @@ public class RealtimeConnectionManager
 
                 var data = buffer.AsMemory(0, result.Count);
 
-                var envelope = MessagePackSerializer
-                    .Deserialize<RealtimeEnvelope>(data);
+                var options = MessagePackSerializerOptions.Standard;
+                var envelope = MessagePackSerializer.Deserialize<RealtimeEnvelope>(data, options);
 
                 await HandleMessage(envelope, socket);
             }

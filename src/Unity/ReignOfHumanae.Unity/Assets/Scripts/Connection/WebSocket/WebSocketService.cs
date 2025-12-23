@@ -1,4 +1,7 @@
-﻿using MessagePack;
+﻿using Assets.Scripts.Models.Character;
+
+using MessagePack;
+using MessagePack.Resolvers;
 
 using System;
 using System.Collections.Concurrent;
@@ -19,12 +22,12 @@ namespace Assets.Scripts.Connection.WebSocket
         private ClientWebSocket _socket;
         private CancellationTokenSource _cts;
 
-        private readonly ConcurrentQueue<byte[]> _receiveQueue = new();
+        private readonly ConcurrentQueue<RealtimeEnvelope> _receiveQueue = new();
 
         public event Action OnConnected;
         public event Action OnDisconnected;
         public event Action<string> OnError;
-        public event Action<byte[]> OnMessage;
+        public event Action<RealtimeEnvelope> OnMessage;
 
         public async Task ConnectAsync(string url)
         {
@@ -44,18 +47,38 @@ namespace Assets.Scripts.Connection.WebSocket
             }
         }
 
-        public async Task SendAsync(object message)
+        public async Task SendAsync(RealtimeEnvelope message)
         {
-            if (_socket == null || _socket.State != WebSocketState.Open)
+            if (_socket?.State != WebSocketState.Open)
+            {
+                Debug.LogWarning("[WS] Cannot send, WebSocket is not open");
                 return;
+            }
 
-            byte[] data = MessagePackSerializer.Serialize(message);
+            try
+            {
+                if (!MessagePackBootstrap.IsInitialized)
+                {
+                    MessagePackBootstrap.Initialize();
+                }
 
-            await _socket.SendAsync(
-                new ArraySegment<byte>(data),
-                WebSocketMessageType.Binary,
-                true,
-                _cts.Token);
+                var options = MessagePackSerializerOptions.Standard
+                                .WithResolver(StandardResolver.Instance)
+                                .WithSecurity(MessagePackSecurity.UntrustedData);
+                var bytes = MessagePackSerializer.Serialize(message, options);
+
+                await _socket.SendAsync(
+                    new ArraySegment<byte>(bytes),
+                    WebSocketMessageType.Binary,
+                    true,
+                    CancellationToken.None
+                );
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[WS] Send error: {ex.Message}");
+                throw;
+            }
         }
 
         private async Task ReceiveLoop()
@@ -64,35 +87,36 @@ namespace Assets.Scripts.Connection.WebSocket
 
             try
             {
-                while (_socket.State == WebSocketState.Open)
+                while (_socket?.State == WebSocketState.Open)
                 {
-                    using var ms = new MemoryStream();
-                    WebSocketReceiveResult result;
+                    var result = await _socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
 
-                    do
+                    if (result.MessageType == WebSocketMessageType.Close)
                     {
-                        result = await _socket.ReceiveAsync(
-                            new ArraySegment<byte>(buffer),
-                            _cts.Token);
+                        await _socket.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
+                        break;
+                    }
 
-                        if (result.MessageType == WebSocketMessageType.Close)
-                        {
-                            await CloseAsync();
-                            return;
-                        }
+                    var messageBytes = new byte[result.Count];
+                    Array.Copy(buffer, messageBytes, result.Count);
 
-                        ms.Write(buffer, 0, result.Count);
+                    try
+                    {
+                        var options = MessagePackBootstrap.Options ?? MessagePackSerializerOptions.Standard;
+                        var message = MessagePackSerializer.Deserialize<RealtimeEnvelope>(messageBytes, options);
 
-                        Debug.Log($"[WS RAW] frame received, bytes={result.Count}, end={result.EndOfMessage}");
-
-                    } while (!result.EndOfMessage);
-
-                    _receiveQueue.Enqueue(ms.ToArray());
+                        // Chama o evento correto (OnMessage em vez de OnMessageReceived)
+                        OnMessage?.Invoke(message);
+                    }
+                    catch (MessagePackSerializationException ex)
+                    {
+                        Debug.LogError($"[WS] Deserialization error: {ex.Message}");
+                    }
                 }
             }
             catch (Exception ex)
             {
-                OnError?.Invoke(ex.Message);
+                Debug.LogError($"[WS] Receive error: {ex.Message}");
             }
         }
 
