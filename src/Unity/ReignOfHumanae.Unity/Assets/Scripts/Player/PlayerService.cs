@@ -214,7 +214,7 @@ namespace Assets.Scripts.Player
             var envelope = new RealtimeEnvelope
             {
                 Type = "PlayerPosition",
-                Payload = MessagePackSerializer.Serialize(msg)
+                Payload = MessagePackSerializer.Serialize<PlayerPositionMessage>(msg)
             };
 
             await _socket.SendAsync(envelope);
@@ -272,9 +272,11 @@ namespace Assets.Scripts.Player
 
             if (_nearbyPlayers.TryGetValue(info.PlayerId, out var instance))
             {
-                instance.transform.SetPositionAndRotation(
+                var interpolator = instance.GetComponent<RemotePlayerInterpolator>() ?? instance.AddComponent<RemotePlayerInterpolator>();
+                interpolator.AddSnapshot(
                     new Vector3(info.X, info.Y, info.Z),
-                    Quaternion.Euler(info.RotX, info.RotY, info.RotZ));
+                    Quaternion.Euler(info.RotX, info.RotY, info.RotZ)
+                );
                 return;
             }
 
@@ -290,6 +292,13 @@ namespace Assets.Scripts.Player
                 prefab,
                 new Vector3(info.X, info.Y, info.Z),
                 Quaternion.Euler(info.RotX, info.RotY, info.RotZ));
+
+            var interpolatorNew = newInstance.AddComponent<RemotePlayerInterpolator>();
+            interpolatorNew.AddSnapshot(
+                new Vector3(info.X, info.Y, info.Z),
+                Quaternion.Euler(info.RotX, info.RotY, info.RotZ)
+            );
+
 
             newInstance.name = $"NearbyPlayer_{info.PlayerId}";
 

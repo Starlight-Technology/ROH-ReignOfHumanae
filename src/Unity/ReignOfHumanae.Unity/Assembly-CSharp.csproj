@@ -81,9 +81,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\ForestVision\Scripts\Tools\TreeCreator\FV_TreeTools.cs" />
+    <Compile Include="Assets\Scripts\Connection\WebSocket\MessagePackBootstrap.cs" />
     <Compile Include="Assets\Scripts\Connection\WebSocket\WebSocketService.cs" />
     <Compile Include="Assets\Scripts\Models\Configuration\ConfigurationModel.cs" />
-    <Compile Include="Assets\Scripts\Models\Character\RealtimeEnvelope.cs" />
+    <Compile Include="Assets\Scripts\Models\Websocket\PlayerSnapshot.cs" />
+    <Compile Include="Assets\Scripts\Models\Websocket\RealtimeEnvelope.cs" />
+    <Compile Include="Assets\Scripts\Player\RemotePlayerInterpolator.cs" />
     <Compile Include="Assets\Visual Design Cafe\Nature Renderer Demo\Scripts\OpenWebsiteButton.cs" />
     <Compile Include="Assets\Scripts\Models\Character\CharacterInventory.cs" />
     <Compile Include="Assets\Scripts\Models\Version\GameVersionFileModel.cs" />
@@ -91,7 +94,7 @@
     <Compile Include="Assets\TerrainGenerator\Scripts\Maps\FalloffMap.cs" />
     <Compile Include="Assets\Scripts\Protos\PlayerPosition\PlayerPosition.cs" />
     <Compile Include="Assets\Scripts\Models\Account\UserModel.cs" />
-    <Compile Include="Assets\Scripts\Models\Character\PositionModel.cs" />
+    <Compile Include="Assets\Scripts\Models\Character\Position\PositionModel.cs" />
     <Compile Include="Assets\Scripts\Update\UpdateService.cs" />
     <Compile Include="Assets\Scripts\Player\ClickToMove.cs" />
     <Compile Include="Assets\EDEN_ErosionTools\Scripts\GPU\EDEN_ErosionTools.cs" />
@@ -100,7 +103,7 @@
     <Compile Include="Assets\EDEN_ErosionTools\Scripts\GPU\EDEN_Hydraulics.cs" />
     <Compile Include="Assets\Visual Design Cafe\Nature Renderer Demo\Scripts\CompileShaders.cs" />
     <Compile Include="Assets\EDEN_Painter\Scripts\EDEN_Terrain_Painter.cs" />
-    <Compile Include="Assets\Scripts\Models\Character\PlayerPositionMessage.cs" />
+    <Compile Include="Assets\Scripts\Models\Character\Position\PlayerPositionMessage.cs" />
     <Compile Include="Assets\TerrainGenerator\Scripts\Generators\GrassGenerator.cs" />
     <Compile Include="Assets\Visual Design Cafe\Nature Renderer\Runtime\NatureRenderer.SRP.cs" />
     <Compile Include="Assets\EDEN_Populator\Scripts\EDEN_Terrain_Populator.cs" />
@@ -111,7 +114,7 @@
     <Compile Include="Assets\Scripts\Helpers\DefaultResponseHelper.cs" />
     <Compile Include="Assets\Scripts\Connection\Api\ApiLoginService.cs" />
     <Compile Include="Assets\Scripts\Models\Character\DefenseStatus.cs" />
-    <Compile Include="Assets\Scripts\Models\Character\PlayerPositionModel.cs" />
+    <Compile Include="Assets\Scripts\Models\Character\Position\PlayerPositionModel.cs" />
     <Compile Include="Assets\ForestVision\Scripts\Tools\TreeCreator\FV_SwitchMesh.cs" />
     <Compile Include="Assets\Scripts\DayTime\DayNightCycleController.cs" />
     <Compile Include="Assets\Forst\CTI Runtime Components\CTI Runtime Components HDRP 12plus\Scripts\CTI_HDRP_CustomWind.cs" />
@@ -163,7 +166,7 @@
     <Compile Include="Assets\DoubleL\Demo\DemoCameraController.cs" />
     <Compile Include="Assets\Scripts\Models\Response\DefaultResponse.cs" />
     <Compile Include="Assets\ForestVision\Scripts\Tools\TreeCreator\Scripts\FBXExporter.cs" />
-    <Compile Include="Assets\Scripts\Models\Character\NearbyPlayerMessage.cs" />
+    <Compile Include="Assets\Scripts\Models\Character\Position\NearbyPlayerMessage.cs" />
     <Compile Include="Assets\TerrainGenerator\Scripts\Abstract\IMap.cs" />
     <Compile Include="Assets\Scripts\Models\Version\GameVersionModel.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerService.cs" />
@@ -175,7 +178,7 @@
     <Compile Include="Assets\ForestVision\Scripts\Tools\TreeCreator\FV_MenuItem.cs" />
     <Compile Include="Assets\Mountain Terrain rocks and tree\Script\Camera\FlyCameraControl.cs" />
     <Compile Include="Assets\ForestVision\Scripts\Tools\TreeCreator\FV_Renamer.cs" />
-    <Compile Include="Assets\Scripts\Models\Character\RotationModel.cs" />
+    <Compile Include="Assets\Scripts\Models\Character\Position\RotationModel.cs" />
     <Compile Include="Assets\Kevin Iglesias\Human Animations\Scripts\SpineProxy.cs" />
     <Compile Include="Assets\Scripts\Models\File\FileModel.cs" />
     <Compile Include="Assets\Visual Design Cafe\Nature Renderer Demo\Scripts\RenderPipelineLighting.cs" />
@@ -2097,6 +2100,7 @@
       <Name>Boxophobic.TerrainDataBaker.Editor</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
