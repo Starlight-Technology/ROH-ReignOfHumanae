@@ -1,7 +1,6 @@
 ﻿using Grpc.Core;
 
-using ROH.Protos.NearbyPlayer;
-using ROH.Protos.PlayerPosition;
+using ROH.Contracts.GRPC.Player.PlayerPosition;
 
 namespace ROH.Gateway.Grpc.Player;
 

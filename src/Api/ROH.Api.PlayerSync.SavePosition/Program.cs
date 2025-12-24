@@ -10,8 +10,6 @@ using ROH.Service.Exception.Communication;
 using ROH.Service.Exception.Interface;
 using ROH.Service.Player.Grpc.Player;
 
-using static ROH.Protos.PlayerPosition.PlayerService;
-
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

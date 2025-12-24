@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\ROH.Protos\ROH.Protos.csproj" />
     <ProjectReference Include="..\..\Common\ROH.StandardModels\ROH.StandardModels.csproj" />
     <ProjectReference Include="..\..\Database\ROH.Context.Player.Mongo\ROH.Context.Player.Mongo.csproj" />
     <ProjectReference Include="..\..\Database\ROH.Context.Player\ROH.Context.Player.csproj" />

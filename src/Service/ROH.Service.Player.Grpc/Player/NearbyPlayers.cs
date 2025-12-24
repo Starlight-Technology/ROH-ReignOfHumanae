@@ -1,13 +1,14 @@
-﻿using ROH.Context.Player.Mongo.Interface;
-using ROH.Protos.NearbyPlayer;
-using Grpc.Core;
+﻿using Grpc.Core;
+
+using ROH.Context.Player.Mongo.Interface;
+using ROH.Contracts.GRPC.Player.NearbyPlayer;
 using ROH.Service.Exception.Interface;
 
 namespace ROH.Service.Player.Grpc.Player;
 
 public class NearbyPlayers(IPositionRepository positionRepository, IExceptionHandler exceptionHandler) : NearbyPlayerService.NearbyPlayerServiceBase
 {
-    public override async Task<ROH.Protos.NearbyPlayer.NearbyPlayersResponse> GetNearbyPlayers(
+    public override async Task<NearbyPlayersResponse> GetNearbyPlayers(
         NearbyPlayersRequest request,
         ServerCallContext context)
     {

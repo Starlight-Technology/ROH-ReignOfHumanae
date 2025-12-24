@@ -1,6 +1,6 @@
 ﻿using Grpc.Core;
 
-using ROH.Protos.NearbyPlayer;
+using ROH.Contracts.GRPC.Player.NearbyPlayer;
 
 namespace ROH.Gateway.Grpc.Player;
 

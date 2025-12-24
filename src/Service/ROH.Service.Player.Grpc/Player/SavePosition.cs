@@ -3,7 +3,7 @@
 using MongoDB.Bson;
 
 using ROH.Context.Player.Mongo.Interface;
-using ROH.Protos.PlayerPosition;
+using ROH.Contracts.GRPC.Player.PlayerPosition;
 using ROH.Service.Exception.Interface;
 
 namespace ROH.Service.Player.Grpc.Player;

@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MessagePack" Version="3.1.4" />
+	  <PackageReference Include="Google.Protobuf" Version="3.31.0" />
+	  <PackageReference Include="Grpc.Core" Version="2.46.6" />
+	  <PackageReference Include="Grpc.Tools" Version="2.72.0">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+  </ItemGroup>
+
+  <!--<ItemGroup>
+    <None Update="GRPC\Player\NearbyPlayer.proto">
+      <GrpcServices>Both</GrpcServices>
+    </None>
+    <None Update="GRPC\Player\PlayerPosition.proto">
+      <GrpcServices>Both</GrpcServices>
+    </None>
+  </ItemGroup>-->
+
+
+	<ItemGroup>
+		<Protobuf Include="GRPC\Player\PlayerPosition.proto" GrpcServices="Both" />
+		<Protobuf Include="GRPC\Player\NearbyPlayer.proto" GrpcServices="Both" />
+	</ItemGroup>
+
+</Project>

@@ -12,10 +12,10 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
+using ROH.Contracts.GRPC.Player.NearbyPlayer;
+using ROH.Contracts.GRPC.Player.PlayerPosition;
 using ROH.Gateway.Grpc.Player;
 using ROH.Gateway.WebSocketGateway;
-using ROH.Protos.NearbyPlayer;
-using ROH.Protos.PlayerPosition;
 using ROH.Service.Exception;
 using ROH.Service.Exception.Communication;
 using ROH.Service.Exception.Interface;

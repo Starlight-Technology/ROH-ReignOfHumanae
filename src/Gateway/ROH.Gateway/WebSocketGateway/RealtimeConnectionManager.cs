@@ -2,12 +2,11 @@
 
 using Microsoft.IdentityModel.Tokens;
 
+using ROH.Contracts.GRPC.Player.NearbyPlayer;
+using ROH.Contracts.GRPC.Player.PlayerPosition;
+using ROH.Contracts.WebSocket.Player;
 using ROH.Gateway.Grpc.Player;
-using ROH.Protos.NearbyPlayer;
-using ROH.Protos.PlayerPosition;
 using ROH.Service.Exception.Interface;
-using ROH.StandardModels.WebSocket;
-using ROH.StandardModels.WebSocket.Player;
 
 using System.Collections.Concurrent;
 using System.IdentityModel.Tokens.Jwt;

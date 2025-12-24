@@ -1,13 +1,9 @@
 ﻿using MessagePack;
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ROH.StandardModels.WebSocket.Player
+namespace ROH.Contracts.WebSocket.Player
 {
     [MessagePackObject]
-    public class NearbyPlayerMessage
+    public class PlayerPositionMessage
     {
         [Key(0)] public string PlayerId;
         [Key(1)] public float X;
@@ -18,13 +14,6 @@ namespace ROH.StandardModels.WebSocket.Player
         [Key(6)] public float RotZ;
         [Key(7)] public float RotW;
         [Key(8)] public string ModelName;
-        [Key(9)] public string AnimationState;
-    }
-
-    [MessagePackObject]
-    public class NearbyPlayersMessage
-    {
-        [Key(0)] public List<NearbyPlayerMessage> Players = new List<NearbyPlayerMessage>();
+        [Key(9)] public float Radius;
     }
 }
-
