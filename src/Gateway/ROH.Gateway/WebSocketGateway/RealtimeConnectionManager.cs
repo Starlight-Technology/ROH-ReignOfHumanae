@@ -110,9 +110,7 @@ public class RealtimeConnectionManager
 
         var clientKey = msg.PlayerId;
         _clients[clientKey] = socket;
-        // ------------------------------------------------------------------
-        // 1️⃣ Salva posição (PlayerSync.SavePosition)
-        // ------------------------------------------------------------------
+
         await _savePositionForwarder.SavePlayerData(
             new PlayerRequest
             {
@@ -129,72 +127,16 @@ public class RealtimeConnectionManager
                     Y = msg.RotY,
                     Z = msg.RotZ,
                     W = msg.RotW
-                }
+                },
+                
 
             },
 
-            context: null! // Gateway não usa metadata aqui
-        );
-
-        // ------------------------------------------------------------------
-        // 2️⃣ Busca jogadores próximos
-        // ------------------------------------------------------------------
-        var nearby = await _nearbyForwarder.GetNearbyPlayers(
-            new NearbyPlayersRequest
-            {
-                PlayerId = msg.PlayerId,
-                X = msg.X,
-                Y = msg.Y,
-                Z = msg.Z,
-                Radius = msg.Radius
-            },
-            context: null!
-        );
-
-        // ------------------------------------------------------------------
-        // 3️⃣ Envia resposta apenas para o jogador solicitante
-        // ------------------------------------------------------------------
-        if (_clients.TryGetValue(msg.PlayerId, out socket))
-        {
-            var response = new NearbyPlayersMessage
-            {
-                Players = [.. nearby.Players.Select(p => new NearbyPlayerMessage
-                {
-                    PlayerId = p.PlayerId,
-                    X = p.X,
-                    Y = p.Y,
-                    Z = p.Z,
-                    RotX = p.RotX,
-                    RotY = p.RotY,
-                    RotZ = p.RotZ,
-                    RotW = p.RotW,
-                    ModelName = p.ModelName,
-                    AnimationState = p.AnimationState
-                })]
-            };
-
-            await SendAsync(
-                socket,
-                new RealtimeEnvelope
-                {
-                    Type = "NearbyPlayers",
-                    Payload = MessagePackSerializer.Serialize(response)
-                });
-        }
+            context: null! 
+        );        
     }
 
-    private static async Task SendAsync(WebSocket socket, RealtimeEnvelope env)
-    {
-        var data = MessagePackSerializer.Serialize(env);
-
-        await socket.SendAsync(
-            data,
-            WebSocketMessageType.Binary,
-            true,
-            CancellationToken.None);
-    }
-
-    private string Authenticate(HttpContext ctx)
+    private static string Authenticate(HttpContext ctx)
     {
         if (!ctx.Request.Query.TryGetValue("access_token", out var tokenValue))
             throw new UnauthorizedAccessException("WebSocket sem token JWT.");

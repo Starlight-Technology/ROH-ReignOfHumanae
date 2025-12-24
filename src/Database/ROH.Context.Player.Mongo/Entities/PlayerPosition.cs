@@ -8,7 +8,7 @@ public class PlayerPosition
     [BsonId]
     public ObjectId Id { get; set; }
 
-    public string PlayerId { get; set; }
+    public string PlayerId { get; set; } = "";
 
     public float PositionX { get; set; }
     public float PositionY { get; set; }

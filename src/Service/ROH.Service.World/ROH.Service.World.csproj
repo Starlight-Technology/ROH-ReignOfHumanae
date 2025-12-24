@@ -11,4 +11,10 @@
     <ProjectReference Include="..\..\Common\ROH.StandardModels\ROH.StandardModels.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Engine\" />
+    <Folder Include="Spatial\" />
+    <Folder Include="State\" />
+  </ItemGroup>
+
 </Project>

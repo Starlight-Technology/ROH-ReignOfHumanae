@@ -43,6 +43,8 @@ namespace Assets.Scripts.Player
 
         private readonly Dictionary<string, GameObject> _nearbyPlayers = new();
 
+        public static PlayerAnimationState playerAnimationState;
+
         #region Unity Lifecycle
 
         public void Start()
@@ -209,7 +211,8 @@ namespace Assets.Scripts.Player
                 Z = pos.z,
                 RotX = rot.eulerAngles.x,
                 RotY = rot.eulerAngles.y,
-                RotZ = rot.eulerAngles.z
+                RotZ = rot.eulerAngles.z,
+                AnimationState = playerInstance.GetComponent<PlayerMovements>().currentAnimState
             };
 
             var envelope = new RealtimeEnvelope

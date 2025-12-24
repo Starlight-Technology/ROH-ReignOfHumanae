@@ -1,5 +1,7 @@
 ﻿using MessagePack;
 
+using ROH.StandardModels.Character;
+
 namespace ROH.Contracts.WebSocket.Player
 {
     [MessagePackObject]
@@ -15,5 +17,6 @@ namespace ROH.Contracts.WebSocket.Player
         [Key(7)] public float RotW;
         [Key(8)] public string ModelName;
         [Key(9)] public float Radius;
+        [Key(10)] public PlayerAnimationState AnimationState;
     }
 }

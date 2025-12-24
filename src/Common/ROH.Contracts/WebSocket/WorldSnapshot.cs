@@ -1,5 +1,7 @@
 ﻿using MessagePack;
 
+using ROH.Contracts.WebSocket.Player;
+
 namespace ROH.Contracts.WebSocket
 {
     [MessagePackObject]
@@ -7,7 +9,7 @@ namespace ROH.Contracts.WebSocket
     {
         [Key(0)] public long ServerTick;
 
-        //[Key(1)] public PlayerSnapshot[] Players;
+        [Key(1)] public PlayerSnapshot[] Players;
     }
 
 }

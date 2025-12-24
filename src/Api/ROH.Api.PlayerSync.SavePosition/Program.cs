@@ -24,6 +24,10 @@ builder.Services.AddScoped<IPositionRepository, PositionRepository>();
 
 builder.Services.AddScoped<IPlayerMongoContext, PlayerMongoContext>();
 
+builder.Services.AddScoped<ROH.Context.Player.Redis.Interface.IPositionRepository, ROH.Context.Player.Redis.Repository.PositionRepository>();
+
+builder.Services.AddScoped<ROH.Context.Player.Redis.Interface.IPlayerRedisContext, ROH.Context.Player.Redis.PlayerRedisContext>();
+
 builder.Services.AddGrpc();
 
 builder.WebHost

@@ -12,6 +12,7 @@ message PlayerRequest {
     string playerId = 1;
     Position position = 2;
     Rotation rotation = 3;
+    uint32 animationSate = 4;
 }
 
 message Position {

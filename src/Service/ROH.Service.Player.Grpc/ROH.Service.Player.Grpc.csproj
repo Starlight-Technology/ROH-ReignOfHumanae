@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Common\ROH.Contracts\ROH.Contracts.csproj" />
     <ProjectReference Include="..\..\Database\ROH.Context.Player.Mongo\ROH.Context.Player.Mongo.csproj" />
+    <ProjectReference Include="..\..\Database\ROH.Context.Player.Redis\ROH.Context.Player.Redis.csproj" />
     <ProjectReference Include="..\ROH.Service.Exception\ROH.Service.Exception.csproj" />
   </ItemGroup>
 

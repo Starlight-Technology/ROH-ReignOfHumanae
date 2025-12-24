@@ -16,6 +16,10 @@
 	  </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ROH.StandardModels\ROH.StandardModels.csproj" />
+  </ItemGroup>
+
   <!--<ItemGroup>
     <None Update="GRPC\Player\NearbyPlayer.proto">
       <GrpcServices>Both</GrpcServices>

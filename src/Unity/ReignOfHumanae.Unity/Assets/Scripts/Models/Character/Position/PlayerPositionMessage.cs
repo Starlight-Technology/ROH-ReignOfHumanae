@@ -21,6 +21,7 @@ namespace Assets.Scripts.Models.Character
         [Key(7)] public float RotW;
         [Key(8)] public string ModelName;
         [Key(9)] public float Radius;
+        [Key(10)] public PlayerAnimationState AnimationState;
     }
 
 }
