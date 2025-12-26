@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option csharp_namespace = "ROH.Contracts.GRPC.Worker.PlayerSocket";
+
+package playerSocket;
+
+import "GRPC/Player/NearbyPlayer.proto";
+
+message PlayerConnected{
+	string Id = 1;
+	uint32 nearbyRadius = 2;
+}
+
+message PlayersConnected{
+	repeated PlayerConnected PlayersId = 1;
+}
+
+message Default{
+	bool a = 1;
+}
+
+service PlayerConnectedService{
+	rpc GetConnectedPlayers (Default) returns (PlayersConnected);
+	rpc SendNearbyPlayers (nearbyPlayer.NearbyPlayersResponse) returns (Default);
+}

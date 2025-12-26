@@ -6,7 +6,7 @@ using System.Net.WebSockets;
 
 namespace ROH.Gateway.WebSocketGateway;
 
-public class WebSocketResponse
+public static class WebSocketResponse
 {
     public static async Task SendAsync(WebSocket socket, RealtimeEnvelope env)
     {

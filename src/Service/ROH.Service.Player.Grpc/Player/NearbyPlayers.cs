@@ -6,7 +6,7 @@ using ROH.Service.Exception.Interface;
 
 namespace ROH.Service.Player.Grpc.Player;
 
-public class NearbyPlayers(IPositionRepository positionRepository, IExceptionHandler exceptionHandler) : NearbyPlayerService.NearbyPlayerServiceBase
+public class NearbyPlayers(Context.Player.Redis.Interface.IPositionRepository positionRepositoryRedis, IExceptionHandler exceptionHandler) : NearbyPlayerService.NearbyPlayerServiceBase
 {
     public override async Task<NearbyPlayersResponse> GetNearbyPlayers(
         NearbyPlayersRequest request,
@@ -14,8 +14,9 @@ public class NearbyPlayers(IPositionRepository positionRepository, IExceptionHan
     {
         try
         {
-            var vectorPosition = new System.Numerics.Vector3(request.X, request.Y, request.Z);
-            var result = await positionRepository.GetPlayersNearbyAsync(request.PlayerId, vectorPosition, request.Radius).ConfigureAwait(true);
+            const int maxPlayers = 32;
+
+            var result = await positionRepositoryRedis.GetNearbyPlayersAsync(request.PlayerId, request.Radius, maxPlayers, context.CancellationToken).ConfigureAwait(true);
 
             return new NearbyPlayersResponse
             {

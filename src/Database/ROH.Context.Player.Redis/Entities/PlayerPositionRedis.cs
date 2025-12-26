@@ -11,8 +11,8 @@ public class PlayerPositionRedis
 {
     public string PlayerId { get; set; } = default!;
 
-    public double PositionX { get; set; } // longitude
-    public double PositionZ { get; set; } // latitude
+    public float PositionX { get; set; } // longitude
+    public float PositionZ { get; set; } // latitude
     public float PositionY { get; set; }
 
     public float RotationX { get; set; }

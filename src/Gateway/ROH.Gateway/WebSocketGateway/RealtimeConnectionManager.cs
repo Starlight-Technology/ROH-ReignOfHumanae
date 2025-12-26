@@ -17,22 +17,17 @@ using System.Text;
 
 namespace ROH.Gateway.WebSocketGateway;
 
-public class RealtimeConnectionManager
+public class RealtimeConnectionManager(
+    PlayerSavePositionServiceForwarder savePositionForwarder,
+    IExceptionHandler exceptionHandler)
+: IRealtimeConnectionManager
 {
-    private readonly ConcurrentDictionary<string, WebSocket> _clients = new();
+    private readonly ConcurrentDictionary<string, WebSocket> _accountConnections = new();
+    private readonly ConcurrentDictionary<string, WebSocket> _playerConnections = new();
 
-    private readonly PlayerSavePositionServiceForwarder _savePositionForwarder;
-    private readonly NearbyPlayerServiceForwarder _nearbyForwarder;
-    private readonly IExceptionHandler exceptionHandler;
-    string accountGuid;
+    string accountGuid = string.Empty;
 
-    public RealtimeConnectionManager(
-        PlayerSavePositionServiceForwarder savePositionForwarder,
-        NearbyPlayerServiceForwarder nearbyForwarder)
-    {
-        _savePositionForwarder = savePositionForwarder;
-        _nearbyForwarder = nearbyForwarder;
-    }
+    public async Task<ConcurrentDictionary<string, WebSocket>> GetPlayersClient() => _playerConnections;
 
     public async Task HandleClientAsync(HttpContext ctx, WebSocket socket)
     {
@@ -41,17 +36,19 @@ public class RealtimeConnectionManager
         {
             accountGuid = Authenticate(ctx);
         }
-        catch
+        catch (Exception e)
         {
             await socket.CloseAsync(
                 WebSocketCloseStatus.PolicyViolation,
                 "Unauthorized",
                 CancellationToken.None);
 
+            exceptionHandler.HandleException(e);
+
             return;
         }
 
-        _clients[accountGuid] = socket;
+        _accountConnections[accountGuid] = socket;
 
         var buffer = new byte[8192];
 
@@ -75,6 +72,7 @@ public class RealtimeConnectionManager
         catch (WebSocketException e)
         {
             Console.WriteLine(e.WebSocketErrorCode);
+            exceptionHandler.HandleException(e);
         }
         catch (Exception e)
         {
@@ -82,7 +80,7 @@ public class RealtimeConnectionManager
         }
         finally
         {
-            _clients.TryRemove(accountGuid, out _);
+            _accountConnections.TryRemove(accountGuid, out _);
 
             if (socket.State == WebSocketState.Open)
             {
@@ -108,10 +106,9 @@ public class RealtimeConnectionManager
     {
         var msg = MessagePackSerializer.Deserialize<PlayerPositionMessage>(payload);
 
-        var clientKey = msg.PlayerId;
-        _clients[clientKey] = socket;
+        _playerConnections[msg.PlayerId] = socket;
 
-        await _savePositionForwarder.SavePlayerData(
+        await savePositionForwarder.SavePlayerData(
             new PlayerRequest
             {
                 PlayerId = msg.PlayerId,
@@ -128,12 +125,10 @@ public class RealtimeConnectionManager
                     Z = msg.RotZ,
                     W = msg.RotW
                 },
-                
-
             },
 
-            context: null! 
-        );        
+            context: null!
+        );
     }
 
     private static string Authenticate(HttpContext ctx)

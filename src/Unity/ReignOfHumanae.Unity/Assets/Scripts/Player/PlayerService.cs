@@ -199,10 +199,6 @@ namespace Assets.Scripts.Player
             Vector3 pos = playerInstance.transform.position;
             Quaternion rot = playerInstance.transform.rotation;
 
-            if (Vector3.Distance(pos, _lastSentPosition) < POSITION_THRESHOLD &&
-                Quaternion.Angle(rot, _lastSentRotation) < ROTATION_THRESHOLD)
-                return;
-
             var msg = new PlayerPositionMessage
             {
                 PlayerId = player.Guid.ToString(),

@@ -10,7 +10,7 @@
     <PackageReference Include="MessagePack" Version="3.1.4" />
 	  <PackageReference Include="Google.Protobuf" Version="3.31.0" />
 	  <PackageReference Include="Grpc.Core" Version="2.46.6" />
-	  <PackageReference Include="Grpc.Tools" Version="2.72.0">
+	  <PackageReference Include="Grpc.Tools" Version="2.76.0">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
@@ -31,8 +31,15 @@
 
 
 	<ItemGroup>
+		<Protobuf Include="GRPC/**/*.proto" GrpcServices="Both" />
 		<Protobuf Include="GRPC\Player\PlayerPosition.proto" GrpcServices="Both" />
 		<Protobuf Include="GRPC\Player\NearbyPlayer.proto" GrpcServices="Both" />
+		<Protobuf Include="GRPC\Worker\PlayerSocket.proto" GrpcServices="Both" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+	  <Folder Include="GRPC\Worker\" />
 	</ItemGroup>
 
 </Project>

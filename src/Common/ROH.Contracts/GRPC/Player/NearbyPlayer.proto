@@ -10,10 +10,7 @@ service NearbyPlayerService {
 
 message NearbyPlayersRequest {
   string playerId = 1;
-  float x = 2;
-  float y = 3;
-  float z = 4;
-  float radius = 5;
+  float radius = 2;
 }
 
 message PlayerInfo {
@@ -29,6 +26,11 @@ message PlayerInfo {
   string animationState = 10;
 }
 
+message Default{
+	bool a = 1;
+}
+
 message NearbyPlayersResponse {
   repeated PlayerInfo players = 1;
+  string mainPlayer = 2;
 }

@@ -15,6 +15,7 @@ using Microsoft.OpenApi.Models;
 using ROH.Contracts.GRPC.Player.NearbyPlayer;
 using ROH.Contracts.GRPC.Player.PlayerPosition;
 using ROH.Gateway.Grpc.Player;
+using ROH.Gateway.Service;
 using ROH.Gateway.WebSocketGateway;
 using ROH.Service.Exception;
 using ROH.Service.Exception.Communication;
@@ -34,6 +35,8 @@ MessagePackSerializer.DefaultOptions =
 
 // Add services to the container.
 builder.Services.AddControllers();
+
+builder.Services.AddGrpc();
 
 string tokenKey = Environment.GetEnvironmentVariable("ROH_KEY_TOKEN") ?? "thisisaverysecurekeywith32charslong!";
 
@@ -133,7 +136,7 @@ builder.Services.AddScoped<IExceptionHandler, ExceptionHandler>();
 builder.Services.AddScoped<PlayerSavePositionServiceForwarder>();
 builder.Services.AddScoped<NearbyPlayerServiceForwarder>();
 
-builder.Services.AddScoped<RealtimeConnectionManager>();
+builder.Services.AddSingleton<IRealtimeConnectionManager, RealtimeConnectionManager>();
 
 WebApplication app = builder.Build();
 
@@ -147,6 +150,8 @@ app.UseSwaggerUI();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapGrpcService<PlayersConnected>();
 
 app.MapControllers();
 app.Map("/ws", RealtimeWebSocketEndpoint);

@@ -97,7 +97,7 @@ public class CharacterService(
         try
         {
             Character entity = mapper.Map<Character>(model);
-            await repository.UpdateCharacterAsync(entity).ConfigureAwait(true);
+            await repository.UpdateCharacterAsync(entity, token).ConfigureAwait(true);
 
             return new DefaultResponse(entity);
         }
