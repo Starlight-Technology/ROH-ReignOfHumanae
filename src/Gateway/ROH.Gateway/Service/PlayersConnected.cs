@@ -4,6 +4,7 @@ using MessagePack;
 
 using ROH.Contracts.GRPC.Player.NearbyPlayer;
 using ROH.Contracts.GRPC.Worker.PlayerSocket;
+using ROH.Contracts.WebSocket;
 using ROH.Contracts.WebSocket.Player;
 using ROH.Gateway.WebSocketGateway;
 
@@ -51,7 +52,7 @@ public class PlayersConnected(IRealtimeConnectionManager realtimeConnection) : P
                     RotZ = p.RotZ,
                     RotW = p.RotW,
                     ModelName = p.ModelName,
-                    AnimationState = p.AnimationState
+                    AnimationState = (int)p.AnimationState
                 })]
             };
 

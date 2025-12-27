@@ -208,7 +208,7 @@ namespace Assets.Scripts.Player
                 RotX = rot.eulerAngles.x,
                 RotY = rot.eulerAngles.y,
                 RotZ = rot.eulerAngles.z,
-                AnimationState = playerInstance.GetComponent<PlayerMovements>().currentAnimState
+                AnimationState = (int)playerInstance.GetComponent<PlayerMovements>().currentAnimState
             };
 
             var envelope = new RealtimeEnvelope

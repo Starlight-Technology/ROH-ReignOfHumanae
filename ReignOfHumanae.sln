@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.1.11312.151 d18.0
+VisualStudioVersion = 18.1.11312.151
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{9163E653-710D-4F9F-96B0-EAEDDC610BFB}"
 	ProjectSection(SolutionItems) = preProject
@@ -102,6 +102,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Api.WorldSync.Player", "src\Api\ROH.Api.WorldSync.Player\ROH.Api.WorldSync.Player.csproj", "{D5072C7E-9B89-440E-B55C-EB8EFD9CBF18}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Context.Player.Redis", "src\Database\ROH.Context.Player.Redis\ROH.Context.Player.Redis.csproj", "{856A6BFC-3E46-401D-802C-0DC3C2AB23CA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Worker", "Worker", "{71A8349E-C34E-4B3A-A233-D31C3A1E8C21}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Worker.GetNearbyPlayer", "src\Worker\ROH.Worker.GetNearbyPlayer\ROH.Worker.GetNearbyPlayer.csproj", "{2A45710C-A503-40DD-8398-2EF87480021E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Api.PlayerSync.State", "src\Api\ROH.Api.PlayerSync.State\ROH.Api.PlayerSync.State.csproj", "{CB3CADE1-6736-400C-B2FC-BD02A2ED8BF5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -314,6 +320,18 @@ Global
 		{856A6BFC-3E46-401D-802C-0DC3C2AB23CA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{856A6BFC-3E46-401D-802C-0DC3C2AB23CA}.Test|Any CPU.ActiveCfg = Debug|Any CPU
 		{856A6BFC-3E46-401D-802C-0DC3C2AB23CA}.Test|Any CPU.Build.0 = Debug|Any CPU
+		{2A45710C-A503-40DD-8398-2EF87480021E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A45710C-A503-40DD-8398-2EF87480021E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A45710C-A503-40DD-8398-2EF87480021E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A45710C-A503-40DD-8398-2EF87480021E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A45710C-A503-40DD-8398-2EF87480021E}.Test|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A45710C-A503-40DD-8398-2EF87480021E}.Test|Any CPU.Build.0 = Debug|Any CPU
+		{CB3CADE1-6736-400C-B2FC-BD02A2ED8BF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB3CADE1-6736-400C-B2FC-BD02A2ED8BF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB3CADE1-6736-400C-B2FC-BD02A2ED8BF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB3CADE1-6736-400C-B2FC-BD02A2ED8BF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB3CADE1-6736-400C-B2FC-BD02A2ED8BF5}.Test|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB3CADE1-6736-400C-B2FC-BD02A2ED8BF5}.Test|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -361,6 +379,9 @@ Global
 		{1EE6ABCA-B0FA-4C0D-8171-21ABB529F527} = {9BF9EF08-5FB4-4014-8D3D-4F6BAE184FD5}
 		{D5072C7E-9B89-440E-B55C-EB8EFD9CBF18} = {E032234B-EEAA-4BC3-B24B-2C2793642015}
 		{856A6BFC-3E46-401D-802C-0DC3C2AB23CA} = {69C2FA84-4DA4-4FA5-863D-B2DBC93B25B9}
+		{71A8349E-C34E-4B3A-A233-D31C3A1E8C21} = {5FADFA80-D5DA-44E7-B906-59D055EF50DC}
+		{2A45710C-A503-40DD-8398-2EF87480021E} = {71A8349E-C34E-4B3A-A233-D31C3A1E8C21}
+		{CB3CADE1-6736-400C-B2FC-BD02A2ED8BF5} = {E032234B-EEAA-4BC3-B24B-2C2793642015}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {27EDF35D-5831-479E-BF70-D6CB24952E66}

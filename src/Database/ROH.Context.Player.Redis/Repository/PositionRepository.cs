@@ -36,14 +36,6 @@ public class PositionRepository(IPlayerRedisContext context)
             key,
             TimeSpan.FromSeconds(60)
         );
-
-        // GEO
-        await context.Database.GeoAddAsync(
-            context.PlayersGeoKey,
-            position.PositionX,
-            position.PositionZ,
-            position.PlayerId
-        );
     }
 
     public async Task<PlayerPositionRedis?> GetPlayerPosition(

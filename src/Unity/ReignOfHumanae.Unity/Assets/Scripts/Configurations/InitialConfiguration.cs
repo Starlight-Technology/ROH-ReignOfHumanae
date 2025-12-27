@@ -21,7 +21,7 @@ namespace Assets.Scripts.Configurations
             ConfigurationModel config = DataManager.LoadData<ConfigurationModel>(DataManager.configurationPath) ??
                 new ConfigurationModel();
             config.ServerUrl ??= "http://localhost:9001";
-            config.ServerUrlWebSocket ??= "ws://localhost:9002";
+            config.ServerUrlWebSocket ??= "ws://localhost:9001";
 
             DataManager.SaveData<ConfigurationModel>(config, DataManager.configurationPath);
 

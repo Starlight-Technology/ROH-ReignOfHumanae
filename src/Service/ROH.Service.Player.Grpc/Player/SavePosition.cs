@@ -3,12 +3,12 @@
 using MongoDB.Bson;
 
 using ROH.Context.Player.Mongo.Interface;
-using ROH.Context.Player.Redis.Entities;
 using ROH.Contracts.GRPC.Player.PlayerPosition;
 using ROH.Service.Exception.Interface;
+using ROH.Service.Player.Grpc.Persistence;
 
 namespace ROH.Service.Player.Grpc.Player;
-public class SavePosition(IPositionRepository repository, Context.Player.Redis.Interface.IPositionRepository positionRepository,IExceptionHandler handler) : PlayerService.PlayerServiceBase
+public class SavePosition(IPositionRepository repository,IPlayersPersistenceService playersPersistenceService ,IExceptionHandler handler) : PlayerService.PlayerServiceBase
 {
     public override async Task<SaveResponse> SavePlayerData(PlayerRequest request, ServerCallContext context)
     {
@@ -27,23 +27,9 @@ public class SavePosition(IPositionRepository repository, Context.Player.Redis.I
                 RotationW = request.Rotation.W,
             };
 
-            await repository.SavePlayerPositionAsync(position, context.CancellationToken).ConfigureAwait(false);
+            await repository.SavePlayerPositionAsync(position, context.CancellationToken).ConfigureAwait(true);
+            await playersPersistenceService.SavePlayerPosition(request, context.CancellationToken).ConfigureAwait(true);
 
-            var redisPosition = new PlayerPositionRedis
-            {
-                PlayerId = request.PlayerId,
-                PositionX = request.Position.X,
-                PositionY = request.Position.Y,
-                PositionZ = request.Position.Z,
-                RotationX = request.Rotation.X,
-                RotationY = request.Rotation.Y,
-                RotationZ = request.Rotation.Z,
-                RotationW = request.Rotation.W,
-                PlayerAnimationState = (int)request.AnimationSate,
-                Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
-            };
-
-            await positionRepository.SavePlayerPosition(redisPosition, context.CancellationToken).ConfigureAwait(false);
 
             return new SaveResponse { Success = true };
         }

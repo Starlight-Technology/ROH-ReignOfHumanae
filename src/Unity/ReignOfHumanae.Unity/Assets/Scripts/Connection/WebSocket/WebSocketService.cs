@@ -105,7 +105,6 @@ namespace Assets.Scripts.Connection.WebSocket
                         var options = MessagePackBootstrap.Options ?? MessagePackSerializerOptions.Standard;
                         var message = MessagePackSerializer.Deserialize<RealtimeEnvelope>(messageBytes, options);
 
-                        // Chama o evento correto (OnMessage em vez de OnMessageReceived)
                         OnMessage?.Invoke(message);
                     }
                     catch (MessagePackSerializationException ex)

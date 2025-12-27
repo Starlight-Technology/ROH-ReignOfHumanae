@@ -12,19 +12,13 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
-using ROH.Contracts.GRPC.Player.NearbyPlayer;
-using ROH.Contracts.GRPC.Player.PlayerPosition;
-using ROH.Gateway.Grpc.Player;
 using ROH.Gateway.Service;
 using ROH.Gateway.WebSocketGateway;
 using ROH.Service.Exception;
 using ROH.Service.Exception.Communication;
 using ROH.Service.Exception.Interface;
-using ROH.Utils.ApiConfiguration;
 
 using System.Text;
-
-using static ROH.Utils.ApiConfiguration.ApiConfigReader;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -101,7 +95,7 @@ builder.WebHost
                     9001,
                     listenOptions =>
                     {
-                        listenOptions.Protocols = HttpProtocols.Http1; // Supports both protocols
+                        listenOptions.Protocols = HttpProtocols.Http1AndHttp2; 
                     }
                 );
             options.ListenAnyIP
@@ -109,32 +103,14 @@ builder.WebHost
                     9002,
                     listenOptions =>
                     {
-                        listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
+                        listenOptions.Protocols = HttpProtocols.Http2;
                     }
                 );
         });
 
-if (!Api._apiUrl.TryGetValue(ApiUrl.PlayerSavePosition, out var savePosUri))
-    throw new InvalidOperationException("URL para PlayerSavePosition não encontrada na configuração.");
-builder.Services.AddGrpcClient<PlayerService.PlayerServiceClient>(options =>
-{
-    options.Address = savePosUri;
-});
+builder.Services.AddSingleton<ILogService, LogService>();
 
-if (!Api._apiUrl.TryGetValue(ApiUrl.GetNearbyPlayer, out var nearbyUri))
-    throw new InvalidOperationException("URL para NearbyPlayerGrpc não encontrada na configuração.");
-builder.Services.AddGrpcClient<NearbyPlayerService.NearbyPlayerServiceClient>(options =>
-{
-    options.Address = nearbyUri;
-});
-
-builder.Services.AddScoped<ILogService, LogService>();
-
-builder.Services.AddScoped<IExceptionHandler, ExceptionHandler>();
-
-
-builder.Services.AddScoped<PlayerSavePositionServiceForwarder>();
-builder.Services.AddScoped<NearbyPlayerServiceForwarder>();
+builder.Services.AddSingleton<IExceptionHandler, ExceptionHandler>();
 
 builder.Services.AddSingleton<IRealtimeConnectionManager, RealtimeConnectionManager>();
 
@@ -170,7 +146,7 @@ static async Task RealtimeWebSocketEndpoint(HttpContext context)
     var socket = await context.WebSockets.AcceptWebSocketAsync();
 
     var manager = context.RequestServices
-        .GetRequiredService<RealtimeConnectionManager>();
+        .GetRequiredService<IRealtimeConnectionManager>();
 
     await manager.HandleClientAsync(context, socket);
 }

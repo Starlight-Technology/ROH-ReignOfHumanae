@@ -71,8 +71,7 @@ namespace ROH.Utils.ApiConfiguration
             Log,
             LogGrpc,
             Player,
-            PlayerSavePosition,
-            GetNearbyPlayer
+            PlayerState,
         }
     }
 }

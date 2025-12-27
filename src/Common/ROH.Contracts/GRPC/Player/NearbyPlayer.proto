@@ -23,11 +23,7 @@ message PlayerInfo {
   float rotZ = 7;
   float rotW = 8;
   string modelName = 9;
-  string animationState = 10;
-}
-
-message Default{
-	bool a = 1;
+  uint32 animationState = 10;
 }
 
 message NearbyPlayersResponse {

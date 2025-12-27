@@ -104,7 +104,7 @@ namespace ROH.Utils.ApiConfiguration
             { Services.CreateCharacter, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Player), "Api/Player/CreateCharacter")},
             { Services.GetAccountCaracters, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Player), "Api/Player/GetAccountCaracters")},
             { Services.GetCharacter, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Player), "Api/Player/GetCharacter")},
-            { Services.SavePosition, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.PlayerSavePosition), "")},
+            { Services.SavePosition, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.PlayerState), "")},
             #endregion PLAYER
 
         };

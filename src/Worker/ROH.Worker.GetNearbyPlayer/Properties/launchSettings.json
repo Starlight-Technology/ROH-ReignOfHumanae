@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ROH.Worker.GetNearbyPlayer": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}

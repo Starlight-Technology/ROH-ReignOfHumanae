@@ -1,6 +1,6 @@
 ﻿using MessagePack;
 
-namespace ROH.Contracts.WebSocket.Player;
+namespace ROH.Contracts.WebSocket;
 
 [MessagePackObject]
 public class RealtimeEnvelope

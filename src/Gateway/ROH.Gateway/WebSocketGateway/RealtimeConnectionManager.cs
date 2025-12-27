@@ -1,29 +1,33 @@
-﻿using MessagePack;
+﻿using Grpc.Net.Client;
+
+using MessagePack;
 
 using Microsoft.IdentityModel.Tokens;
 
-using ROH.Contracts.GRPC.Player.NearbyPlayer;
 using ROH.Contracts.GRPC.Player.PlayerPosition;
+using ROH.Contracts.WebSocket;
 using ROH.Contracts.WebSocket.Player;
-using ROH.Gateway.Grpc.Player;
 using ROH.Service.Exception.Interface;
+using ROH.Utils.ApiConfiguration;
 
 using System.Collections.Concurrent;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Security.Claims;
 using System.Text;
 
+using static ROH.Utils.ApiConfiguration.ApiConfigReader;
+
 namespace ROH.Gateway.WebSocketGateway;
 
 public class RealtimeConnectionManager(
-    PlayerSavePositionServiceForwarder savePositionForwarder,
     IExceptionHandler exceptionHandler)
 : IRealtimeConnectionManager
 {
     private readonly ConcurrentDictionary<string, WebSocket> _accountConnections = new();
     private readonly ConcurrentDictionary<string, WebSocket> _playerConnections = new();
+
+    private Contracts.GRPC.Player.PlayerPosition.PlayerService.PlayerServiceClient _savePlayerPositionApi;
 
     string accountGuid = string.Empty;
 
@@ -31,6 +35,7 @@ public class RealtimeConnectionManager(
 
     public async Task HandleClientAsync(HttpContext ctx, WebSocket socket)
     {
+
 
         try
         {
@@ -108,7 +113,23 @@ public class RealtimeConnectionManager(
 
         _playerConnections[msg.PlayerId] = socket;
 
-        await savePositionForwarder.SavePlayerData(
+        ApiConfigReader _apiConfig = new();
+        Dictionary<ApiUrl, Uri> _apiUrl = _apiConfig.GetApiUrl();
+        GrpcChannel channel = GrpcChannel.ForAddress(
+        _apiUrl.GetValueOrDefault(ApiUrl.PlayerState) ?? new Uri(string.Empty),
+        new GrpcChannelOptions
+        {
+            HttpHandler =
+                new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback =
+                            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                }
+        });
+
+        _savePlayerPositionApi = new(channel);
+
+        await _savePlayerPositionApi.SavePlayerDataAsync(
             new PlayerRequest
             {
                 PlayerId = msg.PlayerId,
@@ -125,9 +146,8 @@ public class RealtimeConnectionManager(
                     Z = msg.RotZ,
                     W = msg.RotW
                 },
-            },
-
-            context: null!
+                AnimationSate = (uint)msg.AnimationState
+            }
         );
     }
 

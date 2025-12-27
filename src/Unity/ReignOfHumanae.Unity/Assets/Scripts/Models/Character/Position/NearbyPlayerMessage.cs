@@ -20,7 +20,7 @@ namespace Assets.Scripts.Models.Character
         [Key(6)] public float RotZ;
         [Key(7)] public float RotW;
         [Key(8)] public string ModelName;
-        [Key(9)] public string AnimationState;
+        [Key(9)] public int AnimationState;
     }
 
     [MessagePackObject]

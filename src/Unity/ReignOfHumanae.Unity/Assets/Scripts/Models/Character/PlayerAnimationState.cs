@@ -9,7 +9,7 @@ namespace Assets.Scripts.Models.Character
     public enum PlayerAnimationState
     {
         // Ground
-        GroundIdle,
+        GroundIdle = 1,
         GroundWalk,
         GroundRun,
         GroundJump,
