@@ -48,12 +48,11 @@ public class LoginServiceTest
 
         LoginModel loginModel = new() { Login = "test", Password = "test" };
 
-        DefaultResponse expected = new(
-            httpStatus: HttpStatusCode.InternalServerError,
-            message: "Internal Server Error");
+        DefaultResponse expected = new(httpStatus: HttpStatusCode.InternalServerError, message: "Internal Server Error");
 
         // Act
-        DefaultResponse result = await loginService.LoginAsync(loginModel, cancellationToken: CancellationToken.None).ConfigureAwait(true);
+        DefaultResponse result = await loginService.LoginAsync(loginModel, cancellationToken: CancellationToken.None)
+            .ConfigureAwait(true);
 
         // Assert
         Assert.Equivalent(expected, result);
@@ -101,8 +100,10 @@ public class LoginServiceTest
         Mock<IExceptionHandler> mockExceptionHandler = new();
 
         Mock<IUserService> mockUserService = new();
-        _ = mockUserService.Setup(x => x.FindUserByEmailAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(userModelTest);
-        _ = mockUserService.Setup(x => x.FindUserByUserNameAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(userModelTest);
+        _ = mockUserService.Setup(x => x.FindUserByEmailAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(userModelTest);
+        _ = mockUserService.Setup(x => x.FindUserByUserNameAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(userModelTest);
 
         Mock<IAuthService> mockAuthService = new();
         _ = mockAuthService.Setup(x => x.GenerateJwtToken(It.IsAny<UserModel>())).Returns(string.Empty);
@@ -131,8 +132,10 @@ public class LoginServiceTest
         Mock<IExceptionHandler> mockExceptionHandler = new();
 
         Mock<IUserService> mockUserService = new();
-        _ = mockUserService.Setup(x => x.FindUserByEmailAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(() => null);
-        _ = mockUserService.Setup(x => x.FindUserByUserNameAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(() => null);
+        _ = mockUserService.Setup(x => x.FindUserByEmailAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(() => null);
+        _ = mockUserService.Setup(x => x.FindUserByUserNameAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(() => null);
 
         Mock<IAuthService> mockAuthService = new();
         _ = mockAuthService.Setup(x => x.GenerateJwtToken(It.IsAny<UserModel>())).Returns(string.Empty);
@@ -170,9 +173,13 @@ public class LoginServiceTest
         Mock<IExceptionHandler> mockExceptionHandler = new();
 
         Mock<IUserService> mockUserService = new();
-        _ = mockUserService.Setup(x => x.FindUserByEmailAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(userModelTest);
-        _ = mockUserService.Setup(x => x.FindUserByUserNameAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(userModelTest);
-        _ = mockUserService.Setup(x => x.ValidatePasswordAsync(It.IsAny<string>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(true);
+        _ = mockUserService.Setup(x => x.FindUserByEmailAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(userModelTest);
+        _ = mockUserService.Setup(x => x.FindUserByUserNameAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(userModelTest);
+        _ = mockUserService.Setup(
+            x => x.ValidatePasswordAsync(It.IsAny<string>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
 
         Mock<IAuthService> mockAuthService = new();
         _ = mockAuthService.Setup(x => x.GenerateJwtToken(It.IsAny<UserModel>())).Returns(string.Empty);

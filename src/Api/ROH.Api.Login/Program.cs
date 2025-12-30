@@ -52,7 +52,8 @@ MapperConfiguration mappingConfig = new(
     {
         mc.AddProfile(new UserMapping());
         mc.AddProfile(new AccountMapping());
-    }, NullLoggerFactory.Instance);
+    },
+    NullLoggerFactory.Instance);
 
 IMapper mapper = mappingConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);

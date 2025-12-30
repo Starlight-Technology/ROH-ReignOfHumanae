@@ -1,4 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿//-----------------------------------------------------------------------
+// <copyright file="FileContext.cs" company="Starlight-Technology">
+//     Author:  
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using Microsoft.EntityFrameworkCore;
 
 using ROH.Context.File.Entities;
 using ROH.Context.File.Interface;
@@ -22,7 +28,8 @@ public class FileContext : DbContext, IFileContext
         base.OnModelCreating(modelBuilder);
     }
 
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => base.SaveChangesAsync(cancellationToken);
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => base.SaveChangesAsync(
+        cancellationToken);
 
     public DbSet<GameFile> GameFiles { get; set; }
 

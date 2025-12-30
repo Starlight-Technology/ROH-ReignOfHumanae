@@ -13,8 +13,5 @@ namespace ROH.Context.Player.TypeConfiguration.Characters;
 
 public class HandRingTypeConfiguration : IEntityTypeConfiguration<HandRing>
 {
-    public void Configure(EntityTypeBuilder<HandRing> builder)
-    {
-        _ = builder.HasKey(r => r.Id);
-    }
+    public void Configure(EntityTypeBuilder<HandRing> builder) => _ = builder.HasKey(r => r.Id);
 }

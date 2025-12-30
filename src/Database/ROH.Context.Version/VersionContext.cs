@@ -1,4 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿//-----------------------------------------------------------------------
+// <copyright file="VersionContext.cs" company="Starlight-Technology">
+//     Author:  
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using Microsoft.EntityFrameworkCore;
 
 using ROH.Context.Version.Entities;
 using ROH.Context.Version.Interface;
@@ -24,7 +30,8 @@ public class VersionContext(DbContextOptions<VersionContext> options) : DbContex
         base.OnModelCreating(modelBuilder);
     }
 
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => base.SaveChangesAsync(cancellationToken);
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => base.SaveChangesAsync(
+        cancellationToken);
 
     public DbSet<GameVersion> GameVersions { get; set; } = null!;
 }

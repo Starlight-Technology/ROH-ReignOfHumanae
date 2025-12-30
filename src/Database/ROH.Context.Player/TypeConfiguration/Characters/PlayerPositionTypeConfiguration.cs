@@ -1,4 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿//-----------------------------------------------------------------------
+// <copyright file="PlayerPositionTypeConfiguration.cs" company="Starlight-Technology">
+//     Author:  
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using ROH.Context.Player.Entities.Characters;

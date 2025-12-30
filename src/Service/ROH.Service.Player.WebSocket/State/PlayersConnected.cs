@@ -1,4 +1,10 @@
-﻿namespace ROH.Service.Player.WebSocket.State;
+﻿//-----------------------------------------------------------------------
+// <copyright file="PlayersConnected.cs" company="Starlight-Technology">
+//     Author:  
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+namespace ROH.Service.Player.WebSocket.State;
 
 using MessagePack;
 
@@ -13,44 +19,51 @@ using System.Threading.Tasks;
 
 public class PlayersConnected(IPlayerPositionServiceSocket playerPositionService) : PlayerConnectedService.PlayerConnectedServiceBase
 {
-    public override async Task<Contracts.GRPC.Worker.PlayerSocket.PlayersConnected> GetConnectedPlayers(Contracts.GRPC.Worker.PlayerSocket.Default request, global::Grpc.Core.ServerCallContext context)
+    public override async Task<Contracts.GRPC.Worker.PlayerSocket.PlayersConnected> GetConnectedPlayers(
+        Default request,
+        global::Grpc.Core.ServerCallContext context)
     {
-        var connectedPlayers = await playerPositionService.GetPlayersClient();
+        System.Collections.Concurrent.ConcurrentDictionary<string, System.Net.WebSockets.WebSocket> connectedPlayers = await playerPositionService.GetPlayersClient(
+            );
 
-        var response = new Google.Protobuf.Collections.RepeatedField<PlayerConnected>();
+        Google.Protobuf.Collections.RepeatedField<PlayerConnected> response = new Google.Protobuf.Collections.RepeatedField<PlayerConnected>(
+            );
 
-        foreach (var player in connectedPlayers)
+        foreach (KeyValuePair<string, System.Net.WebSockets.WebSocket> player in connectedPlayers)
         {
-            response.Add(new PlayerConnected() { Id = player.Key });
+            response.Add(new PlayerConnected { Id = player.Key });
         }
 
-        return new Contracts.GRPC.Worker.PlayerSocket.PlayersConnected()
-        {
-            PlayersId = { response }
-        };
+        return new Contracts.GRPC.Worker.PlayerSocket.PlayersConnected { PlayersId = { response } };
     }
 
-    public override async Task<Contracts.GRPC.Worker.PlayerSocket.Default> SendNearbyPlayers(NearbyPlayersResponse response, global::Grpc.Core.ServerCallContext context)
+    public override async Task<Default> SendNearbyPlayers(
+        NearbyPlayersResponse response,
+        global::Grpc.Core.ServerCallContext context)
     {
-        var connectedPlayers = await playerPositionService.GetPlayersClient();
+        System.Collections.Concurrent.ConcurrentDictionary<string, System.Net.WebSockets.WebSocket> connectedPlayers = await playerPositionService.GetPlayersClient(
+            );
 
-        if (connectedPlayers.TryGetValue(response.MainPlayer, out var socket))
+        if (connectedPlayers.TryGetValue(response.MainPlayer, out System.Net.WebSockets.WebSocket? socket))
         {
-            var message = new NearbyPlayersMessage
+            NearbyPlayersMessage message = new NearbyPlayersMessage
             {
-                Players = [.. response.Players.Select(p => new NearbyPlayerMessage
-                {
-                    PlayerId = p.PlayerId,
-                    X = p.X,
-                    Y = p.Y,
-                    Z = p.Z,
-                    RotX = p.RotX,
-                    RotY = p.RotY,
-                    RotZ = p.RotZ,
-                    RotW = p.RotW,
-                    ModelName = p.ModelName,
-                    AnimationState = (int)p.AnimationState
-                })]
+                Players =
+                    [.. response.Players
+                        .Select(
+                            p => new NearbyPlayerMessage
+                        {
+                            PlayerId = p.PlayerId,
+                            X = p.X,
+                            Y = p.Y,
+                            Z = p.Z,
+                            RotX = p.RotX,
+                            RotY = p.RotY,
+                            RotZ = p.RotZ,
+                            RotW = p.RotW,
+                            ModelName = p.ModelName,
+                            AnimationState = (int)p.AnimationState
+                        })]
             };
 
             await WebSocketService.SendAsync(
@@ -62,6 +75,6 @@ public class PlayersConnected(IPlayerPositionServiceSocket playerPositionService
                 });
         }
 
-        return new Contracts.GRPC.Worker.PlayerSocket.Default() { A = true };
+        return new Default { A = true };
     }
 }

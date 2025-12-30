@@ -1,4 +1,10 @@
-﻿using ROH.Contracts.GRPC.Player.NearbyPlayer;
+﻿//-----------------------------------------------------------------------
+// <copyright file="PlayersPersistenceService.cs" company="Starlight-Technology">
+//     Author:  
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using ROH.Contracts.GRPC.Player.NearbyPlayer;
 using ROH.Contracts.GRPC.Player.PlayerPosition;
 using ROH.StandardModels.Character.Position;
 
@@ -8,18 +14,24 @@ namespace ROH.Service.Player.Grpc.Persistence;
 
 public class PlayersPersistenceService : IPlayersPersistenceService
 {
-    private readonly ConcurrentDictionary<string, PlayerState> players = new();
+    readonly ConcurrentDictionary<string, PlayerState> players = new();
 
-    public Task SavePlayerPosition(PlayerRequest player, CancellationToken token)
+    static PlayerState CreateState(PlayerRequest player) => new PlayerState
     {
-        players.AddOrUpdate(
-            player.PlayerId,
-            _ => CreateState(player),
-            (_, __) => CreateState(player)
-        );
+        PlayerId = player.PlayerId,
 
-        return Task.CompletedTask;
-    }
+        PositionX = player.Position.X,
+        PositionY = player.Position.Y,
+        PositionZ = player.Position.Z,
+
+        RotationX = player.Rotation.X,
+        RotationY = player.Rotation.Y,
+        RotationZ = player.Rotation.Z,
+        RotationW = player.Rotation.W,
+
+        AnimationState = (int)player.AnimationSate,
+        Timestamp = DateTime.UtcNow
+    };
 
     public Task<ICollection<PlayerInfo>> GetNearbyPlayerAsync(
         string playerId,
@@ -27,15 +39,15 @@ public class PlayersPersistenceService : IPlayersPersistenceService
         int maxPlayers,
         CancellationToken cancellationToken)
     {
-        var result = new List<PlayerInfo>(maxPlayers);
+        List<PlayerInfo> result = new List<PlayerInfo>(maxPlayers);
         while (!cancellationToken.IsCancellationRequested)
         {
-            if (!players.TryGetValue(playerId, out var mainPlayer))
+            if (!players.TryGetValue(playerId, out PlayerState? mainPlayer))
                 return Task.FromResult<ICollection<PlayerInfo>>(result);
 
             float radiusSquared = radius * radius;
 
-            foreach (var kv in players)
+            foreach (KeyValuePair<string, PlayerState> kv in players)
             {
                 if (kv.Value.Timestamp < DateTime.UtcNow.AddSeconds(-60))
                 {
@@ -43,7 +55,7 @@ public class PlayersPersistenceService : IPlayersPersistenceService
                     continue;
                 }
 
-                var p = kv.Value;
+                PlayerState p = kv.Value;
 
                 if (p.PlayerId == playerId)
                     continue;
@@ -52,26 +64,27 @@ public class PlayersPersistenceService : IPlayersPersistenceService
                 float dy = p.PositionY - mainPlayer.PositionY;
                 float dz = p.PositionZ - mainPlayer.PositionZ;
 
-                float distanceSquared = dx * dx + dy * dy + dz * dz;
+                float distanceSquared = (dx * dx) + (dy * dy) + (dz * dz);
 
                 if (distanceSquared > radiusSquared)
                     continue;
 
-                result.Add(new PlayerInfo
-                {
-                    PlayerId = p.PlayerId,
+                result.Add(
+                    new PlayerInfo
+                    {
+                        PlayerId = p.PlayerId,
 
-                    X = p.PositionX,
-                    Y = p.PositionY,
-                    Z = p.PositionZ,
+                        X = p.PositionX,
+                        Y = p.PositionY,
+                        Z = p.PositionZ,
 
-                    RotX = p.RotationX,
-                    RotY = p.RotationY,
-                    RotZ = p.RotationZ,
-                    RotW = p.RotationW,
+                        RotX = p.RotationX,
+                        RotY = p.RotationY,
+                        RotZ = p.RotationZ,
+                        RotW = p.RotationW,
 
-                    AnimationState = (uint)p.AnimationState,
-                });
+                        AnimationState = (uint)p.AnimationState,
+                    });
 
                 if (result.Count >= maxPlayers)
                     break;
@@ -83,7 +96,7 @@ public class PlayersPersistenceService : IPlayersPersistenceService
 
     public async Task<PlayerState?> GetPlayerState(string guid)
     {
-        if (players.TryGetValue(guid, out var player))
+        if (players.TryGetValue(guid, out PlayerState? player))
         {
             return player;
         }
@@ -91,23 +104,10 @@ public class PlayersPersistenceService : IPlayersPersistenceService
         return null;
     }
 
-    private static PlayerState CreateState(PlayerRequest player)
+    public Task SavePlayerPosition(PlayerRequest player, CancellationToken token)
     {
-        return new PlayerState
-        {
-            PlayerId = player.PlayerId,
+        players.AddOrUpdate(player.PlayerId, _ => CreateState(player), (_, __) => CreateState(player));
 
-            PositionX = player.Position.X,
-            PositionY = player.Position.Y,
-            PositionZ = player.Position.Z,
-
-            RotationX = player.Rotation.X,
-            RotationY = player.Rotation.Y,
-            RotationZ = player.Rotation.Z,
-            RotationW = player.Rotation.W,
-
-            AnimationState = (int)player.AnimationSate,
-            Timestamp = DateTime.UtcNow
-        };
+        return Task.CompletedTask;
     }
 }

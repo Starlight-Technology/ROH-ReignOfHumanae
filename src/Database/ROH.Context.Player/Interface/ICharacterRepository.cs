@@ -1,4 +1,10 @@
-﻿namespace ROH.Context.Player.Interface;
+﻿//-----------------------------------------------------------------------
+// <copyright file="ICharacterRepository.cs" company="Starlight-Technology">
+//     Author:  
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+namespace ROH.Context.Player.Interface;
 
 public interface ICharacterRepository
 {
@@ -6,7 +12,9 @@ public interface ICharacterRepository
 
     Task DeleteCharacterAsync(Guid id, CancellationToken cancellationToken = default);
 
-    Task<List<Entities.Characters.Character>> GetAllCharactersAsync(Guid accountGuid, CancellationToken cancellationToken = default);
+    Task<List<Entities.Characters.Character>> GetAllCharactersAsync(
+        Guid accountGuid,
+        CancellationToken cancellationToken = default);
 
     Task<Entities.Characters.Character?> GetCharacterByIdAsync(Guid guid, CancellationToken cancellationToken = default);
 

@@ -12,7 +12,7 @@ namespace ROH.Blazor.Server.Helpers;
 
 public static class JwtParser
 {
-    private static byte[] ParseBase64WithoutPadding(string base64)
+    static byte[] ParseBase64WithoutPadding(string base64)
     {
         switch (base64.Length % 4)
         {
@@ -35,7 +35,7 @@ public static class JwtParser
         Dictionary<string, object>? keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
         claims.AddRange(
             from kvp in keyValuePairs
-            select new Claim(kvp.Key, kvp.Value?.ToString() ?? string.Empty));
+                select new Claim(kvp.Key, kvp.Value?.ToString() ?? string.Empty));
         return claims;
     }
 }

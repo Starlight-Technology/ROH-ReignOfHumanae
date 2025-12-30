@@ -17,16 +17,17 @@ namespace ROH.Gateway.Controllers.Version;
 [Authorize]
 public class VersionFileController : ControllerBase
 {
-    private readonly Api _api = new();
+    readonly Api _api = new();
 
     [HttpGet("DownloadFile")]
     public async Task<IActionResult> DownloadFileAsync(string fileGuid, CancellationToken cancellationToken = default)
     {
-        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        using CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         cts.CancelAfter(TimeSpan.FromMinutes(2));
         try
         {
-            var result = await _api.GetAsync(Api.Services.DownloadFile, new { FileGuid = fileGuid }, cts.Token).ConfigureAwait(true);
+            string result = await _api.GetAsync(Api.Services.DownloadFile, new { FileGuid = fileGuid }, cts.Token)
+                .ConfigureAwait(true);
             return Ok(result);
         }
         catch (OperationCanceledException)
@@ -36,13 +37,19 @@ public class VersionFileController : ControllerBase
     }
 
     [HttpGet("GetAllVersionFiles")]
-    public async Task<IActionResult> GetAllVersionFilesAsync(string versionGuid, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetAllVersionFilesAsync(
+        string versionGuid,
+        CancellationToken cancellationToken = default)
     {
-        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        using CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         cts.CancelAfter(TimeSpan.FromMinutes(2));
         try
         {
-            var result = await _api.GetAsync(Api.Services.GetAllVersionFiles, new { VersionGuid = versionGuid }, cts.Token).ConfigureAwait(true);
+            string result = await _api.GetAsync(
+                Api.Services.GetAllVersionFiles,
+                new { VersionGuid = versionGuid },
+                cts.Token)
+                .ConfigureAwait(true);
             return Ok(result);
         }
         catch (OperationCanceledException)
@@ -52,13 +59,15 @@ public class VersionFileController : ControllerBase
     }
 
     [HttpPost("UploadFile")]
-    public async Task<IActionResult> UploadFileAsync(GameVersionFileModel file, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> UploadFileAsync(
+        GameVersionFileModel file,
+        CancellationToken cancellationToken = default)
     {
-        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        using CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         cts.CancelAfter(TimeSpan.FromMinutes(2));
         try
         {
-            var result = await _api.PostAsync(Api.Services.UploadVersionFile, file, cts.Token).ConfigureAwait(true);
+            string result = await _api.PostAsync(Api.Services.UploadVersionFile, file, cts.Token).ConfigureAwait(true);
             return Ok(result);
         }
         catch (OperationCanceledException)

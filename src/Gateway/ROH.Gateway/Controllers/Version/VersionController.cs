@@ -17,16 +17,18 @@ namespace ROH.Gateway.Controllers.Version;
 [Authorize]
 public class VersionController : ControllerBase
 {
-    private readonly Api _api = new();
+    readonly Api _api = new();
 
     [HttpPost("CreateNewVersion")]
-    public async Task<IActionResult> CreateNewVersionAsync(GameVersionModel model, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> CreateNewVersionAsync(
+        GameVersionModel model,
+        CancellationToken cancellationToken = default)
     {
-        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        using CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         cts.CancelAfter(TimeSpan.FromMinutes(2));
         try
         {
-            var result = await _api.PostAsync(Api.Services.CreateNewVersion, model, cts.Token).ConfigureAwait(true);
+            string result = await _api.PostAsync(Api.Services.CreateNewVersion, model, cts.Token).ConfigureAwait(true);
             return Ok(result);
         }
         catch (OperationCanceledException)
@@ -36,13 +38,20 @@ public class VersionController : ControllerBase
     }
 
     [HttpGet("GetAllReleasedVersionsPaginated")]
-    public async Task<IActionResult> GetAllReleasedVersionsPaginatedAsync(int page = 1, int take = 10, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetAllReleasedVersionsPaginatedAsync(
+        int page = 1,
+        int take = 10,
+        CancellationToken cancellationToken = default)
     {
-        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        using CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         cts.CancelAfter(TimeSpan.FromMinutes(2));
         try
         {
-            var result = await _api.GetAsync(Api.Services.GetAllReleasedVersionsPaginated, new { Page = page, Take = take }, cts.Token).ConfigureAwait(true);
+            string result = await _api.GetAsync(
+                Api.Services.GetAllReleasedVersionsPaginated,
+                new { Page = page, Take = take },
+                cts.Token)
+                .ConfigureAwait(true);
             return Ok(result);
         }
         catch (OperationCanceledException)
@@ -52,13 +61,20 @@ public class VersionController : ControllerBase
     }
 
     [HttpGet("GetAllVersionsPaginated")]
-    public async Task<IActionResult> GetAllVersionsPaginatedAsync(int page = 1, int take = 10, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetAllVersionsPaginatedAsync(
+        int page = 1,
+        int take = 10,
+        CancellationToken cancellationToken = default)
     {
-        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        using CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         cts.CancelAfter(TimeSpan.FromMinutes(2));
         try
         {
-            var result = await _api.GetAsync<object>(Api.Services.GetAllVersionsPaginated, new { Page = page, Take = take }, cts.Token).ConfigureAwait(true);
+            string result = await _api.GetAsync<object>(
+                Api.Services.GetAllVersionsPaginated,
+                new { Page = page, Take = take },
+                cts.Token)
+                .ConfigureAwait(true);
             return Ok(result);
         }
         catch (OperationCanceledException)
@@ -70,11 +86,12 @@ public class VersionController : ControllerBase
     [HttpGet("GetCurrentVersion")]
     public async Task<IActionResult> GetCurrentVersionAsync(CancellationToken cancellationToken = default)
     {
-        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        using CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         cts.CancelAfter(TimeSpan.FromMinutes(2));
         try
         {
-            var result = await _api.GetAsync<object?>(Api.Services.GetCurrentVersion, null, cts.Token).ConfigureAwait(true);
+            string result = await _api.GetAsync<object?>(Api.Services.GetCurrentVersion, null, cts.Token)
+                .ConfigureAwait(true);
             return Ok(result);
         }
         catch (OperationCanceledException)
@@ -86,11 +103,12 @@ public class VersionController : ControllerBase
     [HttpGet("GetVersionDetails")]
     public async Task<IActionResult> GetVersionDetailsAsync(Guid guid, CancellationToken cancellationToken = default)
     {
-        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        using CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         cts.CancelAfter(TimeSpan.FromMinutes(2));
         try
         {
-            var result = await _api.GetAsync(Api.Services.GetVersionDetails, new { Guid = guid }, cts.Token).ConfigureAwait(true);
+            string result = await _api.GetAsync(Api.Services.GetVersionDetails, new { Guid = guid }, cts.Token)
+                .ConfigureAwait(true);
             return Ok(result);
         }
         catch (OperationCanceledException)
@@ -100,13 +118,16 @@ public class VersionController : ControllerBase
     }
 
     [HttpPut("ReleaseVersion")]
-    public async Task<IActionResult> ReleaseVersionAsync([FromBody] GameVersionModel gameVersion, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> ReleaseVersionAsync(
+        [FromBody] GameVersionModel gameVersion,
+        CancellationToken cancellationToken = default)
     {
-        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        using CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         cts.CancelAfter(TimeSpan.FromMinutes(2));
         try
         {
-            var result = await _api.UpdateAsync(Api.Services.ReleaseVersion, gameVersion, cts.Token).ConfigureAwait(true);
+            string result = await _api.UpdateAsync(Api.Services.ReleaseVersion, gameVersion, cts.Token)
+                .ConfigureAwait(true);
             return Ok(result);
         }
         catch (OperationCanceledException)

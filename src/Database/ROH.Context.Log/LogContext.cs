@@ -1,4 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿//-----------------------------------------------------------------------
+// <copyright file="LogContext.cs" company="Starlight-Technology">
+//     Author:  
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using Microsoft.EntityFrameworkCore;
 
 using ROH.Context.Log.Interface;
 using ROH.Context.Log.TypeConfiguration;
@@ -20,7 +26,8 @@ public class LogContext : DbContext, ILogContext
         base.OnModelCreating(modelBuilder);
     }
 
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => base.SaveChangesAsync(cancellationToken);
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => base.SaveChangesAsync(
+        cancellationToken);
 
     public DbSet<Entities.Log> Logs { get; set; }
 }

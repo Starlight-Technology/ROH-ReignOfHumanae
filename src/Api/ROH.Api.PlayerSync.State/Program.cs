@@ -1,3 +1,9 @@
+//-----------------------------------------------------------------------
+// <copyright file="Program.cs" company="Starlight-Technology">
+//     Author:  
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 using ROH.Context.Player.Mongo;
@@ -10,7 +16,7 @@ using ROH.Service.Player.Grpc.Interface;
 using ROH.Service.Player.Grpc.Persistence;
 using ROH.Service.Player.Grpc.Player;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 
@@ -22,9 +28,12 @@ builder.Services.AddScoped<IPositionRepository, PositionRepository>();
 
 builder.Services.AddScoped<IPlayerMongoContext, PlayerMongoContext>();
 
-builder.Services.AddScoped<ROH.Context.Player.Redis.Interface.IPositionRepository, ROH.Context.Player.Redis.Repository.PositionRepository>();
+builder.Services
+    .AddScoped<ROH.Context.Player.Redis.Interface.IPositionRepository, ROH.Context.Player.Redis.Repository.PositionRepository>(
+        );
 
-builder.Services.AddScoped<ROH.Context.Player.Redis.Interface.IPlayerRedisContext, ROH.Context.Player.Redis.PlayerRedisContext>();
+builder.Services
+    .AddScoped<ROH.Context.Player.Redis.Interface.IPlayerRedisContext, ROH.Context.Player.Redis.PlayerRedisContext>();
 
 builder.Services.AddScoped<INearbyPlayers, NearbyPlayers>();
 
@@ -49,7 +58,7 @@ builder.WebHost
             options.Limits.MaxRequestBodySize = null;
         });
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 app.MapGrpcService<NearbyPlayers>();
 app.MapGrpcService<SavePosition>();

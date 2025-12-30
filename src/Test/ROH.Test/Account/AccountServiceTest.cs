@@ -39,7 +39,8 @@ public class AccountServiceTest
                     .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
 
                 cfg.CreateMap<User, UserModel>().ReverseMap();
-            }, NullLoggerFactory.Instance);
+            },
+            NullLoggerFactory.Instance);
 
         Mapper mapper = new(config);
 
@@ -49,14 +50,16 @@ public class AccountServiceTest
                 new DefaultResponse(httpStatus: HttpStatusCode.InternalServerError, message: "Internal Server Error"));
 
         Mock<IAccountRepository> mockRepository = new();
-        mockRepository.Setup(x => x.GetAccountByUserGuidAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ThrowsAsync(new Exception("Database error"));
+        mockRepository.Setup(x => x.GetAccountByUserGuidAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new Exception("Database error"));
 
         AccountService service = new(mockExceptionHandler.Object, mockRepository.Object, mapper);
 
         DefaultResponse expected = new(httpStatus: HttpStatusCode.InternalServerError, message: "Internal Server Error");
 
         // Act
-        DefaultResponse result = await service.GetAccountByUserGuidAsync(Guid.NewGuid(), CancellationToken.None).ConfigureAwait(true);
+        DefaultResponse result = await service.GetAccountByUserGuidAsync(Guid.NewGuid(), CancellationToken.None)
+            .ConfigureAwait(true);
 
         // Assert
         Assert.Equivalent(expected, result);
@@ -78,7 +81,8 @@ public class AccountServiceTest
                     .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
 
                 _ = cfg.CreateMap<User, UserModel>().ReverseMap();
-            }, NullLoggerFactory.Instance);
+            },
+            NullLoggerFactory.Instance);
 
         Mapper mapper = new(config);
 
@@ -95,14 +99,16 @@ public class AccountServiceTest
         Mock<IExceptionHandler> mockExceptionHandler = new();
 
         Mock<IAccountRepository> mockRepository = new();
-        _ = mockRepository.Setup(x => x.GetAccountByUserGuidAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(account);
+        _ = mockRepository.Setup(x => x.GetAccountByUserGuidAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(account);
 
         AccountService service = new(mockExceptionHandler.Object, mockRepository.Object, mapper);
 
         DefaultResponse expected = new(httpStatus: HttpStatusCode.OK, objectResponse: accountModel);
 
         // Act
-        DefaultResponse result = await service.GetAccountByUserGuidAsync(Guid.NewGuid(), CancellationToken.None).ConfigureAwait(true);
+        DefaultResponse result = await service.GetAccountByUserGuidAsync(Guid.NewGuid(), CancellationToken.None)
+            .ConfigureAwait(true);
 
         // Assert
 
@@ -125,21 +131,24 @@ public class AccountServiceTest
                     .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
 
                 _ = cfg.CreateMap<User, UserModel>().ReverseMap();
-            }, NullLoggerFactory.Instance);
+            },
+            NullLoggerFactory.Instance);
 
         Mapper mapper = new(config);
 
         Mock<IExceptionHandler> mockExceptionHandler = new();
 
         Mock<IAccountRepository> mockRepository = new();
-        _ = mockRepository.Setup(x => x.GetAccountByGuidAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(() => null);
+        _ = mockRepository.Setup(x => x.GetAccountByGuidAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(() => null);
 
         AccountService service = new(mockExceptionHandler.Object, mockRepository.Object, mapper);
 
         DefaultResponse expected = new(httpStatus: HttpStatusCode.NotFound);
 
         // Act
-        DefaultResponse result = await service.GetAccountByUserGuidAsync(Guid.NewGuid(), CancellationToken.None).ConfigureAwait(true);
+        DefaultResponse result = await service.GetAccountByUserGuidAsync(Guid.NewGuid(), CancellationToken.None)
+            .ConfigureAwait(true);
 
         // Assert
 
@@ -161,7 +170,8 @@ public class AccountServiceTest
                     .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
 
                 cfg.CreateMap<User, UserModel>().ReverseMap();
-            }, NullLoggerFactory.Instance);
+            },
+            NullLoggerFactory.Instance);
 
         Mapper mapper = new(config);
 
@@ -177,14 +187,16 @@ public class AccountServiceTest
                 new DefaultResponse(httpStatus: HttpStatusCode.InternalServerError, message: "Internal Server Error"));
 
         Mock<IAccountRepository> mockRepository = new();
-        mockRepository.Setup(x => x.GetAccountByGuidAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ThrowsAsync(new Exception("Database error"));
+        mockRepository.Setup(x => x.GetAccountByGuidAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new Exception("Database error"));
 
         AccountService service = new(mockExceptionHandler.Object, mockRepository.Object, mapper);
 
         DefaultResponse expected = new(httpStatus: HttpStatusCode.InternalServerError, message: "Internal Server Error");
 
         // Act
-        DefaultResponse result = await service.UpdateAccountAsync(accountModel, CancellationToken.None).ConfigureAwait(true);
+        DefaultResponse result = await service.UpdateAccountAsync(accountModel, CancellationToken.None)
+            .ConfigureAwait(true);
 
         // Assert
         Assert.Equivalent(expected, result);
@@ -206,7 +218,8 @@ public class AccountServiceTest
                     .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
 
                 _ = cfg.CreateMap<User, UserModel>().ReverseMap();
-            }, NullLoggerFactory.Instance);
+            },
+            NullLoggerFactory.Instance);
 
         Mapper mapper = new(config);
 
@@ -219,14 +232,16 @@ public class AccountServiceTest
         Mock<IExceptionHandler> mockExceptionHandler = new();
 
         Mock<IAccountRepository> mockRepository = new();
-        _ = mockRepository.Setup(x => x.GetAccountByGuidAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(() => null);
+        _ = mockRepository.Setup(x => x.GetAccountByGuidAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(() => null);
 
         AccountService service = new(mockExceptionHandler.Object, mockRepository.Object, mapper);
 
         DefaultResponse expected = new(httpStatus: HttpStatusCode.NotFound, message: "Account not found.");
 
         // Act
-        DefaultResponse result = await service.UpdateAccountAsync(accountModel, CancellationToken.None).ConfigureAwait(true);
+        DefaultResponse result = await service.UpdateAccountAsync(accountModel, CancellationToken.None)
+            .ConfigureAwait(true);
 
         // Assert
 
@@ -249,7 +264,8 @@ public class AccountServiceTest
                     .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
 
                 _ = cfg.CreateMap<User, UserModel>().ReverseMap();
-            }, NullLoggerFactory.Instance);
+            },
+            NullLoggerFactory.Instance);
 
         Mapper mapper = new(config);
 
@@ -267,14 +283,16 @@ public class AccountServiceTest
         Mock<IExceptionHandler> mockExceptionHandler = new();
 
         Mock<IAccountRepository> mockRepository = new();
-        _ = mockRepository.Setup(x => x.GetAccountByGuidAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(account);
+        _ = mockRepository.Setup(x => x.GetAccountByGuidAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(account);
 
         AccountService service = new(mockExceptionHandler.Object, mockRepository.Object, mapper);
 
         DefaultResponse expected = new(message: "Account has been updated.");
 
         // Act
-        DefaultResponse result = await service.UpdateAccountAsync(accountModel, CancellationToken.None).ConfigureAwait(true);
+        DefaultResponse result = await service.UpdateAccountAsync(accountModel, CancellationToken.None)
+            .ConfigureAwait(true);
 
         // Assert
 

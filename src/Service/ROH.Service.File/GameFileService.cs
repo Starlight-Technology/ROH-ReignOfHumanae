@@ -17,7 +17,7 @@ namespace ROH.Service.File;
 
 public class GameFileService(IGameFileRepository gameFileRepository, IExceptionHandler exceptionHandler) : IGameFileService
 {
-    private async Task<DefaultResponse> GetGameFileAsync(GameFile gameFile, CancellationToken cancellationToken = default)
+    async Task<DefaultResponse> GetGameFileAsync(GameFile gameFile, CancellationToken cancellationToken = default)
     {
         try
         {

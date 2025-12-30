@@ -1,12 +1,18 @@
-﻿using StackExchange.Redis;
+﻿//-----------------------------------------------------------------------
+// <copyright file="IPlayerRedisContext.cs" company="Starlight-Technology">
+//     Author:  
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using StackExchange.Redis;
 
 namespace ROH.Context.Player.Redis.Interface;
 
 public interface IPlayerRedisContext
 {
-    IDatabase Database { get; }
-
     string PlayerStateKey(string playerId);
+
+    IDatabase Database { get; }
 
     string PlayersGeoKey { get; }
 }

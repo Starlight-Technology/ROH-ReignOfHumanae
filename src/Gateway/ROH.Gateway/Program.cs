@@ -25,8 +25,8 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 MessagePackSerializer.DefaultOptions =
     MessagePackSerializerOptions.Standard
-        .WithResolver(StandardResolver.Instance)
-        .WithSecurity(MessagePackSecurity.UntrustedData);
+    .WithResolver(StandardResolver.Instance)
+    .WithSecurity(MessagePackSecurity.UntrustedData);
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -63,14 +63,14 @@ builder.Services
             c.AddSecurityDefinition(
                 "Bearer",
                 new OpenApiSecurityScheme
-                {
-                    Description =
-                        "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                    Name = "Authorization",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer"
-                });
+                    {
+                        Description =
+                            "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                        Name = "Authorization",
+                        In = ParameterLocation.Header,
+                        Type = SecuritySchemeType.ApiKey,
+                        Scheme = "Bearer"
+                    });
         });
 
 // Configure Kestrel to listen on a specific port
@@ -79,38 +79,33 @@ builder.WebHost
         options =>
         {
             options.Limits.MaxRequestBodySize = null;
-            options.ListenAnyIP
-                (
-                    9001,
-                    listenOptions =>
-                    {
-                        listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
-                    }
-                );
-            options.ListenAnyIP
-                (
-                    9002,
-                    listenOptions =>
-                    {
-                        listenOptions.Protocols = HttpProtocols.Http2;
-                    }
-                );
+            options.ListenAnyIP(
+                9001,
+                listenOptions =>
+                {
+                    listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
+                });
+            options.ListenAnyIP(
+                9002,
+                listenOptions =>
+                {
+                    listenOptions.Protocols = HttpProtocols.Http2;
+                });
         });
 
 builder.Services.AddSingleton<ILogService, LogService>();
 
 builder.Services.AddSingleton<IExceptionHandler, ExceptionHandler>();
 
-builder.Services.AddSingleton<IRealtimeConnectionManager, RealtimeConnectionManager>();
+builder.Services
+    .AddSingleton<ROH.Gateway.Controllers.Websocket.IRealtimeConnectionManager, ROH.Gateway.Controllers.Websocket.RealtimeConnectionManager>(
+        );
 
 builder.Services.AddSingleton<IPlayerPositionServiceSocket, PlayerPositionServiceSocket>();
 
 WebApplication app = builder.Build();
 
-app.UseWebSockets(new WebSocketOptions
-{
-    KeepAliveInterval = TimeSpan.FromSeconds(15)
-});
+app.UseWebSockets(new WebSocketOptions { KeepAliveInterval = TimeSpan.FromSeconds(15) });
 
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -133,10 +128,10 @@ static async Task RealtimeWebSocketEndpoint(HttpContext context)
         return;
     }
 
-    var socket = await context.WebSockets.AcceptWebSocketAsync();
+    System.Net.WebSockets.WebSocket socket = await context.WebSockets.AcceptWebSocketAsync();
 
-    var manager = context.RequestServices
-        .GetRequiredService<IRealtimeConnectionManager>();
+    ROH.Gateway.Controllers.Websocket.IRealtimeConnectionManager manager = context.RequestServices
+        .GetRequiredService<ROH.Gateway.Controllers.Websocket.IRealtimeConnectionManager>();
 
     await manager.HandleClientAsync(context, socket);
 }

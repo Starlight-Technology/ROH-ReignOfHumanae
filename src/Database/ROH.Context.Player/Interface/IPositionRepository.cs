@@ -1,4 +1,10 @@
-﻿using ROH.Context.Player.Entities.Characters;
+﻿//-----------------------------------------------------------------------
+// <copyright file="IPositionRepository.cs" company="Starlight-Technology">
+//     Author:  
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using ROH.Context.Player.Entities.Characters;
 
 namespace ROH.Context.Player.Interface;
 

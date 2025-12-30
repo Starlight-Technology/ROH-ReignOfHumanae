@@ -73,7 +73,8 @@ MapperConfiguration mappingConfig = new(
         mc.AddProfile(new GameVersionFileMapping());
         mc.AddProfile(new GameVersionMapping());
         mc.AddProfile(new GameFileMapping());
-    }, NullLoggerFactory.Instance);
+    },
+    NullLoggerFactory.Instance);
 
 IMapper mapper = mappingConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);

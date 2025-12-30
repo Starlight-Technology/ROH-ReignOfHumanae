@@ -1,4 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿//-----------------------------------------------------------------------
+// <copyright file="20250508004338_PlayerPosition.cs" company="Starlight-Technology">
+//     Author:  
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using Microsoft.EntityFrameworkCore.Migrations;
 
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -6,19 +12,48 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ROH.Context.Player.Migrations;
 
-/// <inheritdoc />
+/// <inheritdoc/>
 public partial class PlayerPosition : Migration
 {
-    /// <inheritdoc />
+    /// <inheritdoc/>
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropForeignKey(name: "FK_KingdomRelations_Kingdoms_IdKingdom", table: "KingdomRelations");
+
+        migrationBuilder.DropForeignKey(name: "FK_KingdomRelations_Kingdoms_IdKingdom2", table: "KingdomRelations");
+
+        migrationBuilder.DropTable(name: "PlayersPosition");
+
+        migrationBuilder.DropTable(name: "Positions");
+
+        migrationBuilder.DropTable(name: "Rotations");
+
+        migrationBuilder.DropIndex(name: "IX_KingdomRelations_IdKingdom", table: "KingdomRelations");
+
+        migrationBuilder.DropColumn(name: "GuidAccount", table: "Characters");
+
+        migrationBuilder.AddColumn<long>(
+            name: "IdAccount",
+            table: "Characters",
+            type: "bigint",
+            nullable: false,
+            defaultValue: 0L);
+
+        migrationBuilder.AddForeignKey(
+            name: "FK_KingdomRelations_Kingdoms_IdKingdom2",
+            table: "KingdomRelations",
+            column: "IdKingdom2",
+            principalTable: "Kingdoms",
+            principalColumn: "Id",
+            onDelete: ReferentialAction.Cascade);
+    }
+
+    /// <inheritdoc/>
     protected override void Up(MigrationBuilder migrationBuilder)
     {
-        migrationBuilder.DropForeignKey(
-            name: "FK_KingdomRelations_Kingdoms_IdKingdom2",
-            table: "KingdomRelations");
+        migrationBuilder.DropForeignKey(name: "FK_KingdomRelations_Kingdoms_IdKingdom2", table: "KingdomRelations");
 
-        migrationBuilder.DropColumn(
-            name: "IdAccount",
-            table: "Characters");
+        migrationBuilder.DropColumn(name: "IdAccount", table: "Characters");
 
         migrationBuilder.AddColumn<Guid>(
             name: "GuidAccount",
@@ -38,10 +73,7 @@ public partial class PlayerPosition : Migration
                 Y = table.Column<float>(type: "real", nullable: false),
                 Z = table.Column<float>(type: "real", nullable: false)
             },
-            constraints: table =>
-            {
-                table.PrimaryKey("PK_Positions", x => x.Id);
-            });
+            constraints: table => table.PrimaryKey("PK_Positions", x => x.Id));
 
         migrationBuilder.CreateTable(
             name: "Rotations",
@@ -54,10 +86,7 @@ public partial class PlayerPosition : Migration
                 Z = table.Column<float>(type: "real", nullable: false),
                 W = table.Column<float>(type: "real", nullable: false)
             },
-            constraints: table =>
-            {
-                table.PrimaryKey("PK_Rotations", x => x.Id);
-            });
+            constraints: table => table.PrimaryKey("PK_Rotations", x => x.Id));
 
         migrationBuilder.CreateTable(
             name: "PlayersPosition",
@@ -128,49 +157,5 @@ public partial class PlayerPosition : Migration
             principalTable: "Kingdoms",
             principalColumn: "Id",
             onDelete: ReferentialAction.Restrict);
-    }
-
-    /// <inheritdoc />
-    protected override void Down(MigrationBuilder migrationBuilder)
-    {
-        migrationBuilder.DropForeignKey(
-            name: "FK_KingdomRelations_Kingdoms_IdKingdom",
-            table: "KingdomRelations");
-
-        migrationBuilder.DropForeignKey(
-            name: "FK_KingdomRelations_Kingdoms_IdKingdom2",
-            table: "KingdomRelations");
-
-        migrationBuilder.DropTable(
-            name: "PlayersPosition");
-
-        migrationBuilder.DropTable(
-            name: "Positions");
-
-        migrationBuilder.DropTable(
-            name: "Rotations");
-
-        migrationBuilder.DropIndex(
-            name: "IX_KingdomRelations_IdKingdom",
-            table: "KingdomRelations");
-
-        migrationBuilder.DropColumn(
-            name: "GuidAccount",
-            table: "Characters");
-
-        migrationBuilder.AddColumn<long>(
-            name: "IdAccount",
-            table: "Characters",
-            type: "bigint",
-            nullable: false,
-            defaultValue: 0L);
-
-        migrationBuilder.AddForeignKey(
-            name: "FK_KingdomRelations_Kingdoms_IdKingdom2",
-            table: "KingdomRelations",
-            column: "IdKingdom2",
-            principalTable: "Kingdoms",
-            principalColumn: "Id",
-            onDelete: ReferentialAction.Cascade);
     }
 }

@@ -1,4 +1,10 @@
-﻿using ROH.Context.Player.Mongo.Entities;
+﻿//-----------------------------------------------------------------------
+// <copyright file="PlayerPositionGeoMapper.cs" company="Starlight-Technology">
+//     Author:  
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using ROH.Context.Player.Mongo.Entities;
 
 namespace ROH.Context.Player.Mongo.Mappers;
 
@@ -12,13 +18,7 @@ public static class PlayerPositionGeoMapper
         {
             PlayerId = legacy.PlayerId,
 
-            Position = new GeoPoint
-            {
-                Coordinates = new[]
-                {
-                    lng, lat
-                }
-            },
+            Position = new GeoPoint { Coordinates = new[] { lng, lat } },
 
             PositionY = legacy.PositionY,
             RotationX = legacy.RotationX,
@@ -52,17 +52,16 @@ public static class PlayerPositionGeoMapper
 public static class WorldProjection
 {
     // Raio médio da Terra em metros (WGS84)
-    private const double EarthRadiusMeters = 6378137.0;
-
-    private const double RadToDeg = 180.0 / Math.PI;
+    const double EarthRadiusMeters = 6378137.0;
+    const double RadToDeg = 180.0 / Math.PI;
 
     /// <summary>
     /// Converte posição X/Z do mundo (em metros) para coordenadas GeoJSON
     /// </summary>
     public static (double lng, double lat) Project(float worldX, float worldZ)
     {
-        var lng = (worldX / EarthRadiusMeters) * RadToDeg;
-        var lat = (worldZ / EarthRadiusMeters) * RadToDeg;
+        double lng = (worldX / EarthRadiusMeters) * RadToDeg;
+        double lat = (worldZ / EarthRadiusMeters) * RadToDeg;
 
         return (lng, lat);
     }
@@ -72,8 +71,8 @@ public static class WorldProjection
     /// </summary>
     public static (float x, float z) Unproject(double lng, double lat)
     {
-        var x = (float)(lng * Math.PI / 180.0 * EarthRadiusMeters);
-        var z = (float)(lat * Math.PI / 180.0 * EarthRadiusMeters);
+        float x = (float)(((lng * Math.PI) / 180.0) * EarthRadiusMeters);
+        float z = (float)(((lat * Math.PI) / 180.0) * EarthRadiusMeters);
 
         return (x, z);
     }

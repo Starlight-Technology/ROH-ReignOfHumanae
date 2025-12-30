@@ -17,13 +17,24 @@ public class AccountRepository(IAccountContext context) : IAccountRepository
         .AsNoTracking()
         .FirstOrDefaultAsync(a => a.Guid == guid, cancellationToken);
 
-    public ValueTask<Entity.Account?> GetAccountByIdAsync(long id, CancellationToken cancellationToken = default) => context.Accounts.FindAsync([id, cancellationToken], cancellationToken: cancellationToken);
+    public ValueTask<Entity.Account?> GetAccountByIdAsync(long id, CancellationToken cancellationToken = default) => context.Accounts
+        .FindAsync([id, cancellationToken], cancellationToken: cancellationToken);
 
-    public async Task<Entity.Account?> GetAccountByUserGuidAsync(Guid guid, CancellationToken cancellationToken = default)
+    public async Task<Entity.Account?> GetAccountByUserGuidAsync(
+        Guid guid,
+        CancellationToken cancellationToken = default)
     {
-        User? user = await context.Users.AsNoTracking().FirstOrDefaultAsync(a => a.Guid == guid, cancellationToken).ConfigureAwait(true);
+        User? user = await context.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(a => a.Guid == guid, cancellationToken)
+            .ConfigureAwait(true);
 
-        return user is null ? null : await context.Accounts.AsNoTracking().FirstAsync(a => a.Id == user.IdAccount, cancellationToken).ConfigureAwait(true);
+        return (user is null)
+            ? null
+            : (await context.Accounts
+                .AsNoTracking()
+                .FirstAsync(a => a.Id == user.IdAccount, cancellationToken)
+                .ConfigureAwait(true));
     }
 
     public async Task UpdateAccountAsync(Entity.Account account, CancellationToken cancellationToken = default)

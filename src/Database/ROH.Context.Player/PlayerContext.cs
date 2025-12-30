@@ -1,4 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿//-----------------------------------------------------------------------
+// <copyright file="PlayerContext.cs" company="Starlight-Technology">
+//     Author:  
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using Microsoft.EntityFrameworkCore;
 
 using ROH.Context.Player.Entities.Characters;
 using ROH.Context.Player.Entities.Guilds;
@@ -41,7 +47,8 @@ public class PlayerContext : DbContext, IPlayerContext
         base.OnModelCreating(modelBuilder);
     }
 
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => base.SaveChangesAsync(cancellationToken);
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => base.SaveChangesAsync(
+        cancellationToken);
 
     public DbSet<AttackStatus> AttackStatuses { get; set; }
 
@@ -65,15 +72,15 @@ public class PlayerContext : DbContext, IPlayerContext
 
     public DbSet<MembersPosition> MembersPositions { get; set; }
 
-    public DbSet<HandRing> RingsEquipped { get; set; }
-
-    public DbSet<Skill> Skills { get; set; }
-
-    public DbSet<Status> Statuses { get; set; }
-
     public DbSet<PlayerPosition> PlayersPosition { get; set; }
 
     public DbSet<Player.Entities.Characters.Position> Positions { get; set; }
 
+    public DbSet<HandRing> RingsEquipped { get; set; }
+
     public DbSet<Rotation> Rotations { get; set; }
+
+    public DbSet<Skill> Skills { get; set; }
+
+    public DbSet<Status> Statuses { get; set; }
 }

@@ -14,7 +14,7 @@ namespace ROH.Blazor.Server.Api;
 
 public class AccountService(ICustomAuthenticationStateProvider customAuthenticationStateProvider) : IAccountService
 {
-    private readonly Gateway _gateway = new();
+    readonly Gateway _gateway = new();
 
     public async Task<DefaultResponse?> CreateNewUser(UserModel user) => await _gateway.PostAsync(
         Gateway.Services.CreateNewUser,

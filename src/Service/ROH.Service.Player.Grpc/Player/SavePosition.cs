@@ -1,4 +1,10 @@
-﻿using Grpc.Core;
+﻿//-----------------------------------------------------------------------
+// <copyright file="SavePosition.cs" company="Starlight-Technology">
+//     Author:  
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using Grpc.Core;
 
 using MongoDB.Bson;
 
@@ -13,42 +19,15 @@ using System.Numerics;
 
 namespace ROH.Service.Player.Grpc.Player;
 
-public class SavePosition(IPositionRepository repository, IPlayersPersistenceService playersPersistenceService, IExceptionHandler handler, IPlayerValidPositionService positionService) : PlayerService.PlayerServiceBase, ISavePosition
+public class SavePosition(
+    IPositionRepository repository,
+    IPlayersPersistenceService playersPersistenceService,
+    IExceptionHandler handler,
+    IPlayerValidPositionService positionService) : PlayerService.PlayerServiceBase, ISavePosition
 {
-    public override async Task<SaveResponse> SavePlayerData(PlayerRequest request, ServerCallContext context)
+    async Task SavePositionPersistence(PlayerRequest request, ServerCallContext context)
     {
-        try
-        {
-            var lastPlayerPosition = await playersPersistenceService.GetPlayerState(request.PlayerId);
-
-            if (lastPlayerPosition is not null)
-            {
-                var lastPositionVector = new Vector3(lastPlayerPosition.PositionX, lastPlayerPosition.PositionY, lastPlayerPosition.PositionZ);
-
-                var currentPositionVector = new Vector3(request.Position.X, request.Position.Y, request.Position.Z);
-
-                var playerPositionInput = new PlayerPositionInput(new Guid(request.PlayerId), lastPositionVector, currentPositionVector, lastPlayerPosition.Timestamp, DateTime.UtcNow);
-
-                var isPositionValid = positionService.Validate(playerPositionInput);
-
-                if (isPositionValid != PlayerPositionValidationResult.Valid)
-                    return new SaveResponse { PositionValid = (UInt32)isPositionValid, Success = false };
-            }
-
-            await SavePositionPersistence(request, context);
-
-            return new SaveResponse { PositionValid = (UInt32)PlayerPositionValidationResult.Valid, Success = true };
-        }
-        catch (System.Exception ex)
-        {
-            handler.HandleException(ex);
-            return new SaveResponse { Success = false };
-        }
-    }
-
-    private async Task SavePositionPersistence(PlayerRequest request, ServerCallContext context)
-    {
-        var position = new Context.Player.Mongo.Entities.PlayerPosition
+        Context.Player.Mongo.Entities.PlayerPosition position = new Context.Player.Mongo.Entities.PlayerPosition
         {
             Id = ObjectId.GenerateNewId(),
             PlayerId = request.PlayerId,
@@ -63,5 +42,44 @@ public class SavePosition(IPositionRepository repository, IPlayersPersistenceSer
 
         await repository.SavePlayerPositionAsync(position, context.CancellationToken).ConfigureAwait(true);
         await playersPersistenceService.SavePlayerPosition(request, context.CancellationToken).ConfigureAwait(true);
+    }
+
+    public override async Task<SaveResponse> SavePlayerData(PlayerRequest request, ServerCallContext context)
+    {
+        try
+        {
+            PlayerState? lastPlayerPosition = await playersPersistenceService.GetPlayerState(request.PlayerId);
+
+            if (lastPlayerPosition is not null)
+            {
+                Vector3 lastPositionVector = new Vector3(
+                    lastPlayerPosition.PositionX,
+                    lastPlayerPosition.PositionY,
+                    lastPlayerPosition.PositionZ);
+
+                Vector3 currentPositionVector = new Vector3(request.Position.X, request.Position.Y, request.Position.Z);
+
+                PlayerPositionInput playerPositionInput = new PlayerPositionInput(
+                    new Guid(request.PlayerId),
+                    lastPositionVector,
+                    currentPositionVector,
+                    lastPlayerPosition.Timestamp,
+                    DateTime.UtcNow);
+
+                PlayerPositionValidationResult isPositionValid = positionService.Validate(playerPositionInput);
+
+                if (isPositionValid != PlayerPositionValidationResult.Valid)
+                    return new SaveResponse { PositionValid = (uint)isPositionValid, Success = false };
+            }
+
+            await SavePositionPersistence(request, context);
+
+            return new SaveResponse { PositionValid = (uint)PlayerPositionValidationResult.Valid, Success = true };
+        }
+        catch (System.Exception ex)
+        {
+            handler.HandleException(ex);
+            return new SaveResponse { Success = false };
+        }
     }
 }

@@ -22,14 +22,14 @@ namespace ROH.StandardModels.Version
             FileGuid = fileGuid;
         }
 
+        public bool Active { get; set; }
+
+        public Func<Task<DefaultResponse?>>? DownloadFile { get; set; }
+
         public Guid FileGuid { get; set; }
 
         public string Name { get; set; }
 
         public string Size { get; set; }
-
-        public bool Active { get; set; }
-
-        public Func<Task<DefaultResponse?>>? DownloadFile { get; set; }
     }
 }

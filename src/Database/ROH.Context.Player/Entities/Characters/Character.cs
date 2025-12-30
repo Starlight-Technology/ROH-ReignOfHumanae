@@ -8,6 +8,7 @@ using ROH.Context.Player.Entities.Guilds;
 using ROH.Context.Player.Entities.Kingdoms;
 
 namespace ROH.Context.Player.Entities.Characters;
+
 /// <summary>
 ///
 /// </summary>
@@ -20,9 +21,9 @@ namespace ROH.Context.Player.Entities.Characters;
 /// <param name="Race"></param>
 public record Character(long Id, Guid GuidAccount, long? IdGuild, long? IdKingdom, Guid Guid, string? Name, Race Race)
 {
-    public DateTime DateCreated { get; set; } = DateTime.UtcNow;
-
     public virtual AttackStatus? AttackStatus { get; set; }
+
+    public DateTime DateCreated { get; set; } = DateTime.UtcNow;
 
     public virtual DefenseStatus? DefenseStatus { get; set; }
 
@@ -34,9 +35,9 @@ public record Character(long Id, Guid GuidAccount, long? IdGuild, long? IdKingdo
 
     public virtual Kingdom? Kingdom { get; set; }
 
+    public virtual PlayerPosition? PlayerPosition { get; set; }
+
     public virtual ICollection<CharacterSkill>? Skills { get; set; }
 
     public virtual Status? Status { get; set; }
-
-    public virtual PlayerPosition? PlayerPosition { get; set; }
 }

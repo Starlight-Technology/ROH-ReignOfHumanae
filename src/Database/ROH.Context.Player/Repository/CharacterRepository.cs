@@ -1,23 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿//-----------------------------------------------------------------------
+// <copyright file="CharacterRepository.cs" company="Starlight-Technology">
+//     Author:  
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using Microsoft.EntityFrameworkCore;
 
 using ROH.Context.Player.Interface;
 
 namespace ROH.Context.Player.Repository;
 
-public class CharacterRepository(IPlayerContext context)
-: ICharacterRepository
+public class CharacterRepository(IPlayerContext context) : ICharacterRepository
 {
-    public async Task<List<Entities.Characters.Character>> GetAllCharactersAsync(Guid accountGuid, CancellationToken cancellationToken = default)
-    {
-        return await context.Characters.Where(c => c.GuidAccount == accountGuid).ToListAsync(cancellationToken).ConfigureAwait(true);
-    }
-
-    public async Task<Entities.Characters.Character?> GetCharacterByIdAsync(Guid guid, CancellationToken cancellationToken = default)
-    {
-        return await context.Characters.FirstOrDefaultAsync(c => c.Guid == guid, cancellationToken).ConfigureAwait(true);
-    }
-
-    public async Task AddCharacterAsync(Entities.Characters.Character character, CancellationToken cancellationToken = default)
+    public async Task AddCharacterAsync(
+        Entities.Characters.Character character,
+        CancellationToken cancellationToken = default)
     {
         character.DateCreated = DateTime.UtcNow;
 
@@ -25,19 +22,35 @@ public class CharacterRepository(IPlayerContext context)
         await context.SaveChangesAsync(cancellationToken).ConfigureAwait(true);
     }
 
-    public async Task UpdateCharacterAsync(Entities.Characters.Character character, CancellationToken cancellationToken = default)
-    {
-        context.Characters.Update(character);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(true);
-    }
-
     public async Task DeleteCharacterAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var character = await GetCharacterByIdAsync(id, cancellationToken).ConfigureAwait(true);
+        Entities.Characters.Character? character = await GetCharacterByIdAsync(id, cancellationToken)
+            .ConfigureAwait(true);
         if (character != null)
         {
             context.Characters.Remove(character);
             await context.SaveChangesAsync(cancellationToken).ConfigureAwait(true);
         }
+    }
+
+    public async Task<List<Entities.Characters.Character>> GetAllCharactersAsync(
+        Guid accountGuid,
+        CancellationToken cancellationToken = default) => await context.Characters
+        .Where(c => c.GuidAccount == accountGuid)
+        .ToListAsync(cancellationToken)
+        .ConfigureAwait(true);
+
+    public async Task<Entities.Characters.Character?> GetCharacterByIdAsync(
+        Guid guid,
+        CancellationToken cancellationToken = default) => await context.Characters
+        .FirstOrDefaultAsync(c => c.Guid == guid, cancellationToken)
+        .ConfigureAwait(true);
+
+    public async Task UpdateCharacterAsync(
+        Entities.Characters.Character character,
+        CancellationToken cancellationToken = default)
+    {
+        context.Characters.Update(character);
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(true);
     }
 }

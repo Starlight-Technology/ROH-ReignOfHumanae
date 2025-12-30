@@ -51,8 +51,12 @@ public class AuthServiceTest
 
         // Check claims
         JwtSecurityToken jwtToken = (JwtSecurityToken)validatedToken;
-        string usernameClaim = jwtToken.Claims.First(claim => string.Compare(claim.Type, JwtRegisteredClaimNames.Sub, StringComparison.Ordinal) == 0).Value;
-        string jtiClaim = jwtToken.Claims.First(claim => string.Compare(claim.Type, JwtRegisteredClaimNames.Jti, StringComparison.Ordinal) == 0).Value;
+        string usernameClaim = jwtToken.Claims
+            .First(claim => string.Compare(claim.Type, JwtRegisteredClaimNames.Sub, StringComparison.Ordinal) == 0)
+            .Value;
+        string jtiClaim = jwtToken.Claims
+            .First(claim => string.Compare(claim.Type, JwtRegisteredClaimNames.Jti, StringComparison.Ordinal) == 0)
+            .Value;
 
         Assert.Equal(user.UserName, usernameClaim);
         Assert.Equal(user.Guid.Value.ToString(), jtiClaim);

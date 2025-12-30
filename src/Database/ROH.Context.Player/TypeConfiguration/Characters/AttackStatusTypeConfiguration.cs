@@ -11,7 +11,7 @@ using ROH.Context.Player.Entities.Characters;
 
 namespace ROH.Context.Player.TypeConfiguration.Characters;
 
-public class AttackStatusTypeConfiguration : IEntityTypeConfiguration<Entities.Characters.AttackStatus>
+public class AttackStatusTypeConfiguration : IEntityTypeConfiguration<AttackStatus>
 {
     public void Configure(EntityTypeBuilder<AttackStatus> builder)
     {

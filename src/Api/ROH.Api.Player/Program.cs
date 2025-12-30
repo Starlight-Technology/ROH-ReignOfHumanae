@@ -86,10 +86,8 @@ app.MapPost(
 
 app.MapGet(
     "GetAccountCaracters",
-    async (ICharacterService service, Guid accountGuid) =>
-    {
-        return await service.GetAllCharactersAsync(accountGuid).ConfigureAwait(true);
-    });
+    async (ICharacterService service, Guid accountGuid) => await service.GetAllCharactersAsync(accountGuid)
+        .ConfigureAwait(true));
 
 app.MapGet(
     "GetCharacter",

@@ -26,11 +26,9 @@ public class UserService(
     IUserRepository repository,
     IMapper mapper) : IUserService
 {
-    public async Task<UserModel?> FindUserByEmailAsync(
-        string email,
-        CancellationToken cancellationToken = default)
+    public async Task<UserModel?> FindUserByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
-        var user = await repository.FindUserByEmailAsync(email, cancellationToken).ConfigureAwait(true);
+        User? user = await repository.FindUserByEmailAsync(email, cancellationToken).ConfigureAwait(true);
         if (user is null)
             return null;
 
@@ -41,7 +39,7 @@ public class UserService(
         string userName,
         CancellationToken cancellationToken = default)
     {
-        var user = await repository.FindUserByUserNameAsync(userName, cancellationToken).ConfigureAwait(true);
+        User? user = await repository.FindUserByUserNameAsync(userName, cancellationToken).ConfigureAwait(true);
 
         if (user is null)
             return null;
@@ -56,8 +54,9 @@ public class UserService(
     {
         try
         {
-            ValidationResult validation = await userValidator.ValidateAsync(userModel, cancellationToken).ConfigureAwait(true);
-            if (validation is not null && !validation.IsValid && validation.Errors.Count > 0)
+            ValidationResult validation = await userValidator.ValidateAsync(userModel, cancellationToken)
+                .ConfigureAwait(true);
+            if ((validation is not null) && !validation.IsValid && (validation.Errors.Count > 0))
             {
                 string errorMessages = string.Join("; ", validation.Errors.Select(e => e.ErrorMessage));
                 return new DefaultResponse(null, HttpStatusCode.BadRequest, errorMessages);
@@ -82,7 +81,10 @@ public class UserService(
         }
     }
 
-    public async Task<bool> ValidatePasswordAsync(string password, Guid userGuid, CancellationToken cancellationToken = default)
+    public async Task<bool> ValidatePasswordAsync(
+        string password,
+        Guid userGuid,
+        CancellationToken cancellationToken = default)
     {
         User user = await repository.GetUserByGuidAsync(userGuid, cancellationToken).ConfigureAwait(true);
 

@@ -19,9 +19,9 @@ namespace ROH.Blazor.Server.Helpers;
 /// </summary>
 public class CustomAuthenticationStateProvider(ILocalStorageService localStorage) : AuthenticationStateProvider, ICustomAuthenticationStateProvider
 {
-    private readonly string _authToken = "authToken";
-    private bool _isInitialized;
-    private readonly string _userKey = "userKey";
+    readonly string _authToken = "authToken";
+    bool _isInitialized;
+    readonly string _userKey = "userKey";
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {

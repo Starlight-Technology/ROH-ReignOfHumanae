@@ -1,4 +1,10 @@
-﻿using Grpc.Core;
+﻿//-----------------------------------------------------------------------
+// <copyright file="ISavePosition.cs" company="Starlight-Technology">
+//     Author:  
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using Grpc.Core;
 
 using ROH.Contracts.GRPC.Player.PlayerPosition;
 

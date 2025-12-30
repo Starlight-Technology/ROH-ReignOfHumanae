@@ -23,13 +23,13 @@ namespace ROH.Test.Version;
 
 public class GameVersionServiceTests
 {
-    private readonly GameVersion _gameVersion;
-    private readonly GameVersionModel _gameVersionModel;
-    private readonly Mock<IExceptionHandler> _mockExceptionHandler;
-    private readonly Mock<IMapper> _mockMapper;
-    private readonly Mock<IGameVersionRepository> _mockVersionRepository;
-    private readonly Paginated _paginatedResult;
-    private readonly GameVersionService _service;
+    readonly GameVersion _gameVersion;
+    readonly GameVersionModel _gameVersionModel;
+    readonly Mock<IExceptionHandler> _mockExceptionHandler;
+    readonly Mock<IMapper> _mockMapper;
+    readonly Mock<IGameVersionRepository> _mockVersionRepository;
+    readonly Paginated _paginatedResult;
+    readonly GameVersionService _service;
 
     public GameVersionServiceTests()
     {
@@ -54,13 +54,15 @@ public class GameVersionServiceTests
     public async Task GetAllReleasedVersionsShouldHandleException()
     {
         // Arrange
-        _mockVersionRepository.Setup(repo => repo.GetAllReleasedVersionsAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
+        _mockVersionRepository.Setup(
+            repo => repo.GetAllReleasedVersionsAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ThrowsAsync(new Exception());
         _mockExceptionHandler.Setup(handler => handler.HandleException(It.IsAny<Exception>()))
             .Returns(new DefaultResponse(null, HttpStatusCode.InternalServerError, "Exception occurred"));
 
         // Act
-        DefaultResponse result = await _service.GetAllReleasedVersionsAsync(cancellationToken: CancellationToken.None).ConfigureAwait(true);
+        DefaultResponse result = await _service.GetAllReleasedVersionsAsync(cancellationToken: CancellationToken.None)
+            .ConfigureAwait(true);
 
         // Assert
         Assert.Equal(HttpStatusCode.InternalServerError, result.HttpStatus);
@@ -71,11 +73,13 @@ public class GameVersionServiceTests
     public async Task GetAllReleasedVersionsShouldReturnReleasedVersions()
     {
         // Arrange
-        _mockVersionRepository.Setup(repo => repo.GetAllReleasedVersionsAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
+        _mockVersionRepository.Setup(
+            repo => repo.GetAllReleasedVersionsAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(_paginatedResult);
 
         // Act
-        DefaultResponse result = await _service.GetAllReleasedVersionsAsync(cancellationToken: CancellationToken.None).ConfigureAwait(true);
+        DefaultResponse result = await _service.GetAllReleasedVersionsAsync(cancellationToken: CancellationToken.None)
+            .ConfigureAwait(true);
 
         // Assert
         Assert.NotNull(result.ObjectResponse);
@@ -87,13 +91,15 @@ public class GameVersionServiceTests
     public async Task GetAllVersionsShouldHandleException()
     {
         // Arrange
-        _mockVersionRepository.Setup(repo => repo.GetAllVersionsAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
+        _mockVersionRepository.Setup(
+            repo => repo.GetAllVersionsAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ThrowsAsync(new Exception());
         _mockExceptionHandler.Setup(handler => handler.HandleException(It.IsAny<Exception>()))
             .Returns(new DefaultResponse(null, HttpStatusCode.InternalServerError, "Exception occurred"));
 
         // Act
-        DefaultResponse result = await _service.GetAllVersionsAsync(cancellationToken: CancellationToken.None).ConfigureAwait(true);
+        DefaultResponse result = await _service.GetAllVersionsAsync(cancellationToken: CancellationToken.None)
+            .ConfigureAwait(true);
 
         // Assert
         Assert.Equal(HttpStatusCode.InternalServerError, result.HttpStatus);
@@ -104,11 +110,13 @@ public class GameVersionServiceTests
     public async Task GetAllVersionsShouldReturnVersions()
     {
         // Arrange
-        _mockVersionRepository.Setup(repo => repo.GetAllVersionsAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
+        _mockVersionRepository.Setup(
+            repo => repo.GetAllVersionsAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(_paginatedResult);
 
         // Act
-        DefaultResponse result = await _service.GetAllVersionsAsync(cancellationToken: CancellationToken.None).ConfigureAwait(true);
+        DefaultResponse result = await _service.GetAllVersionsAsync(cancellationToken: CancellationToken.None)
+            .ConfigureAwait(true);
 
         // Assert
         Assert.NotNull(result.ObjectResponse);
@@ -119,12 +127,14 @@ public class GameVersionServiceTests
     public async Task GetCurrentVersionShouldHandleException()
     {
         // Arrange
-        _mockVersionRepository.Setup(repo => repo.GetCurrentGameVersionAsync(It.IsAny<CancellationToken>())).ThrowsAsync(new Exception());
+        _mockVersionRepository.Setup(repo => repo.GetCurrentGameVersionAsync(It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new Exception());
         _mockExceptionHandler.Setup(handler => handler.HandleException(It.IsAny<Exception>()))
             .Returns(new DefaultResponse(null, HttpStatusCode.InternalServerError, "Exception occurred"));
 
         // Act
-        DefaultResponse result = await _service.GetCurrentVersionAsync(cancellationToken: CancellationToken.None).ConfigureAwait(true);
+        DefaultResponse result = await _service.GetCurrentVersionAsync(cancellationToken: CancellationToken.None)
+            .ConfigureAwait(true);
 
         // Assert
         Assert.Equal(HttpStatusCode.InternalServerError, result.HttpStatus);
@@ -135,10 +145,12 @@ public class GameVersionServiceTests
     public async Task GetCurrentVersionShouldReturnCurrentVersion()
     {
         // Arrange
-        _mockVersionRepository.Setup(repo => repo.GetCurrentGameVersionAsync(It.IsAny<CancellationToken>())).ReturnsAsync(_gameVersion);
+        _mockVersionRepository.Setup(repo => repo.GetCurrentGameVersionAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(_gameVersion);
 
         // Act
-        DefaultResponse result = await _service.GetCurrentVersionAsync(cancellationToken: CancellationToken.None).ConfigureAwait(true);
+        DefaultResponse result = await _service.GetCurrentVersionAsync(cancellationToken: CancellationToken.None)
+            .ConfigureAwait(true);
 
         // Assert
         Assert.NotNull(result.ObjectResponse);
@@ -149,12 +161,17 @@ public class GameVersionServiceTests
     public async Task GetVersionByGuidShouldHandleException()
     {
         // Arrange
-        _mockVersionRepository.Setup(repo => repo.GetVersionByGuidAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ThrowsAsync(new Exception());
+        _mockVersionRepository.Setup(
+            repo => repo.GetVersionByGuidAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new Exception());
         _mockExceptionHandler.Setup(handler => handler.HandleException(It.IsAny<Exception>()))
             .Returns(new DefaultResponse(null, HttpStatusCode.InternalServerError, "Exception occurred"));
 
         // Act
-        DefaultResponse result = await _service.GetVersionByGuidAsync(Guid.NewGuid().ToString(), cancellationToken: CancellationToken.None).ConfigureAwait(true);
+        DefaultResponse result = await _service.GetVersionByGuidAsync(
+            Guid.NewGuid().ToString(),
+            cancellationToken: CancellationToken.None)
+            .ConfigureAwait(true);
 
         // Assert
         Assert.Equal(HttpStatusCode.InternalServerError, result.HttpStatus);
@@ -165,7 +182,10 @@ public class GameVersionServiceTests
     public async Task GetVersionByGuidShouldReturnExpectationFailedWhenVersionGuidIsInvalid()
     {
         // Act
-        DefaultResponse result = await _service.GetVersionByGuidAsync("invalid-guid", cancellationToken: CancellationToken.None).ConfigureAwait(true);
+        DefaultResponse result = await _service.GetVersionByGuidAsync(
+            "invalid-guid",
+            cancellationToken: CancellationToken.None)
+            .ConfigureAwait(true);
 
         // Assert
         Assert.Equal(HttpStatusCode.ExpectationFailed, result.HttpStatus);
@@ -176,10 +196,15 @@ public class GameVersionServiceTests
     public async Task GetVersionByGuidShouldReturnVersionWhenFound()
     {
         // Arrange
-        _mockVersionRepository.Setup(repo => repo.GetVersionByGuidAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(_gameVersion);
+        _mockVersionRepository.Setup(
+            repo => repo.GetVersionByGuidAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(_gameVersion);
 
         // Act
-        DefaultResponse result = await _service.GetVersionByGuidAsync(_gameVersion.Guid.ToString(), cancellationToken: CancellationToken.None).ConfigureAwait(true);
+        DefaultResponse result = await _service.GetVersionByGuidAsync(
+            _gameVersion.Guid.ToString(),
+            cancellationToken: CancellationToken.None)
+            .ConfigureAwait(true);
 
         // Assert
         Assert.NotNull(result.ObjectResponse);
@@ -190,13 +215,17 @@ public class GameVersionServiceTests
     public async Task NewVersionShouldHandleException()
     {
         // Arrange
-        _mockVersionRepository.Setup(repo => repo.SetNewGameVersionAsync(It.IsAny<GameVersion>(), It.IsAny<CancellationToken>()))
+        _mockVersionRepository.Setup(
+            repo => repo.SetNewGameVersionAsync(It.IsAny<GameVersion>(), It.IsAny<CancellationToken>()))
             .ThrowsAsync(new Exception());
         _mockExceptionHandler.Setup(handler => handler.HandleException(It.IsAny<Exception>()))
             .Returns(new DefaultResponse(null, HttpStatusCode.InternalServerError, "Exception occurred"));
 
         // Act
-        DefaultResponse result = await _service.NewVersionAsync(_gameVersionModel, cancellationToken: CancellationToken.None).ConfigureAwait(true);
+        DefaultResponse result = await _service.NewVersionAsync(
+            _gameVersionModel,
+            cancellationToken: CancellationToken.None)
+            .ConfigureAwait(true);
 
         // Assert
         Assert.Equal(HttpStatusCode.InternalServerError, result.HttpStatus);
@@ -207,10 +236,15 @@ public class GameVersionServiceTests
     public async Task NewVersionShouldReturnConflictWhenVersionAlreadyExists()
     {
         // Arrange
-        _mockVersionRepository.Setup(repo => repo.VerifyIfExistAsync(It.IsAny<GameVersion>(), It.IsAny<CancellationToken>())).ReturnsAsync(true);
+        _mockVersionRepository.Setup(
+            repo => repo.VerifyIfExistAsync(It.IsAny<GameVersion>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
 
         // Act
-        DefaultResponse result = await _service.NewVersionAsync(_gameVersionModel, cancellationToken: CancellationToken.None).ConfigureAwait(true);
+        DefaultResponse result = await _service.NewVersionAsync(
+            _gameVersionModel,
+            cancellationToken: CancellationToken.None)
+            .ConfigureAwait(true);
 
         // Assert
         Assert.Equal(HttpStatusCode.Conflict, result.HttpStatus);
@@ -221,10 +255,15 @@ public class GameVersionServiceTests
     public async Task NewVersionShouldReturnCreatedWhenVersionIsNew()
     {
         // Arrange
-        _mockVersionRepository.Setup(repo => repo.VerifyIfExistAsync(It.IsAny<GameVersion>(), It.IsAny<CancellationToken>())).ReturnsAsync(false);
+        _mockVersionRepository.Setup(
+            repo => repo.VerifyIfExistAsync(It.IsAny<GameVersion>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
 
         // Act
-        DefaultResponse result = await _service.NewVersionAsync(_gameVersionModel, cancellationToken: CancellationToken.None).ConfigureAwait(true);
+        DefaultResponse result = await _service.NewVersionAsync(
+            _gameVersionModel,
+            cancellationToken: CancellationToken.None)
+            .ConfigureAwait(true);
 
         // Assert
         Assert.Equal(HttpStatusCode.Created, result.HttpStatus);
@@ -235,15 +274,21 @@ public class GameVersionServiceTests
     public async Task ReleaseVersionShouldHandleException()
     {
         // Arrange
-        _mockVersionRepository.Setup(repo => repo.GetVersionByGuidAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(_gameVersion);
-        _mockVersionRepository.Setup(repo => repo.UpdateGameVersionAsync(It.IsAny<GameVersion>(), It.IsAny<CancellationToken>()))
+        _mockVersionRepository.Setup(
+            repo => repo.GetVersionByGuidAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(_gameVersion);
+        _mockVersionRepository.Setup(
+            repo => repo.UpdateGameVersionAsync(It.IsAny<GameVersion>(), It.IsAny<CancellationToken>()))
             .ThrowsAsync(new Exception());
 
         _mockExceptionHandler.Setup(handler => handler.HandleException(It.IsAny<Exception>()))
             .Returns(new DefaultResponse(null, HttpStatusCode.InternalServerError, "Exception occurred"));
 
         // Act
-        DefaultResponse result = await _service.SetReleasedAsync(_gameVersion.Guid.ToString(), cancellationToken: CancellationToken.None).ConfigureAwait(true);
+        DefaultResponse result = await _service.SetReleasedAsync(
+            _gameVersion.Guid.ToString(),
+            cancellationToken: CancellationToken.None)
+            .ConfigureAwait(true);
 
         // Assert
         Assert.Equal(HttpStatusCode.InternalServerError, result.HttpStatus);
@@ -254,10 +299,15 @@ public class GameVersionServiceTests
     public async Task ReleaseVersionShouldReturnNotFoundWhenObjectIsNull()
     {
         // Arrange
-        _mockVersionRepository.Setup(repo => repo.GetVersionByGuidAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(() => null);
+        _mockVersionRepository.Setup(
+            repo => repo.GetVersionByGuidAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(() => null);
 
         // Act
-        DefaultResponse result = await _service.SetReleasedAsync(_gameVersion.Guid.ToString(), cancellationToken: CancellationToken.None).ConfigureAwait(true);
+        DefaultResponse result = await _service.SetReleasedAsync(
+            _gameVersion.Guid.ToString(),
+            cancellationToken: CancellationToken.None)
+            .ConfigureAwait(true);
 
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, result.HttpStatus);
@@ -268,11 +318,18 @@ public class GameVersionServiceTests
     public async Task SetReleasedShouldReleaseVersionWhenValidGuid()
     {
         // Arrange
-        _mockVersionRepository.Setup(repo => repo.GetVersionByGuidAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(_gameVersion);
-        _mockVersionRepository.Setup(repo => repo.UpdateGameVersionAsync(It.IsAny<GameVersion>(), It.IsAny<CancellationToken>())).ReturnsAsync(_gameVersion);
+        _mockVersionRepository.Setup(
+            repo => repo.GetVersionByGuidAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(_gameVersion);
+        _mockVersionRepository.Setup(
+            repo => repo.UpdateGameVersionAsync(It.IsAny<GameVersion>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(_gameVersion);
 
         // Act
-        DefaultResponse result = await _service.SetReleasedAsync(_gameVersion.Guid.ToString(), cancellationToken: CancellationToken.None).ConfigureAwait(true);
+        DefaultResponse result = await _service.SetReleasedAsync(
+            _gameVersion.Guid.ToString(),
+            cancellationToken: CancellationToken.None)
+            .ConfigureAwait(true);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, result.HttpStatus);
@@ -283,7 +340,10 @@ public class GameVersionServiceTests
     public async Task SetReleasedShouldReturnNotFoundWhenInvalidGuid()
     {
         // Act
-        DefaultResponse result = await _service.SetReleasedAsync("invalid-guid", cancellationToken: CancellationToken.None).ConfigureAwait(true);
+        DefaultResponse result = await _service.SetReleasedAsync(
+            "invalid-guid",
+            cancellationToken: CancellationToken.None)
+            .ConfigureAwait(true);
 
         // Assert
         Assert.Equal(HttpStatusCode.ExpectationFailed, result.HttpStatus);
@@ -294,10 +354,15 @@ public class GameVersionServiceTests
     public async Task VerifyIfVersionExistShouldReturnFalseWhenVersionDoesNotExist()
     {
         // Arrange
-        _mockVersionRepository.Setup(repo => repo.VerifyIfExistAsync(It.IsAny<GameVersion>(), It.IsAny<CancellationToken>())).ReturnsAsync(false);
+        _mockVersionRepository.Setup(
+            repo => repo.VerifyIfExistAsync(It.IsAny<GameVersion>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
 
         // Act
-        bool result = await _service.VerifyIfVersionExistAsync(_gameVersionModel, cancellationToken: CancellationToken.None).ConfigureAwait(true);
+        bool result = await _service.VerifyIfVersionExistAsync(
+            _gameVersionModel,
+            cancellationToken: CancellationToken.None)
+            .ConfigureAwait(true);
 
         // Assert
         Assert.False(result);
@@ -307,10 +372,14 @@ public class GameVersionServiceTests
     public async Task VerifyIfVersionExistShouldReturnFalseWhenVersionGuidDoesNotExist()
     {
         // Arrange
-        _mockVersionRepository.Setup(repo => repo.VerifyIfExistAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(false);
+        _mockVersionRepository.Setup(repo => repo.VerifyIfExistAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
 
         // Act
-        bool result = await _service.VerifyIfVersionExistAsync(_gameVersion.Guid.ToString(), cancellationToken: CancellationToken.None).ConfigureAwait(true);
+        bool result = await _service.VerifyIfVersionExistAsync(
+            _gameVersion.Guid.ToString(),
+            cancellationToken: CancellationToken.None)
+            .ConfigureAwait(true);
 
         // Assert
         Assert.False(result);
@@ -320,10 +389,15 @@ public class GameVersionServiceTests
     public async Task VerifyIfVersionExistShouldReturnTrueWhenVersionExists()
     {
         // Arrange
-        _mockVersionRepository.Setup(repo => repo.VerifyIfExistAsync(It.IsAny<GameVersion>(), It.IsAny<CancellationToken>())).ReturnsAsync(true);
+        _mockVersionRepository.Setup(
+            repo => repo.VerifyIfExistAsync(It.IsAny<GameVersion>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
 
         // Act
-        bool result = await _service.VerifyIfVersionExistAsync(_gameVersionModel, cancellationToken: CancellationToken.None).ConfigureAwait(true);
+        bool result = await _service.VerifyIfVersionExistAsync(
+            _gameVersionModel,
+            cancellationToken: CancellationToken.None)
+            .ConfigureAwait(true);
 
         // Assert
         Assert.True(result);
@@ -333,10 +407,14 @@ public class GameVersionServiceTests
     public async Task VerifyIfVersionExistShouldReturnTrueWhenVersionGuidExists()
     {
         // Arrange
-        _mockVersionRepository.Setup(repo => repo.VerifyIfExistAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(true);
+        _mockVersionRepository.Setup(repo => repo.VerifyIfExistAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
 
         // Act
-        bool result = await _service.VerifyIfVersionExistAsync(_gameVersion.Guid.ToString(), cancellationToken: CancellationToken.None).ConfigureAwait(true);
+        bool result = await _service.VerifyIfVersionExistAsync(
+            _gameVersion.Guid.ToString(),
+            cancellationToken: CancellationToken.None)
+            .ConfigureAwait(true);
 
         // Assert
         Assert.True(result);

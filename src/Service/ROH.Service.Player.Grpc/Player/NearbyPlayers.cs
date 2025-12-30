@@ -1,4 +1,10 @@
-﻿using Grpc.Core;
+﻿//-----------------------------------------------------------------------
+// <copyright file="NearbyPlayers.cs" company="Starlight-Technology">
+//     Author:  
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using Grpc.Core;
 
 using ROH.Contracts.GRPC.Player.NearbyPlayer;
 using ROH.Service.Exception.Interface;
@@ -17,21 +23,19 @@ public class NearbyPlayers(IPlayersPersistenceService playersPersistenceService,
         {
             const int maxPlayers = 32;
 
-            var result = await playersPersistenceService.GetNearbyPlayerAsync(request.PlayerId, request.Radius, maxPlayers, context.CancellationToken).ConfigureAwait(true);
+            ICollection<PlayerInfo> result = await playersPersistenceService.GetNearbyPlayerAsync(
+                request.PlayerId,
+                request.Radius,
+                maxPlayers,
+                context.CancellationToken)
+                .ConfigureAwait(true);
 
-            return new NearbyPlayersResponse
-            {
-                Players = { result },
-                MainPlayer = request.PlayerId,
-            };
+            return new NearbyPlayersResponse { Players = { result }, MainPlayer = request.PlayerId, };
         }
         catch (System.Exception ex)
         {
             exceptionHandler.HandleException(ex);
-            return new NearbyPlayersResponse
-            {
-                Players = { }
-            };
+            return new NearbyPlayersResponse { Players = { } };
         }
     }
 }

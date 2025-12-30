@@ -1,4 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿//-----------------------------------------------------------------------
+// <copyright file="PlayerController.cs" company="Starlight-Technology">
+//     Author:  
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using ROH.StandardModels.Character;
@@ -11,16 +17,32 @@ namespace ROH.Gateway.Controllers.Player;
 [Authorize]
 public class PlayerController : ControllerBase
 {
-    private readonly Api _api = new();
+    readonly Api _api = new();
+
+    [HttpPost("CreateCharacter")]
+    public async Task<IActionResult> CreateCharacter(CharacterModel model, CancellationToken token = default)
+    {
+        using CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(token);
+        cts.CancelAfter(TimeSpan.FromMinutes(2));
+        try
+        {
+            string response = await _api.PostAsync(Api.Services.CreateCharacter, model, cts.Token).ConfigureAwait(true);
+            return Ok(response);
+        }
+        catch (OperationCanceledException)
+        {
+            return StatusCode(408, "The request timed out.");
+        }
+    }
 
     [HttpGet("GetAllCharacters")]
     public async Task<IActionResult> GetAllCharacters(Guid accountGuid, CancellationToken token = default)
     {
-        using var cts = CancellationTokenSource.CreateLinkedTokenSource(token);
+        using CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(token);
         cts.CancelAfter(TimeSpan.FromMinutes(2));
         try
         {
-            var response = await _api.GetAsync(Api.Services.GetAccountCaracters, new { accountGuid }, cts.Token)
+            string response = await _api.GetAsync(Api.Services.GetAccountCaracters, new { accountGuid }, cts.Token)
                 .ConfigureAwait(true);
             return Ok(response);
         }
@@ -33,28 +55,11 @@ public class PlayerController : ControllerBase
     [HttpGet("GetCharacter")]
     public async Task<IActionResult> GetCharacter(Guid guid, CancellationToken token = default)
     {
-        using var cts = CancellationTokenSource.CreateLinkedTokenSource(token);
+        using CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(token);
         cts.CancelAfter(TimeSpan.FromMinutes(2));
         try
         {
-            var response = await _api.GetAsync(Api.Services.GetCharacter, new { characterGuid = guid }, cts.Token)
-                .ConfigureAwait(true);
-            return Ok(response);
-        }
-        catch (OperationCanceledException)
-        {
-            return StatusCode(408, "The request timed out.");
-        }
-    }
-
-    [HttpPost("CreateCharacter")]
-    public async Task<IActionResult> CreateCharacter(CharacterModel model, CancellationToken token = default)
-    {
-        using var cts = CancellationTokenSource.CreateLinkedTokenSource(token);
-        cts.CancelAfter(TimeSpan.FromMinutes(2));
-        try
-        {
-            var response = await _api.PostAsync(Api.Services.CreateCharacter, model, cts.Token)
+            string response = await _api.GetAsync(Api.Services.GetCharacter, new { characterGuid = guid }, cts.Token)
                 .ConfigureAwait(true);
             return Ok(response);
         }

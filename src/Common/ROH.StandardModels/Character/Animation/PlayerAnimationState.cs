@@ -1,4 +1,10 @@
-﻿namespace ROH.StandardModels.Character.Animation
+﻿//-----------------------------------------------------------------------
+// <copyright file="PlayerAnimationState.cs" company="Starlight-Technology">
+//     Author:  
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+namespace ROH.StandardModels.Character.Animation
 {
     public enum PlayerAnimationState
     {

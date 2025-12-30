@@ -1,4 +1,10 @@
-﻿using Grpc.Net.Client;
+﻿//-----------------------------------------------------------------------
+// <copyright file="Program.cs" company="Starlight-Technology">
+//     Author:  
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using Grpc.Net.Client;
 
 using ROH.Contracts.GRPC.Player.NearbyPlayer;
 using ROH.Contracts.GRPC.Worker.PlayerSocket;
@@ -12,7 +18,7 @@ const int DEFAULT_NEARBY_RANGE = 100;
 
 Console.WriteLine("Initialized GetNearbyPlayers worker.");
 
-using var cts = new CancellationTokenSource();
+using CancellationTokenSource cts = new CancellationTokenSource();
 
 Console.CancelKeyPress += (_, e) =>
 {
@@ -30,10 +36,10 @@ GrpcChannel gatewayChannel = GrpcChannel.ForAddress(
     {
         HttpHandler =
             new HttpClientHandler
-            {
-                ServerCertificateCustomValidationCallback =
+                {
+                    ServerCertificateCustomValidationCallback =
                         HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-            }
+                }
     });
 
 GrpcChannel nearbyPlayerChannel = GrpcChannel.ForAddress(
@@ -42,15 +48,17 @@ GrpcChannel nearbyPlayerChannel = GrpcChannel.ForAddress(
     {
         HttpHandler =
             new HttpClientHandler
-            {
-                ServerCertificateCustomValidationCallback =
+                {
+                    ServerCertificateCustomValidationCallback =
                         HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-            }
+                }
     });
 #pragma warning restore S4830 // Server certificates should be verified during SSL/TLS connections
 
-var playerSocketGrpc = new PlayerConnectedService.PlayerConnectedServiceClient(gatewayChannel);
-var nearbyPlayerApi = new NearbyPlayerService.NearbyPlayerServiceClient(nearbyPlayerChannel);
+PlayerConnectedService.PlayerConnectedServiceClient playerSocketGrpc = new PlayerConnectedService.PlayerConnectedServiceClient(
+    gatewayChannel);
+NearbyPlayerService.NearbyPlayerServiceClient nearbyPlayerApi = new NearbyPlayerService.NearbyPlayerServiceClient(
+    nearbyPlayerChannel);
 
 LogService logService = new LogService();
 ExceptionHandler exceptionHandler = new ExceptionHandler(logService);
@@ -59,21 +67,23 @@ while (!cts.Token.IsCancellationRequested)
 {
     try
     {
-        var connectedPlayers =
+        PlayersConnected connectedPlayers =
             await playerSocketGrpc.GetConnectedPlayersAsync(new Default());
 
-        var tasks = connectedPlayers.PlayersId.Select(async player =>
-        {
-            var nearbyPlayers =
+        IEnumerable<Task> tasks = connectedPlayers.PlayersId
+            .Select(
+                async player =>
+                {
+                    NearbyPlayersResponse nearbyPlayers =
                 await nearbyPlayerApi.GetNearbyPlayersAsync(
-                    new NearbyPlayersRequest
-                    {
-                        PlayerId = player.Id,
-                        Radius = Math.Max(player.NearbyRadius, DEFAULT_NEARBY_RANGE)
-                    });
+                        new NearbyPlayersRequest
+                            {
+                                PlayerId = player.Id,
+                                Radius = Math.Max(player.NearbyRadius, DEFAULT_NEARBY_RANGE)
+                            });
 
-            await playerSocketGrpc.SendNearbyPlayersAsync(nearbyPlayers);
-        });
+                    await playerSocketGrpc.SendNearbyPlayersAsync(nearbyPlayers);
+                });
 
         await Task.WhenAll(tasks);
     }

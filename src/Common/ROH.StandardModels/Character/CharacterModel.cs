@@ -1,4 +1,10 @@
-﻿using ROH.StandardModels.Character.PlayerStatus;
+﻿//-----------------------------------------------------------------------
+// <copyright file="CharacterModel.cs" company="Starlight-Technology">
+//     Author:  
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using ROH.StandardModels.Character.PlayerStatus;
 using ROH.StandardModels.Character.Position;
 
 using System;
@@ -9,7 +15,8 @@ namespace ROH.StandardModels.Character
     public class CharacterModel
     {
         public CharacterModel()
-        { }
+        {
+        }
 
         public CharacterModel(
             long id,
@@ -29,20 +36,34 @@ namespace ROH.StandardModels.Character
             Race = race;
         }
 
-        public long Id { get; set; }
-        public Guid GuidAccount { get; set; }
-        public long? IdGuild { get; set; }
-        public long? IdKingdom { get; set; }
-        public Guid Guid { get; set; }
-        public string Name { get; set; }
-        public Race Race { get; set; }
-        public DateTime DateCreated { get; set; }
         public virtual AttackStatus AttackStatus { get; set; }
+
+        public DateTime DateCreated { get; set; }
+
         public virtual DefenseStatus DefenseStatus { get; set; }
+
         public virtual EquippedItems EquippedItems { get; set; }
+
+        public Guid Guid { get; set; }
+
+        public Guid GuidAccount { get; set; }
+
+        public long Id { get; set; }
+
+        public long? IdGuild { get; set; }
+
+        public long? IdKingdom { get; set; }
+
         public virtual ICollection<CharacterInventory> Inventory { get; set; }
-        public virtual ICollection<CharacterSkill> Skills { get; set; }
-        public virtual Status Status { get; set; }
+
+        public string Name { get; set; }
+
         public virtual PlayerPositionModel? PlayerPosition { get; set; }
+
+        public Race Race { get; set; }
+
+        public virtual ICollection<CharacterSkill> Skills { get; set; }
+
+        public virtual Status Status { get; set; }
     }
 }

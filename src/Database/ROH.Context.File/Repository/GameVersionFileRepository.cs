@@ -11,34 +11,40 @@ using ROH.Context.File.Interface;
 
 namespace ROH.Context.File.Repository;
 
-public class GameVersionFileRepository(IFileContext context)
-: IGameVersionFileRepository
+public class GameVersionFileRepository(IFileContext context) : IGameVersionFileRepository
 {
     public async Task<GameVersionFile?> GetFileAsync(long id, CancellationToken cancellationToken = default)
     {
-        GameVersionFile? gameVersionFile = await context.GameVersionFiles.FirstOrDefaultAsync(a => a.IdGameFile == id, cancellationToken: cancellationToken)
-                                                                         .ConfigureAwait(true);
-        gameVersionFile!.GameFile = await context.GameFiles.FindAsync([gameVersionFile.IdGameFile], cancellationToken: cancellationToken)
-                                                           .ConfigureAwait(true);
+        GameVersionFile? gameVersionFile = await context.GameVersionFiles
+            .FirstOrDefaultAsync(a => a.IdGameFile == id, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
+        gameVersionFile!.GameFile = await context.GameFiles
+            .FindAsync([gameVersionFile.IdGameFile], cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
 
         return gameVersionFile;
     }
 
     public async Task<GameVersionFile?> GetFileAsync(Guid fileGuid, CancellationToken cancellationToken = default)
     {
-        GameVersionFile? gameVersionFile = await context.GameVersionFiles.FirstOrDefaultAsync(v => v.Guid == fileGuid, cancellationToken: cancellationToken)
-                                                                         .ConfigureAwait(true);
-        gameVersionFile!.GameFile = await context.GameFiles.FindAsync([gameVersionFile.IdGameFile], cancellationToken: cancellationToken)
-                                                           .ConfigureAwait(true);
+        GameVersionFile? gameVersionFile = await context.GameVersionFiles
+            .FirstOrDefaultAsync(v => v.Guid == fileGuid, cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
+        gameVersionFile!.GameFile = await context.GameFiles
+            .FindAsync([gameVersionFile.IdGameFile], cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
 
         return gameVersionFile;
     }
 
-    public async Task<List<GameVersionFile>> GetFilesAsync(Guid versionGuid, CancellationToken cancellationToken = default)
+    public async Task<List<GameVersionFile>> GetFilesAsync(
+        Guid versionGuid,
+        CancellationToken cancellationToken = default)
     {
-        var result = await context.GameVersionFiles.Where(v => v.GuidVersion == versionGuid)
-                                             .ToListAsync(cancellationToken: cancellationToken)
-                                             .ConfigureAwait(true);
+        List<GameVersionFile> result = await context.GameVersionFiles
+            .Where(v => v.GuidVersion == versionGuid)
+            .ToListAsync(cancellationToken: cancellationToken)
+            .ConfigureAwait(true);
 
         return result;
     }
