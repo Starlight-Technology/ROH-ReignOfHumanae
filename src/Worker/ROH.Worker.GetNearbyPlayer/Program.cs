@@ -84,5 +84,5 @@ while (!cts.Token.IsCancellationRequested)
         await Task.Delay(10000);
     }
 
-    await Task.Delay(1000);
+    await Task.Delay(50);
 }

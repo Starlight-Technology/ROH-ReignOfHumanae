@@ -22,6 +22,8 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+using static UnityEngine.AdaptivePerformance.Provider.AdaptivePerformanceSubsystemDescriptor;
+
 namespace Assets.Scripts.Player
 {
     public class PlayerService : MonoBehaviour
@@ -34,6 +36,8 @@ namespace Assets.Scripts.Player
 
         public GameObject PlayerObj;
 
+        public GameObject OtherPlayer;
+
         private Vector3 _lastSentPosition;
         private Quaternion _lastSentRotation;
         private bool _hasLastPosition;
@@ -42,6 +46,7 @@ namespace Assets.Scripts.Player
         private const float ROTATION_THRESHOLD = 0.5f;
 
         private readonly Dictionary<string, GameObject> _nearbyPlayers = new();
+        private readonly Dictionary<string , DateTime> _nearbyPlayersLastUpdate = new();
 
         public static PlayerAnimationState playerAnimationState;
 
@@ -73,6 +78,7 @@ namespace Assets.Scripts.Player
                             InitializePlayer();
                             InitializeWebSocket();
                             StartCoroutine(SendPositionCoroutine());
+                            StartCoroutine(CleanupNearbyPlayerCoroutine());
                         });
                     });
             }
@@ -191,6 +197,34 @@ namespace Assets.Scripts.Player
             }
         }
 
+        private IEnumerator CleanupNearbyPlayerCoroutine()
+        {
+            while (true)
+            {
+                CleanupNearbyPlayer();
+                yield return new WaitForSeconds(5f); 
+            }
+        }
+        void CleanupNearbyPlayer()
+        {
+            var toRemove = new List<string>();
+
+            foreach (var kv in _nearbyPlayersLastUpdate)
+            {
+                if (kv.Value.AddSeconds(5) < DateTime.UtcNow)
+                    toRemove.Add(kv.Key);
+            }
+
+            foreach (var id in toRemove)
+            {
+                if (_nearbyPlayers.TryGetValue(id, out var go))
+                    Destroy(go);
+
+                _nearbyPlayers.Remove(id);
+                _nearbyPlayersLastUpdate.Remove(id);
+            }
+        }
+
         private async void SendPlayerPositionWs()
         {
             if (!_hasLastPosition || playerInstance == null)
@@ -252,7 +286,6 @@ namespace Assets.Scripts.Player
             }
         }
 
-
         private void UpdateNearbyPlayer(NearbyPlayerMessage info)
         {
             if (info.PlayerId == player.Guid.ToString())
@@ -260,61 +293,55 @@ namespace Assets.Scripts.Player
 
             if (_nearbyPlayers.TryGetValue(info.PlayerId, out var instance))
             {
-                var interpolator = instance.GetComponent<RemotePlayerInterpolator>() ?? instance.AddComponent<RemotePlayerInterpolator>();
+                _nearbyPlayersLastUpdate[info.PlayerId] = DateTime.UtcNow;
+
+                var interpolator =
+                    instance.GetComponent<RemotePlayerInterpolator>();
+
                 interpolator.AddSnapshot(
                     new Vector3(info.X, info.Y, info.Z),
                     Quaternion.Euler(info.RotX, info.RotY, info.RotZ)
                 );
-                return;
+
+                var animator = instance.GetComponent<Animator>();
+                PlayerAnimator.ApplyAnimatorState(
+                    (PlayerAnimationState)info.AnimationState,
+                    animator
+                );
             }
+            else
+            {
+                Vector3 vector = new(info.X, info.Y,info.Z);
+                Quaternion quat = Quaternion.Euler(info.RotX, info.RotY, info.RotZ);
+                var obj = new GameObject($"Player-{info.PlayerId}");
+                obj.transform.position = vector;
+                obj.transform.rotation = quat;
+                var newInstance = InstantiateCharacter(info.ModelName, obj.transform);
+                newInstance.AddComponent<RemotePlayerInterpolator>();
+                var interpolator = newInstance.GetComponent<RemotePlayerInterpolator>();
+                
+                interpolator.Initialize(
+                    newInstance.transform.position,
+                    newInstance.transform.rotation);
 
-            string prefabName = string.IsNullOrEmpty(info.ModelName)
-                ? "DefaultMaleHumanoid"
-                : info.ModelName;
-
-            GameObject prefab =
-                Resources.Load<GameObject>($"Characters/{prefabName}") ??
-                Resources.Load<GameObject>("Characters/DefaultMaleHumanoid");
-
-            var newInstance = Instantiate(
-                prefab,
-                new Vector3(info.X, info.Y, info.Z),
-                Quaternion.Euler(info.RotX, info.RotY, info.RotZ));
-
-            var interpolatorNew = newInstance.AddComponent<RemotePlayerInterpolator>();
-            interpolatorNew.AddSnapshot(
-                new Vector3(info.X, info.Y, info.Z),
-                Quaternion.Euler(info.RotX, info.RotY, info.RotZ)
-            );
-
-
-            newInstance.name = $"NearbyPlayer_{info.PlayerId}";
-
-            var movement = newInstance.GetComponent<PlayerMovements>();
-            if (movement != null)
-                movement.enabled = false;
-
-            _nearbyPlayers[info.PlayerId] = newInstance;
+                _nearbyPlayers[info.PlayerId] = newInstance;
+                _nearbyPlayersLastUpdate[info.PlayerId] = DateTime.UtcNow;
+            }
         }
 
         #endregion
 
         #region Helpers
 
-        private void InstantiateCharacter(string prefabName, Transform parentTransform)
+        private static GameObject? InstantiateCharacter(string prefabName, Transform parentTransform)
         {
-            GameObject prefab = Resources.Load<GameObject>($"Characters/{prefabName}");
-
-            if (prefab == null)
-            {
-                Debug.LogError($"Prefab '{prefabName}' not found.");
-                return;
-            }
-
-            GameObject instance = Instantiate(prefab);
+            GameObject prefab = Resources.Load<GameObject>($"Characters/{prefabName}") ?? Resources.Load<GameObject>($"Characters/DefaultMaleHumanoid");
+            GameObject instance = Instantiate(prefab);            
             instance.transform.SetParent(parentTransform, false);
             instance.transform.localPosition = Vector3.zero;
             instance.transform.localRotation = Quaternion.identity;
+
+            return instance;
         }
 
         #endregion

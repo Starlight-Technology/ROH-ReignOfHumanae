@@ -22,7 +22,8 @@ namespace Assets.Scripts.Player
                 Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
-                    agent.SetDestination(hit.point);
+                    var movement = GetComponent<PlayerMovements>();
+                    movement?.SetMoveDestination(hit.point);
                 }
             }
         }

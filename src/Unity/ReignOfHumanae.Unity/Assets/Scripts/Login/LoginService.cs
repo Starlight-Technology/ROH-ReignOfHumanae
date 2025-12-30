@@ -136,6 +136,18 @@ namespace Assets.Scripts.Login
             LoginUiObj.SetActive(true);
         }
 
+        public void CancelNewCharacter()
+        {
+            NewCharacterObj.SetActive(false); 
+            CharacterList.SetActive(true);
+        }
+
+        public void CancelCharacterList()
+        {
+            CharacterList.SetActive(false);
+            ShowLogin();
+        }
+
         public void ExitGame()
         {
             Application.Quit();

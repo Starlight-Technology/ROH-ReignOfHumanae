@@ -60,7 +60,6 @@ namespace Assets.Scripts.Player
 
             isGrounded = controller.isGrounded;
 
-            // Se estiver nadando
             if (currentMode == MovementMode.Swimming)
             {
                 if (jumpPressed)
@@ -71,7 +70,6 @@ namespace Assets.Scripts.Player
                     yVelocity = 0f;
             }
 
-            // Se estiver voando
             if (currentMode == MovementMode.Flying)
             {
                 float flyY = 0f;
@@ -99,8 +97,6 @@ namespace Assets.Scripts.Player
                 agent.isStopped = false;
             }
 
-
-            // Se input manual
             if (usingManualInput)
             {
                 MoveCharacter(new Vector3(moveX, 0, moveZ), WalkingOrRun(moveSpeed, runSpeed));
@@ -112,8 +108,6 @@ namespace Assets.Scripts.Player
                 }
             }
 
-
-            // Movimento automático via agent
             else if (agent.enabled && !agent.isStopped && agent.hasPath)
             {
                 Vector3 velocity = agent.desiredVelocity;
@@ -123,13 +117,11 @@ namespace Assets.Scripts.Player
                 agent.nextPosition = transform.position;
             }
 
-            // Pular no modo terrestre
             if (jumpPressed && isGrounded && currentMode == MovementMode.Ground)
             {
                 yVelocity = jumpForce;
             }
 
-            // Aplica gravidade
             if (!isFlying && !inWater)
                 yVelocity += Physics.gravity.y * Time.deltaTime;
 
@@ -140,12 +132,24 @@ namespace Assets.Scripts.Player
             if (agent.enabled)
                 CheckAgentRecovery();
 
-            bool hasInput = usingManualInput;
-            bool isRunning = Input.GetKey(KeyCode.LeftShift);
+            bool isAgentMoving =
+                    agent != null &&
+                    agent.enabled &&
+                    !agent.isStopped &&
+                    agent.hasPath &&
+                    agent.desiredVelocity.sqrMagnitude > 0.05f;
+
+            bool hasMovement = usingManualInput || isAgentMoving;
+
+            bool isRunning =
+                usingManualInput
+                    ? Input.GetKey(KeyCode.LeftShift)
+                    : agent.speed > moveSpeed * 1.1f;
+
             bool isJumping = !isGrounded && currentMode == MovementMode.Ground;
 
             UpdateAnimationState(
-                hasInput,
+                hasMovement,
                 isRunning,
                 isJumping,
                 isGrounded
@@ -212,13 +216,21 @@ namespace Assets.Scripts.Player
             }
         }
 
+        public void SetMoveDestination(Vector3 destination)
+        {
+            if (agent == null || !agent.isOnNavMesh)
+                return;
+
+            usingManualInput = false;
+            agent.isStopped = false;
+            agent.SetDestination(destination);
+        }
 
         void UpdateAnimationState(
         bool hasInput,
         bool isRunning,
         bool isJumping,
-        bool isGrounded
-    )
+        bool isGrounded)
         {
             lastAnimState = currentAnimState;
 
@@ -249,35 +261,9 @@ namespace Assets.Scripts.Player
             }
 
             if (currentAnimState != lastAnimState)
-                ApplyAnimatorState(currentAnimState);
+                PlayerAnimator.ApplyAnimatorState(currentAnimState, animator);
         }
 
-        void ApplyAnimatorState(PlayerAnimationState state)
-        {
-            animator.SetBool("IsJumping", state == PlayerAnimationState.GroundJump);
-
-            animator.SetBool("IsSwimming",
-                state == PlayerAnimationState.SwimmingIdle ||
-                state == PlayerAnimationState.SwimmingMove);
-
-            animator.SetBool("IsFlying",
-                state == PlayerAnimationState.FlyingIdle ||
-                state == PlayerAnimationState.FlyingMove);
-
-            float speed = state switch
-            {
-                PlayerAnimationState.GroundIdle => 0,
-                PlayerAnimationState.GroundWalk => 0.5f,
-                PlayerAnimationState.GroundRun => 1f,
-                PlayerAnimationState.SwimmingIdle => 0,
-                PlayerAnimationState.SwimmingMove => 0.6f,
-                PlayerAnimationState.FlyingIdle => 0,
-                PlayerAnimationState.FlyingMove => 0.8f,
-                _ => 0
-            };
-
-            animator.SetFloat("Speed", speed);
-        }
 
 
     }

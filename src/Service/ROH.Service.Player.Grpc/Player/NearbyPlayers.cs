@@ -6,7 +6,7 @@ using ROH.Service.Player.Grpc.Persistence;
 
 namespace ROH.Service.Player.Grpc.Player;
 
-public class NearbyPlayers(Context.Player.Redis.Interface.IPositionRepository positionRepositoryRedis, IPlayersPersistenceService playersPersistenceService, IExceptionHandler exceptionHandler) : NearbyPlayerService.NearbyPlayerServiceBase
+public class NearbyPlayers(IPlayersPersistenceService playersPersistenceService, IExceptionHandler exceptionHandler) : NearbyPlayerService.NearbyPlayerServiceBase
 {
     public override async Task<NearbyPlayersResponse> GetNearbyPlayers(
         NearbyPlayersRequest request,

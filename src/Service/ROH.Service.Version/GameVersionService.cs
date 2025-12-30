@@ -119,7 +119,7 @@ public class GameVersionService(
     {
         try
         {
-            GameVersion? version = await versionRepository.GetCurrentGameVersionAsync(cancellationToken).ConfigureAwait(true);
+            GameVersion? version = await versionRepository.GetCurrentGameVersionAsync(cancellationToken).ConfigureAwait(true) ?? new GameVersion(DateTime.Now, 0, Guid.Empty, 0, 0);
             return new DefaultResponse(objectResponse: version);
         }
         catch (System.Exception ex)
