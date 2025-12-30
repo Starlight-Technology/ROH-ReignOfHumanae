@@ -11,6 +11,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 
 using ROH.Api.Version.Services;
 using ROH.Context.Version;
@@ -88,7 +89,7 @@ MapperConfiguration mappingConfig = new(
         mc.AddProfile(new GameVersionFileMapping());
         mc.AddProfile(new GameVersionMapping());
         mc.AddProfile(new GameFileMapping());
-    });
+    }, NullLoggerFactory.Instance);
 
 IMapper mapper = mappingConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);

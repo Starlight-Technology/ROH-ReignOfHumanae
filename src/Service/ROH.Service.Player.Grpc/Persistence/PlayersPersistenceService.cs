@@ -1,5 +1,6 @@
 ﻿using ROH.Contracts.GRPC.Player.NearbyPlayer;
 using ROH.Contracts.GRPC.Player.PlayerPosition;
+using ROH.StandardModels.Character.Position;
 
 using System;
 using System.Collections.Concurrent;
@@ -83,6 +84,16 @@ public class PlayersPersistenceService : IPlayersPersistenceService
         return Task.FromResult<ICollection<PlayerInfo>>(result);
     }
 
+    public async Task<PlayerState?> GetPlayerState(string guid)
+    {
+        if(players.TryGetValue(guid, out var player))
+        {
+            return player;
+        }
+        await Task.CompletedTask;
+        return null;
+    }
+
     private static PlayerState CreateState(PlayerRequest player)
     {
         return new PlayerState
@@ -103,22 +114,4 @@ public class PlayersPersistenceService : IPlayersPersistenceService
         };
     }
 
-}
-
-public class PlayerState
-{
-    public string PlayerId { get; set; } = "";
-
-    public float PositionX { get; set; }
-    public float PositionY { get; set; }
-    public float PositionZ { get; set; }
-
-    public float RotationX { get; set; }
-    public float RotationY { get; set; }
-    public float RotationZ { get; set; }
-    public float RotationW { get; set; }
-
-    public int AnimationState { get; set; }
-
-    public DateTime Timestamp { get; set; } = DateTime.UtcNow;
 }

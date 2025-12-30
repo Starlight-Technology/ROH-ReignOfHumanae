@@ -10,13 +10,14 @@ using MessagePack.Resolvers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
-using ROH.Gateway.Service;
-using ROH.Gateway.WebSocketGateway;
 using ROH.Service.Exception;
 using ROH.Service.Exception.Communication;
 using ROH.Service.Exception.Interface;
+using ROH.Service.Player.WebSocket.Interface;
+using ROH.Service.Player.WebSocket.State;
+using ROH.Service.WebSocket;
 
 using System.Text;
 
@@ -71,17 +72,6 @@ builder.Services
                     Scheme = "Bearer"
                 });
 
-            c.AddSecurityRequirement(
-                new OpenApiSecurityRequirement
-                {
-                {
-                    new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
-                    },
-                    Array.Empty<string>()
-                }
-                });
         });
 
 // Configure Kestrel to listen on a specific port
@@ -113,6 +103,8 @@ builder.Services.AddSingleton<ILogService, LogService>();
 builder.Services.AddSingleton<IExceptionHandler, ExceptionHandler>();
 
 builder.Services.AddSingleton<IRealtimeConnectionManager, RealtimeConnectionManager>();
+
+builder.Services.AddSingleton<IPlayerPositionServiceSocket, PlayerPositionServiceSocket>();
 
 WebApplication app = builder.Build();
 

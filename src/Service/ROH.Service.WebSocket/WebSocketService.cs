@@ -4,11 +4,11 @@ using ROH.Contracts.WebSocket;
 
 using System.Net.WebSockets;
 
-namespace ROH.Gateway.WebSocketGateway;
+namespace ROH.Service.WebSocket;
 
-public static class WebSocketResponse
+public static class WebSocketService 
 {
-    public static async Task SendAsync(WebSocket socket, RealtimeEnvelope env)
+    public static async Task SendAsync(this System.Net.WebSockets.WebSocket socket, RealtimeEnvelope env)
     {
         if (socket.State != WebSocketState.Open)
             return;

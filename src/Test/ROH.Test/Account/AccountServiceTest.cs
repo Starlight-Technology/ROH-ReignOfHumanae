@@ -6,6 +6,8 @@
 //-----------------------------------------------------------------------
 using AutoMapper;
 
+using Microsoft.Extensions.Logging.Abstractions;
+
 using Moq;
 
 using ROH.Context.Account.Entity;
@@ -37,7 +39,7 @@ public class AccountServiceTest
                     .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
 
                 cfg.CreateMap<User, UserModel>().ReverseMap();
-            });
+            }, NullLoggerFactory.Instance);
 
         Mapper mapper = new(config);
 
@@ -76,7 +78,7 @@ public class AccountServiceTest
                     .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
 
                 _ = cfg.CreateMap<User, UserModel>().ReverseMap();
-            });
+            }, NullLoggerFactory.Instance);
 
         Mapper mapper = new(config);
 
@@ -123,7 +125,7 @@ public class AccountServiceTest
                     .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
 
                 _ = cfg.CreateMap<User, UserModel>().ReverseMap();
-            });
+            }, NullLoggerFactory.Instance);
 
         Mapper mapper = new(config);
 
@@ -159,7 +161,7 @@ public class AccountServiceTest
                     .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
 
                 cfg.CreateMap<User, UserModel>().ReverseMap();
-            });
+            }, NullLoggerFactory.Instance);
 
         Mapper mapper = new(config);
 
@@ -204,7 +206,7 @@ public class AccountServiceTest
                     .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
 
                 _ = cfg.CreateMap<User, UserModel>().ReverseMap();
-            });
+            }, NullLoggerFactory.Instance);
 
         Mapper mapper = new(config);
 
@@ -247,7 +249,7 @@ public class AccountServiceTest
                     .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.BirthDate)));
 
                 _ = cfg.CreateMap<User, UserModel>().ReverseMap();
-            });
+            }, NullLoggerFactory.Instance);
 
         Mapper mapper = new(config);
 

@@ -30,4 +30,5 @@ message Rotation {
 
 message SaveResponse {
     bool success = 1;
+    uint32 positionValid = 2;
 }

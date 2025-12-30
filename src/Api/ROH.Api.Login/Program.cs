@@ -9,6 +9,7 @@ using AutoMapper;
 using FluentValidation;
 
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.Extensions.Logging.Abstractions;
 
 using ROH.Context.Account;
 using ROH.Context.Account.Interface;
@@ -51,7 +52,7 @@ MapperConfiguration mappingConfig = new(
     {
         mc.AddProfile(new UserMapping());
         mc.AddProfile(new AccountMapping());
-    });
+    }, NullLoggerFactory.Instance);
 
 IMapper mapper = mappingConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);

@@ -1,4 +1,4 @@
-﻿namespace ROH.StandardModels.Character
+﻿namespace ROH.StandardModels.Character.Animation
 {
     public enum PlayerAnimationState
     {

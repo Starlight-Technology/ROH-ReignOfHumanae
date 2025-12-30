@@ -1,4 +1,7 @@
-﻿using System;
+﻿using ROH.StandardModels.Character.PlayerStatus;
+using ROH.StandardModels.Character.Position;
+
+using System;
 using System.Collections.Generic;
 
 namespace ROH.StandardModels.Character

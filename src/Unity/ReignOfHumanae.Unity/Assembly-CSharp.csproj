@@ -87,6 +87,7 @@
     <Compile Include="Assets\Scripts\Connection\WebSocket\WebSocketService.cs" />
     <Compile Include="Assets\Scripts\Models\Character\PlayerAnimationState.cs" />
     <Compile Include="Assets\Scripts\Models\Configuration\ConfigurationModel.cs" />
+    <Compile Include="Assets\Scripts\Models\Websocket\RealtimeEventTypes.cs" />
     <Compile Include="Assets\Scripts\Models\Websocket\PlayerSnapshot.cs" />
     <Compile Include="Assets\Scripts\Models\Websocket\RealtimeEnvelope.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerAnimator.cs" />

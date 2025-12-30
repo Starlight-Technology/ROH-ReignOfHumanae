@@ -1,4 +1,4 @@
-﻿namespace ROH.Gateway.Service;
+﻿namespace ROH.Service.Player.WebSocket.State;
 
 using MessagePack;
 
@@ -6,17 +6,17 @@ using ROH.Contracts.GRPC.Player.NearbyPlayer;
 using ROH.Contracts.GRPC.Worker.PlayerSocket;
 using ROH.Contracts.WebSocket;
 using ROH.Contracts.WebSocket.Player;
-using ROH.Gateway.WebSocketGateway;
+using ROH.Service.Player.WebSocket.Interface;
+using ROH.Service.WebSocket;
 
-using System.Net.Sockets;
 using System.Threading.Tasks;
 
-public class PlayersConnected(IRealtimeConnectionManager realtimeConnection) : PlayerConnectedService.PlayerConnectedServiceBase
+public class PlayersConnected(IPlayerPositionServiceSocket playerPositionService) : PlayerConnectedService.PlayerConnectedServiceBase
 {
     public async override Task<Contracts.GRPC.Worker.PlayerSocket.PlayersConnected> GetConnectedPlayers(Contracts.GRPC.Worker.PlayerSocket.Default request, global::Grpc.Core.ServerCallContext context)
     {
 
-        var connectedPlayers = await realtimeConnection.GetPlayersClient();
+        var connectedPlayers = await playerPositionService.GetPlayersClient();
 
         var response = new Google.Protobuf.Collections.RepeatedField<PlayerConnected>();
 
@@ -35,7 +35,7 @@ public class PlayersConnected(IRealtimeConnectionManager realtimeConnection) : P
     public async override Task<Contracts.GRPC.Worker.PlayerSocket.Default> SendNearbyPlayers(NearbyPlayersResponse response, global::Grpc.Core.ServerCallContext context)
     {
 
-        var connectedPlayers = await realtimeConnection.GetPlayersClient();
+        var connectedPlayers = await playerPositionService.GetPlayersClient();
 
         if (connectedPlayers.TryGetValue(response.MainPlayer, out var socket))
         {
@@ -56,11 +56,11 @@ public class PlayersConnected(IRealtimeConnectionManager realtimeConnection) : P
                 })]
             };
 
-            await WebSocketResponse.SendAsync(
+            await WebSocketService.SendAsync(
                 socket,
                 new RealtimeEnvelope
                 {
-                    Type = "NearbyPlayers",
+                    Type = RealtimeEventTypes.GetNearbyPlayers,
                     Payload = MessagePackSerializer.Serialize(message)
                 });
         }

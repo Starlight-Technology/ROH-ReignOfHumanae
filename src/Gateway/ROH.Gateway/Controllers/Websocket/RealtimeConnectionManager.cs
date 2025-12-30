@@ -1,14 +1,10 @@
-﻿using Grpc.Net.Client;
-
-using MessagePack;
+﻿using MessagePack;
 
 using Microsoft.IdentityModel.Tokens;
 
-using ROH.Contracts.GRPC.Player.PlayerPosition;
 using ROH.Contracts.WebSocket;
-using ROH.Contracts.WebSocket.Player;
 using ROH.Service.Exception.Interface;
-using ROH.Utils.ApiConfiguration;
+using ROH.Service.Player.WebSocket.Interface;
 
 using System.Collections.Concurrent;
 using System.IdentityModel.Tokens.Jwt;
@@ -16,32 +12,29 @@ using System.Net.WebSockets;
 using System.Security.Claims;
 using System.Text;
 
-using static ROH.Utils.ApiConfiguration.ApiConfigReader;
-
-namespace ROH.Gateway.WebSocketGateway;
+namespace ROH.Service.WebSocket;
 
 public class RealtimeConnectionManager(
-    IExceptionHandler exceptionHandler)
+    IExceptionHandler exceptionHandler,
+    IPlayerPositionServiceSocket playerPositionService)
 : IRealtimeConnectionManager
 {
-    private readonly ConcurrentDictionary<string, WebSocket> _accountConnections = new();
-    private readonly ConcurrentDictionary<string, WebSocket> _playerConnections = new();
+    private readonly ConcurrentDictionary<string, System.Net.WebSockets.WebSocket> _accountConnections = new();
+
 
     private Contracts.GRPC.Player.PlayerPosition.PlayerService.PlayerServiceClient _savePlayerPositionApi;
 
+
     string accountGuid = string.Empty;
 
-    public async Task<ConcurrentDictionary<string, WebSocket>> GetPlayersClient() => _playerConnections;
 
-    public async Task HandleClientAsync(HttpContext ctx, WebSocket socket)
+    public async Task HandleClientAsync(HttpContext ctx, System.Net.WebSockets.WebSocket socket)
     {
-
-
         try
         {
             accountGuid = Authenticate(ctx);
         }
-        catch (Exception e)
+        catch (System.Exception e)
         {
             await socket.CloseAsync(
                 WebSocketCloseStatus.PolicyViolation,
@@ -79,7 +72,7 @@ public class RealtimeConnectionManager(
             Console.WriteLine(e.WebSocketErrorCode);
             exceptionHandler.HandleException(e);
         }
-        catch (Exception e)
+        catch (System.Exception e)
         {
             exceptionHandler.HandleException(e);
         }
@@ -97,60 +90,16 @@ public class RealtimeConnectionManager(
         }
     }
 
-    private async Task HandleMessage(RealtimeEnvelope env, WebSocket socket)
+    private async Task HandleMessage(RealtimeEnvelope env, System.Net.WebSockets.WebSocket socket)
     {
         switch (env.Type)
         {
-            case "PlayerPosition":
-                await HandlePlayerPosition(env.Payload, socket);
+            case RealtimeEventTypes.SavePlayerPosition:
+                await playerPositionService.HandlePlayerPosition(env.Payload, socket);
                 break;
         }
     }
-
-    private async Task HandlePlayerPosition(byte[] payload, WebSocket socket)
-    {
-        var msg = MessagePackSerializer.Deserialize<PlayerPositionMessage>(payload);
-
-        _playerConnections[msg.PlayerId] = socket;
-
-        ApiConfigReader _apiConfig = new();
-        Dictionary<ApiUrl, Uri> _apiUrl = _apiConfig.GetApiUrl();
-        GrpcChannel channel = GrpcChannel.ForAddress(
-        _apiUrl.GetValueOrDefault(ApiUrl.PlayerState) ?? new Uri(string.Empty),
-        new GrpcChannelOptions
-        {
-            HttpHandler =
-                new HttpClientHandler
-                {
-                    ServerCertificateCustomValidationCallback =
-                            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-                }
-        });
-
-        _savePlayerPositionApi = new(channel);
-
-        await _savePlayerPositionApi.SavePlayerDataAsync(
-            new PlayerRequest
-            {
-                PlayerId = msg.PlayerId,
-                Position = new Position
-                {
-                    X = msg.X,
-                    Y = msg.Y,
-                    Z = msg.Z
-                },
-                Rotation = new Rotation
-                {
-                    X = msg.RotX,
-                    Y = msg.RotY,
-                    Z = msg.RotZ,
-                    W = msg.RotW
-                },
-                AnimationSate = (uint)msg.AnimationState
-            }
-        );
-    }
-
+  
     private static string Authenticate(HttpContext ctx)
     {
         if (!ctx.Request.Query.TryGetValue("access_token", out var tokenValue))
@@ -194,7 +143,6 @@ public class RealtimeConnectionManager(
             throw new UnauthorizedAccessException("JWT inválido.");
         }
 
-        // 🔑 playerId vem do JTI
         string? accountGuid = principal.Claims
             .FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)
             ?.Value;

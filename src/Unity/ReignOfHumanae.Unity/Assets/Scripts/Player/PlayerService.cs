@@ -11,6 +11,7 @@ using Assets.Scripts.Connection.WebSocket;
 using Assets.Scripts.Helpers;
 using Assets.Scripts.Models.Character;
 using Assets.Scripts.Models.Configuration;
+using Assets.Scripts.Models.Websocket;
 
 using MessagePack;
 
@@ -35,8 +36,6 @@ namespace Assets.Scripts.Player
         private WebSocketService _socket;
 
         public GameObject PlayerObj;
-
-        public GameObject OtherPlayer;
 
         private Vector3 _lastSentPosition;
         private Quaternion _lastSentRotation;
@@ -247,7 +246,7 @@ namespace Assets.Scripts.Player
 
             var envelope = new RealtimeEnvelope
             {
-                Type = "PlayerPosition",
+                Type = RealtimeEventTypes.SavePlayerPosition,
                 Payload = MessagePackSerializer.Serialize<PlayerPositionMessage>(msg)
             };
 
@@ -271,7 +270,7 @@ namespace Assets.Scripts.Player
 
             switch (env.Type)
             {
-                case "NearbyPlayers":
+                case RealtimeEventTypes.GetNearbyPlayers:
                     {
                         var msg = MessagePackSerializer
                             .Deserialize<NearbyPlayersMessage>(env.Payload);

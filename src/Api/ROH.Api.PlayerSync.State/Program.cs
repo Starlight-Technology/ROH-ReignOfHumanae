@@ -6,6 +6,7 @@ using ROH.Context.Player.Mongo.Repository;
 using ROH.Service.Exception;
 using ROH.Service.Exception.Communication;
 using ROH.Service.Exception.Interface;
+using ROH.Service.Player.Grpc.Interface;
 using ROH.Service.Player.Grpc.Persistence;
 using ROH.Service.Player.Grpc.Player;
 
@@ -25,7 +26,13 @@ builder.Services.AddScoped<ROH.Context.Player.Redis.Interface.IPositionRepositor
 
 builder.Services.AddScoped<ROH.Context.Player.Redis.Interface.IPlayerRedisContext, ROH.Context.Player.Redis.PlayerRedisContext>();
 
+builder.Services.AddScoped<INearbyPlayers, NearbyPlayers>();
+
+builder.Services.AddScoped<ISavePosition, SavePosition>();
+
 builder.Services.AddSingleton<IPlayersPersistenceService, PlayersPersistenceService>();
+
+builder.Services.AddScoped<IPlayerValidPositionService, PlayerValidPositionService>();
 
 builder.Services.AddGrpc();
 

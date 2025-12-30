@@ -2,11 +2,12 @@
 
 using ROH.Contracts.GRPC.Player.NearbyPlayer;
 using ROH.Service.Exception.Interface;
+using ROH.Service.Player.Grpc.Interface;
 using ROH.Service.Player.Grpc.Persistence;
 
 namespace ROH.Service.Player.Grpc.Player;
 
-public class NearbyPlayers(IPlayersPersistenceService playersPersistenceService, IExceptionHandler exceptionHandler) : NearbyPlayerService.NearbyPlayerServiceBase
+public class NearbyPlayers(IPlayersPersistenceService playersPersistenceService, IExceptionHandler exceptionHandler) : NearbyPlayerService.NearbyPlayerServiceBase, INearbyPlayers
 {
     public override async Task<NearbyPlayersResponse> GetNearbyPlayers(
         NearbyPlayersRequest request,
@@ -20,7 +21,7 @@ public class NearbyPlayers(IPlayersPersistenceService playersPersistenceService,
 
             return new NearbyPlayersResponse
             {
-                Players = {result},
+                Players = { result },
                 MainPlayer = request.PlayerId,
             };
         }
