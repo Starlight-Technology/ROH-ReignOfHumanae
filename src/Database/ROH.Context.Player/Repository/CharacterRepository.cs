@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-using ROH.Context.Player.Entities.Characters;
 using ROH.Context.Player.Interface;
 
 namespace ROH.Context.Player.Repository;

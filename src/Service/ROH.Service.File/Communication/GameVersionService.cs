@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="GameVersionService.cs" company="Starlight-Technology">
-//     Author:  
+//     Author:
 //     Copyright (c) Starlight-Technology. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -15,8 +15,8 @@ namespace ROH.Service.File.Communication;
 
 public class GameVersionService : IGameVersionService
 {
-    static readonly ApiConfigReader _apiConfig = new();
-    static readonly Dictionary<ApiUrl, Uri> _apiUrl = _apiConfig.GetApiUrl();
+    private static readonly ApiConfigReader _apiConfig = new();
+    private static readonly Dictionary<ApiUrl, Uri> _apiUrl = _apiConfig.GetApiUrl();
 
     public async Task<VersionServiceApi.DefaultResponse> GetCurrentVersionAsync(
         CancellationToken cancellationToken = default)
@@ -28,10 +28,10 @@ public class GameVersionService : IGameVersionService
             {
                 HttpHandler =
                     new HttpClientHandler
-                        {
-                            ServerCertificateCustomValidationCallback =
+                    {
+                        ServerCertificateCustomValidationCallback =
                                 HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-                        }
+                    }
             });
 #pragma warning restore S4830 // Server certificates should be verified during SSL/TLS connections
         VersionServiceApi.GameVersionService.GameVersionServiceClient client = new VersionServiceApi.GameVersionService.GameVersionServiceClient(
@@ -50,10 +50,10 @@ public class GameVersionService : IGameVersionService
             {
                 HttpHandler =
                     new HttpClientHandler
-                        {
-                            ServerCertificateCustomValidationCallback =
+                    {
+                        ServerCertificateCustomValidationCallback =
                                 HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-                        }
+                    }
             });
 
 #pragma warning restore S4830 // Server certificates should be verified during SSL/TLS connections

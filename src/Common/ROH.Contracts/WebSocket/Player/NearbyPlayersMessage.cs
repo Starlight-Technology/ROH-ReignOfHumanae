@@ -8,4 +8,3 @@ namespace ROH.Contracts.WebSocket.Player
         [Key(0)] public List<Player.NearbyPlayerMessage> Players = new List<Player.NearbyPlayerMessage>();
     }
 }
-

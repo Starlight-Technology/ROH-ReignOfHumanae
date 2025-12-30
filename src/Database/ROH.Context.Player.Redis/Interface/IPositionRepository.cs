@@ -14,5 +14,4 @@ public interface IPositionRepository
                                                                    double radiusMeters,
                                                                    int maxResults,
                                                                    CancellationToken cancellationToken);
-
 }

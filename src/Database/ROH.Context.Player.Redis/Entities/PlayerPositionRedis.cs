@@ -1,11 +1,4 @@
-﻿using ROH.StandardModels.Character;
-
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ROH.Context.Player.Redis.Entities;
-
+﻿namespace ROH.Context.Player.Redis.Entities;
 
 public class PlayerPositionRedis
 {

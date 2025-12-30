@@ -46,7 +46,6 @@ public class PositionRepository : IPositionRepository
         ).ConfigureAwait(false);
     }
 
-
     public async Task<List<PlayerPosition>> GetAllPlayersAsync(
         CancellationToken cancellationToken = default)
     {
@@ -106,7 +105,7 @@ public class PositionRepository : IPositionRepository
         };
 
         var geoResults = await _collection
-            .AggregateAsync<PlayerPositionGeo>(pipeline,null, cancellationToken)
+            .AggregateAsync<PlayerPositionGeo>(pipeline, null, cancellationToken)
             .Result
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);

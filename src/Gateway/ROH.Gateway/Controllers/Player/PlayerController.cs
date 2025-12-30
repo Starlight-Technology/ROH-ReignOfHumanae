@@ -1,13 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using ROH.StandardModels.Character;
 using ROH.Utils.ApiConfiguration;
 
-using System.Threading;
-
 namespace ROH.Gateway.Controllers.Player;
+
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]

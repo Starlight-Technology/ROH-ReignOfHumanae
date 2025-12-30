@@ -53,6 +53,7 @@ public static class WorldProjection
 {
     // Raio médio da Terra em metros (WGS84)
     private const double EarthRadiusMeters = 6378137.0;
+
     private const double RadToDeg = 180.0 / Math.PI;
 
     /// <summary>
@@ -77,4 +78,3 @@ public static class WorldProjection
         return (x, z);
     }
 }
-

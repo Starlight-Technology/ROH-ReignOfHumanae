@@ -7,5 +7,6 @@ public interface IPlayerRedisContext
     IDatabase Database { get; }
 
     string PlayerStateKey(string playerId);
+
     string PlayersGeoKey { get; }
 }

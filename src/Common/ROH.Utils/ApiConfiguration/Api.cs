@@ -27,7 +27,9 @@ namespace ROH.Utils.ApiConfiguration
         public static readonly Dictionary<ApiUrl, Uri> _apiUrl = _apiConfig.GetApiUrl();
 
         private static readonly Dictionary<Services, Uri> _servicesUrl = new Dictionary<Services, Uri> {
+
             #region VERSION
+
             { Services.GetCurrentVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version), "GetCurrentVersion") },
             { Services.CreateNewVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version), "CreateNewVersion") },
             {
@@ -43,6 +45,7 @@ namespace ROH.Utils.ApiConfiguration
             #endregion VERSION
 
             #region FILES
+
             { Services.UploadVersionFile, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.VersionFile), "UploadFile") },
             {
                 Services.GetAllVersionFiles,
@@ -52,6 +55,7 @@ namespace ROH.Utils.ApiConfiguration
             #endregion FILES
 
             #region ACCOUNT
+
             { Services.CreateNewUser, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Account), "CreateNewUser") },
             { Services.FindUserByEmail, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Account), "FindUserByEmail") },
             { Services.FindUserByUserName, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Account), "FindUserByUserName") },
@@ -64,15 +68,17 @@ namespace ROH.Utils.ApiConfiguration
             #endregion ACCOUNT
 
             #region LOGIN
+
             { Services.Login, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Login), "Login") },
             #endregion LOGIN
 
             #region LOG
+
             { Services.Log, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Login), "Log") },
             #endregion LOG
 
             #region PLAYER
-            
+
             { Services.CreateCharacter, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Player), "CreateCharacter") },
             { Services.GetAccountCaracters, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Player), "GetAccountCaracters") },
             { Services.GetCharacter, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Player), "GetCharacter") },

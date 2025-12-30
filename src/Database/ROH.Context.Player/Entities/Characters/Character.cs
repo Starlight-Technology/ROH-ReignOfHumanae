@@ -9,7 +9,7 @@ using ROH.Context.Player.Entities.Kingdoms;
 
 namespace ROH.Context.Player.Entities.Characters;
 /// <summary>
-/// 
+///
 /// </summary>
 /// <param name="Id"></param>
 /// <param name="GuidAccount"></param> use GUID from User not account, temporary

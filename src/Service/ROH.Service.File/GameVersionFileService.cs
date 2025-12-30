@@ -30,7 +30,7 @@ public class GameVersionFileService(
     IMapper mapper,
     IExceptionHandler exceptionHandler) : IGameVersionFileService
 {
-    async Task<GameVersionModel?> GetCurrentVersionAsync(CancellationToken cancellationToken = default)
+    private async Task<GameVersionModel?> GetCurrentVersionAsync(CancellationToken cancellationToken = default)
     {
         VersionServiceApi.DefaultResponse? response = await gameVersion.GetCurrentVersionAsync(cancellationToken)
             .ConfigureAwait(true);
@@ -52,7 +52,7 @@ public class GameVersionFileService(
         return version;
     }
 
-    static string GetFilePath(GameVersionModel gameVersion) =>
+    private static string GetFilePath(GameVersionModel gameVersion) =>
 #if DEBUG
         @$".\ROHUpdateFiles\{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}\";
 
@@ -60,11 +60,11 @@ public class GameVersionFileService(
     @$"/app/ROH/updateFiles/{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}/";
 #endif
 
-    static string GetRejectionMessage(GameVersionModel gameVersion) => gameVersion.Released
+    private static string GetRejectionMessage(GameVersionModel gameVersion) => gameVersion.Released
         ? "File Upload Failed: This version has already been released. You cannot upload new files for a released version."
         : "File Upload Failed: This version has already been released with a yearly schedule. Uploading new files is not allowed for past versions.";
 
-    async Task<DefaultResponse> SaveFileAsync(
+    private async Task<DefaultResponse> SaveFileAsync(
         GameVersionFileModel fileModel,
         GameVersionFile versionFile,
         GameVersionModel? currentVersion,
@@ -86,7 +86,7 @@ public class GameVersionFileService(
         return new DefaultResponse(HttpStatusCode.OK);
     }
 
-    static Task<bool> ShouldRejectFileUploadAsync(
+    private static Task<bool> ShouldRejectFileUploadAsync(
         GameVersionModel gameVersion,
         GameVersionModel? currentVersion,
         CancellationToken cancellationToken = default)
@@ -98,7 +98,7 @@ public class GameVersionFileService(
         return Task.FromResult(gameVersion.Released || (gameVersion.VersionDate < currentVersion?.VersionDate));
     }
 
-    Task<ValidationResult> ValidateFileAsync(GameVersionFileModel file, CancellationToken cancellationToken = default) => validator.ValidateAsync(
+    private Task<ValidationResult> ValidateFileAsync(GameVersionFileModel file, CancellationToken cancellationToken = default) => validator.ValidateAsync(
         file,
         cancellationToken);
 

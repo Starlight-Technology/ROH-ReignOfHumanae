@@ -27,7 +27,7 @@ public class UserService(
     IMapper mapper) : IUserService
 {
     public async Task<UserModel?> FindUserByEmailAsync(
-        string email, 
+        string email,
         CancellationToken cancellationToken = default)
     {
         var user = await repository.FindUserByEmailAsync(email, cancellationToken).ConfigureAwait(true);

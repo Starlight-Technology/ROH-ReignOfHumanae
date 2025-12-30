@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="VersionServiceImplementation.cs" company="">
-//     Author:  
+//     Author:
 //     Copyright (c) . All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------

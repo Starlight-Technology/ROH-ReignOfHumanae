@@ -4,6 +4,7 @@ using ROH.Context.Player.Entities.Characters;
 using ROH.Context.Player.Interface;
 
 namespace ROH.Context.Player.Repository;
+
 public class PositionRepository(IPlayerContext context)
 : IPositionRepository
 {
@@ -24,7 +25,3 @@ public class PositionRepository(IPlayerContext context)
         return await context.PlayersPosition.Include(p => p.Position).Include(p => p.Rotation).FirstOrDefaultAsync(p => p.IdPlayer == idPlayer, token).ConfigureAwait(true);
     }
 }
-
-
-
-

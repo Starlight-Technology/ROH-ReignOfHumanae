@@ -13,7 +13,7 @@ namespace ROH.Service.Exception;
 
 public class ExceptionHandler(ILogService logService) : IExceptionHandler
 {
-    readonly bool _isDebugMode =
+    private readonly bool _isDebugMode =
 #if DEBUG
         true;
 
@@ -21,8 +21,7 @@ public class ExceptionHandler(ILogService logService) : IExceptionHandler
         true;
 #endif
 
-
-    void LogException(string exception) => logService.SaveLog(exception).ConfigureAwait(true);
+    private void LogException(string exception) => logService.SaveLog(exception).ConfigureAwait(true);
 
     public DefaultResponse HandleException(System.Exception exception)
     {
