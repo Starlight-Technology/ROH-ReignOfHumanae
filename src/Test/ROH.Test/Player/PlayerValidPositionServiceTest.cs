@@ -1,10 +1,7 @@
 ﻿using ROH.Service.Player.Grpc.Player;
 using ROH.StandardModels.Character.Position;
 
-using System;
 using System.Numerics;
-
-using Xunit;
 
 namespace ROH.Test.Player.Validation;
 

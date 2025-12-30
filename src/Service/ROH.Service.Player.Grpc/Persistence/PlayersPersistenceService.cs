@@ -2,10 +2,7 @@
 using ROH.Contracts.GRPC.Player.PlayerPosition;
 using ROH.StandardModels.Character.Position;
 
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ROH.Service.Player.Grpc.Persistence;
 
@@ -40,7 +37,7 @@ public class PlayersPersistenceService : IPlayersPersistenceService
 
             foreach (var kv in players)
             {
-                if(kv.Value.Timestamp < DateTime.UtcNow.AddSeconds(-60))
+                if (kv.Value.Timestamp < DateTime.UtcNow.AddSeconds(-60))
                 {
                     players.TryRemove(kv);
                     continue;
@@ -86,7 +83,7 @@ public class PlayersPersistenceService : IPlayersPersistenceService
 
     public async Task<PlayerState?> GetPlayerState(string guid)
     {
-        if(players.TryGetValue(guid, out var player))
+        if (players.TryGetValue(guid, out var player))
         {
             return player;
         }
@@ -113,5 +110,4 @@ public class PlayersPersistenceService : IPlayersPersistenceService
             Timestamp = DateTime.UtcNow
         };
     }
-
 }

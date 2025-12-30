@@ -13,9 +13,8 @@ using System.Threading.Tasks;
 
 public class PlayersConnected(IPlayerPositionServiceSocket playerPositionService) : PlayerConnectedService.PlayerConnectedServiceBase
 {
-    public async override Task<Contracts.GRPC.Worker.PlayerSocket.PlayersConnected> GetConnectedPlayers(Contracts.GRPC.Worker.PlayerSocket.Default request, global::Grpc.Core.ServerCallContext context)
+    public override async Task<Contracts.GRPC.Worker.PlayerSocket.PlayersConnected> GetConnectedPlayers(Contracts.GRPC.Worker.PlayerSocket.Default request, global::Grpc.Core.ServerCallContext context)
     {
-
         var connectedPlayers = await playerPositionService.GetPlayersClient();
 
         var response = new Google.Protobuf.Collections.RepeatedField<PlayerConnected>();
@@ -29,12 +28,10 @@ public class PlayersConnected(IPlayerPositionServiceSocket playerPositionService
         {
             PlayersId = { response }
         };
-
     }
 
-    public async override Task<Contracts.GRPC.Worker.PlayerSocket.Default> SendNearbyPlayers(NearbyPlayersResponse response, global::Grpc.Core.ServerCallContext context)
+    public override async Task<Contracts.GRPC.Worker.PlayerSocket.Default> SendNearbyPlayers(NearbyPlayersResponse response, global::Grpc.Core.ServerCallContext context)
     {
-
         var connectedPlayers = await playerPositionService.GetPlayersClient();
 
         if (connectedPlayers.TryGetValue(response.MainPlayer, out var socket))

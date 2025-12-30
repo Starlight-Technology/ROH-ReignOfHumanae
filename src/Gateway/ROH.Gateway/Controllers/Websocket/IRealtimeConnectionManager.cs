@@ -1,8 +1,4 @@
-﻿using ROH.Contracts.WebSocket;
-
-using System.Collections.Concurrent;
-
-namespace ROH.Service.WebSocket;
+﻿namespace ROH.Service.WebSocket;
 
 public interface IRealtimeConnectionManager
 {

@@ -106,7 +106,6 @@ namespace ROH.Utils.ApiConfiguration
             { Services.GetCharacter, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Player), "Api/Player/GetCharacter")},
             { Services.SavePosition, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.PlayerState), "")},
             #endregion PLAYER
-
         };
 
         private readonly Api _api = new Api();
@@ -302,10 +301,12 @@ namespace ROH.Utils.ApiConfiguration
             #endregion LOG
 
             #region PLAYER
+
             CreateCharacter,
             GetAccountCaracters,
             GetCharacter,
             SavePosition,
+
             #endregion PLAYER
         }
     }

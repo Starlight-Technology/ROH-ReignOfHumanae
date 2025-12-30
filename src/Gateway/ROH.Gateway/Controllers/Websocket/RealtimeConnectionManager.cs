@@ -21,12 +21,9 @@ public class RealtimeConnectionManager(
 {
     private readonly ConcurrentDictionary<string, System.Net.WebSockets.WebSocket> _accountConnections = new();
 
-
     private Contracts.GRPC.Player.PlayerPosition.PlayerService.PlayerServiceClient _savePlayerPositionApi;
 
-
-    string accountGuid = string.Empty;
-
+    private string accountGuid = string.Empty;
 
     public async Task HandleClientAsync(HttpContext ctx, System.Net.WebSockets.WebSocket socket)
     {
@@ -99,7 +96,7 @@ public class RealtimeConnectionManager(
                 break;
         }
     }
-  
+
     private static string Authenticate(HttpContext ctx)
     {
         if (!ctx.Request.Query.TryGetValue("access_token", out var tokenValue))

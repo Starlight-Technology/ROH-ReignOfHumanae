@@ -71,7 +71,6 @@ builder.Services
                     Type = SecuritySchemeType.ApiKey,
                     Scheme = "Bearer"
                 });
-
         });
 
 // Configure Kestrel to listen on a specific port
@@ -85,7 +84,7 @@ builder.WebHost
                     9001,
                     listenOptions =>
                     {
-                        listenOptions.Protocols = HttpProtocols.Http1AndHttp2; 
+                        listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
                     }
                 );
             options.ListenAnyIP
@@ -125,7 +124,6 @@ app.MapControllers();
 app.Map("/ws", RealtimeWebSocketEndpoint);
 
 await app.RunAsync().ConfigureAwait(true);
-
 
 static async Task RealtimeWebSocketEndpoint(HttpContext context)
 {

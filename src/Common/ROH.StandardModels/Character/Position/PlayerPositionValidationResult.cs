@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ROH.StandardModels.Character.Position
+﻿namespace ROH.StandardModels.Character.Position
 {
     public enum PlayerPositionValidationResult
     {
@@ -11,5 +7,4 @@ namespace ROH.StandardModels.Character.Position
         InvalidTeleport,
         InvalidTimestamp
     }
-
 }

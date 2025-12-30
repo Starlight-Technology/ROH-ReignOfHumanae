@@ -1,10 +1,7 @@
 ﻿using ROH.Service.Player.Grpc.Interface;
 using ROH.StandardModels.Character.Position;
 
-using System;
-using System.Collections.Generic;
 using System.Numerics;
-using System.Text;
 
 namespace ROH.Service.Player.Grpc.Player;
 
@@ -16,7 +13,7 @@ public class PlayerValidPositionService : IPlayerValidPositionService
 
     public PlayerPositionValidationResult Validate(PlayerPositionInput input)
     {
-        float deltaTime =(float)( input.ServerTimestamp - input.LastServerTimestamp).TotalSeconds;
+        float deltaTime = (float)(input.ServerTimestamp - input.LastServerTimestamp).TotalSeconds;
 
         if (deltaTime <= 0 || deltaTime > MAX_TIME_DESYNC)
             return PlayerPositionValidationResult.InvalidTimestamp;

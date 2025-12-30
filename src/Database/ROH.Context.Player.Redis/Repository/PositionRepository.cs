@@ -1,20 +1,13 @@
 ﻿using ROH.Context.Player.Redis.Entities;
 using ROH.Context.Player.Redis.Interface;
-using ROH.StandardModels.Character;
 
 using StackExchange.Redis;
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace ROH.Context.Player.Redis.Repository;
-
 
 public class PositionRepository(IPlayerRedisContext context)
 : IPositionRepository
 {
-
     public async Task SavePlayerPosition(PlayerPositionRedis position, CancellationToken cancellationToken)
     {
         var key = context.PlayerStateKey(position.PlayerId);
@@ -143,5 +136,4 @@ public class PositionRepository(IPlayerRedisContext context)
 
         return result;
     }
-
 }

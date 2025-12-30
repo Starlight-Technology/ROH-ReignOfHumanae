@@ -5,13 +5,9 @@ using MessagePack;
 using ROH.Contracts.GRPC.Player.PlayerPosition;
 using ROH.Contracts.WebSocket.Player;
 using ROH.Service.Player.WebSocket.Interface;
-using ROH.Service.WebSocket;
 using ROH.Utils.ApiConfiguration;
 
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Text;
 
 using static ROH.Utils.ApiConfiguration.ApiConfigReader;
 
@@ -76,6 +72,5 @@ public class PlayerPositionServiceSocket()
         );
 
         return response;
-
     }
 }

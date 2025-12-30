@@ -77,7 +77,7 @@ while (!cts.Token.IsCancellationRequested)
 
         await Task.WhenAll(tasks);
     }
-    catch(Exception e)
+    catch (Exception e)
     {
         exceptionHandler.HandleException(e);
         Console.WriteLine(e.ToString());

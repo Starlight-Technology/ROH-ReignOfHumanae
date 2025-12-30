@@ -1,7 +1,5 @@
 ﻿using MessagePack;
 
-using ROH.StandardModels.Character;
-
 namespace ROH.Contracts.WebSocket.Player
 {
     [MessagePackObject]

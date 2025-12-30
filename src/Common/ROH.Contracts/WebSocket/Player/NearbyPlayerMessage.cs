@@ -17,4 +17,3 @@ namespace ROH.Contracts.WebSocket.Player
         [Key(9)] public int AnimationState;
     }
 }
-
