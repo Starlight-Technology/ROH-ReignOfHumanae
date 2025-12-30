@@ -12,10 +12,12 @@ using ROH.Context.Version.Paginator;
 
 namespace ROH.Context.Version.Repository;
 
-public class GameVersionRepository(IVersionContext context)
-: IGameVersionRepository
+public class GameVersionRepository(IVersionContext context) : IGameVersionRepository
 {
-    public async Task<Paginated> GetAllReleasedVersionsAsync(int take = 10, int skip = 0, CancellationToken cancellationToken = default)
+    public async Task<Paginated> GetAllReleasedVersionsAsync(
+        int take = 10,
+        int skip = 0,
+        CancellationToken cancellationToken = default)
     {
         List<GameVersion> versions = await context.GameVersions
             .Where(v => v.Released)
@@ -30,7 +32,10 @@ public class GameVersionRepository(IVersionContext context)
         return new(total, versions.Cast<dynamic>().ToList());
     }
 
-    public async Task<Paginated> GetAllVersionsAsync(int take = 10, int skip = 0, CancellationToken cancellationToken = default)
+    public async Task<Paginated> GetAllVersionsAsync(
+        int take = 10,
+        int skip = 0,
+        CancellationToken cancellationToken = default)
     {
         List<GameVersion> versions = await context.GameVersions
             .OrderBy(gv => gv.Version)
@@ -50,10 +55,11 @@ public class GameVersionRepository(IVersionContext context)
         .FirstOrDefaultAsync(cancellationToken);
 
     public Task<GameVersion?> GetVersionByGuidAsync(Guid versionGuid, CancellationToken cancellationToken = default) => context.GameVersions
-        .FirstOrDefaultAsync(v => v.Guid == versionGuid,
-                             cancellationToken);
+        .FirstOrDefaultAsync(v => v.Guid == versionGuid, cancellationToken);
 
-    public async Task<GameVersion> SetNewGameVersionAsync(GameVersion version, CancellationToken cancellationToken = default)
+    public async Task<GameVersion> SetNewGameVersionAsync(
+        GameVersion version,
+        CancellationToken cancellationToken = default)
     {
         version = version with { VersionDate = DateTime.UtcNow };
         _ = await context.GameVersions.AddAsync(version, cancellationToken).ConfigureAwait(true);
@@ -62,7 +68,9 @@ public class GameVersionRepository(IVersionContext context)
         return version;
     }
 
-    public async Task<GameVersion> UpdateGameVersionAsync(GameVersion version, CancellationToken cancellationToken = default)
+    public async Task<GameVersion> UpdateGameVersionAsync(
+        GameVersion version,
+        CancellationToken cancellationToken = default)
     {
         _ = context.GameVersions.Update(version);
         _ = await context.SaveChangesAsync(cancellationToken).ConfigureAwait(true);
@@ -71,7 +79,9 @@ public class GameVersionRepository(IVersionContext context)
     }
 
     public Task<bool> VerifyIfExistAsync(GameVersion version, CancellationToken cancellationToken = default) => context.GameVersions
-        .AnyAsync(v => v.Release == version.Release && v.Review == version.Review && v.Version == version.Version, cancellationToken);
+        .AnyAsync(
+            v => (v.Release == version.Release) && (v.Review == version.Review) && (v.Version == version.Version),
+            cancellationToken);
 
     public Task<bool> VerifyIfExistAsync(Guid versionGuid, CancellationToken cancellationToken = default) => context.GameVersions
         .AnyAsync(v => v.Guid == versionGuid, cancellationToken);

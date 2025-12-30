@@ -17,13 +17,15 @@ namespace ROH.Gateway.Controllers.Account;
 [Authorize]
 public class AccountController : ControllerBase
 {
-    private readonly Api _api = new();
+    readonly Api _api = new();
 
     [AllowAnonymous]
     [HttpPost("CreateNewUser")]
-    public async Task<IActionResult> CreateNewUserAsync(UserModel userModel, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> CreateNewUserAsync(
+        UserModel userModel,
+        CancellationToken cancellationToken = default)
     {
-        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        using CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         cts.CancelAfter(TimeSpan.FromMinutes(2));
         try
         {
@@ -38,11 +40,12 @@ public class AccountController : ControllerBase
     [HttpGet("FindUserByEmail")]
     public async Task<IActionResult> FindUserByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
-        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        using CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         cts.CancelAfter(TimeSpan.FromMinutes(2));
         try
         {
-            return Ok(await _api.GetAsync(Api.Services.FindUserByEmail, new { Email = email }, cts.Token).ConfigureAwait(true));
+            return Ok(
+                await _api.GetAsync(Api.Services.FindUserByEmail, new { Email = email }, cts.Token).ConfigureAwait(true));
         }
         catch (OperationCanceledException)
         {
@@ -51,13 +54,17 @@ public class AccountController : ControllerBase
     }
 
     [HttpGet("FindUserByUserName")]
-    public async Task<IActionResult> FindUserByUserNameAsync(string userName, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> FindUserByUserNameAsync(
+        string userName,
+        CancellationToken cancellationToken = default)
     {
-        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        using CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         cts.CancelAfter(TimeSpan.FromMinutes(2));
         try
         {
-            return Ok(await _api.GetAsync(Api.Services.FindUserByUserName, new { UserName = userName }, cts.Token).ConfigureAwait(true));
+            return Ok(
+                await _api.GetAsync(Api.Services.FindUserByUserName, new { UserName = userName }, cts.Token)
+                    .ConfigureAwait(true));
         }
         catch (OperationCanceledException)
         {
@@ -68,11 +75,13 @@ public class AccountController : ControllerBase
     [HttpGet("GetAccountByUserGuid")]
     public async Task<IActionResult> GetAccountByUserGuidAsync(Guid guid, CancellationToken cancellationToken = default)
     {
-        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        using CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         cts.CancelAfter(TimeSpan.FromMinutes(2));
         try
         {
-            return Ok(await _api.GetAsync(Api.Services.GetAccountByUserGuid, new { Guid = guid }, cts.Token).ConfigureAwait(true));
+            return Ok(
+                await _api.GetAsync(Api.Services.GetAccountByUserGuid, new { Guid = guid }, cts.Token)
+                    .ConfigureAwait(true));
         }
         catch (OperationCanceledException)
         {
@@ -83,11 +92,12 @@ public class AccountController : ControllerBase
     [HttpGet("GetUserByGuid")]
     public async Task<IActionResult> GetUserByGuidAsync(Guid guid, CancellationToken cancellationToken = default)
     {
-        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        using CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         cts.CancelAfter(TimeSpan.FromMinutes(2));
         try
         {
-            return Ok(await _api.GetAsync(Api.Services.GetUserByGuid, new { Guid = guid }, cts.Token).ConfigureAwait(true));
+            return Ok(
+                await _api.GetAsync(Api.Services.GetUserByGuid, new { Guid = guid }, cts.Token).ConfigureAwait(true));
         }
         catch (OperationCanceledException)
         {
@@ -99,7 +109,7 @@ public class AccountController : ControllerBase
     [HttpPost("Login")]
     public async Task<IActionResult> LoginAsync(LoginModel model, CancellationToken cancellationToken = default)
     {
-        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        using CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         cts.CancelAfter(TimeSpan.FromMinutes(2));
         try
         {
@@ -112,9 +122,11 @@ public class AccountController : ControllerBase
     }
 
     [HttpPut("UpdateAccount")]
-    public async Task<IActionResult> UpdateAccountAsync(AccountModel model, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> UpdateAccountAsync(
+        AccountModel model,
+        CancellationToken cancellationToken = default)
     {
-        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        using CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         cts.CancelAfter(TimeSpan.FromMinutes(2));
         try
         {

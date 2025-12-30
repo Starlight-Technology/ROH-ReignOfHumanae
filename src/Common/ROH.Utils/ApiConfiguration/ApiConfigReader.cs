@@ -17,7 +17,7 @@ namespace ROH.Utils.ApiConfiguration
 {
     public class ApiConfigReader
     {
-        private readonly XDocument _config;
+        readonly XDocument _config;
 
         public ApiConfigReader()
         {
@@ -71,7 +71,7 @@ namespace ROH.Utils.ApiConfiguration
             Log,
             LogGrpc,
             Player,
-            PlayerSavePosition
+            PlayerState,
         }
     }
 }

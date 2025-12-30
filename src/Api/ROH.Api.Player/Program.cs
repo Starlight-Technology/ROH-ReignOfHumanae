@@ -8,6 +8,7 @@
 using AutoMapper;
 
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.Extensions.Logging.Abstractions;
 
 using ROH.Context.Player;
 using ROH.Context.Player.Interface;
@@ -36,7 +37,7 @@ builder.Services.AddScoped<ICharacterRepository, CharacterRepository>();
 builder.Services.AddScoped<IPositionRepository, PositionRepository>();
 builder.Services.AddScoped<ICharacterService, CharacterService>();
 
-MapperConfiguration mappingConfig = new(mc => mc.AddProfile(new CharacterMapping()));
+MapperConfiguration mappingConfig = new(mc => mc.AddProfile(new CharacterMapping()), NullLoggerFactory.Instance);
 
 IMapper mapper = mappingConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
@@ -85,11 +86,8 @@ app.MapPost(
 
 app.MapGet(
     "GetAccountCaracters",
-    async (ICharacterService service, Guid accountGuid) =>
-    {
-        return await service.GetAllCharactersAsync(accountGuid).ConfigureAwait(true);
-        ;
-    });
+    async (ICharacterService service, Guid accountGuid) => await service.GetAllCharactersAsync(accountGuid)
+        .ConfigureAwait(true));
 
 app.MapGet(
     "GetCharacter",

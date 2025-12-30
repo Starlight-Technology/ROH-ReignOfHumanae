@@ -44,29 +44,17 @@ public class CharacterTypeConfiguration : IEntityTypeConfiguration<Character>
             .HasForeignKey<PlayerPosition>(p => p.IdPlayer)
             .IsRequired(false);
 
-        _ = builder.HasMany(c => c.Skills)
-            .WithOne(s => s.Character)
-            .HasForeignKey(c => c.IdCharacter)
-            .IsRequired(false);
+        _ = builder.HasMany(c => c.Skills).WithOne(s => s.Character).HasForeignKey(c => c.IdCharacter).IsRequired(false);
 
         _ = builder.HasMany(c => c.Inventory)
             .WithOne(i => i.Character)
             .HasForeignKey(i => i.IdCharacter)
             .IsRequired(false);
 
-        builder.HasOne(c => c.Guild)
-            .WithMany()
-            .HasForeignKey(c => c.IdGuild)
-            .IsRequired(false);
+        builder.HasOne(c => c.Guild).WithMany().HasForeignKey(c => c.IdGuild).IsRequired(false);
 
-        builder.HasOne(c => c.Kingdom)
-            .WithMany()
-            .HasForeignKey(c => c.IdKingdom)
-            .IsRequired(false);
+        builder.HasOne(c => c.Kingdom).WithMany().HasForeignKey(c => c.IdKingdom).IsRequired(false);
 
-        builder.HasOne(c => c.Status)
-            .WithOne()
-            .HasForeignKey<Status>(s => s.IdCharacter)
-            .IsRequired(false);
+        builder.HasOne(c => c.Status).WithOne().HasForeignKey<Status>(s => s.IdCharacter).IsRequired(false);
     }
 }

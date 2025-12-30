@@ -1,3 +1,6 @@
+using Assets.Scripts.Connection;
+using Assets.Scripts.Connection.WebSocket;
+
 using UnityEngine;
 
 namespace Assets.Scripts.Player
@@ -18,6 +21,13 @@ namespace Assets.Scripts.Player
         private float currentZoom = 10f;
         private float pitch = 20f;
         private float yaw = 0f;
+
+        private WebSocketService _socket;
+
+        void Update()
+        {
+            _socket?.Dispatch();
+        }
 
         void LateUpdate()
         {

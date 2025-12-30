@@ -13,10 +13,11 @@ namespace ROH.Context.File.Repository;
 
 public class GameFileRepository(IFileContext context) : IGameFileRepository
 {
-    public ValueTask<GameFile?> GetFileAsync(long id, CancellationToken cancellationToken = default) => context.GameFiles.FindAsync([id, cancellationToken], cancellationToken: cancellationToken);
+    public ValueTask<GameFile?> GetFileAsync(long id, CancellationToken cancellationToken = default) => context.GameFiles
+        .FindAsync([id, cancellationToken], cancellationToken: cancellationToken);
 
-    public Task<GameFile?> GetFileAsync(Guid fileGuid, CancellationToken cancellationToken = default)
-        => context.GameFiles.FirstOrDefaultAsync(v => v.Guid == fileGuid, cancellationToken);
+    public Task<GameFile?> GetFileAsync(Guid fileGuid, CancellationToken cancellationToken = default) => context.GameFiles
+        .FirstOrDefaultAsync(v => v.Guid == fileGuid, cancellationToken);
 
     public async Task SaveFileAsync(GameFile file, CancellationToken cancellationToken = default)
     {

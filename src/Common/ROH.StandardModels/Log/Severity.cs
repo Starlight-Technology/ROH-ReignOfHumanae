@@ -1,4 +1,10 @@
-﻿namespace ROH.StandardModels.Log
+﻿//-----------------------------------------------------------------------
+// <copyright file="Severity.cs" company="Starlight-Technology">
+//     Author:  
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+namespace ROH.StandardModels.Log
 {
     public enum Severity
     {

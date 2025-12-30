@@ -1,33 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿//-----------------------------------------------------------------------
+// <copyright file="20241230171354_FixVersionRelationMigration.cs" company="Starlight-Technology">
+//     Author:  
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace ROH.Context.File.Migrations;
 
-/// <inheritdoc />
+/// <inheritdoc/>
 public partial class FixVersionRelationMigration : Migration
 {
-    /// <inheritdoc />
-    protected override void Up(MigrationBuilder migrationBuilder)
-    {
-        migrationBuilder.DropColumn(
-            name: "IdVersion",
-            table: "GameVersionFiles");
-
-        migrationBuilder.AddColumn<Guid>(
-            name: "GuidVersion",
-            table: "GameVersionFiles",
-            type: "uuid",
-            nullable: false,
-            defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
-    }
-
-    /// <inheritdoc />
+    /// <inheritdoc/>
     protected override void Down(MigrationBuilder migrationBuilder)
     {
-        migrationBuilder.DropColumn(
-            name: "GuidVersion",
-            table: "GameVersionFiles");
+        migrationBuilder.DropColumn(name: "GuidVersion", table: "GameVersionFiles");
 
         migrationBuilder.AddColumn<long>(
             name: "IdVersion",
@@ -35,5 +24,18 @@ public partial class FixVersionRelationMigration : Migration
             type: "bigint",
             nullable: false,
             defaultValue: 0L);
+    }
+
+    /// <inheritdoc/>
+    protected override void Up(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropColumn(name: "IdVersion", table: "GameVersionFiles");
+
+        migrationBuilder.AddColumn<Guid>(
+            name: "GuidVersion",
+            table: "GameVersionFiles",
+            type: "uuid",
+            nullable: false,
+            defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
     }
 }

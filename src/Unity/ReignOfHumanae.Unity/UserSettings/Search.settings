@@ -13,6 +13,10 @@ scopes = {
 	"picker_visibility_flags.075BCD15" = "264"
 	"picker_item_size.075BCD15" = "96"
 	"picker_inspector.075BCD15" = "0"
+	"picker_window_position_offset.00000000" = "-1394;402;320;550"
+	"picker_visibility_flags.00000000" = "0"
+	"picker_item_size.00000000" = "1"
+	"picker_inspector.00000000" = "0"
 }
 providers = {
 	adb = {
@@ -75,6 +79,16 @@ providers = {
 		priority = 2500
 		defaultAction = null
 	}
+	"unity.ai.pattern.search" = {
+		active = true
+		priority = 80
+		defaultAction = null
+	}
+	"unity.ai.file.search" = {
+		active = true
+		priority = 85
+		defaultAction = null
+	}
 }
 objectSelectors = {
 }
@@ -85,6 +99,8 @@ searchItemFavorites = [
 savedSearchesSortOrder = 0
 showSavedSearchPanel = false
 hideTabs = false
+indexOnEditorStartup = true
+logIndexingPerformanceReport = false
 expandedQueries = [
 ]
 queryBuilder = false
@@ -93,3 +109,4 @@ helperWidgetCurrentArea = "all"
 disabledIndexers = ""
 minIndexVariations = 2
 findProviderIndexHelper = true
+itemIconSize = 32

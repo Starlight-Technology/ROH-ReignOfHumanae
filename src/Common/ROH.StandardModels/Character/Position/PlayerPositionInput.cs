@@ -1,0 +1,38 @@
+﻿//-----------------------------------------------------------------------
+// <copyright file="PlayerPositionInput.cs" company="Starlight-Technology">
+//     Author:  
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using System;
+using System.Numerics;
+
+namespace ROH.StandardModels.Character.Position
+{
+    public class PlayerPositionInput
+    {
+        public PlayerPositionInput(
+            Guid playerId,
+            Vector3 lastServerPosition,
+            Vector3 clientReportedPosition,
+            DateTime lastServerTimestamp,
+            DateTime serverTimestamp)
+        {
+            PlayerId = playerId;
+            LastServerPosition = lastServerPosition;
+            ClientReportedPosition = clientReportedPosition;
+            LastServerTimestamp = lastServerTimestamp;
+            ServerTimestamp = serverTimestamp;
+        }
+
+        public Vector3 ClientReportedPosition { get; set; }
+
+        public Vector3 LastServerPosition { get; set; }
+
+        public DateTime LastServerTimestamp { get; set; }
+
+        public Guid PlayerId { get; set; }
+
+        public DateTime ServerTimestamp { get; set; }
+    }
+}

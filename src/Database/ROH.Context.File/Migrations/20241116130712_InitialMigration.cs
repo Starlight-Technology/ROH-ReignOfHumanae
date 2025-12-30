@@ -1,4 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿//-----------------------------------------------------------------------
+// <copyright file="20241116130712_InitialMigration.cs" company="Starlight-Technology">
+//     Author:  
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using Microsoft.EntityFrameworkCore.Migrations;
 
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -6,10 +12,18 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ROH.Context.File.Migrations;
 
-/// <inheritdoc />
+/// <inheritdoc/>
 public partial class InitialMigration : Migration
 {
-    /// <inheritdoc />
+    /// <inheritdoc/>
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropTable(name: "GameVersionFiles");
+
+        migrationBuilder.DropTable(name: "GameFiles");
+    }
+
+    /// <inheritdoc/>
     protected override void Up(MigrationBuilder migrationBuilder)
     {
         migrationBuilder.CreateTable(
@@ -25,10 +39,7 @@ public partial class InitialMigration : Migration
                 Format = table.Column<string>(type: "text", nullable: false),
                 Active = table.Column<bool>(type: "boolean", nullable: false)
             },
-            constraints: table =>
-            {
-                table.PrimaryKey("PK_GameFiles", x => x.Id);
-            });
+            constraints: table => table.PrimaryKey("PK_GameFiles", x => x.Id));
 
         migrationBuilder.CreateTable(
             name: "GameVersionFiles",
@@ -56,15 +67,5 @@ public partial class InitialMigration : Migration
             table: "GameVersionFiles",
             column: "IdGameFile",
             unique: true);
-    }
-
-    /// <inheritdoc />
-    protected override void Down(MigrationBuilder migrationBuilder)
-    {
-        migrationBuilder.DropTable(
-            name: "GameVersionFiles");
-
-        migrationBuilder.DropTable(
-            name: "GameFiles");
     }
 }

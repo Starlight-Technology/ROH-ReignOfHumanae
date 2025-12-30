@@ -16,7 +16,7 @@ namespace ROH.Blazor.Server.Api;
 
 public class VersionService(ICustomAuthenticationStateProvider customAuthenticationStateProvider) : IVersionService
 {
-    private readonly Gateway _gateway = new();
+    readonly Gateway _gateway = new();
 
     public async Task<DefaultResponse?> CreateNewVersion(GameVersionModel model) => await _gateway.PostAsync(
         Gateway.Services.CreateNewVersion,

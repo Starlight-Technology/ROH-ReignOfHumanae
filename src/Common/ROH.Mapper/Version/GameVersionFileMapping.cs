@@ -13,10 +13,9 @@ namespace ROH.Mapping.Version;
 
 public class GameVersionFileMapping : Profile
 {
-    public GameVersionFileMapping()
-    {
-        CreateMap<GameVersionFileModel, GameVersionFile>()
-            .ForCtorParam("GuidVersion", opt => opt.MapFrom(src => src.GameVersion != null ? src.GameVersion.Guid : Guid.Empty))
-            .ReverseMap();
-    }
+    public GameVersionFileMapping() => CreateMap<GameVersionFileModel, GameVersionFile>()
+        .ForCtorParam(
+            "GuidVersion",
+            opt => opt.MapFrom(src => (src.GameVersion != null) ? src.GameVersion.Guid : Guid.Empty))
+        .ReverseMap();
 }

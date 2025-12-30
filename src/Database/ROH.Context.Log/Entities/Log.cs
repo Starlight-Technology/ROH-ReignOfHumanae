@@ -11,5 +11,5 @@ namespace ROH.Context.Log.Entities;
 
 public record Log(long Id, Severity Severity, string Message)
 {
-    public DateTime Date { get; } = DateTime.UtcNow;
+    public DateTime Date { get; private set; } = DateTime.UtcNow;
 }

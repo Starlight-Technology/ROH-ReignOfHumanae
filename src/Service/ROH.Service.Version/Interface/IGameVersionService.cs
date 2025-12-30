@@ -11,9 +11,15 @@ namespace ROH.Service.Version.Interface;
 
 public interface IGameVersionService
 {
-    Task<DefaultResponse> GetAllReleasedVersionsAsync(int take = 10, int page = 1, CancellationToken cancellationToken = default);
+    Task<DefaultResponse> GetAllReleasedVersionsAsync(
+        int take = 10,
+        int page = 1,
+        CancellationToken cancellationToken = default);
 
-    Task<DefaultResponse> GetAllVersionsAsync(int take = 10, int page = 1, CancellationToken cancellationToken = default);
+    Task<DefaultResponse> GetAllVersionsAsync(
+        int take = 10,
+        int page = 1,
+        CancellationToken cancellationToken = default);
 
     Task<DefaultResponse> GetCurrentVersionAsync(CancellationToken cancellationToken = default);
 

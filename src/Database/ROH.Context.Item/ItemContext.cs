@@ -1,4 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿//-----------------------------------------------------------------------
+// <copyright file="ItemContext.cs" company="Starlight-Technology">
+//     Author:  
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using Microsoft.EntityFrameworkCore;
 
 using ROH.Context.Item.Entities;
 using ROH.Context.Item.TypeConfiguration;
@@ -22,11 +28,12 @@ public class ItemContext : DbContext
         base.OnModelCreating(modelBuilder);
     }
 
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => base.SaveChangesAsync(cancellationToken);
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => base.SaveChangesAsync(
+        cancellationToken);
 
     public DbSet<Enchantment> Enchantments { get; set; }
 
     public DbSet<ItemEnchantment> ItemEnchantments { get; set; }
 
-    public DbSet<Item.Entities.Item> Items { get; set; }
+    public DbSet<Entities.Item> Items { get; set; }
 }

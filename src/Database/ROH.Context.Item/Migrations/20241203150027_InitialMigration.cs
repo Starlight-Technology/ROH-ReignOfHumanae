@@ -1,4 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿//-----------------------------------------------------------------------
+// <copyright file="20241203150027_InitialMigration.cs" company="Starlight-Technology">
+//     Author:  
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using Microsoft.EntityFrameworkCore.Migrations;
 
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -6,10 +12,20 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ROH.Context.Item.Migrations;
 
-/// <inheritdoc />
+/// <inheritdoc/>
 public partial class InitialMigration : Migration
 {
-    /// <inheritdoc />
+    /// <inheritdoc/>
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropTable(name: "ItemEnchantments");
+
+        migrationBuilder.DropTable(name: "Enchantments");
+
+        migrationBuilder.DropTable(name: "Items");
+    }
+
+    /// <inheritdoc/>
     protected override void Up(MigrationBuilder migrationBuilder)
     {
         migrationBuilder.CreateTable(
@@ -24,10 +40,7 @@ public partial class InitialMigration : Migration
                 Name = table.Column<string>(type: "text", nullable: false),
                 Type = table.Column<int>(type: "integer", nullable: false)
             },
-            constraints: table =>
-            {
-                table.PrimaryKey("PK_Enchantments", x => x.Id);
-            });
+            constraints: table => table.PrimaryKey("PK_Enchantments", x => x.Id));
 
         migrationBuilder.CreateTable(
             name: "Items",
@@ -45,10 +58,7 @@ public partial class InitialMigration : Migration
                 File = table.Column<string>(type: "text", nullable: true),
                 Format = table.Column<string>(type: "text", nullable: true)
             },
-            constraints: table =>
-            {
-                table.PrimaryKey("PK_Items", x => x.Id);
-            });
+            constraints: table => table.PrimaryKey("PK_Items", x => x.Id));
 
         migrationBuilder.CreateTable(
             name: "ItemEnchantments",
@@ -81,22 +91,6 @@ public partial class InitialMigration : Migration
             table: "ItemEnchantments",
             column: "IdEnchantment");
 
-        migrationBuilder.CreateIndex(
-            name: "IX_ItemEnchantments_IdItem",
-            table: "ItemEnchantments",
-            column: "IdItem");
-    }
-
-    /// <inheritdoc />
-    protected override void Down(MigrationBuilder migrationBuilder)
-    {
-        migrationBuilder.DropTable(
-            name: "ItemEnchantments");
-
-        migrationBuilder.DropTable(
-            name: "Enchantments");
-
-        migrationBuilder.DropTable(
-            name: "Items");
+        migrationBuilder.CreateIndex(name: "IX_ItemEnchantments_IdItem", table: "ItemEnchantments", column: "IdItem");
     }
 }

@@ -1,4 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿//-----------------------------------------------------------------------
+// <copyright file="20241108214700_InitialMigration.cs" company="Starlight-Technology">
+//     Author:  
+//     Copyright (c) Starlight-Technology. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using Microsoft.EntityFrameworkCore.Migrations;
 
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -6,10 +12,18 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ROH.Context.Account.Migrations;
 
-/// <inheritdoc />
+/// <inheritdoc/>
 public partial class InitialMigration : Migration
 {
-    /// <inheritdoc />
+    /// <inheritdoc/>
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropTable(name: "Users");
+
+        migrationBuilder.DropTable(name: "Accounts");
+    }
+
+    /// <inheritdoc/>
     protected override void Up(MigrationBuilder migrationBuilder)
     {
         migrationBuilder.CreateTable(
@@ -23,10 +37,7 @@ public partial class InitialMigration : Migration
                 RealName = table.Column<string>(type: "text", nullable: true),
                 BirthDate = table.Column<DateOnly>(type: "date", nullable: false)
             },
-            constraints: table =>
-            {
-                table.PrimaryKey("PK_Accounts", x => x.Id);
-            });
+            constraints: table => table.PrimaryKey("PK_Accounts", x => x.Id));
 
         migrationBuilder.CreateTable(
             name: "Users",
@@ -52,20 +63,6 @@ public partial class InitialMigration : Migration
                     onDelete: ReferentialAction.Cascade);
             });
 
-        migrationBuilder.CreateIndex(
-            name: "IX_Users_IdAccount",
-            table: "Users",
-            column: "IdAccount",
-            unique: true);
-    }
-
-    /// <inheritdoc />
-    protected override void Down(MigrationBuilder migrationBuilder)
-    {
-        migrationBuilder.DropTable(
-            name: "Users");
-
-        migrationBuilder.DropTable(
-            name: "Accounts");
+        migrationBuilder.CreateIndex(name: "IX_Users_IdAccount", table: "Users", column: "IdAccount", unique: true);
     }
 }

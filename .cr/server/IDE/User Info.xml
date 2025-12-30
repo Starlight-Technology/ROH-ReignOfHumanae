@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Root Type="DevExpress.CodeRush.SystemPlugins.UserInfo.UserInfoOptions">
+  <Options Language="Neutral">
+    <Entries>
+      <Item Id="{0e0ba764-02c2-4948-9711-90dd21d96dbc}">
+        <Key>First Name</Key>
+      </Item>
+      <Item Id="{81bc0782-2c9e-4dc6-b446-64a1fafe272e}">
+        <Key>Last Name</Key>
+      </Item>
+      <Item Id="{842b14f7-06bf-4f15-865f-6dc3d00a805e}">
+        <Key>Company</Key>
+        <Value>Starlight</Value>
+      </Item>
+    </Entries>
+  </Options>
+</Root>

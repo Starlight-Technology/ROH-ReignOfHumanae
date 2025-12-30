@@ -16,7 +16,10 @@ using ROH.Utils.Helpers;
 
 namespace ROH.Blazor.Server.Helpers;
 
-public class SweetAlertService(IJSRuntime _jsRuntime, NavigationManager _navigation, ICustomAuthenticationStateProvider _authenticationStateProvider) : ISweetAlertService
+public class SweetAlertService(
+    IJSRuntime _jsRuntime,
+    NavigationManager _navigation,
+    ICustomAuthenticationStateProvider _authenticationStateProvider) : ISweetAlertService
 {
     public async Task Show(string title, string message, SweetAlertType type) => await _jsRuntime.InvokeVoidAsync(
         "window.sweetalertInterop.showSweetAlert",

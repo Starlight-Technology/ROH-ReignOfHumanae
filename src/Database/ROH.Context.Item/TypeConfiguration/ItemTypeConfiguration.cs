@@ -11,7 +11,7 @@ namespace ROH.Context.Item.TypeConfiguration;
 
 public class ItemTypeConfiguration : IEntityTypeConfiguration<Entities.Item>
 {
-    public void Configure(EntityTypeBuilder<Item.Entities.Item> builder)
+    public void Configure(EntityTypeBuilder<Entities.Item> builder)
     {
         _ = builder.HasKey(i => i.Id);
 

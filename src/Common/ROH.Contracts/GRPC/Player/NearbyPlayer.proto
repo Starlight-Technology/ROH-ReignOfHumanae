@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+option csharp_namespace = "ROH.Contracts.GRPC.Player.NearbyPlayer";
+
+package nearbyPlayer;
+
+service NearbyPlayerService {
+  rpc GetNearbyPlayers (NearbyPlayersRequest) returns (NearbyPlayersResponse);
+}
+
+message NearbyPlayersRequest {
+  string playerId = 1;
+  float radius = 2;
+}
+
+message PlayerInfo {
+  string playerId = 1;
+  float x = 2;
+  float y = 3;
+  float z = 4;
+  float rotX = 5;
+  float rotY = 6;
+  float rotZ = 7;
+  float rotW = 8;
+  string modelName = 9;
+  uint32 animationState = 10;
+}
+
+message NearbyPlayersResponse {
+  repeated PlayerInfo players = 1;
+  string mainPlayer = 2;
+}

@@ -15,7 +15,7 @@ namespace Assets.Scripts.Models.Configuration
     {
         public string ServerUrl;
 
-        public string ServerUrlGrpc;
+        public string ServerUrlWebSocket;
 
         public string JwToken;
 

@@ -23,10 +23,10 @@ namespace ROH.Utils.ApiConfiguration
 {
     public class Api
     {
-        private static readonly ApiConfigReader _apiConfig = new ApiConfigReader();
+        static readonly ApiConfigReader _apiConfig = new ApiConfigReader();
         public static readonly Dictionary<ApiUrl, Uri> _apiUrl = _apiConfig.GetApiUrl();
-
-        private static readonly Dictionary<Services, Uri> _servicesUrl = new Dictionary<Services, Uri> {
+        static readonly Dictionary<Services, Uri> _servicesUrl = new Dictionary<Services, Uri>
+        {
             #region VERSION
             { Services.GetCurrentVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version), "GetCurrentVersion") },
             { Services.CreateNewVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version), "CreateNewVersion") },
@@ -72,26 +72,27 @@ namespace ROH.Utils.ApiConfiguration
             #endregion LOG
 
             #region PLAYER
-            
             { Services.CreateCharacter, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Player), "CreateCharacter") },
             { Services.GetAccountCaracters, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Player), "GetAccountCaracters") },
             { Services.GetCharacter, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Player), "GetCharacter") },
             #endregion PLAYER
         };
 
-        private static bool IsSimpleType(JTokenType type) => (type == JTokenType.String) ||
+        static bool IsSimpleType(JTokenType type) => (type == JTokenType.String) ||
             (type == JTokenType.Integer) ||
             (type == JTokenType.Float) ||
             (type == JTokenType.Boolean) ||
             (type == JTokenType.Date) ||
             (type == JTokenType.Guid);
 
-        public async Task<string> DeleteAsync<T>(Services service, T parametersObject, CancellationToken cancellationToken = default)
+        public async Task<string> DeleteAsync<T>(
+            Services service,
+            T parametersObject,
+            CancellationToken cancellationToken = default)
         {
-            var handler = new HttpClientHandler();
+            HttpClientHandler handler = new HttpClientHandler();
 #if DEBUG
-            handler.ServerCertificateCustomValidationCallback =
-                (httpRequestMessage, cert, cetChain, policyErrors) => true;
+            handler.ServerCertificateCustomValidationCallback =(httpRequestMessage, cert, cetChain, policyErrors) => true;
 #endif
             using HttpClient client = new HttpClient(handler);
 
@@ -102,18 +103,23 @@ namespace ROH.Utils.ApiConfiguration
                 param = GetParams(parametersObject!);
             }
 
-            HttpResponseMessage response = await client.DeleteAsync($"{_servicesUrl.GetValueOrDefault(service)}{param}", cancellationToken).ConfigureAwait(true);
+            HttpResponseMessage response = await client.DeleteAsync(
+                $"{_servicesUrl.GetValueOrDefault(service)}{param}",
+                cancellationToken)
+                .ConfigureAwait(true);
 
             return await response.Content.ReadAsStringAsync().ConfigureAwait(true);
         }
 
-        public async Task<string> GetAsync<T>(Services service, T parametersObject, CancellationToken cancellationToken = default)
+        public async Task<string> GetAsync<T>(
+            Services service,
+            T parametersObject,
+            CancellationToken cancellationToken = default)
 
         {
-            var handler = new HttpClientHandler();
+            HttpClientHandler handler = new HttpClientHandler();
 #if DEBUG
-            handler.ServerCertificateCustomValidationCallback =
-                (httpRequestMessage, cert, cetChain, policyErrors) => true;
+            handler.ServerCertificateCustomValidationCallback =(httpRequestMessage, cert, cetChain, policyErrors) => true;
 #endif
             using HttpClient client = new HttpClient(handler);
             string param = string.Empty;
@@ -123,7 +129,10 @@ namespace ROH.Utils.ApiConfiguration
                 param = GetParams(parametersObject!);
             }
 
-            HttpResponseMessage response = await client.GetAsync($"{_servicesUrl.GetValueOrDefault(service)}{param}", cancellationToken).ConfigureAwait(true);
+            HttpResponseMessage response = await client.GetAsync(
+                $"{_servicesUrl.GetValueOrDefault(service)}{param}",
+                cancellationToken)
+                .ConfigureAwait(true);
 
             return await response.Content.ReadAsStringAsync().ConfigureAwait(true);
         }
@@ -158,29 +167,37 @@ namespace ROH.Utils.ApiConfiguration
             return parameters.ToString();
         }
 
-        public async Task<string> PostAsync(Services service, object objectToSend, CancellationToken cancellationToken = default)
+        public async Task<string> PostAsync(
+            Services service,
+            object objectToSend,
+            CancellationToken cancellationToken = default)
         {
-            var handler = new HttpClientHandler();
+            HttpClientHandler handler = new HttpClientHandler();
 #if DEBUG
-            handler.ServerCertificateCustomValidationCallback =
-                (httpRequestMessage, cert, cetChain, policyErrors) => true;
+            handler.ServerCertificateCustomValidationCallback =(httpRequestMessage, cert, cetChain, policyErrors) => true;
 #endif
             using HttpClient client = new HttpClient(handler);
 
             string jsonContent = JsonConvert.SerializeObject(objectToSend);
             StringContent httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-            HttpResponseMessage response = await client.PostAsync(_servicesUrl.GetValueOrDefault(service), httpContent, cancellationToken).ConfigureAwait(true);
+            HttpResponseMessage response = await client.PostAsync(
+                _servicesUrl.GetValueOrDefault(service),
+                httpContent,
+                cancellationToken)
+                .ConfigureAwait(true);
 
             return await response.Content.ReadAsStringAsync().ConfigureAwait(true);
         }
 
-        public async Task<string> UpdateAsync(Services service, object objectToSend, CancellationToken cancellationToken = default)
+        public async Task<string> UpdateAsync(
+            Services service,
+            object objectToSend,
+            CancellationToken cancellationToken = default)
         {
-            var handler = new HttpClientHandler();
+            HttpClientHandler handler = new HttpClientHandler();
 #if DEBUG
-            handler.ServerCertificateCustomValidationCallback =
-                (httpRequestMessage, cert, cetChain, policyErrors) => true;
+            handler.ServerCertificateCustomValidationCallback =(httpRequestMessage, cert, cetChain, policyErrors) => true;
 #endif
             using HttpClient client = new HttpClient(handler);
 
@@ -188,7 +205,11 @@ namespace ROH.Utils.ApiConfiguration
 
             StringContent httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-            HttpResponseMessage response = await client.PutAsync(_servicesUrl.GetValueOrDefault(service), httpContent, cancellationToken).ConfigureAwait(true);
+            HttpResponseMessage response = await client.PutAsync(
+                _servicesUrl.GetValueOrDefault(service),
+                httpContent,
+                cancellationToken)
+                .ConfigureAwait(true);
 
             return await response.Content.ReadAsStringAsync().ConfigureAwait(true);
         }

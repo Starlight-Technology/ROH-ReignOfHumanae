@@ -14,7 +14,7 @@ namespace ROH.Blazor.Server.Api;
 
 public class VersionFileService(ICustomAuthenticationStateProvider customAuthenticationStateProvider) : IVersionFileService
 {
-    private readonly Gateway _gateway = new();
+    readonly Gateway _gateway = new();
 
     public async Task<DefaultResponse?> DownloadVersionFile(string FileGuid) => await _gateway.GetAsync(
         Gateway.Services.DownloadFile,

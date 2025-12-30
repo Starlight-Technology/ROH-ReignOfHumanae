@@ -27,10 +27,10 @@ public class AuthService : IAuthService
             Subject =
                 new ClaimsIdentity(
                     new Claim[]
-                {
-                    new(JwtRegisteredClaimNames.Sub, user.UserName!),
-                    new(JwtRegisteredClaimNames.Jti, user.Guid!.Value.ToString())
-                }),
+                    {
+                        new(JwtRegisteredClaimNames.Sub, user.UserName!),
+                        new(JwtRegisteredClaimNames.Jti, user.Guid!.Value.ToString())
+                    }),
             Expires = DateTime.UtcNow.AddHours(24),
             SigningCredentials =
                 new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),

@@ -4,25 +4,34 @@
 //     Copyright (c) Starlight-Technology. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
+using MessagePack;
+using MessagePack.Resolvers;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
-using ROH.Gateway.Grpc.Player;
-using ROH.Protos.Player;
-using ROH.Utils.ApiConfiguration;
+using ROH.Service.Exception;
+using ROH.Service.Exception.Communication;
+using ROH.Service.Exception.Interface;
+using ROH.Service.Player.WebSocket.Interface;
+using ROH.Service.Player.WebSocket.State;
+using ROH.Service.WebSocket;
 
-using System.Collections.Generic;
 using System.Text;
-
-using static ROH.Protos.Player.PlayerService;
-using static ROH.Utils.ApiConfiguration.ApiConfigReader;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+MessagePackSerializer.DefaultOptions =
+    MessagePackSerializerOptions.Standard
+    .WithResolver(StandardResolver.Instance)
+    .WithSecurity(MessagePackSecurity.UntrustedData);
+
 // Add services to the container.
 builder.Services.AddControllers();
+
+builder.Services.AddGrpc();
 
 string tokenKey = Environment.GetEnvironmentVariable("ROH_KEY_TOKEN") ?? "thisisaverysecurekeywith32charslong!";
 
@@ -54,26 +63,14 @@ builder.Services
             c.AddSecurityDefinition(
                 "Bearer",
                 new OpenApiSecurityScheme
-                {
-                    Description =
-                        "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                    Name = "Authorization",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer"
-                });
-
-            c.AddSecurityRequirement(
-                new OpenApiSecurityRequirement
-                {
-                {
-                    new OpenApiSecurityScheme
                     {
-                        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
-                    },
-                    Array.Empty<string>()
-                }
-                });
+                        Description =
+                            "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                        Name = "Authorization",
+                        In = ParameterLocation.Header,
+                        Type = SecuritySchemeType.ApiKey,
+                        Scheme = "Bearer"
+                    });
         });
 
 // Configure Kestrel to listen on a specific port
@@ -82,40 +79,33 @@ builder.WebHost
         options =>
         {
             options.Limits.MaxRequestBodySize = null;
-            options.ListenAnyIP
-                (
-                    9001,
-                    listenOptions =>
-                    {
-                        listenOptions.Protocols = HttpProtocols.Http1; // Supports both protocols
-                    }
-                );
-            options.ListenAnyIP
-                (
-                    9002,
-                    listenOptions =>
-                    {
-                        listenOptions.Protocols = HttpProtocols.Http2;
-                    }
-                );
+            options.ListenAnyIP(
+                9001,
+                listenOptions =>
+                {
+                    listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
+                });
+            options.ListenAnyIP(
+                9002,
+                listenOptions =>
+                {
+                    listenOptions.Protocols = HttpProtocols.Http2;
+                });
         });
-builder.Services.AddGrpc();
 
-builder.Services.AddGrpcClient<ROH.Protos.Player.PlayerService.PlayerServiceClient>(o =>
-{
-    if (Api._apiUrl.TryGetValue(ApiUrl.PlayerSavePosition, out var grpcUri))
-    {
-        o.Address = grpcUri;
-    }
-    else
-    {
-        throw new InvalidOperationException("URL para PlayerGrpc não encontrada na configuração.");
-    }
-});
+builder.Services.AddSingleton<ILogService, LogService>();
+
+builder.Services.AddSingleton<IExceptionHandler, ExceptionHandler>();
+
+builder.Services
+    .AddSingleton<ROH.Gateway.Controllers.Websocket.IRealtimeConnectionManager, ROH.Gateway.Controllers.Websocket.RealtimeConnectionManager>(
+        );
+
+builder.Services.AddSingleton<IPlayerPositionServiceSocket, PlayerPositionServiceSocket>();
 
 WebApplication app = builder.Build();
 
-app.MapGrpcService<PlayerServiceForwarder>();
+app.UseWebSockets(new WebSocketOptions { KeepAliveInterval = TimeSpan.FromSeconds(15) });
 
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -123,6 +113,25 @@ app.UseSwaggerUI();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapGrpcService<PlayersConnected>();
+
 app.MapControllers();
+app.Map("/ws", RealtimeWebSocketEndpoint);
 
 await app.RunAsync().ConfigureAwait(true);
+
+static async Task RealtimeWebSocketEndpoint(HttpContext context)
+{
+    if (!context.WebSockets.IsWebSocketRequest)
+    {
+        context.Response.StatusCode = 400;
+        return;
+    }
+
+    System.Net.WebSockets.WebSocket socket = await context.WebSockets.AcceptWebSocketAsync();
+
+    ROH.Gateway.Controllers.Websocket.IRealtimeConnectionManager manager = context.RequestServices
+        .GetRequiredService<ROH.Gateway.Controllers.Websocket.IRealtimeConnectionManager>();
+
+    await manager.HandleClientAsync(context, socket);
+}

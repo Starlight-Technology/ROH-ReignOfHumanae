@@ -5,8 +5,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 RUN useradd -u 1010 roh
 USER roh 
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+EXPOSE 9100:9100
 
 
 # This stage is used to build the service project
