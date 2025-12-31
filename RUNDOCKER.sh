@@ -91,11 +91,11 @@ docker run -d \
   roh.api.player
 
 # Build and run the ROH.Api.PlayerSync.State Dockerfile
-docker build -t roh.api.playersync.saveposition -f ./src/Api/ROH.Api.PlayerSync.SavePosition/Dockerfile .
+docker build -t roh.api.playersync.state -f ./src/Api/ROH.Api.PlayerSync.State/Dockerfile .
 docker run -d \
-  --name ROH.Api.PlayerSync.SavePosition \
+  --name ROH.Api.PlayerSync.State \
   --network $NETWORK_NAME \
   -p 9210:9210 \
   -e ROH_MONGO_PLAYER_CONNECTION_STRING="mongodb://192.168.0.65:27017/?retryWrites=true&loadBalanced=false&serverSelectionTimeoutMS=5000&connectTimeoutMS=10000" \
   -e DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT=true \
-  roh.api.playersync.saveposition
+  roh.api.playersync.state
