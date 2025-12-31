@@ -90,7 +90,7 @@ docker run -d \
   -e DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT=true \
   roh.api.player
 
-# Build and run the ROH.Api.PlayerSync.SavePosition Dockerfile
+# Build and run the ROH.Api.PlayerSync.State Dockerfile
 docker build -t roh.api.playersync.saveposition -f ./src/Api/ROH.Api.PlayerSync.SavePosition/Dockerfile .
 docker run -d \
   --name ROH.Api.PlayerSync.SavePosition \
