@@ -99,3 +99,10 @@ docker run -d \
   -e ROH_MONGO_PLAYER_CONNECTION_STRING="mongodb://192.168.0.65:27017/?retryWrites=true&loadBalanced=false&serverSelectionTimeoutMS=5000&connectTimeoutMS=10000" \
   -e DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT=true \
   roh.api.playersync.state
+
+  # Build and run the ROH.Worker.GetNearbyPlayer Dockerfile
+docker build -t roh.worker.getnearbyplayer -f ./src/Worker/ROH.Worker.GetNearbyPlayer/Dockerfile .
+docker run -d \
+  --name ROH.Worker.GetNearbyPlayer \
+  --network $NETWORK_NAME \
+  roh.worker.getnearbyplayer

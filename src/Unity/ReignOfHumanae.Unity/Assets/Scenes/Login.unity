@@ -152,7 +152,7 @@ RectTransform:
   m_Father: {fileID: 550259064}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.9984201, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -318,8 +318,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1284634170}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.0014310479}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 0.99997294}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -444,8 +444,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 188029544}
   m_HandleRect: {fileID: 188029543}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.99856895
+  m_Value: 0
+  m_Size: 0.99997294
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -627,8 +627,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.34436148, y: 0.24773912}
   m_AnchorMax: {x: 0.6815305, y: 0.791}
-  m_AnchoredPosition: {x: -1.6812, y: 2.2973084}
-  m_SizeDelta: {x: 337.5325, y: 35.0038}
+  m_AnchoredPosition: {x: 0.40200043, y: -1.6069}
+  m_SizeDelta: {x: 309.3905, y: 61.71}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &343284309
 MonoBehaviour:
@@ -1023,8 +1023,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.10325653, y: 0.06676716}
   m_AnchorMax: {x: 0.91600007, y: 0.90646577}
-  m_AnchoredPosition: {x: -37.92686, y: 8.636001}
-  m_SizeDelta: {x: 11.3537, y: -57.529278}
+  m_AnchoredPosition: {x: -35.02063, y: 11.134834}
+  m_SizeDelta: {x: -7.5859, y: -79.95444}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &434049977
 MonoBehaviour:
@@ -1053,7 +1053,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
+    m_Left: 10
     m_Right: 10
     m_Top: 10
     m_Bottom: 10
@@ -2935,7 +2935,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Login
+  m_Text: Create New
 --- !u!222 &1408376352
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3123,7 +3123,7 @@ RectTransform:
   m_GameObject: {fileID: 1538619558}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.18745, y: 0.35951164, z: 1}
+  m_LocalScale: {x: 0.18745, y: 0.20671919, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1344820422}
@@ -3458,7 +3458,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 59344203}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.9984201
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3956,7 +3956,7 @@ RectTransform:
   m_GameObject: {fileID: 2016347739}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.56171924, y: 0.36255, z: 1}
+  m_LocalScale: {x: 0.56171924, y: 0.22659375, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1408376350}
@@ -3964,7 +3964,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.5, y: -14.7}
+  m_AnchoredPosition: {x: -0.5, y: -22.1}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2016347741
@@ -4011,9 +4011,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 439602785}
-        m_TargetAssemblyTypeName: Assets.Scripts.Login.CharacterListUI, Assembly-CSharp
-        m_MethodName: LoginSelectedCharacter
+      - m_Target: {fileID: 889631492}
+        m_TargetAssemblyTypeName: Assets.Scripts.Login.LoginService, Assembly-CSharp
+        m_MethodName: CreateNewCharacter
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
