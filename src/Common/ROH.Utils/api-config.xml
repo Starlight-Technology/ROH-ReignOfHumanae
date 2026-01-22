@@ -33,7 +33,7 @@
 			<Service name="Log" url="http://ROH.Api.Log:9104/" />
 			<Service name="LogGrpc" url="http://ROH.Api.Log:9204/" />
 			<Service name="Player" url="http://ROH.Api.Player:9105/" />
-			<Service name="PlayerState" url="http://ROH.Api.PlayerSync.SavePosition:9210/" />
+			<Service name="PlayerState" url="http://ROH.Api.PlayerSync.State:9210/" />
 		</ServiceUrls>
 	</Test>
 	<Release>
@@ -51,7 +51,7 @@
 			<Service name="Log" url="http://ROH.Api.Log:9104/" />
 			<Service name="LogGrpc" url="http://ROH.Api.Log:9204/" />
 			<Service name="Player" url="http://ROH.Api.Player:9105/" />
-			<Service name="PlayerState" url="http://ROH.Api.PlayerSync.SavePosition:9210/" />
+			<Service name="PlayerState" url="http://ROH.Api.PlayerSync.State:9210/" />
 		</ServiceUrls>
 	</Release>
 </ApiConfig>

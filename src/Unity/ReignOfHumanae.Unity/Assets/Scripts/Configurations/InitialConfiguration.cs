@@ -20,8 +20,8 @@ namespace Assets.Scripts.Configurations
 
             ConfigurationModel config = DataManager.LoadData<ConfigurationModel>(DataManager.configurationPath) ??
                 new ConfigurationModel();
-            config.ServerUrl ??= "http://localhost:9001";
-            config.ServerUrlWebSocket ??= "ws://localhost:9001";
+            config.ServerUrl ??= "https://starlighttecnologia.webredirect.org/gateway/"; // local value "http://localhost:9001";
+            config.ServerUrlWebSocket ??= "wss://starlighttecnologia.webredirect.org/gateway/ws/"; // local value "ws://localhost:9001";
 
             DataManager.SaveData<ConfigurationModel>(config, DataManager.configurationPath);
 
