@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sc.terrain.painter.editor",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Boxophobic.Utils.Editor", "Boxophobic.Utils.Editor.csproj", "{A7F35083-95D3-82F3-3C85-42F7EFF2899F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ALP8310_ControllerGlobal.Editor", "ALP8310_ControllerGlobal.Editor.csproj", "{878387EF-81E4-006B-F59E-5B04F366C28A}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sc.terrain.painter.runtime", "sc.terrain.painter.runtime.csproj", "{55DCB70E-FF6F-D8F9-7D8F-00FE9F518666}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Boxophobic.Utils.Scripts", "Boxophobic.Utils.Scripts.csproj", "{9B363851-3D23-E3C3-F234-2511742141CF}"
@@ -14,6 +16,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{850200C2-4426-36AD-AB71-B4A73A0C98D0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Boxophobic.TerrainDataBaker.Editor", "Boxophobic.TerrainDataBaker.Editor.csproj", "{3BFD8063-9744-5603-7C2C-EE23A9957996}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ALP8310_ControllerGlobal", "ALP8310_ControllerGlobal.csproj", "{A623D81F-4184-C48B-2FA7-82007871F55C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,10 @@ Global
 		{A7F35083-95D3-82F3-3C85-42F7EFF2899F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7F35083-95D3-82F3-3C85-42F7EFF2899F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7F35083-95D3-82F3-3C85-42F7EFF2899F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{878387EF-81E4-006B-F59E-5B04F366C28A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{878387EF-81E4-006B-F59E-5B04F366C28A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{878387EF-81E4-006B-F59E-5B04F366C28A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{878387EF-81E4-006B-F59E-5B04F366C28A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{55DCB70E-FF6F-D8F9-7D8F-00FE9F518666}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{55DCB70E-FF6F-D8F9-7D8F-00FE9F518666}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55DCB70E-FF6F-D8F9-7D8F-00FE9F518666}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -49,6 +57,10 @@ Global
 		{3BFD8063-9744-5603-7C2C-EE23A9957996}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3BFD8063-9744-5603-7C2C-EE23A9957996}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3BFD8063-9744-5603-7C2C-EE23A9957996}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A623D81F-4184-C48B-2FA7-82007871F55C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A623D81F-4184-C48B-2FA7-82007871F55C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A623D81F-4184-C48B-2FA7-82007871F55C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A623D81F-4184-C48B-2FA7-82007871F55C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

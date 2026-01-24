@@ -37,6 +37,8 @@ namespace Assets.Scripts.Player
 
         public GameObject PlayerObj;
 
+        private PlayerStatusHUDController _status_HUD;
+
         private Vector3 _lastSentPosition;
         private Quaternion _lastSentRotation;
         private bool _hasLastPosition;
@@ -45,7 +47,7 @@ namespace Assets.Scripts.Player
         private const float ROTATION_THRESHOLD = 0.5f;
 
         private readonly Dictionary<string, GameObject> _nearbyPlayers = new();
-        private readonly Dictionary<string , DateTime> _nearbyPlayersLastUpdate = new();
+        private readonly Dictionary<string, DateTime> _nearbyPlayersLastUpdate = new();
 
         public static PlayerAnimationState playerAnimationState;
 
@@ -58,39 +60,87 @@ namespace Assets.Scripts.Player
             apiService.Start();
             MessagePackBootstrap.Initialize();
 
-            try
+            if (Application.isEditor)
             {
-                apiService.GetCharacterAsync(GameState.CharacterGuid)
-                    .ContinueWith(task =>
-                    {
-                        if (!task.IsCompletedSuccessfully || task.Result == null)
-                        {
-                            Debug.LogError("Failed to load character.");
-                            SceneManager.LoadScene("Login");
-                            return;
-                        }
-
-                        player = task.Result;
-
-                        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                player = new CharacterModel(0, GameState.UserGuid, 0, 0, GameState.CharacterGuid, "GOD TEST", Race.God);
+                player.PlayerPosition = new PlayerPositionModel();
+                player.PlayerPosition.Position = new PositionModel()
+                {
+                    X = -320,
+                    Y = 30,
+                    Z = 240
+                };
+                player.PlayerPosition.Rotation = new RotationModel();
+                UnityMainThreadDispatcher.Instance()
+                    .Enqueue(
+                        () =>
                         {
                             InitializePlayer();
-                            InitializeWebSocket();
-                            StartCoroutine(SendPositionCoroutine());
-                            StartCoroutine(CleanupNearbyPlayerCoroutine());
                         });
-                    });
             }
-            catch (Exception ex)
+            else
             {
-                Debug.LogError($"PlayerService start error: {ex}");
-                SceneManager.LoadScene("Login");
+                try
+                {
+                    apiService.GetCharacterAsync(GameState.CharacterGuid)
+                        .ContinueWith(
+                            task =>
+                            {
+                                if (!task.IsCompletedSuccessfully || task.Result == null)
+                                {
+                                    Debug.LogError("Failed to load character.");
+                                    SceneManager.LoadScene("Login");
+                                    return;
+                                }
+
+                                player = task.Result;
+
+                                UnityMainThreadDispatcher.Instance()
+                                    .Enqueue(
+                                        () =>
+                                        {
+                                            InitializePlayer();
+                                            InitializeWebSocket();
+                                            StartCoroutine(SendPositionCoroutine());
+                                            StartCoroutine(CleanupNearbyPlayerCoroutine());
+                                        });
+                            });
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"PlayerService start error: {ex}");
+
+                    SceneManager.LoadScene("Login");
+                }
             }
+
+            _status_HUD = GameObject.FindFirstObjectByType<PlayerStatusHUDController>();
         }
 
         private void Update()
         {
             _socket?.Dispatch();
+
+            if (_status_HUD._hp > 10)
+            {
+                _status_HUD._hp -= 0.1f;
+            }
+            else
+                _status_HUD._hp = 100f;
+
+            if (_status_HUD._mana > 10)
+            {
+                _status_HUD._mana -= 0.1f;
+            }
+            else
+                _status_HUD._mana = 100f;
+
+            if (_status_HUD._stamina > 10)
+            {
+                _status_HUD._stamina -= 0.1f;
+            }
+            else
+                _status_HUD._stamina = 100f;
         }
 
         #endregion
@@ -164,7 +214,7 @@ namespace Assets.Scripts.Player
             _socket.OnError += error =>
             {
                 Debug.LogError($"[WS] Error: {error}");
-            };         
+            };
 
             _socket.OnMessage += HandleRealtimeMessage;
 
@@ -201,7 +251,7 @@ namespace Assets.Scripts.Player
             while (true)
             {
                 CleanupNearbyPlayer();
-                yield return new WaitForSeconds(5f); 
+                yield return new WaitForSeconds(5f);
             }
         }
         void CleanupNearbyPlayer()
@@ -310,7 +360,7 @@ namespace Assets.Scripts.Player
             }
             else
             {
-                Vector3 vector = new(info.X, info.Y,info.Z);
+                Vector3 vector = new(info.X, info.Y, info.Z);
                 Quaternion quat = Quaternion.Euler(info.RotX, info.RotY, info.RotZ);
                 var obj = new GameObject($"Player-{info.PlayerId}");
                 obj.transform.position = vector;
@@ -318,7 +368,7 @@ namespace Assets.Scripts.Player
                 var newInstance = InstantiateCharacter(info.ModelName, obj.transform);
                 newInstance.AddComponent<RemotePlayerInterpolator>();
                 var interpolator = newInstance.GetComponent<RemotePlayerInterpolator>();
-                
+
                 interpolator.Initialize(
                     newInstance.transform.position,
                     newInstance.transform.rotation);
@@ -335,7 +385,7 @@ namespace Assets.Scripts.Player
         private static GameObject? InstantiateCharacter(string prefabName, Transform parentTransform)
         {
             GameObject prefab = Resources.Load<GameObject>($"Characters/{prefabName}") ?? Resources.Load<GameObject>($"Characters/DefaultMaleHumanoid");
-            GameObject instance = Instantiate(prefab);            
+            GameObject instance = Instantiate(prefab);
             instance.transform.SetParent(parentTransform, false);
             instance.transform.localPosition = Vector3.zero;
             instance.transform.localRotation = Quaternion.identity;
