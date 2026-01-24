@@ -1,0 +1,84 @@
+﻿@inherits LayoutComponentBase
+@using MatBlazor
+@using Microsoft.AspNetCore.Components.Authorization
+@using ROH.Site.Interfaces.Helpers
+@inject NavigationManager Navigation;
+@inject ICustomAuthenticationStateProvider CustomAuthStateProvider
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<MatAppBarContainer>
+    <MatAppBar Fixed="true">
+        <MatAppBarRow>
+            <MatAppBarSection>
+                <MatIconButton Icon="menu" @onclick="ToggleDrawer" />
+                <MatAppBarTitle>Reign of Humanae</MatAppBarTitle>
+            </MatAppBarSection>
+            <MatAppBarSection Align="MatAppBarSectionAlign.End">
+                <MatIconButton Icon="account_circle" OnClick="@(() => Navigation.NavigateTo("/login"))"></MatIconButton>
+            </MatAppBarSection>
+        </MatAppBarRow>
+    </MatAppBar>
+    <MatDrawerContainer>
+        <MatAppBarContent>
+            <MatDrawer @bind-Opened="@_drawerOpen" class="fixed-drawer" style="position: fixed;">
+                <MatNavMenu>
+                    <MatNavItem Href="/">Home</MatNavItem>
+                    <MatNavItem Href="/lore">Lore</MatNavItem>
+                    <MatNavItem Href="/world-bosses">World Bosses</MatNavItem>
+                    <MatNavItem Href="/races">Races</MatNavItem>
+                    <MatNavItem Href="/crafting">Crafting</MatNavItem>
+                    <MatNavItem Href="/magic-skills">Magic & Skills</MatNavItem>
+                    @if (IsAuthorized)
+                    {
+                        <MatNavSubMenu>
+                            <MatNavSubMenuHeader>
+                                <MatNavItem AllowSelection="false"><MatIcon Icon="settings"></MatIcon>Manager</MatNavItem>
+                            </MatNavSubMenuHeader>
+                            <MatNavSubMenuList>
+                                <MatNavItem Href="/Manager/Version/VersionManager"><MatIcon Icon="system_update"></MatIcon> Manage Version </MatNavItem>
+                            </MatNavSubMenuList>
+                        </MatNavSubMenu>
+                    }
+                </MatNavMenu>
+            </MatDrawer>
+            <MatDrawerContent class="scrollable-content">
+                <div class="container" style="margin-top: 20px;">
+                    <CascadingAuthenticationState>
+                        @Body
+                    </CascadingAuthenticationState>
+                    <footer>
+                        <span>&copy; 2024 Reign of Humanae. All rights reserved.</span>
+                    </footer>
+                </div>
+            </MatDrawerContent>
+        </MatAppBarContent>
+    </MatDrawerContainer>
+</MatAppBarContainer>
+
+@code {
+    private bool _drawerOpen = true;
+
+    private bool IsAuthorized { get; set; } = false;
+
+    private void ToggleDrawer()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsAuthorized = !string.IsNullOrWhiteSpace(await CustomAuthStateProvider.GetToken());
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            CustomAuthStateProvider.Initialize();
+            var token = await CustomAuthStateProvider.GetToken();
+            IsAuthorized = !string.IsNullOrWhiteSpace(await CustomAuthStateProvider.GetToken());
+            StateHasChanged();
+        }
+    }
+}
+}

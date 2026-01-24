@@ -1,0 +1,176 @@
+﻿@namespace Pages.Components
+@using ROH.Site.Helpers.Types
+@using ROH.Site.Interfaces.Helpers
+@using ROH.StandardModels.File
+@using ROH.StandardModels.Response
+@using ROH.Utils.Helpers
+@typeparam T where T : class
+
+@inject ISweetAlertService _sweetAlert;
+@inject IDownloadFileService _downloadFile;
+
+@if (Items != null && Items.Count > 0)
+{
+    <div style="overflow-y:auto">
+        <table class="table">
+            <thead>
+                <tr>
+                    @foreach (var property in GetProperties())
+                    {
+                        if (
+                        !property.Contains(DETAILS_LINK, StringComparison.OrdinalIgnoreCase) &&
+                        !property.Contains(DOWNLOAD_FILE, StringComparison.OrdinalIgnoreCase) &&
+                        !property.Contains(GUID_ITEM, StringComparison.OrdinalIgnoreCase))
+                        {
+                            <th>@property</th>
+                        }
+                        else
+                        {
+                            if (!property.Equals(ITEM_GUID))
+                            {
+                                <th></th>
+                            }
+                        }
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @if (Items is not null && Items.Count > 0)
+                {
+                    @foreach (T item in Items)
+                    {
+                        <tr>
+                            @foreach (string property in GetProperties())
+                            {
+                                if (property.Contains(GUID_ITEM, StringComparison.OrdinalIgnoreCase)) continue;
+
+                                if (property.Contains(DETAILS_LINK, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    string detailsLink = GetPropertyValue<string>(item, property);
+                                    if (!string.IsNullOrEmpty(detailsLink))
+                                    {
+                                        <td>
+                                            <a href=@detailsLink>
+                                                <i class="fa fa-solid fa-eye">DETAILS</i>
+                                            </a>
+                                        </td>
+                                    }
+
+                                    continue;
+                                }
+
+                                if (property.Contains(DOWNLOAD_FILE, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    var downloadLinkFunc = GetPropertyValue<Func<Task<DefaultResponse?>>>(item, property);
+                                    if (downloadLinkFunc != null)
+                                    {
+                                        <td>
+                                            <button @onclick="() => GetResponse(downloadLinkFunc)">
+                                                <i class="fa fa-download">DOWNLOAD</i>
+                                            </button>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+
+                                    continue;
+                                }
+
+                                <td>@(GetPropertyValue<string>(item, property))</td>
+                            }
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <button @onclick="PreviousPage" disabled="@IsFirstPage" class="btn btn-outline-primary">Previous</button>
+        </div>
+        <div class="col-sm-6">
+            <button @onclick="NextPage" disabled="@IsLastPage" class="btn btn-outline-primary">Next</button>
+        </div>
+    </div>
+}
+@code {
+    [Parameter]
+    public List<T>? Items { get; set; }
+
+    [Parameter]
+    public bool IsFirstPage { get; set; } = true;
+
+    [Parameter]
+    public bool IsLastPage { get; set; } = true;
+
+    [Parameter]
+    public EventCallback PreviousPage { get; set; }
+
+    [Parameter]
+    public EventCallback NextPage { get; set; }
+
+    const string DETAILS_LINK = "DetailsLink";
+    const string GUID_ITEM = "guid";
+    const string ITEM_GUID = "FileGuid";
+    const string DOWNLOAD_FILE = "DownloadFile";
+
+    private IEnumerable<string> GetProperties()
+    {
+        if (Items != null && Items.Any())
+        {
+            var firstItem = Items.First();
+            return firstItem?.GetType().GetProperties().Select(p => p.Name) ?? Enumerable.Empty<string>();
+        }
+
+        return Enumerable.Empty<string>();
+    }
+
+    private TProperty GetPropertyValue<TProperty>(T item, string propertyName)
+    {
+        var propertyInfo = item.GetType().GetProperty(propertyName);
+
+        if (propertyInfo is not null)
+        {
+            object? propertyValue = propertyInfo.GetValue(item);
+            if (propertyValue is not null)
+            {
+                if (typeof(string).IsAssignableFrom(typeof(TProperty)))
+                {
+                    if (propertyValue is DateTime dateTimeValue)
+                    {
+                        return (TProperty)(object)dateTimeValue.ToString("yyyy-MM-dd");
+                    }
+
+                    return (TProperty)Convert.ChangeType(propertyValue?.ToString()!, typeof(TProperty));
+                }
+                else
+                    return (TProperty)propertyValue;
+            }
+            return default!;
+        }
+
+        return default!;
+    }
+
+    private async Task GetResponse(Func<Task<DefaultResponse?>> task)
+    {
+        var response = await task.Invoke();
+
+        if (response is not null)
+        {
+            if (response.ObjectResponse is not null)
+            {
+                GameFileModel fileModel = response.ResponseToModel<GameFileModel>();
+                await _downloadFile.Download(fileModel);
+            }
+            else
+                await _sweetAlert.ShowResponse(response);
+        }
+
+        else
+            await _sweetAlert.Show("Error", "Cannot get any response from server.", SweetAlertType.Error);
+    }
+
+}

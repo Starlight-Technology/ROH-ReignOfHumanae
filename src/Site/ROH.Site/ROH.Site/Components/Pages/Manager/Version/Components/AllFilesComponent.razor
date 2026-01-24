@@ -1,0 +1,87 @@
+﻿@namespace Manager.Version.Components
+@using Newtonsoft.Json;
+@using Newtonsoft.Json.Linq;
+@using Pages.Components;
+@using ROH.Site.Interfaces.Api
+@using ROH.Site.Interfaces.Helpers
+@using ROH.StandardModels.Paginator;
+@using ROH.StandardModels.Response;
+@using ROH.StandardModels.Version
+@using ROH.Utils.Helpers;
+
+@inject IVersionFileService _versionFileService;
+@inject ISweetAlertService _sweetAlert;
+
+<CardComponent Header="Files">
+
+    @if (isLoading)
+    {
+        <div style="text-align:center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only"></span>
+            </div>
+        </div>
+    }
+
+    else
+    {
+        <PaginatedListComponent Items="@gameVersionFileListModels"
+                                T="@GameVersionFileListModel" />
+    }
+
+</CardComponent>
+
+@code {
+
+    private bool isLoading = true;
+    private DefaultResponse? apiResponse = null;
+    private List<GameVersionFileListModel> gameVersionFileListModels = new();
+
+    [Parameter]
+    public string VersionGuid { get; set; } = string.Empty;
+
+    protected override async void OnInitialized()
+    {
+        base.OnInitialized();
+        await GetAllVersion();
+    }
+
+    private async Task GetAllVersion()
+    {
+        isLoading = true;
+        apiResponse = await _versionFileService.GetAllVersionFiles(VersionGuid);
+
+        if (apiResponse != null && !apiResponse.HttpStatus.IsSuccessStatusCode())
+            await _sweetAlert.ShowResponse(apiResponse);
+        else if (apiResponse != null && !apiResponse.HttpStatus.IsSuccessStatusCode())
+        {
+            await _sweetAlert.ShowResponse(apiResponse);
+        }
+
+        else if (apiResponse != null && apiResponse.ObjectResponse != null && apiResponse.HttpStatus.IsSuccessStatusCode())
+        {
+            var result = JsonConvert.DeserializeObject<ICollection<dynamic>>(apiResponse.ObjectResponse.ToString() ?? "");
+
+            if (result != null)
+            {
+                var versionList = result.ToList();
+
+                foreach (var item in versionList)
+                {
+                    GameVersionFileModel gameVersionFileModel = JsonConvert.DeserializeObject<GameVersionFileModel>(item.ToString());
+
+                    if (gameVersionFileModel != null)
+                    {
+                        GameVersionFileListModel gameVersionFileListModel = gameVersionFileModel.ToListModel();
+                        gameVersionFileListModel.DownloadFile = async () => await _versionFileService.DownloadVersionFile(gameVersionFileListModel.FileGuid.ToString());
+                        gameVersionFileListModels?.Add(gameVersionFileListModel);
+                    }
+                }
+            }
+        }
+
+        isLoading = false;
+        StateHasChanged();
+
+    }
+}
