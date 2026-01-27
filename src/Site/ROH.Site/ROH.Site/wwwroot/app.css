@@ -3,6 +3,9 @@
    Global Stylesheet
    ========================================================= */
 
+@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+
+
 /* ---------- CSS Reset (soft) ---------- */
 *,
 *::before,
@@ -219,4 +222,55 @@ th {
 
 .mb-4 {
     margin-bottom: 1.5rem;
+}
+
+.roh-drawer {
+    width: 240px;
+    background: linear-gradient( 180deg, rgba(15, 20, 40, 0.98), rgba(10, 14, 30, 0.98) );
+    border-right: 1px solid rgba(255,255,255,0.08);
+}
+
+.mat-nav-item {
+    color: #c9a24d;
+    font-weight: 500;
+}
+
+    .mat-nav-item:hover {
+        background: rgba(201, 162, 77, 0.08);
+    }
+
+    .mat-nav-item.mat-nav-item-active {
+        background: rgba(201, 162, 77, 0.15);
+        border-left: 3px solid #c9a24d;
+    }
+
+
+footer {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    font-size: 0.75rem;
+    color: #7f8596;
+    text-align: center;
+}
+
+.mat-app-bar .material-icons {
+    color: #d4b15f;
+}
+
+.mat-app-bar {
+    background: linear-gradient( 180deg, #0b0f1e, #070a14 );
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+
+.mat-app-bar-row {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.mat-app-bar-section {
+    display: flex;
+    align-items: center;
 }
