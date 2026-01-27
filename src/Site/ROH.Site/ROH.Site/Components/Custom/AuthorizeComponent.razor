@@ -1,0 +1,43 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Authorization
+@using Interfaces.Helpers
+@using System.ComponentModel.DataAnnotations
+@inject ICustomAuthenticationStateProvider CustomAuthStateProvider
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; } = null!;
+
+    [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
+
+    private bool IsAuthorized { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsAuthorized = !string.IsNullOrWhiteSpace(await CustomAuthStateProvider.GetToken());
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            CustomAuthStateProvider.Initialize();
+            IsAuthorized = !string.IsNullOrWhiteSpace(await CustomAuthStateProvider.GetToken());
+            StateHasChanged();
+        }
+    }
+}
+
+@if (IsAuthorized)
+{
+    @ChildContent
+}
+else
+{
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Access Denied!</h4>
+        <p>You are not authorized to view this page.</p>
+        <hr>
+        <p class="mb-0">If you believe this is an error, please contact support.</p>
+    </div>
+}
