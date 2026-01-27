@@ -70,8 +70,9 @@ else
     app.UseHsts();
 }
 app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
+#if !DEBUG
 app.UseHttpsRedirection();
-
+#endif
 app.UseAntiforgery();
 
 app.UseAuthentication();
