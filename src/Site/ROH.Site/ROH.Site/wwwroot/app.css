@@ -38,10 +38,17 @@ html, body {
 
 /* ---------- Base Typography ---------- */
 body {
-    font-family: "Inter", "Segoe UI", system-ui, sans-serif;
-    background: radial-gradient( circle at top, #111a33 0%, var(--color-bg-primary) 60% );
-    color: var(--color-text-primary);
-    line-height: 1.6;
+    color: #e6e8ef;
+    font-family: 'Segoe UI', 'Roboto', sans-serif;
+}
+
+p {
+    color: #d6d9e6;
+}
+
+.lead {
+    font-size: 1.15rem;
+    color: #f1f3f9;
 }
 
 /* ---------- Headings ---------- */
@@ -95,27 +102,6 @@ a {
         font-weight: 500;
     }
 
-/* ---------- Panels / Cards ---------- */
-.panel,
-.card {
-    background: linear-gradient( 180deg, rgba(27, 35, 54, 0.95), rgba(19, 26, 42, 0.95) );
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    padding: 1.25rem;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
-}
-
-.card-header {
-    font-family: "Cinzel", serif;
-    font-size: 0.95rem;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--color-accent-gold);
-    margin-bottom: 0.75rem;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 0.5rem;
-}
 
 /* ---------- Buttons ---------- */
 button,
@@ -278,3 +264,56 @@ footer {
     flex: none; /* prevents it from expanding */
     white-space: nowrap;
 }
+
+/* === ROH CARD BASE === */
+.card {
+    background: linear-gradient( 180deg, rgba(25, 30, 55, 0.95), rgba(18, 22, 40, 0.95) );
+    border: 1px solid rgba(201, 162, 77, 0.25);
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    color: #e6e8ef;
+}
+
+/* Card header */
+.card-header {
+    background: rgba(201, 162, 77, 0.12);
+    border-bottom: 1px solid rgba(201, 162, 77, 0.35);
+    color: var(--color-accent-gold);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+/* Card body */
+.card-body {
+    color: #e6e8ef;
+    line-height: 1.7;
+}
+
+.card-divider {
+    height: 1px;
+    margin: 2rem 0;
+    background: linear-gradient( 90deg, transparent, rgba(201, 162, 77, 0.6), transparent );
+}
+
+.card .card {
+    background: linear-gradient( 180deg, rgba(35, 40, 70, 0.95), rgba(28, 32, 55, 0.95) );
+    border-color: rgba(201, 162, 77, 0.18);
+}
+
+.card-container {
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+.expansion-panel {
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-left: 3px solid rgba(201, 162, 77, 0.6);
+    border-radius: 4px;
+}
+
+    .expansion-panel b {
+        color: #e9c46a;
+    }
