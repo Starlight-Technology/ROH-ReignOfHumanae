@@ -1,0 +1,17 @@
+﻿@page "/test"
+@rendermode InteractiveServer
+
+<h3>Blazor Click Test</h3>
+
+<button @onclick="Click">CLICK ME</button>
+
+<p>@Message</p>
+
+@code {
+    string Message = "Not clicked";
+
+    void Click()
+    {
+        Message = "CLICK WORKS";
+    }
+}

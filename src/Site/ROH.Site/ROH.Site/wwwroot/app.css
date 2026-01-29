@@ -5,20 +5,6 @@
 
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
-
-/* ---------- CSS Reset (soft) ---------- */
-/**,
-*::before,
-*::after {
-    box-sizing: border-box;
-}*/
-
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-}
-
 /* ---------- Color Variables ---------- */
 :root {
     /* Core palette */
@@ -26,8 +12,6 @@ html, body {
     --color-bg-secondary: #131a2a; /* Dark blue */
     --color-bg-panel: #1b2336; /* UI panels */
 
-    /*--color-text-primary: #f1efe8;*/ /* Aged ivory */
-    /*--color-text-secondary: #b6b9c3;*/ /* Muted text */
     --color-text-muted: #7f8596;
     --color-accent-gold: #c9a24d; /* Aged gold */
     --color-accent-gold-soft: #9f8440;
@@ -44,7 +28,16 @@ html, body {
 
 
 /* ---------- Base Typography ---------- */
+html, body {
+    height: 100%;
+}
+
 body {
+    margin: 0;
+    background: radial-gradient( circle at top center, rgba(40, 55, 110, 0.35), rgba(10, 12, 24, 0.95) 60% ), linear-gradient( 180deg, #0b0f1e, #070a14 80% );
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
     color: #e6e8ef;
     font-family: 'Segoe UI', 'Roboto', sans-serif;
 }
@@ -223,21 +216,6 @@ th {
     border-right: 1px solid rgba(255,255,255,0.08);
 }
 
-.mat-nav-item {
-    color: #c9a24d;
-    font-weight: 500;
-}
-
-    .mat-nav-item:hover {
-        background: rgba(201, 162, 77, 0.08);
-    }
-
-    .mat-nav-item.mat-nav-item-active {
-        background: rgba(201, 162, 77, 0.15);
-        border-left: 3px solid #c9a24d;
-    }
-
-
 footer {
     margin-top: 3rem;
     padding-top: 1rem;
@@ -304,12 +282,6 @@ footer {
         background: rgba(201, 162, 77, 0.15);
     }
 
-/* Material Icons font size fix */
-.mat-app-bar .material-icons {
-    font-size: 24px;
-    line-height: 24px;
-}
-
 /* AppBar content offset */
 .roh-content {
     padding-top: 64px;
@@ -368,17 +340,46 @@ footer {
         color: #e9c46a;
     }
 
-/* === ROH GLOBAL BACKGROUND === */
-html, body {
-    height: 100%;
+/* =========================================================
+   ROH – MatBlazor MDC Navigation
+   ========================================================= */
+
+/* Base nav item */
+.mdc-nav-menu .mdc-nav-item {
+    color: var(--color-accent-gold) !important;
+    font-weight: 500;
+    letter-spacing: 0.04em;
 }
 
-body {
-    margin: 0;
-    background: radial-gradient( circle at top center, rgba(40, 55, 110, 0.35), rgba(10, 12, 24, 0.95) 60% ), linear-gradient( 180deg, #0b0f1e, #070a14 80% );
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-    background-size: cover;
-    color: #e6e8ef;
-    font-family: 'Segoe UI', 'Roboto', sans-serif;
+    /* Hover */
+    .mdc-nav-menu .mdc-nav-item:hover {
+        background: rgba(201, 162, 77, 0.08) !important;
+        color: var(--color-accent-gold) !important;
+    }
+
+/* Active / selected item */
+.mdc-nav-menu .mdc-list-item--selected {
+    background: rgba(201, 162, 77, 0.15) !important;
+    border-left: 3px solid var(--color-accent-gold);
+    color: var(--color-accent-gold) !important;
 }
+
+/* Remove default MDC ink / focus colors */
+.mdc-nav-menu .mdc-list-item::before,
+.mdc-nav-menu .mdc-list-item::after {
+    background-color: transparent !important;
+}
+
+.mdc-nav-menu {
+    padding-top: 0.5rem;
+}
+
+.mdc-nav-li {
+    margin-bottom: 0.25rem;
+}
+
+.mdc-nav-item {
+    padding: 0.65rem 1.25rem;
+    border-radius: 4px;
+}
+
