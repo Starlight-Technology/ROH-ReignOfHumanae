@@ -7,11 +7,11 @@
 
 
 /* ---------- CSS Reset (soft) ---------- */
-*,
+/**,
 *::before,
 *::after {
     box-sizing: border-box;
-}
+}*/
 
 html, body {
     margin: 0;
@@ -26,15 +26,22 @@ html, body {
     --color-bg-secondary: #131a2a; /* Dark blue */
     --color-bg-panel: #1b2336; /* UI panels */
 
-    --color-text-primary: #f1efe8; /* Aged ivory */
-    --color-text-secondary: #b6b9c3; /* Muted text */
+    /*--color-text-primary: #f1efe8;*/ /* Aged ivory */
+    /*--color-text-secondary: #b6b9c3;*/ /* Muted text */
     --color-text-muted: #7f8596;
     --color-accent-gold: #c9a24d; /* Aged gold */
     --color-accent-gold-soft: #9f8440;
     --color-accent-blue: #3a6ea5;
     --color-accent-danger: #a43d3d;
     --border-color: rgba(255, 255, 255, 0.08);
+
+    --color-bg-deep: #070a14;
+    --color-bg-mid: #0b0f1e;
+    --color-accent-gold: #c9a24d;
+    --color-text-primary: #e6e8ef;
+    --color-text-secondary: #b8bccb;
 }
+
 
 /* ---------- Base Typography ---------- */
 body {
@@ -244,25 +251,68 @@ footer {
     color: #d4b15f;
 }
 
+/* === ROH MAT APP BAR === */
 .mat-app-bar {
-    background: linear-gradient( 180deg, #0b0f1e, #070a14 );
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    height: 64px;
+    background: linear-gradient( 180deg, rgba(30, 35, 70, 0.95), rgba(15, 18, 40, 0.95) );
+    border-bottom: 1px solid rgba(201, 162, 77, 0.35);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+    color: var(--color-text-primary);
+    z-index: 1000;
 }
 
-
+/* Force single-row layout */
 .mat-app-bar-row {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
 }
 
+/* Sections alignment */
 .mat-app-bar-section {
-    white-space: nowrap;
+    display: flex;
+    align-items: center;
 }
 
-.mat-appbar-title {
-    flex: none; /* prevents it from expanding */
-    white-space: nowrap;
+/* Title */
+.mat-app-bar-title {
+    margin-left: 0.75rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-accent-gold);
+}
+
+.mat-app-bar::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 1px;
+    background: linear-gradient( 90deg, transparent, rgba(201, 162, 77, 0.6), transparent );
+}
+
+/* Icon buttons */
+.mat-icon-button {
+    color: var(--color-accent-gold);
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 2;
+}
+
+    .mat-icon-button:hover {
+        background: rgba(201, 162, 77, 0.15);
+    }
+
+/* Material Icons font size fix */
+.mat-app-bar .material-icons {
+    font-size: 24px;
+    line-height: 24px;
+}
+
+/* AppBar content offset */
+.roh-content {
+    padding-top: 64px;
 }
 
 /* === ROH CARD BASE === */
@@ -317,3 +367,18 @@ footer {
     .expansion-panel b {
         color: #e9c46a;
     }
+
+/* === ROH GLOBAL BACKGROUND === */
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    background: radial-gradient( circle at top center, rgba(40, 55, 110, 0.35), rgba(10, 12, 24, 0.95) 60% ), linear-gradient( 180deg, #0b0f1e, #070a14 80% );
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #e6e8ef;
+    font-family: 'Segoe UI', 'Roboto', sans-serif;
+}
