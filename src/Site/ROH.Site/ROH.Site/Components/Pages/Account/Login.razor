@@ -2,7 +2,6 @@
 @using Interfaces.Api
 @using Interfaces.Helpers
 @using Helpers
-@using MatBlazor
 @using ROH.Site.Components.Custom
 @using ROH.Utils.Helpers;
 @using ROH.StandardModels.Account
@@ -12,7 +11,7 @@
 @inject ICustomAuthenticationStateProvider _customAuthenticationStateProviderProvider;
 
 <CardComponent Header="Login">
-    <div class="center-content">
+@*     <div class="center-content">
         <MatInputTextComponent Label="Login" @bind-Value="@LoginValue"></MatInputTextComponent>
         <MatInputTextComponent Label="Password" @bind-Value="@PasswordValue" Type="password"></MatInputTextComponent>
         <div class="row" style="margin-top:10px">
@@ -30,7 +29,7 @@
                 <MatButton>Forgot Password</MatButton>
             </div>
         </div>
-    </div>
+    </div> *@
 </CardComponent>
 
 @code {

@@ -12,9 +12,12 @@
     <ProjectReference Include="..\..\..\Common\ROH.Utils\ROH.Utils.csproj" />
     <ProjectReference Include="..\ROH.Site.Client\ROH.Site.Client.csproj" />
     <PackageReference Include="Blazored.LocalStorage" Version="4.3.0" />
-    <PackageReference Include="MatBlazor" Version="2.10.0" />
+    <PackageReference Include="Extensions.MudBlazor.StaticInput" Version="3.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.2" />
+    <PackageReference Include="MudBlazor" Version="8.15.0" />
+    <PackageReference Include="MudBlazor.FontIcons.MaterialIcons" Version="1.3.0" />
+    <PackageReference Include="MudBlazor.FontIcons.MaterialSymbols" Version="1.3.0" />
   </ItemGroup>
 
 </Project>

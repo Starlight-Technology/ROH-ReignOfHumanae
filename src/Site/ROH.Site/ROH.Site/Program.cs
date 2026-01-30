@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.IdentityModel.Tokens;
 
+using MudBlazor.Services;
+
 using ROH.Site.Components;
 using ROH.Site.Helpers;
 
@@ -53,6 +55,7 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddMudServices();
 
 servicesManager.ConfigureServices(builder.Services);
 

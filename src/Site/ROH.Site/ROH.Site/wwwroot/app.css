@@ -1,385 +1,92 @@
-/* =========================================================
-   ROH – Reign of Humanæ
-   Global Stylesheet
-   ========================================================= */
-
-@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
-
-/* ---------- Color Variables ---------- */
-:root {
-    /* Core palette */
-    --color-bg-primary: #0b0f1a; /* Deep Indigo / Night */
-    --color-bg-secondary: #131a2a; /* Dark blue */
-    --color-bg-panel: #1b2336; /* UI panels */
-
-    --color-text-muted: #7f8596;
-    --color-accent-gold: #c9a24d; /* Aged gold */
-    --color-accent-gold-soft: #9f8440;
-    --color-accent-blue: #3a6ea5;
-    --color-accent-danger: #a43d3d;
-    --border-color: rgba(255, 255, 255, 0.08);
-
-    --color-bg-deep: #070a14;
-    --color-bg-mid: #0b0f1e;
-    --color-accent-gold: #c9a24d;
-    --color-text-primary: #e6e8ef;
-    --color-text-secondary: #b8bccb;
-}
-
-
-/* ---------- Base Typography ---------- */
-html, body {
-    height: 100%;
-}
-
 body {
     margin: 0;
-    background: radial-gradient( circle at top center, rgba(40, 55, 110, 0.35), rgba(10, 12, 24, 0.95) 60% ), linear-gradient( 180deg, #0b0f1e, #070a14 80% );
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-    background-size: cover;
-    color: #e6e8ef;
-    font-family: 'Segoe UI', 'Roboto', sans-serif;
+    background: radial-gradient( circle at top, #141d2b 0%, #0b0f14 60%, #070a0f 100% );
 }
 
-p {
-    color: #d6d9e6;
-}
-
-.lead {
-    font-size: 1.15rem;
-    color: #f1f3f9;
-}
-
-/* ---------- Headings ---------- */
-h1, h2, h3, h4, h5 {
-    font-family: "Cinzel", "Trajan Pro", serif;
-    letter-spacing: 0.04em;
-    color: var(--color-text-primary);
-    margin-top: 0;
-}
-
-h1 {
-    font-size: 2.2rem;
-}
-
-h2 {
-    font-size: 1.6rem;
-}
-
-h3 {
-    font-size: 1.2rem;
-}
-
-/* ---------- Links ---------- */
-a {
-    color: var(--color-accent-gold);
-    text-decoration: none;
-}
-
-    a:hover {
-        color: var(--color-accent-gold-soft);
-        text-decoration: underline;
-    }
-
-/* ---------- Layout Containers ---------- */
-.container {
-    width: 100%;
-    max-width: 1200px;
-    padding: 1.5rem;
-    margin: 0 auto;
-}
-
-/* ---------- Navigation Bar ---------- */
-.navbar {
-    background: linear-gradient( to bottom, rgba(10, 14, 30, 0.95), rgba(10, 14, 30, 0.85) );
-    border-bottom: 1px solid var(--border-color);
-    padding: 0.75rem 1.5rem;
-}
-
-    .navbar a {
-        margin-right: 1.25rem;
-        font-weight: 500;
-    }
-
-
-/* ---------- Buttons ---------- */
-button,
-.btn {
-    background: linear-gradient( to bottom, var(--color-accent-gold), var(--color-accent-gold-soft) );
-    border: none;
-    border-radius: 6px;
-    color: #1a1406;
-    padding: 0.55rem 1.2rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 0.08s ease, box-shadow 0.08s ease;
-}
-
-    button:hover,
-    .btn:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(201, 162, 77, 0.35);
-    }
-
-.btn-secondary {
-    background: var(--color-bg-panel);
-    color: var(--color-text-primary);
-    border: 1px solid var(--border-color);
-}
-
-/* ---------- Forms ---------- */
-input,
-select,
-textarea {
-    width: 100%;
-    background: var(--color-bg-secondary);
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    padding: 0.55rem 0.65rem;
-    color: var(--color-text-primary);
-    margin-bottom: 0.75rem;
-}
-
-    input:focus,
-    textarea:focus {
-        outline: none;
-        border-color: var(--color-accent-gold);
-    }
-
-/* ---------- Tables ---------- */
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-th, td {
-    padding: 0.65rem;
-    border-bottom: 1px solid var(--border-color);
-}
-
-th {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--color-text-secondary);
-}
-
-/* ---------- Alerts ---------- */
-.alert {
-    padding: 0.75rem 1rem;
-    border-radius: 6px;
-    margin-bottom: 1rem;
-}
-
-.alert-danger {
-    background: rgba(164, 61, 61, 0.15);
-    border: 1px solid var(--color-accent-danger);
-}
-
-/* ---------- Footer ---------- */
-.footer {
-    text-align: center;
-    font-size: 0.75rem;
-    color: var(--color-text-muted);
-    padding: 2rem 0;
-}
-
-/* ---------- Utility ---------- */
-.text-muted {
-    color: var(--color-text-muted);
-}
-
-.text-center {
-    text-align: center;
-}
-
-.mt-2 {
-    margin-top: 0.5rem;
-}
-
-.mt-4 {
-    margin-top: 1.5rem;
-}
-
-.mb-2 {
-    margin-bottom: 0.5rem;
-}
-
-.mb-4 {
-    margin-bottom: 1.5rem;
-}
-
-.roh-drawer {
-    width: 240px;
-    background: linear-gradient( 180deg, rgba(15, 20, 40, 0.98), rgba(10, 14, 30, 0.98) );
-    border-right: 1px solid rgba(255,255,255,0.08);
-}
-
-footer {
-    margin-top: 3rem;
-    padding-top: 1rem;
-    border-top: 1px solid rgba(255,255,255,0.08);
-    font-size: 0.75rem;
-    color: #7f8596;
-    text-align: center;
-}
-
-.mat-app-bar .material-icons {
-    color: #d4b15f;
-}
-
-/* === ROH MAT APP BAR === */
-.mat-app-bar {
+/* === ROH APP BAR === */
+.roh-appbar {
     height: 64px;
-    background: linear-gradient( 180deg, rgba(30, 35, 70, 0.95), rgba(15, 18, 40, 0.95) );
+    background: linear-gradient( 180deg, rgba(25, 30, 55, 0.98), rgba(15, 18, 40, 0.98) );
     border-bottom: 1px solid rgba(201, 162, 77, 0.35);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
-    color: var(--color-text-primary);
-    z-index: 1000;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.7);
 }
 
-/* Force single-row layout */
-.mat-app-bar-row {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-}
+    .roh-appbar .mud-icon-button {
+        color: #c9a24d;
+    }
 
-/* Sections alignment */
-.mat-app-bar-section {
-    display: flex;
-    align-items: center;
-}
+        .roh-appbar .mud-icon-button:hover {
+            background: rgba(201, 162, 77, 0.15);
+        }
 
 /* Title */
-.mat-app-bar-title {
-    margin-left: 0.75rem;
-    font-size: 1.1rem;
-    font-weight: 600;
+.roh-appbar-title {
+    margin-left: 12px;
+    font-family: "Cinzel", serif;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--color-accent-gold);
+    color: #c9a24d;
 }
 
-.mat-app-bar::after {
-    content: "";
-    position: absolute;
-    inset: auto 0 0 0;
-    height: 1px;
-    background: linear-gradient( 90deg, transparent, rgba(201, 162, 77, 0.6), transparent );
+/* Drawer */
+.roh-drawer {
+    background: linear-gradient( 180deg, rgba(15, 20, 40, 0.98), rgba(10, 14, 30, 0.98) );
+    border-right: 1px solid rgba(201, 162, 77, 0.25);
 }
 
-/* Icon buttons */
-.mat-icon-button {
-    color: var(--color-accent-gold);
-    pointer-events: auto;
-    cursor: pointer;
-    z-index: 2;
-}
-
-    .mat-icon-button:hover {
-        background: rgba(201, 162, 77, 0.15);
-    }
-
-/* AppBar content offset */
+/* Content offset */
 .roh-content {
     padding-top: 64px;
 }
 
-/* === ROH CARD BASE === */
-.card {
-    background: linear-gradient( 180deg, rgba(25, 30, 55, 0.95), rgba(18, 22, 40, 0.95) );
-    border: 1px solid rgba(201, 162, 77, 0.25);
-    border-radius: 10px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    color: #e6e8ef;
-}
+/* ===============================
+   ROH – MudBlazor AppBar
+   =============================== */
 
-/* Card header */
-.card-header {
-    background: rgba(201, 162, 77, 0.12);
+.mud-appbar {
+    height: 64px;
+    background: linear-gradient( 180deg, rgba(25, 30, 60, 0.98), rgba(12, 15, 30, 0.98) );
     border-bottom: 1px solid rgba(201, 162, 77, 0.35);
-    color: var(--color-accent-gold);
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6), inset 0 -1px 0 rgba(201, 162, 77, 0.25);
 }
 
-/* Card body */
-.card-body {
-    color: #e6e8ef;
-    line-height: 1.7;
-}
-
-.card-divider {
-    height: 1px;
-    margin: 2rem 0;
-    background: linear-gradient( 90deg, transparent, rgba(201, 162, 77, 0.6), transparent );
-}
-
-.card .card {
-    background: linear-gradient( 180deg, rgba(35, 40, 70, 0.95), rgba(28, 32, 55, 0.95) );
-    border-color: rgba(201, 162, 77, 0.18);
-}
-
-.card-container {
-    max-width: 960px;
-    margin: 0 auto;
-}
-
-.expansion-panel {
-    padding: 1rem 1.25rem;
-    margin-bottom: 1rem;
-    background: rgba(255, 255, 255, 0.03);
-    border-left: 3px solid rgba(201, 162, 77, 0.6);
-    border-radius: 4px;
-}
-
-    .expansion-panel b {
-        color: #e9c46a;
+    /* Title */
+    .mud-appbar .mud-typography {
+        color: #c9a24d;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        font-family: "Cinzel", "Trajan Pro", serif;
     }
 
-/* =========================================================
-   ROH – MatBlazor MDC Navigation
-   ========================================================= */
-
-/* Base nav item */
-.mdc-nav-menu .mdc-nav-item {
-    color: var(--color-accent-gold) !important;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-}
-
-    /* Hover */
-    .mdc-nav-menu .mdc-nav-item:hover {
-        background: rgba(201, 162, 77, 0.08) !important;
-        color: var(--color-accent-gold) !important;
+    /* Icon buttons */
+    .mud-appbar .mud-icon-button {
+        color: #d6b35e;
+        border-radius: 8px;
+        margin: 0 4px;
+        transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
     }
 
-/* Active / selected item */
-.mdc-nav-menu .mdc-list-item--selected {
-    background: rgba(201, 162, 77, 0.15) !important;
-    border-left: 3px solid var(--color-accent-gold);
-    color: var(--color-accent-gold) !important;
-}
+        /* Hover */
+        .mud-appbar .mud-icon-button:hover {
+            background: rgba(201, 162, 77, 0.18);
+            box-shadow: 0 0 0 1px rgba(201, 162, 77, 0.45);
+            transform: translateY(-1px);
+        }
 
-/* Remove default MDC ink / focus colors */
-.mdc-nav-menu .mdc-list-item::before,
-.mdc-nav-menu .mdc-list-item::after {
-    background-color: transparent !important;
-}
+        /* Active / pressed */
+        .mud-appbar .mud-icon-button:active {
+            transform: translateY(0);
+            box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.6);
+        }
 
-.mdc-nav-menu {
-    padding-top: 0.5rem;
-}
-
-.mdc-nav-li {
-    margin-bottom: 0.25rem;
-}
-
-.mdc-nav-item {
-    padding: 0.65rem 1.25rem;
-    border-radius: 4px;
-}
-
+    /* Bottom glow line */
+    .mud-appbar::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient( 90deg, transparent, rgba(201, 162, 77, 0.8), transparent );
+    }

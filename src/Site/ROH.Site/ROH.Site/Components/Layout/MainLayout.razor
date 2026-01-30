@@ -1,5 +1,86 @@
-﻿@inherits LayoutComponentBase
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor
+@using ROH.Site.Interfaces.Helpers
+@inherits LayoutComponentBase
+@inject NavigationManager Navigation;
+@inject ICustomAuthenticationStateProvider CustomAuthStateProvider
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
-<div class="app-shell">
-    @Body
-</div>
+@* Required *@
+<MudThemeProvider Theme="@RohTheme.Dark" />
+<MudPopoverProvider />
+
+@* Needed for dialogs *@
+<MudDialogProvider />
+
+@* Needed for snackbars *@
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudAppBar>
+
+
+
+            <MudIconButton Icon="@Icons.Material.Filled.Menu"
+                           Color="Color.Inherit"
+                           Edge="Edge.Start"
+                           OnClick="@ToggleDrawer" />
+
+            <MudText Typo="Typo.h6"
+                     Color="Color.Inherit">
+                Reign of Humanae
+            </MudText>
+
+            <MudSpacer />
+
+            <MudIconButton Icon="@Icons.Material.Filled.AccountCircle"
+                           Color="Color.Inherit"
+                           OnClick="@(() => Navigation.NavigateTo("/login"))" />
+
+
+    </MudAppBar>
+
+    <MudDrawer @bind-Open="_drawerOpen"
+               Variant="DrawerVariant.Temporary"
+               Class="roh-drawer">
+
+        <!-- Drawer content later -->
+        <MudNavMenu>
+            <MudNavLink Href="/" Match="NavLinkMatch.All">Home</MudNavLink>
+            <MudNavLink Href="/login">Login</MudNavLink>
+        </MudNavMenu>
+
+    </MudDrawer>
+
+    <MudMainContent Class="roh-content">
+        @Body
+    </MudMainContent>
+
+</MudLayout>
+
+@code {
+    private bool _drawerOpen;
+
+    void ToggleDrawer()
+        => _drawerOpen = !_drawerOpen;
+
+    private bool IsAuthorized { get; set; } = false;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsAuthorized = !string.IsNullOrWhiteSpace(await CustomAuthStateProvider.GetToken());
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            CustomAuthStateProvider.Initialize();
+            var token = await CustomAuthStateProvider.GetToken();
+            IsAuthorized = !string.IsNullOrWhiteSpace(await CustomAuthStateProvider.GetToken());
+            StateHasChanged();
+        }
+    }
+
+}
