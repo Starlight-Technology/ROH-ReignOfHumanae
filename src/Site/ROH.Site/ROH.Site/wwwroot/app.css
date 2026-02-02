@@ -3,6 +3,14 @@ body {
     background: radial-gradient( circle at top, #141d2b 0%, #0b0f14 60%, #070a0f 100% );
 }
 
+:root {
+    --appbar-height: 64px;
+}
+
+.roh-main {
+    padding-top: var(--appbar-height);
+}
+
 /* === ROH APP BAR === */
 .roh-appbar {
     height: 64px;
@@ -32,6 +40,8 @@ body {
 .roh-drawer {
     background: linear-gradient( 180deg, rgba(15, 20, 40, 0.98), rgba(10, 14, 30, 0.98) );
     border-right: 1px solid rgba(201, 162, 77, 0.25);
+    top: var(--appbar-height);
+    height: calc(100vh - var(--appbar-height));
 }
 
 /* Content offset */

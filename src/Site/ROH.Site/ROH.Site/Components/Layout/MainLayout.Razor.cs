@@ -27,6 +27,10 @@ public static class RohTheme
         {
             AppbarHeight = "64px",
             DrawerWidthLeft = "260px"
+        },
+        Typography = new Typography
+        {
+            
         }
     };
 }

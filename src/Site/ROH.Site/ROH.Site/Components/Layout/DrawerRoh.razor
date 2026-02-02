@@ -1,0 +1,31 @@
+﻿@rendermode InteractiveServer
+@using MudBlazor
+@using ROH.Site.Helpers.Components.Layout
+@implements IDisposable
+@inject DrawerState DrawerState
+
+<MudDrawer Open="@DrawerState.Open"
+           Variant="DrawerVariant.Responsive"
+           Elevation="2"
+           Anchor="Anchor.Left"
+           Class="roh-drawer"
+           Overlay="false">
+
+    <MudNavMenu>
+        <MudNavLink Href="/">Home</MudNavLink>
+        <MudNavLink Href="/login">Login</MudNavLink>
+    </MudNavMenu>
+
+</MudDrawer>
+
+@code {
+    protected override void OnInitialized()
+    {
+        DrawerState.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        DrawerState.OnChange -= StateHasChanged;
+    }
+}

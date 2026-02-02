@@ -8,6 +8,7 @@ using MudBlazor.Services;
 
 using ROH.Site.Components;
 using ROH.Site.Helpers;
+using ROH.Site.Helpers.Components.Layout;
 
 using System.Text;
 
@@ -56,6 +57,7 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddMudServices();
+builder.Services.AddScoped<DrawerState>();
 
 servicesManager.ConfigureServices(builder.Services);
 
