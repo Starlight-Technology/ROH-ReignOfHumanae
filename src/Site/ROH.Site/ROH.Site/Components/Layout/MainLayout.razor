@@ -17,27 +17,23 @@
 <MudSnackbarProvider />
 
 <MudLayout>
-    <MudAppBar>
+    <MudAppBar Class="roh-appbar">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu"
+                       Color="Color.Inherit"
+                       Edge="Edge.Start"
+                       OnClick="@ToggleDrawer" />
 
+        <MudText Typo="Typo.h6"
+                 Color="Color.Inherit"
+                 Class="roh-appbar-title">
+            Reign of Humanae
+        </MudText>
 
+        <MudSpacer />
 
-            <MudIconButton Icon="@Icons.Material.Filled.Menu"
-                           Color="Color.Inherit"
-                           Edge="Edge.Start"
-                           OnClick="@ToggleDrawer" />
-
-            <MudText Typo="Typo.h6"
-                     Color="Color.Inherit">
-                Reign of Humanae
-            </MudText>
-
-            <MudSpacer />
-
-            <MudIconButton Icon="@Icons.Material.Filled.AccountCircle"
-                           Color="Color.Inherit"
-                           OnClick="@(() => Navigation.NavigateTo("/login"))" />
-
-
+        <MudIconButton Icon="@Icons.Material.Filled.AccountCircle"
+                       Color="Color.Inherit"
+                       OnClick="@(() => Navigation.NavigateTo("/login"))" />
     </MudAppBar>
 
     <MudDrawer @bind-Open="_drawerOpen"
@@ -45,9 +41,13 @@
                Class="roh-drawer">
 
         <!-- Drawer content later -->
-        <MudNavMenu>
-            <MudNavLink Href="/" Match="NavLinkMatch.All">Home</MudNavLink>
-            <MudNavLink Href="/login">Login</MudNavLink>
+        <MudNavMenu Class="roh-navmenu">
+            <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">
+                Home
+            </MudNavLink>
+            <MudNavLink Href="/login" Icon="@Icons.Material.Filled.Login">
+                Login
+            </MudNavLink>
         </MudNavMenu>
 
     </MudDrawer>
