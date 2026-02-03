@@ -45,8 +45,38 @@
             <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">
                 Home
             </MudNavLink>
-            <MudNavLink Href="/login" Icon="@Icons.Material.Filled.Login">
-                Login
+            <MudNavGroup Title="Account" Icon="@Icons.Material.Filled.AccountCircle">
+                <MudNavLink Href="/login" Icon="@Icons.Material.Filled.Login">
+                    Login
+                </MudNavLink>
+                <MudNavLink Href="/createaccount" Icon="@Icons.Material.Filled.PersonAdd">
+                    Create Account
+                </MudNavLink>
+            </MudNavGroup>
+            <MudNavGroup Title="Lore" Icon="@Icons.Material.Filled.MenuBook">
+                <MudNavLink Href="/lore" Icon="@Icons.Material.Filled.AutoStories">
+                    Lore
+                </MudNavLink>
+                <MudNavLink Href="/races" Icon="@Icons.Material.Filled.Groups">
+                    Races
+                </MudNavLink>
+                <MudNavLink Href="/crafting" Icon="@Icons.Material.Filled.Handyman">
+                    Crafting
+                </MudNavLink>
+                <MudNavLink Href="/magic-skills" Icon="@Icons.Material.Filled.AutoFixHigh">
+                    Magic Skills
+                </MudNavLink>
+                <MudNavLink Href="/world-bosses" Icon="@Icons.Material.Filled.Public">
+                    World Bosses
+                </MudNavLink>
+            </MudNavGroup>
+            <MudNavGroup Title="Manager" Icon="@Icons.Material.Filled.Build">
+                <MudNavLink Href="/manager/version/versionmanager" Icon="@Icons.Material.Filled.Settings">
+                    Version Manager
+                </MudNavLink>
+            </MudNavGroup>
+            <MudNavLink Href="/test" Icon="@Icons.Material.Filled.Science">
+                Test
             </MudNavLink>
         </MudNavMenu>
 

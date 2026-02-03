@@ -11,25 +11,30 @@
 @inject ICustomAuthenticationStateProvider _customAuthenticationStateProviderProvider;
 
 <CardComponent Header="Login">
-@*     <div class="center-content">
-        <MatInputTextComponent Label="Login" @bind-Value="@LoginValue"></MatInputTextComponent>
-        <MatInputTextComponent Label="Password" @bind-Value="@PasswordValue" Type="password"></MatInputTextComponent>
-        <div class="row" style="margin-top:10px">
-            <div class="col-auto">
-                <MatButton OnClick="Confirm">Confirm</MatButton>
-            </div>
-        </div>
-        <div class="row" style="margin-top:10px">
-            <div class="col-auto">
-                <MatButton OnClick="@(() => Navigation.NavigateTo("/createaccount"))">New Account</MatButton>
-            </div>
-        </div>
-        <div class="row" style="margin-top:10px">
-            <div class="col-auto">
-                <MatButton>Forgot Password</MatButton>
-            </div>
-        </div>
-    </div> *@
+    <MudStack Spacing="2">
+        <MudTextField T="string"
+                      Label="Login"
+                      Variant="Variant.Outlined"
+                      @bind-Value="@LoginValue" />
+        <MudTextField T="string"
+                      Label="Password"
+                      Variant="Variant.Outlined"
+                      InputType="InputType.Password"
+                      @bind-Value="@PasswordValue" />
+        <MudStack Direction="Row" Spacing="2">
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Confirm">
+                Confirm
+            </MudButton>
+            <MudButton Color="Color.Secondary"
+                       Variant="Variant.Outlined"
+                       OnClick="@(() => Navigation.NavigateTo("/createaccount"))">
+                New Account
+            </MudButton>
+            <MudButton Color="Color.Default" Variant="Variant.Text">
+                Forgot Password
+            </MudButton>
+        </MudStack>
+    </MudStack>
 </CardComponent>
 
 @code {
@@ -62,4 +67,3 @@
 
 
 }
-
