@@ -1,18 +1,22 @@
-﻿@inherits LayoutComponentBase
-
+﻿@using ROH.Site.Helpers.Components.Layout
+@inherits LayoutComponentBase
 
 <MudThemeProvider Theme="@RohTheme.Dark" />
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-<div class="app-root">
+<AppBarRoh />
 
-    <AppBarRoh />
-    <DrawerRoh />
+<div class="roh-layout">
+    <MudDrawerContainer>
 
-    <main class="content">
-        @Body
-    </main>
+        <DrawerRoh />
 
+        <div class="d-flex card-container">
+            @Body
+        </div>
+    </MudDrawerContainer>
 </div>
+
+@inject DrawerState DrawerState

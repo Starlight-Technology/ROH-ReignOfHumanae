@@ -7,9 +7,20 @@ body {
     --appbar-height: 64px;
 }
 
-.roh-main {
-    padding-top: var(--appbar-height);
+.roh-layout {
+    display: flex;
+    height: 100vh;
 }
+
+.roh-main {
+    flex: 1;
+    padding-top: var(--appbar-height);
+    transition: margin-left 0.25s ease;
+}
+
+    .roh-main.drawer-open {
+        margin-left: 280px; /* largura do drawer */
+    }
 
 /* === ROH APP BAR === */
 .roh-appbar {
@@ -75,6 +86,25 @@ body {
             box-shadow: inset 0 0 0 1px rgba(201, 162, 77, 0.6);
         }
 
+
+.mud-nav-link-text {
+    border-radius: 12px;
+    color: #e6d3a1;
+    font-family: "Cinzel", "Trajan Pro", serif;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 12px 16px;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease, color 0.2s ease;
+}
+
+    /* HOVER */
+    .mud-nav-link-text:hover {
+        background: linear-gradient( 90deg, rgba(230, 211, 161, 0.15), rgba(230, 211, 161, 0.05) );
+        box-shadow: inset 4px 0 0 #c9a24d, 0 4px 12px rgba(0, 0, 0, 0.35);
+        color: #c9a24d;
+        transform: translateX(4px);
+    }
+
 /* Content offset */
 .roh-content {
     padding-top: 64px;
@@ -83,6 +113,11 @@ body {
 /* ===============================
    ROH � MudBlazor AppBar
    =============================== */
+
+.roh-main-content {
+    padding: 24px;
+    transition: margin-left 0.25s ease;
+}
 
 .mud-appbar {
     height: 64px;
@@ -130,4 +165,87 @@ body {
         right: 0;
         height: 1px;
         background: linear-gradient( 90deg, transparent, rgba(201, 162, 77, 0.8), transparent );
+    }
+
+/* ===============================
+   ROH – CARD CONTAINER
+   =============================== */
+
+.card-container {
+    margin: 40px;
+    padding: 32px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(1080px, 1fr));
+    gap: 28px;
+    background: radial-gradient(circle at top, rgba(25,30,55,.9), rgba(8,10,18,.95));
+    border-radius: 24px;
+    box-shadow: inset 0 0 0 1px rgba(201,162,77,.15), 0 0 60px rgba(0,0,0,.7);
+}
+
+
+/* ===============================
+   ROH – CARD
+   =============================== */
+
+.card {
+    position: relative;
+    background: linear-gradient(180deg, rgba(22,26,50,.95), rgba(10,12,22,.98));
+    border-radius: 18px;
+    padding: 24px;
+    margin: 24px;
+    border: 1px solid rgba(201,162,77,.25);
+    box-shadow: 0 12px 28px rgba(0,0,0,.65), inset 0 0 24px rgba(201,162,77,.05);
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    font-family: "Inter", system-ui, sans-serif;
+    color: #e8dcc0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+    /* Hover = card ganha vida */
+
+    .card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(201,162,77,.6);
+        box-shadow: 0 18px 40px rgba(0,0,0,.8), inset 0 0 40px rgba(201,162,77,.12);
+    }
+
+    /* brilho superior sutil */
+
+    .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(255,255,255,.04), transparent 40%);
+        pointer-events: none;
+    }
+
+
+/* ===============================
+   ROH – CARD HEADER
+   =============================== */
+
+.card-header {
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    text-align: center;
+    font-family: "Cinzel", "Trajan Pro", serif;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #c9a24d;
+    font-size: .85rem;
+    border-bottom: 1px solid rgba(201,162,77,.35);
+    position: relative;
+}
+
+    /* linha mágica central */
+
+    .card-header::after {
+        content: "";
+        position: absolute;
+        bottom: -1px;
+        left: 25%;
+        right: 25%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(201,162,77,.9), transparent);
     }

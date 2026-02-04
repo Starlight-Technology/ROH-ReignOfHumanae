@@ -5,7 +5,7 @@ namespace ROH.Site.Components.Layout;
 
 public static class RohTheme
 {
-    public static MudTheme Dark = new()
+    private static readonly MudTheme _darkTheme = new()
     {
         PaletteDark = new PaletteDark
         {
@@ -30,20 +30,20 @@ public static class RohTheme
         {
             Default = new DefaultTypography
             {
-                FontFamily = new[] { "Cinzel", "Trajan Pro", "serif" },
+                FontFamily = ["Cinzel", "Trajan Pro", "serif"],
                 FontSize = "0.98rem",
-                FontWeight = 400
+                FontWeight = "400"
             },
             H6 = new H6Typography
             {
-                FontFamily = new[] { "Cinzel", "Trajan Pro", "serif" },
-                FontWeight = 600,
+                FontFamily = ["Cinzel", "Trajan Pro", "serif"],
+                FontWeight = "600",
                 LetterSpacing = "0.18em"
             },
             Subtitle1 = new Subtitle1Typography
             {
-                FontFamily = new[] { "Cinzel", "Trajan Pro", "serif" },
-                FontWeight = 500,
+                FontFamily = ["Cinzel", "Trajan Pro", "serif"],
+                FontWeight = "500",
                 LetterSpacing = "0.12em"
             }
         },
@@ -54,4 +54,6 @@ public static class RohTheme
             DrawerWidthLeft = "280px"
         }
     };
+
+    public static MudTheme Dark { get; set; } = _darkTheme;
 }
