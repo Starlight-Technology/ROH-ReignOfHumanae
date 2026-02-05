@@ -249,3 +249,37 @@ body {
         height: 1px;
         background: linear-gradient(90deg, transparent, rgba(201,162,77,.9), transparent);
     }
+
+.mud-button-outlined {
+    border-width: 2px !important;
+    border-radius: 14px;
+    font-family: "Cinzel", serif;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    transition: all .2s ease;
+}
+
+    .mud-button-outlined:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 0 12px rgba(201,162,77,.35);
+    }
+
+.mud-input-label {
+    color: #B8A878 !important; /* marfim secundário */
+}
+
+.mud-input-control input {
+    color: #E6D3A1 !important; /* texto principal */
+}
+
+.mud-input-label.mud-shrink {
+    background: #0E1522;
+    padding: 0 6px;
+}
+.mud-input-root {
+    border-radius: 12px;
+    font-family: "Cinzel", serif;
+    letter-spacing: 0.05em;
+}
+

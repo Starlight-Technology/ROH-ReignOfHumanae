@@ -1,7 +1,7 @@
 ﻿@using ROH.Site.Helpers.Components.Layout
 @inherits LayoutComponentBase
 
-<MudThemeProvider Theme="@RohTheme.Dark" />
+<MudThemeProvider Theme="@RohTheme.Dark" IsDarkMode="true" />
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
@@ -18,5 +18,5 @@
         </div>
     </MudDrawerContainer>
 </div>
-
 @inject DrawerState DrawerState
+
