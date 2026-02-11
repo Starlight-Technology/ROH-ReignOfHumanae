@@ -17,18 +17,14 @@ namespace ROH.Site.Helpers;
 /// <summary>
 /// I tried to use AuthenticationState with claims identity, but don't worked so i make just with jwt and local storage
 /// </summary>
-public class CustomAuthenticationStateProvider(ILocalStorageService localStorage) : AuthenticationStateProvider, ICustomAuthenticationStateProvider
+public class CustomAuthenticationStateProvider(ILocalStorageService localStorage) :  ICustomAuthenticationStateProvider
 {
     readonly string _authToken = "authToken";
     bool _isInitialized;
     readonly string _userKey = "userKey";
 
-    public override async Task<AuthenticationState> GetAuthenticationStateAsync()
+    public async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-        if (!_isInitialized)
-        {
-            return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
-        }
 
         string? token = await localStorage.GetItemAsync<string>("_tokenKey");
 
@@ -49,9 +45,7 @@ public class CustomAuthenticationStateProvider(ILocalStorageService localStorage
     public async Task<string> GetToken()
     {
         if (!_isInitialized)
-        {
             return string.Empty;
-        }
 
         string? token = await localStorage.GetItemAsStringAsync(_authToken);
         return token?.Trim('"') ?? string.Empty;
@@ -61,10 +55,10 @@ public class CustomAuthenticationStateProvider(ILocalStorageService localStorage
         ? (await localStorage.GetItemAsStringAsync(_userKey) ?? string.Empty)
         : string.Empty;
 
-    public void Initialize()
+    public async void Initialize()
     {
         _isInitialized = true;
-        NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+        await GetAuthenticationStateAsync();
     }
 
     public async Task MarkUserAsAuthenticated(string token)
@@ -73,18 +67,18 @@ public class CustomAuthenticationStateProvider(ILocalStorageService localStorage
 
         await localStorage.SetItemAsync("_tokenKey", token);
 
-        ClaimsPrincipal authenticatedUser = new(new ClaimsIdentity(claims, "jwtAuthType"));
+        //ClaimsPrincipal authenticatedUser = new(new ClaimsIdentity(claims, "jwtAuthType"));
 
-        NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(authenticatedUser)));
+        //await Task.FromResult(new AuthenticationState(authenticatedUser));
     }
 
     public async Task MarkUserAsLoggedOut()
     {
         await localStorage.RemoveItemAsync("authToken").ConfigureAwait(false);
 
-        ClaimsPrincipal anonymousUser = new(new ClaimsIdentity());
+        //ClaimsPrincipal anonymousUser = new(new ClaimsIdentity());
 
-        NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(anonymousUser)));
+        //await Task.FromResult(new AuthenticationState(anonymousUser));
     }
 
     public async Task SetUserToken(string user = "", string token = "")

@@ -54,7 +54,7 @@ builder.Services
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddBlazoredLocalStorage();
-builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+//builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddMudServices();
 builder.Services.AddScoped<DrawerState>();

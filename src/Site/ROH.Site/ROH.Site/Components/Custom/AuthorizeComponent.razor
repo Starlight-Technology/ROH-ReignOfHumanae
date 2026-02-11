@@ -3,21 +3,13 @@
 @using Interfaces.Helpers
 @using System.ComponentModel.DataAnnotations
 @inject ICustomAuthenticationStateProvider CustomAuthStateProvider
-@inject AuthenticationStateProvider AuthenticationStateProvider
 
 @namespace ROH.Site.Components.Custom
 
 @code {
     [Parameter] public RenderFragment ChildContent { get; set; } = null!;
 
-    [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
-
     private bool IsAuthorized { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        IsAuthorized = !string.IsNullOrWhiteSpace(await CustomAuthStateProvider.GetToken());
-    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
