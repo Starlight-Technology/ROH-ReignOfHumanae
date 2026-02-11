@@ -1,11 +1,13 @@
 ﻿
 @using Interfaces.Helpers
+@using ROH.Site.Helpers
+@using ROH.Site.Helpers.Types
 @using ROH.StandardModels.File
 @using ROH.StandardModels.Response
 @using ROH.Utils.Helpers
 @typeparam T where T : class
 
-@inject ISweetAlertService _sweetAlert;
+@inject IRohAlertService _alertService;
 @inject IDownloadFileService _downloadFile;
 
 @namespace ROH.Site.Components.Custom
@@ -167,11 +169,11 @@
                 await _downloadFile.Download(fileModel);
             }
             else
-                await _sweetAlert.ShowResponse(response);
+                await _alertService.ShowResponse(response);
         }
 
         else
-            await _sweetAlert.Show("Error", "Cannot get any response from server.", ROH.Site.Helpers.Types.SweetAlertType.Error);
+            await _alertService.Show("Error", "Cannot get any response from server.", RohAlertType.Error);
     }
 
 }

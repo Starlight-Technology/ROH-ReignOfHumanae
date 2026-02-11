@@ -2,10 +2,11 @@
 @using Interfaces.Api
 @using Interfaces.Helpers
 @using ROH.Site.Components.Custom
+@using ROH.Site.Helpers.Types
 @using ROH.Utils.Helpers
 @inject NavigationManager Navigation;
 @inject IAccountService _accountService;
-@inject ISweetAlertService _sweetAlert;
+@inject IRohAlertService _sweetAlert;
 
 <CardComponent Header="Create Account">
     @if (isLoading)
@@ -75,7 +76,7 @@
         }
         else
         {
-            await _sweetAlert.Show("", "Passwords don't match!", Helpers.Types.SweetAlertType.Error);
+            await _sweetAlert.Show("", "Passwords don't match!", RohAlertType.Error);
         }
         isLoading = false;
         StateHasChanged();

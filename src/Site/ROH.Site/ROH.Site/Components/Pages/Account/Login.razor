@@ -7,7 +7,7 @@
 @using ROH.StandardModels.Account
 @inject NavigationManager Navigation;
 @inject IAccountService _accountService;
-@inject ISweetAlertService _sweetAlert;
+@inject IRohAlertService _sweetAlert;
 @inject ICustomAuthenticationStateProvider _customAuthenticationStateProviderProvider;
 @rendermode InteractiveServer
 
@@ -43,6 +43,7 @@
 </CardComponent>
 
 @code {
+
     public string LoginValue { get; set; } = "";
     public string PasswordValue { get; set; } = "";
 
@@ -57,9 +58,11 @@
             }
         );
 
-        await _sweetAlert.ShowResponse(response ?? new StandardModels.Response.DefaultResponse(httpStatus: System.Net.HttpStatusCode.BadGateway));
+        var alert =  await _sweetAlert.ShowResponse(response ?? new StandardModels.Response.DefaultResponse(httpStatus: System.Net.HttpStatusCode.BadGateway));
+        StateHasChanged();
+        var result = await alert.Result;
 
-        if (response?.HttpStatus.IsSuccessStatusCode() is true)
+        if (result is not null && !result.Canceled && response?.HttpStatus.IsSuccessStatusCode() is true)
         {
             string token = response?.ResponseToModel<UserModel>().Token ?? string.Empty;
             string userGuid = response?.ResponseToModel<UserModel>().Guid.ToString() ?? string.Empty;

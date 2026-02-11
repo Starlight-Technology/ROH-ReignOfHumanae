@@ -1,0 +1,42 @@
+﻿
+@using MudBlazor
+@using ROH.Site.Helpers.Types
+
+<MudPaper Class="pa-6 roh-alert">
+
+    <MudText Typo="Typo.h5">@Title</MudText>
+
+    <MudDivider Class="my-4" />
+
+    <MudText>@Message</MudText>
+
+    <MudButton Variant="Variant.Filled"
+               Color="@GetColor()"
+               OnClick="Close"
+               Class="mt-6">
+        OK
+    </MudButton>
+
+</MudPaper>
+
+@code {
+
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = default!;
+    [Parameter] public string Title { get; set; } = "";
+    [Parameter] public string Message { get; set; } = "";
+    [Parameter] public RohAlertType Type { get; set; }
+
+    void Close()
+    {
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    Color GetColor() => Type switch
+    {
+        RohAlertType.Success => Color.Success,
+        RohAlertType.Warning => Color.Warning,
+        RohAlertType.Error => Color.Error,
+        _ => Color.Info
+    };
+}

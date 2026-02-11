@@ -4,6 +4,11 @@ window.sweetalertInterop = {
             title: title,
             text: message,
             icon: icon,
+            backdrop: true,
+            allowOutsideClick: true,
+            customClass: {
+                popup: 'roh-swal'
+            }
         });
     }
 };

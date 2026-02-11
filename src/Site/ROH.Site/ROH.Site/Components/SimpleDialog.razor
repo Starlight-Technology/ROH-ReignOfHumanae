@@ -1,0 +1,17 @@
+﻿@using MudBlazor
+
+<MudPaper Class="pa-6">
+    <MudText>Hello World</MudText>
+
+    <MudButton OnClick="Close">
+        Close
+    </MudButton>
+</MudPaper>
+
+@code {
+
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = default!;
+
+    void Close() => MudDialog.Close();
+}

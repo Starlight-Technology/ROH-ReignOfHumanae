@@ -325,3 +325,11 @@ html, body {
     height: calc(100vh - var(--appbar-height));
     display: flex;
 }
+
+.roh-swal {
+    z-index: 99999 !important;
+}
+
+.swal2-container {
+    z-index: 99999 !important;
+}

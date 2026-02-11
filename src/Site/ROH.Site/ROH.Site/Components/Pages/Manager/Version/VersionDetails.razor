@@ -5,6 +5,7 @@
 @using Interfaces.Api;
 @using Interfaces.Helpers;
 @using ROH.Site.Components.Custom
+@using ROH.Site.Helpers.Types
 @using ROH.StandardModels.Response
 @using ROH.StandardModels.Version;
 @using ROH.Utils.Helpers;
@@ -13,7 +14,7 @@
 
 @inject IVersionService _versionService;
 @inject IVersionFileService _versionFileService;
-@inject ISweetAlertService _sweetAlert;
+@inject IRohAlertService _sweetAlert;
 
 <AuthorizeComponent>
     @if (gameVersion is not null)
@@ -131,7 +132,7 @@
         }
         else
         {
-            await _sweetAlert.Show("ERROR", "Incorrect uuid version", Helpers.Types.SweetAlertType.Error);
+            await _sweetAlert.Show("ERROR", "Incorrect uuid version", RohAlertType.Error);
         }
 
         StateHasChanged();
@@ -166,7 +167,7 @@
                     fileSize = file.Size;
                     if (fileSize > maxFileSize)
                     {
-                        await _sweetAlert.Show("Upload File", "The file size must be less than 1 Gb.", Helpers.Types.SweetAlertType.Warning);
+                        await _sweetAlert.Show("Upload File", "The file size must be less than 1 Gb.", RohAlertType.Warning);
                     }
                     else
                     {
@@ -202,7 +203,7 @@
                 }
 
                 if (uploaded)
-                    await _sweetAlert.Show("Upload File", "File has been uploaded", Helpers.Types.SweetAlertType.Success);
+                    await _sweetAlert.Show("Upload File", "File has been uploaded", RohAlertType.Success);
             }
             finally
             {
