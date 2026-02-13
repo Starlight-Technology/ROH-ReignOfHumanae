@@ -19,81 +19,106 @@
     {
         <CardComponent Header="Version">
             <div class="row">
-                <div class="col-sm-1">
-                    <label for="Version">Version:</label>
-                </div>
-                <div class="col-sm-1">
-                    <input type="number" id="Version" class="form-control" @bind="gameVersion.Version" readonly />
-                </div>
-
-                <div class="col-sm-1">
-                    <label for="Release">Release:</label>
-                </div>
-                <div class="col-sm-1">
-                    <input type="number" id="Release" class="form-control" @bind="gameVersion.Release" readonly />
+                <div class="col-sm-2">
+                    <MudTextField T="int"
+                                  Label="Release"
+                                  Variant="Variant.Outlined"
+                                  Value="@gameVersion!.Release"
+                                  Disabled="true" />
                 </div>
 
-                <div class="col-sm-1">
-                    <label for="Review">Review:</label>
+                <div class="col-sm-2">
+                    <MudTextField T="int"
+                                  Label="Review"
+                                  Variant="Variant.Outlined"
+                                  Value="@gameVersion!.Review"
+                                  Disabled="true" />
                 </div>
-                <div class="col-sm-1">
-                    <input type="number" id="Review" class="form-control" @bind="gameVersion.Review" readonly />
+
+                <div class="col-sm-2">
+                    <MudTextField T="int"
+                                  Label="Version"
+                                  Variant="Variant.Outlined"
+                                  Value="@gameVersion!.Version"
+                                  Disabled="true" />
                 </div>
 
                 @if (!gameVersion.Released)
                 {
+
                     <div class="col-sm-2">
-                        <button class="btn btn-outline-primary" @onclick="ReleaseVersion"> Release Version </button>
+                        <MudButton ButtonType="ButtonType.Button"
+                                   Color="Color.Primary"
+                                   Variant="Variant.Outlined"
+                                   OnClick="ReleaseVersion">Release Version</MudButton>
                     </div>
                 }
 
                 @if (gameVersion.ReleaseDate.HasValue)
                 {
-                    <div class="col-sm-1">
-                        <label for="ReleaseDate">Released Date:</label>
-                    </div>
-                    <div class="col-sm-3">
-                        <input type="date" id="ReleaseDate" class="form-control" @bind="gameVersion.ReleaseDate" readonly />
+
+                    <div class="col-sm-4">
+                        <MudTextField T="string"
+                                      Label="Release Date"
+                                      Variant="Variant.Outlined"
+                                      Value="@gameVersion!.ReleaseDate?.ToShortDateString()"
+                                      Disabled="true" />
                     </div>
                 }
 
             </div>
         </CardComponent>
-    }
 
-    <CardComponent Header="Upload File">
-        <EditForm Model="gameVersionFile" OnValidSubmit="HandleSubmit" style="margin:20px">
-            <div class="row">
-                <div class="col-sm-10">
-                    <div class="form-group">
-                        <label for="file">Files:</label>
-                        <InputFile id="file" multiple maxAllowedSize="0" OnChange="HandleFileSelection" />
+        <CardComponent Header="Upload File">
+            <EditForm Model="gameVersionFile" OnValidSubmit="HandleSubmit" style="margin:20px">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <MudFileUpload T="IReadOnlyList<IBrowserFile>"
+                                           FilesChanged="HandleFilesChanged"
+                                           Multiple="true"
+                                           MaxFileSize="1000000000">
+
+                                <ActivatorContent>
+                                    <MudButton Variant="Variant.Outlined"
+                                               Color="Color.Primary"
+                                               StartIcon="@Icons.Material.Filled.UploadFile">
+                                        Select Files
+                                    </MudButton>
+                                </ActivatorContent>
+
+                            </MudFileUpload>
+
+                        </div>
+                    </div>
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-2">
+                        <MudButton ButtonType="ButtonType.Submit"
+                                   Color="Color.Primary"
+                                   Variant="Variant.Outlined">Submit</MudButton>
                     </div>
                 </div>
-                <div class="col-sm-2">
-                    <button type="submit" class="btn btn-outline-success">Submit</button>
-                </div>
-            </div>
-        </EditForm>
+            </EditForm>
 
-        @if (isUploading)
-        {
+            @if (isUploading)
+            {
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="text-center">
+                            <MudProgressLinear Value="uploadProgress" Color="Color.Primary" />
+                            <p>Uploading... (@uploadProgress%)</p>
+                        </div>
+                    </div>
+                </div>
+            }
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="text-center">
-                        <MudProgressLinear Value="uploadProgress" Color="Color.Primary" />
-                        <p>Uploading... (@uploadProgress%)</p>
-                    </div>
+                    <Manager.Version.Components.AllFilesComponent VersionGuid="@versionGuid">
+                    </Manager.Version.Components.AllFilesComponent>
                 </div>
             </div>
-        }
-        <div class="row">
-            <div class="col-sm-12">
-                <Manager.Version.Components.AllFilesComponent VersionGuid="@versionGuid">
-                </Manager.Version.Components.AllFilesComponent>
-            </div>
-        </div>
-    </CardComponent>
+        </CardComponent>
+    }
 </AuthorizeComponent>
 
 
@@ -136,11 +161,12 @@
         StateHasChanged();
     }
 
-    private async Task HandleFileSelection(InputFileChangeEventArgs e)
+    private Task HandleFilesChanged(IReadOnlyList<IBrowserFile> files)
     {
-        selectedFiles = e.GetMultipleFiles();
-        await Task.CompletedTask;
+        selectedFiles = files;
+        return Task.CompletedTask;
     }
+
 
     private async Task HandleSubmit(EditContext editContext)
     {
@@ -181,14 +207,14 @@
 
                             var responseUpload = await _versionFileService.UploadVersionFile(
                             new GameVersionFileModel()
-                                {
-                                    Guid = Guid.Empty,
-                                    Name = fileName,
-                                    Format = fileExtension,
-                                    Content = fileContent,
-                                    Size = fileSize,
-                                    GameVersion = gameVersion
-                                }
+                            {
+                                Guid = Guid.Empty,
+                                Name = fileName,
+                                Format = fileExtension,
+                                Content = fileContent,
+                                Size = fileSize,
+                                GameVersion = gameVersion
+                            }
                             );
 
                             if (responseUpload != null && !responseUpload.HttpStatus.IsSuccessStatusCode())
