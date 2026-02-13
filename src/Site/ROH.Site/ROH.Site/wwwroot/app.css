@@ -333,3 +333,84 @@ html, body {
 .swal2-container {
     z-index: 99999 !important;
 }
+
+.roh-form-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    align-items: end;
+}
+
+.roh-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.roh-field-wide {
+    grid-column: span 2;
+}
+
+.roh-field label {
+    font-family: "Cinzel", serif;
+    color: #c9a24d;
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+.roh-field input {
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(201,162,77,.35);
+    border-radius: 8px;
+    padding: 8px 10px;
+    color: #e6d3a1;
+    font-family: inherit;
+}
+
+    .roh-field input:read-only {
+        cursor: default;
+    }
+
+.roh-action {
+    display: flex;
+    align-items: flex-end;
+}
+
+.roh-btn {
+    padding: 10px 18px;
+    border-radius: 10px;
+    background: linear-gradient(135deg,#c9a24d,#8f6b2c);
+    color: #0b0f14;
+    text-decoration: none;
+    font-family: "Cinzel", serif;
+    letter-spacing: .12em;
+    box-shadow: 0 0 14px rgba(201,162,77,.35);
+    transition: all .2s ease;
+}
+
+    .roh-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 22px rgba(201,162,77,.6);
+    }
+
+.roh-loading {
+    display: flex;
+    justify-content: center;
+    padding: 40px;
+}
+
+.roh-spinner {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 3px solid rgba(201,162,77,.25);
+    border-top-color: #c9a24d;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

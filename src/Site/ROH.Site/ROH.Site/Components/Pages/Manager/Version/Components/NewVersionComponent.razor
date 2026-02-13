@@ -7,37 +7,42 @@
 @using ROH.Utils.Helpers;
 
 @inject IRohAlertService _sweetAlert;
-    
+
 @inject IVersionService _versionService;
 
 <CardComponent Header="New Version">
     <div class="row">
-        <div class="col-sm-4">
-            <label for="Version">Version:</label>
-        </div>
-        <div class="col-sm-8">
-            <input type="number" id="Version" class="form-control" @bind="inputVersion" />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-4">
-            <label for="Release">Release:</label>
-        </div>
-        <div class="col-sm-8">
-            <input type="number" id="Release" class="form-control" @bind="inputRelease" />
+        <div class="col-sm-12">
+            <MudTextField T="int"
+                          Label="Release"
+                          Variant="Variant.Outlined"
+                          Value="@inputRelease"
+                          ReadOnly="true" />
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-4">
-            <label for="Review">Review:</label>
+        <div class="col-sm-12">
+            <MudTextField T="int"
+                          Label="Review"
+                          Variant="Variant.Outlined"
+                          Value="@inputReview"
+                          ReadOnly="true" />
         </div>
-        <div class="col-sm-8">
-            <input type="number" id="Review" class="form-control" @bind="inputReview" />
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <MudTextField T="int"
+                          Label="Version"
+                          Variant="Variant.Outlined"
+                          Value="@inputVersion"
+                          ReadOnly="true" />
         </div>
     </div>
     <div class="row" style="margin-top:20px;">
-        <div class="col-sm-12 text-center">
-            <button class="btn btn-primary" @onclick="CreateNewVersion">Create New Version</button>
+        <div class="col-sm-12">
+            <MudButton ButtonType="ButtonType.Button"
+                       Color="Color.Primary"
+                       OnClick="CreateNewVersion">Create New Version</MudButton>
         </div>
     </div>
 
@@ -50,11 +55,11 @@
     private int inputReview = 0;
 
     private readonly GameVersionModel currentVersion = new()
-        {
-            Version = 0,
-            Release = 0,
-            Review = 0
-        };
+    {
+        Version = 0,
+        Release = 0,
+        Review = 0
+    };
 
 
     private async Task CreateNewVersion()
@@ -62,7 +67,7 @@
         GameVersionModel model = new GameVersionModel() { Version = inputVersion, Release = inputRelease, Review = inputReview };
 
         var response = await _versionService.CreateNewVersion(model);
-        
+
         if (response != null)
             await _sweetAlert.ShowResponse(response);
     }

@@ -28,11 +28,11 @@ namespace ROH.StandardModels.Version
 
         public bool Released { get; set; }
 
-        public DateTime? ReleaseDate { get; set; }
-
         public int Review { get; set; }
 
         public int Version { get; set; }
+
+        public DateTime? ReleaseDate { get; set; }
 
         public DateTime VersionDate { get; set; }
     }

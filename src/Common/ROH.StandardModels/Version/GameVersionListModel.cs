@@ -21,21 +21,21 @@ namespace ROH.StandardModels.Version
             Version = version;
             Release = release;
             Review = review;
-            ReleaseDate = releaseDate;
             VersionDate = versionDate;
+            ReleaseDate = releaseDate;
             DetailsLink = $"/Manager/Version/VersionDetails/{guid}";
         }
 
-        public string DetailsLink { get; set; }
-
         public int Release { get; set; }
-
-        public DateTime? ReleaseDate { get; set; }
 
         public int Review { get; set; }
 
         public int Version { get; set; }
 
         public DateTime VersionDate { get; set; }
+
+        public DateTime? ReleaseDate { get; set; }
+
+        public string DetailsLink { get; set; }
     }
 }

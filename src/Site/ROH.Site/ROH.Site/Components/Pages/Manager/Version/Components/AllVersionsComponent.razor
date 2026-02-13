@@ -16,13 +16,20 @@
 <CardComponent Header="Versions">
     <div class="row">
         <div class="col-sm-12">
-            <label for="releasedVersionSelect"></label>
-            <select id="releasedVersionSelect" @onchange="OnVersionTypeChange">
+            <MudSelect T="string"
+                       Label="Version Type"
+                       Variant="Variant.Outlined"
+                       Class="roh-field"
+                       @bind-Value="selectedVersionType">
+
                 @foreach (var type in versionTypes)
                 {
-                    <option value="@type">@type</option>
+                    <MudSelectItem Value="@type">
+                        @type
+                    </MudSelectItem>
                 }
-            </select>
+
+            </MudSelect>
         </div>
     </div>
 

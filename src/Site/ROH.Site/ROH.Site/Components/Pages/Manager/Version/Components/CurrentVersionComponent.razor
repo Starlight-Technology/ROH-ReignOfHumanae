@@ -13,46 +13,54 @@
 <CardComponent Header="Current Version">
     @if (isLoadingCurrentVersion)
     {
-        <div style="text-align:center">
-            <div class="spinner-border text-primary" role="status">
-                <span class="sr-only"></span>
-            </div>
+        <div class="roh-loading">
+            <div class="roh-spinner"></div>
         </div>
     }
     else
     {
-        <div class="row">
-            <div class="col-sm-1">
-                <label for="Version">Version:</label>
-            </div>
-            <div class="col-sm-1">
-                <input type="number" id="Version" class="form-control" @bind="currentVersion!.Version" readonly />
-            </div>
-
-            <div class="col-sm-1">
-                <label for="Release">Release:</label>
-            </div>
-            <div class="col-sm-1">
-                <input type="number" id="Release" class="form-control" @bind="currentVersion.Release" readonly />
+         <div class="row">
+             
+            <div class="col-sm-2">
+                <MudTextField T="int"
+                      Label="Release"
+                      Variant="Variant.Outlined"
+                      Value="@currentVersion!.Release"
+                      Disabled="true"/>
             </div>
 
-            <div class="col-sm-1">
-                <label for="Review">Review:</label>
-            </div>
-            <div class="col-sm-1">
-                <input type="number" id="Review" class="form-control" @bind="currentVersion.Review" readonly />
-            </div>
-
-            <div class="col-sm-1">
-                <label for="ReleaseDate">Released Date:</label>
-            </div>
-            <div class="col-sm-3">
-                <input type="date" id="ReleaseDate" class="form-control" @bind="currentVersion.ReleaseDate" readonly />
+            <div class="col-sm-2">
+                <MudTextField T="int"
+                      Label="Review"
+                      Variant="Variant.Outlined"
+                      Value="@currentVersion!.Review"
+                      Disabled="true"/>
             </div>
 
-            <div class="col-sm-1">
-                <a href="/Manager/Version/VersionDetails/@currentVersion.Guid"><i class="fa fa-solid fa-eye">DETAILS</i></a>
+            <div class="col-sm-2">
+                <MudTextField T="int"
+                      Label="Version"
+                      Variant="Variant.Outlined"
+                      Value="@currentVersion!.Version"
+                      Disabled="true"/>
             </div>
+
+            <div class="col-sm-4">
+                <MudTextField T="string"
+                    Label="Release Date"
+                    Variant="Variant.Outlined"
+                    Value="@currentVersion!.ReleaseDate?.ToShortDateString()" 
+                    Disabled="true"/>
+            </div>
+
+            <div class="col-sm-2">
+                <MudIconButton
+                    Icon="@Icons.Material.Filled.Visibility"
+                    Color="Color.Primary"
+                    OnClick="@(() => Navigation.NavigateTo($"/Manager/Version/VersionDetails/{currentVersion!.Guid}"))" />
+
+            </div>
+
         </div>
 
     }

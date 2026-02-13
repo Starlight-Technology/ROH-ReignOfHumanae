@@ -1,8 +1,10 @@
 ﻿@rendermode InteractiveServer
 @using MudBlazor
 @using ROH.Site.Helpers.Components.Layout
+@using Interfaces.Helpers
 @implements IDisposable
 @inject DrawerState DrawerState
+@inject ICustomAuthenticationStateProvider CustomAuthStateProvider
 
 <MudDrawer Open="@DrawerState.Open"
            Variant="DrawerVariant.Persistent"
@@ -13,7 +15,14 @@
 
     <MudNavMenu>
         <MudNavLink Href="/">Home</MudNavLink>
-        <MudNavLink Href="/login">Login</MudNavLink>
+        @if (IsAuthorized)
+        {
+            <MudNavLink Href="/Manager/Version/VersionManager">Manager</MudNavLink>
+        }
+        else
+        {
+            <MudNavLink Href="/login">Login</MudNavLink>
+        }
         <MudNavLink Href="/crafting">Crafting</MudNavLink>
         <MudNavLink Href="/lore">Lore</MudNavLink>
         <MudNavLink Href="/magic-skills">Magic Skills</MudNavLink>
@@ -32,5 +41,17 @@
     public void Dispose()
     {
         DrawerState.OnChange -= StateHasChanged;
+    }
+
+    private bool IsAuthorized { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            CustomAuthStateProvider.Initialize();
+            IsAuthorized = !string.IsNullOrWhiteSpace(await CustomAuthStateProvider.GetToken());
+            StateHasChanged();
+        }
     }
 }
