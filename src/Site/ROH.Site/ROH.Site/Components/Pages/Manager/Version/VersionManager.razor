@@ -1,0 +1,27 @@
+﻿@page "/Manager/Version/VersionManager"
+
+@using Newtonsoft.Json;
+@using Api;
+@using ROH.Site.Components.Custom
+@using ROH.StandardModels.Version;
+
+<AuthorizeComponent>
+    <div class="row">
+        <div class="col-sm-12">
+            <Manager.Version.Components.CurrentVersionComponent>
+            </Manager.Version.Components.CurrentVersionComponent>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <Manager.Version.Components.AllVersionsComponent></Manager.Version.Components.AllVersionsComponent>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <Manager.Version.Components.NewVersionComponent></Manager.Version.Components.NewVersionComponent>
+        </div>
+    </div>
+</AuthorizeComponent>

@@ -1,0 +1,77 @@
+﻿@page "/Login"
+@using Interfaces.Api
+@using Interfaces.Helpers
+@using Helpers
+@using ROH.Site.Components.Custom
+@using ROH.Utils.Helpers;
+@using ROH.StandardModels.Account
+@inject NavigationManager Navigation;
+@inject IAccountService _accountService;
+@inject IRohAlertService _sweetAlert;
+@inject ICustomAuthenticationStateProvider _customAuthenticationStateProviderProvider;
+@rendermode InteractiveServer
+
+<CardComponent Header="Login">
+    <MudStack Spacing="2">
+        <MudTextField T="string"
+                      Label="Login"
+                      Variant="Variant.Outlined"
+                      @bind-Value="@LoginValue" />
+        <MudTextField T="string"
+                      Label="Password"
+                      Variant="Variant.Outlined"
+                      InputType="InputType.Password"
+                      @bind-Value="@PasswordValue" />
+
+        <MudStack Direction="Row" Spacing="2">
+            <MudButton Color="Color.Primary"
+                       Variant="Variant.Filled"
+                       OnClick="Confirm">
+                Confirm
+            </MudButton>
+            <MudButton Color="Color.Secondary"
+                       Variant="Variant.Outlined"
+                       OnClick="@(() => Navigation.NavigateTo("/createaccount"))">
+                New Account
+            </MudButton>
+            <MudButton Color="Color.Warning"
+                       Variant="Variant.Outlined">
+                Forgot Password
+            </MudButton>
+        </MudStack>
+    </MudStack>
+</CardComponent>
+
+@code {
+
+    public string LoginValue { get; set; } = "";
+    public string PasswordValue { get; set; } = "";
+
+
+    public async Task Confirm()
+    {
+        var response = await _accountService.Login(
+            new StandardModels.Account.LoginModel()
+            {
+                Login = LoginValue,
+                Password = PasswordValue
+            }
+        );
+
+        var alert =  await _sweetAlert.ShowResponse(response ?? new StandardModels.Response.DefaultResponse(httpStatus: System.Net.HttpStatusCode.BadGateway));
+        StateHasChanged();
+        var result = await alert.Result;
+
+        if (result is not null && !result.Canceled && response?.HttpStatus.IsSuccessStatusCode() is true)
+        {
+            string token = response?.ResponseToModel<UserModel>().Token ?? string.Empty;
+            string userGuid = response?.ResponseToModel<UserModel>().Guid.ToString() ?? string.Empty;
+            await _customAuthenticationStateProviderProvider.SetUserToken(userGuid, token);
+            Navigation.NavigateTo("/");
+        }
+
+        StateHasChanged();
+    }
+
+
+}

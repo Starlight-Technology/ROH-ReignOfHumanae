@@ -1,0 +1,416 @@
+body {
+    margin: 0;
+    background: radial-gradient( circle at top, #141d2b 0%, #0b0f14 60%, #070a0f 100% );
+}
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+:root {
+    --appbar-height: 64px;
+}
+
+.roh-layout {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+}
+
+.roh-main {
+    flex: 1;
+    padding-top: var(--appbar-height);
+    transition: margin-left 0.25s ease;
+}
+
+    .roh-main.drawer-open {
+        margin-left: 280px; /* largura do drawer */
+    }
+
+/* === ROH APP BAR === */
+.roh-appbar {
+    height: 64px;
+    background: linear-gradient( 180deg, rgba(25, 30, 55, 0.98), rgba(15, 18, 40, 0.98) );
+    border-bottom: 1px solid rgba(201, 162, 77, 0.35);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.7);
+}
+
+    .roh-appbar .mud-icon-button {
+        color: #c9a24d;
+    }
+
+        .roh-appbar .mud-icon-button:hover {
+            background: rgba(201, 162, 77, 0.15);
+        }
+
+/* Title */
+.roh-appbar-title {
+    margin-left: 12px;
+    font-family: "Cinzel", serif;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #c9a24d;
+}
+
+/* Drawer */
+.roh-drawer {
+    background: linear-gradient( 180deg, rgba(15, 20, 40, 0.98), rgba(10, 14, 30, 0.98) );
+    border-right: 1px solid rgba(201, 162, 77, 0.25);
+    top: var(--appbar-height);
+    height: calc(100vh - var(--appbar-height));
+}
+
+/* Drawer navigation */
+.roh-navmenu {
+    padding: 12px;
+}
+
+    .roh-navmenu .mud-nav-link {
+        border-radius: 12px;
+        color: #e6d3a1;
+        font-family: "Cinzel", "Trajan Pro", serif;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 12px 16px;
+        transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+    }
+
+        .roh-navmenu .mud-nav-link .mud-nav-link-icon {
+            color: #d6b35e;
+            margin-right: 12px;
+        }
+
+        .roh-navmenu .mud-nav-link:hover {
+            background: rgba(201, 162, 77, 0.12);
+            box-shadow: inset 0 0 0 1px rgba(201, 162, 77, 0.35);
+            transform: translateX(2px);
+        }
+
+        .roh-navmenu .mud-nav-link.active {
+            background: rgba(201, 162, 77, 0.2);
+            box-shadow: inset 0 0 0 1px rgba(201, 162, 77, 0.6);
+        }
+
+
+.mud-nav-link-text {
+    border-radius: 12px;
+    color: #e6d3a1;
+    font-family: "Cinzel", "Trajan Pro", serif;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 12px 16px;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease, color 0.2s ease;
+}
+
+    /* HOVER */
+    .mud-nav-link-text:hover {
+        background: linear-gradient( 90deg, rgba(230, 211, 161, 0.15), rgba(230, 211, 161, 0.05) );
+        box-shadow: inset 4px 0 0 #c9a24d, 0 4px 12px rgba(0, 0, 0, 0.35);
+        color: #c9a24d;
+        transform: translateX(4px);
+    }
+
+/* Content offset */
+.roh-content {
+    padding-top: 64px;
+}
+
+/* ===============================
+   ROH � MudBlazor AppBar
+   =============================== */
+
+.roh-main-content {
+    padding: 24px;
+    transition: margin-left 0.25s ease;
+}
+
+.mud-appbar {
+    height: 64px;
+    background: linear-gradient( 180deg, rgba(25, 30, 60, 0.98), rgba(12, 15, 30, 0.98) );
+    border-bottom: 1px solid rgba(201, 162, 77, 0.35);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6), inset 0 -1px 0 rgba(201, 162, 77, 0.25);
+}
+
+    /* Title */
+    .mud-appbar .mud-typography {
+        color: #c9a24d;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        font-family: "Cinzel", "Trajan Pro", serif;
+    }
+
+    /* Icon buttons */
+    .mud-appbar .mud-icon-button {
+        color: #d6b35e;
+        border-radius: 8px;
+        margin: 0 4px;
+        transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+    }
+
+        /* Hover */
+        .mud-appbar .mud-icon-button:hover {
+            background: rgba(201, 162, 77, 0.18);
+            box-shadow: 0 0 0 1px rgba(201, 162, 77, 0.45);
+            transform: translateY(-1px);
+        }
+
+        /* Active / pressed */
+        .mud-appbar .mud-icon-button:active {
+            transform: translateY(0);
+            box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.6);
+        }
+
+    /* Bottom glow line */
+    .mud-appbar::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient( 90deg, transparent, rgba(201, 162, 77, 0.8), transparent );
+    }
+
+/* ===============================
+   ROH – CARD CONTAINER
+   =============================== */
+
+.card-container {
+    flex: 1;
+    min-height: calc(100vh - var(--appbar-height));
+    margin: 0 auto;
+    padding: 32px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 32px;
+    position: fixed;
+    inset: var(--appbar-height) 0 0 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(201,162,77,.45) rgba(255,255,255,.03);
+}
+    .card-container:before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at center, rgba(201,162,77,.08), transparent 60%);
+        pointer-events: none;
+    }
+
+    .card-container::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    .card-container::-webkit-scrollbar-track {
+        background: rgba(255,255,255,.03);
+    }
+
+    .card-container::-webkit-scrollbar-thumb {
+        background: linear-gradient( 180deg, rgba(201,162,77,.6), rgba(201,162,77,.35) );
+        border-radius: 12px;
+        border: 2px solid transparent;
+        background-clip: padding-box;
+    }
+
+
+
+/* ===============================
+   ROH – CARD
+   =============================== */
+
+.card {
+    position: relative;
+    background: linear-gradient(180deg, rgba(22,26,50,.95), rgba(10,12,22,.98));
+    border-radius: 18px;
+    padding: 24px;
+    margin: 24px;
+    border: 1px solid rgba(201,162,77,.25);
+    box-shadow: 0 12px 28px rgba(0,0,0,.65), inset 0 0 24px rgba(201,162,77,.05);
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    font-family: "Inter", system-ui, sans-serif;
+    color: #e8dcc0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    align-content:safe center;
+    align-items:center;
+}
+
+    /* Hover = card ganha vida */
+
+    .card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(201,162,77,.6);
+        box-shadow: 0 18px 40px rgba(0,0,0,.8), inset 0 0 40px rgba(201,162,77,.12);
+    }
+
+    /* brilho superior sutil */
+
+    .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(255,255,255,.04), transparent 40%);
+        pointer-events: none;
+    }
+
+
+/* ===============================
+   ROH – CARD HEADER
+   =============================== */
+
+.card-header {
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    text-align: center;
+    font-family: "Cinzel", "Trajan Pro", serif;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #c9a24d;
+    font-size: .85rem;
+    border-bottom: 1px solid rgba(201,162,77,.35);
+    position: relative;
+}
+
+    /* linha mágica central */
+
+    .card-header::after {
+        content: "";
+        position: absolute;
+        bottom: -1px;
+        left: 25%;
+        right: 25%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(201,162,77,.9), transparent);
+    }
+
+.mud-button-outlined {
+    border-width: 2px !important;
+    border-radius: 14px;
+    font-family: "Cinzel", serif;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    transition: all .2s ease;
+}
+
+    .mud-button-outlined:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 0 12px rgba(201,162,77,.35);
+    }
+
+.mud-input-label {
+    color: #B8A878 !important; /* marfim secundário */
+}
+
+.mud-input-control input {
+    color: #E6D3A1 !important; /* texto principal */
+}
+
+.mud-input-label.mud-shrink {
+    background: #0E1522;
+    padding: 0 6px;
+}
+.mud-input-root {
+    border-radius: 12px;
+    font-family: "Cinzel", serif;
+    letter-spacing: 0.05em;
+}
+
+.mud-drawer-container {
+    height: calc(100vh - var(--appbar-height));
+    display: flex;
+}
+
+.roh-swal {
+    z-index: 99999 !important;
+}
+
+.swal2-container {
+    z-index: 99999 !important;
+}
+
+.roh-form-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    align-items: end;
+}
+
+.roh-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.roh-field-wide {
+    grid-column: span 2;
+}
+
+.roh-field label {
+    font-family: "Cinzel", serif;
+    color: #c9a24d;
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+.roh-field input {
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(201,162,77,.35);
+    border-radius: 8px;
+    padding: 8px 10px;
+    color: #e6d3a1;
+    font-family: inherit;
+}
+
+    .roh-field input:read-only {
+        cursor: default;
+    }
+
+.roh-action {
+    display: flex;
+    align-items: flex-end;
+}
+
+.roh-btn {
+    padding: 10px 18px;
+    border-radius: 10px;
+    background: linear-gradient(135deg,#c9a24d,#8f6b2c);
+    color: #0b0f14;
+    text-decoration: none;
+    font-family: "Cinzel", serif;
+    letter-spacing: .12em;
+    box-shadow: 0 0 14px rgba(201,162,77,.35);
+    transition: all .2s ease;
+}
+
+    .roh-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 22px rgba(201,162,77,.6);
+    }
+
+.roh-loading {
+    display: flex;
+    justify-content: center;
+    padding: 40px;
+}
+
+.roh-spinner {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 3px solid rgba(201,162,77,.25);
+    border-top-color: #c9a24d;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

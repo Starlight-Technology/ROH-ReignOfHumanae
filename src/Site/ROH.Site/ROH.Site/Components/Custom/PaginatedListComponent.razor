@@ -1,0 +1,185 @@
+﻿@using Interfaces.Helpers
+@using ROH.Site.Helpers
+@using ROH.Site.Helpers.Types
+@using ROH.StandardModels.File
+@using ROH.StandardModels.Response
+@using ROH.Utils.Helpers
+
+@typeparam T where T : class
+
+@inject IRohAlertService _alertService
+@inject IDownloadFileService _downloadFile
+@inject NavigationManager Navigation
+
+@if (Items != null && Items.Any())
+{
+    <MudPaper Class="roh-table-container" Elevation="3">
+
+        <MudTable T="T"
+                  Dense
+                  Hover
+                  Items="Items">
+
+            <HeaderContent>
+                @foreach (var property in GetProperties())
+                {
+                    if (!property.Contains(DETAILS_LINK, StringComparison.OrdinalIgnoreCase)
+                     && !property.Contains(DOWNLOAD_FILE, StringComparison.OrdinalIgnoreCase)
+                     && !property.Contains(GUID_ITEM, StringComparison.OrdinalIgnoreCase))
+                    {
+                        <MudTh>@property</MudTh>
+                    }
+                    else if (!property.Equals(ITEM_GUID))
+                    {
+                        <MudTh />
+                    }
+                }
+            </HeaderContent>
+
+            <RowTemplate Context="context">
+
+                @foreach (var property in GetProperties())
+                {
+                    if (!property.Contains(DETAILS_LINK, StringComparison.OrdinalIgnoreCase) 
+                     && !property.Contains(DOWNLOAD_FILE, StringComparison.OrdinalIgnoreCase) 
+                     && !property.Contains(GUID_ITEM, StringComparison.OrdinalIgnoreCase))
+                    {
+                        <MudTd>
+                            @(GetPropertyValue<string>(context, property))
+                        </MudTd>
+                    }
+
+                    else if (property.Contains(DETAILS_LINK, StringComparison.OrdinalIgnoreCase))
+                    {                        
+                        var link = GetPropertyValue<string>(context, property);                        
+
+                        <MudTd>
+                            @if (!string.IsNullOrEmpty(link))
+                            {
+                                <MudIconButton
+                                    Icon="@Icons.Material.Filled.Visibility"
+                                    Color="Color.Primary"
+                                    OnClick="@(() => Navigation.NavigateTo(link))" />
+                            }
+                        </MudTd>
+                    }
+
+                    else if (property.Contains(DOWNLOAD_FILE, StringComparison.OrdinalIgnoreCase))
+                    {                        
+                        var func = GetPropertyValue<Func<Task<DefaultResponse?>>>(context, property);                        
+
+                        <MudTd>
+                            @if (func != null)
+                            {
+                                <MudIconButton
+                                    Icon="@Icons.Material.Filled.Download"
+                                    Color="Color.Primary"
+                                    OnClick="@(() => GetResponse(func))" />
+                            }
+                        </MudTd>
+                    }
+                }
+
+            </RowTemplate>
+
+        </MudTable>
+
+        <MudStack Direction="Row" Row="true" Justify="Justify.SpaceBetween" Class="sm-3">
+
+            <MudButton Variant="Variant.Outlined"
+                       Disabled="@IsFirstPage"
+                       OnClick="PreviousPage"
+                       StartIcon="@Icons.Material.Filled.NavigateBefore">
+
+                Previous
+            </MudButton>
+
+            <MudButton Variant="Variant.Outlined"
+                       Disabled="@IsLastPage"
+                       OnClick="NextPage"
+                       EndIcon="@Icons.Material.Filled.NavigateNext">
+
+                Next
+            </MudButton>
+
+        </MudStack>
+
+    </MudPaper>
+}
+
+@code {
+
+    [Parameter] public List<T>? Items { get; set; }
+
+    [Parameter] public bool IsFirstPage { get; set; } = true;
+
+    [Parameter] public bool IsLastPage { get; set; } = true;
+
+    [Parameter] public EventCallback PreviousPage { get; set; }
+
+    [Parameter] public EventCallback NextPage { get; set; }
+
+    const string DETAILS_LINK = "DetailsLink";
+    const string GUID_ITEM = "guid";
+    const string ITEM_GUID = "FileGuid";
+    const string DOWNLOAD_FILE = "DownloadFile";
+
+    private IEnumerable<string> GetProperties()
+    {
+        if (Items != null && Items.Any())
+        {
+            var firstItem = Items[0];
+            return firstItem?.GetType().GetProperties().Select(p => p.Name)
+                   ?? Enumerable.Empty<string>();
+        }
+
+        return Enumerable.Empty<string>();
+    }
+
+    private TProperty GetPropertyValue<TProperty>(T item, string propertyName)
+    {
+        var propertyInfo = item.GetType().GetProperty(propertyName);
+
+        if (propertyInfo != null)
+        {
+            object? propertyValue = propertyInfo.GetValue(item);
+
+            if (propertyValue != null)
+            {
+                if (typeof(string).IsAssignableFrom(typeof(TProperty)))
+                {
+                    if (propertyValue is DateTime dt)
+                        return (TProperty)(object)dt.ToString("yyyy-MM-dd");
+
+                    return (TProperty)Convert.ChangeType(propertyValue.ToString()!, typeof(TProperty));
+                }
+
+                return (TProperty)propertyValue;
+            }
+        }
+
+        return default!;
+    }
+
+    private async Task GetResponse(Func<Task<DefaultResponse?>> task)
+    {
+        var response = await task.Invoke();
+
+        if (response != null)
+        {
+            if (response.ObjectResponse != null)
+            {
+                GameFileModel fileModel = response.ResponseToModel<GameFileModel>();
+                await _downloadFile.Download(fileModel);
+            }
+            else
+            {
+                await _alertService.ShowResponse(response);
+            }
+        }
+        else
+        {
+            await _alertService.Show("Error", "Cannot get any response from server.", RohAlertType.Error);
+        }
+    }
+}

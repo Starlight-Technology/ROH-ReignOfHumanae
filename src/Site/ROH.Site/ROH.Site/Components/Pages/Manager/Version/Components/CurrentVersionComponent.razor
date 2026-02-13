@@ -1,0 +1,101 @@
+﻿@namespace Manager.Version.Components
+@using Newtonsoft.Json;
+@using ROH.Site.Components.Custom
+@using ROH.Site.Interfaces.Api
+@using ROH.Site.Interfaces.Helpers
+@using ROH.StandardModels.Version;
+@using ROH.Utils.Helpers;
+
+@inject IVersionService _versionService;
+@inject IRohAlertService _sweetAlert;
+@inject NavigationManager Navigation;
+
+<CardComponent Header="Current Version">
+    @if (isLoadingCurrentVersion)
+    {
+        <div class="roh-loading">
+            <div class="roh-spinner"></div>
+        </div>
+    }
+    else
+    {
+         <div class="row">
+             
+            <div class="col-sm-2">
+                <MudTextField T="int"
+                      Label="Release"
+                      Variant="Variant.Outlined"
+                      Value="@currentVersion!.Release"
+                      Disabled="true"/>
+            </div>
+
+            <div class="col-sm-2">
+                <MudTextField T="int"
+                      Label="Review"
+                      Variant="Variant.Outlined"
+                      Value="@currentVersion!.Review"
+                      Disabled="true"/>
+            </div>
+
+            <div class="col-sm-2">
+                <MudTextField T="int"
+                      Label="Version"
+                      Variant="Variant.Outlined"
+                      Value="@currentVersion!.Version"
+                      Disabled="true"/>
+            </div>
+
+            <div class="col-sm-4">
+                <MudTextField T="string"
+                    Label="Release Date"
+                    Variant="Variant.Outlined"
+                    Value="@currentVersion!.ReleaseDate?.ToShortDateString()" 
+                    Disabled="true"/>
+            </div>
+
+            <div class="col-sm-2">
+                <MudIconButton
+                    Icon="@Icons.Material.Filled.Visibility"
+                    Color="Color.Primary"
+                    OnClick="@(() => Navigation.NavigateTo($"/Manager/Version/VersionDetails/{currentVersion!.Guid}"))" />
+
+            </div>
+
+        </div>
+
+    }
+
+</CardComponent>
+
+@code {
+
+    private bool isLoadingCurrentVersion = true;
+
+    private GameVersionModel? currentVersion = new()
+        {
+            Version = 0,
+            Release = 0,
+            Review = 0
+        };
+
+    protected override async void OnInitialized()
+    {
+        await base.OnInitializedAsync();
+        await GetCurrentVersion();
+    }
+
+    private async Task GetCurrentVersion()
+    {
+        isLoadingCurrentVersion = true;
+        var currentVersionResponse = await _versionService.GetCurrentVersion();
+
+        if (currentVersionResponse != null && !currentVersionResponse.HttpStatus.IsSuccessStatusCode())
+            await _sweetAlert.ShowResponse(currentVersionResponse);
+
+        else if (currentVersionResponse != null && currentVersionResponse.ObjectResponse != null)
+            currentVersion = JsonConvert.DeserializeObject<GameVersionModel>(currentVersionResponse.ObjectResponse.ToString()!);
+
+        isLoadingCurrentVersion = false;
+        StateHasChanged();
+    }
+}

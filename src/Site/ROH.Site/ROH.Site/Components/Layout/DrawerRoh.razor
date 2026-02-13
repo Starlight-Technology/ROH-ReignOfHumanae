@@ -1,0 +1,57 @@
+﻿@rendermode InteractiveServer
+@using MudBlazor
+@using ROH.Site.Helpers.Components.Layout
+@using Interfaces.Helpers
+@implements IDisposable
+@inject DrawerState DrawerState
+@inject ICustomAuthenticationStateProvider CustomAuthStateProvider
+
+<MudDrawer Open="@DrawerState.Open"
+           Variant="DrawerVariant.Persistent"
+           Elevation="2"
+           Anchor="Anchor.Left"
+           Class="roh-drawer"
+           Overlay="false">
+
+    <MudNavMenu>
+        <MudNavLink Href="/">Home</MudNavLink>
+        @if (IsAuthorized)
+        {
+            <MudNavLink Href="/Manager/Version/VersionManager">Manager</MudNavLink>
+        }
+        else
+        {
+            <MudNavLink Href="/login">Login</MudNavLink>
+        }
+        <MudNavLink Href="/crafting">Crafting</MudNavLink>
+        <MudNavLink Href="/lore">Lore</MudNavLink>
+        <MudNavLink Href="/magic-skills">Magic Skills</MudNavLink>
+        <MudNavLink Href="/races">Races</MudNavLink>
+        <MudNavLink Href="/world-bosses">World Bosses</MudNavLink>
+    </MudNavMenu>
+
+</MudDrawer>
+
+@code {
+    protected override void OnInitialized()
+    {
+        DrawerState.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        DrawerState.OnChange -= StateHasChanged;
+    }
+
+    private bool IsAuthorized { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            CustomAuthStateProvider.Initialize();
+            IsAuthorized = !string.IsNullOrWhiteSpace(await CustomAuthStateProvider.GetToken());
+            StateHasChanged();
+        }
+    }
+}

@@ -1,0 +1,18 @@
+﻿@namespace ROH.Site.Components.Custom
+
+<div class="card roh-card">
+    <div class="card-header roh-card-header">
+        @Header
+    </div>
+    <div class="card-body roh-card-body">
+        @ChildContent
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string? Header { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

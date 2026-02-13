@@ -1,0 +1,84 @@
+﻿@page "/CreateAccount"
+@using Interfaces.Api
+@using Interfaces.Helpers
+@using ROH.Site.Components.Custom
+@using ROH.Site.Helpers.Types
+@using ROH.Utils.Helpers
+@inject NavigationManager Navigation;
+@inject IAccountService _accountService;
+@inject IRohAlertService _sweetAlert;
+
+<CardComponent Header="Create Account">
+    @if (isLoading)
+    {
+        <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center">
+            <MudProgressCircular Indeterminate="true" Color="Color.Primary" Size="Size.Large" />
+        </MudStack>
+    }
+    else
+    {
+        <MudStack Spacing="2">
+            <MudTextField T="string"
+                          Label="Email"
+                          Variant="Variant.Outlined"
+                          @bind-Value="@EmailValue" />
+            <MudTextField T="string"
+                          Label="Username"
+                          Variant="Variant.Outlined"
+                          @bind-Value="@UsernameValue" />
+            <MudTextField T="string"
+                          Label="Password"
+                          Variant="Variant.Outlined"
+                          InputType="InputType.Password"
+                          @bind-Value="@PasswordValue" />
+            <MudTextField T="string"
+                          Label="Confirm Password"
+                          Variant="Variant.Outlined"
+                          InputType="InputType.Password"
+                          @bind-Value="@ConfirmPasswordValue" />
+            <MudButton Color="Color.Primary"
+                       Variant="Variant.Filled"
+                       OnClick="Confirm">
+                Create Account
+            </MudButton>
+        </MudStack>
+    }
+</CardComponent>
+
+@code {
+    public string EmailValue { get; set; } = "";
+    public string UsernameValue { get; set; } = "";
+    public string PasswordValue { get; set; } = "";
+    public string ConfirmPasswordValue { get; set; } = "";
+
+    public bool isLoading = false;
+
+    public async Task Confirm()
+    {
+        isLoading = true;
+
+        if (PasswordValue == ConfirmPasswordValue)
+        {
+
+            var response = await _accountService.CreateNewUser(
+                new StandardModels.Account.UserModel()
+                    {
+                        Email = EmailValue,
+                        UserName = UsernameValue,
+                        Password = PasswordValue
+                    }
+            );
+
+            await _sweetAlert.ShowResponse(response?? new StandardModels.Response.DefaultResponse(httpStatus:System.Net.HttpStatusCode.BadGateway));
+
+            if (response?.HttpStatus.IsSuccessStatusCode() is true)
+                Navigation.NavigateTo("/login");
+        }
+        else
+        {
+            await _sweetAlert.Show("", "Passwords don't match!", RohAlertType.Error);
+        }
+        isLoading = false;
+        StateHasChanged();
+    }
+}
