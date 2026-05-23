@@ -1,0 +1,23 @@
+@page "/settings"
+@inject ROH.Launcher.Services.LauncherState LauncherState
+
+<div class="container mt-3">
+    <h2>Settings</h2>
+
+    <div class="mb-3">
+        <label class="form-label">Launch Options</label>
+        <select class="form-select">
+            <option value="windowed">Windowed</option>
+            <option value="fullscreen">Fullscreen</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Game Directory</label>
+        <input class="form-control" placeholder="C:\\Program Files\\ROH" />
+    </div>
+
+    <div>
+        <NavLink class="btn btn-primary me-2" href="/">Back</NavLink>
+    </div>
+</div>

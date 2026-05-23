@@ -1,0 +1,40 @@
+@page "/login"
+@inject ROH.Launcher.Services.LauncherState LauncherState
+
+<div class="container mt-3">
+    <h2>Login</h2>
+
+    <div class="mb-3">
+        <label class="form-label">Username</label>
+        <input @bind="username" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input type="password" @bind="password" class="form-control" />
+    </div>
+
+    <div>
+        <button class="btn btn-primary" @onclick="DoLogin">Login</button>
+        <NavLink class="btn btn-link ms-2" href="/">Back</NavLink>
+    </div>
+</div>
+
+@code {
+    private string? username;
+    private string? password;
+
+    private void DoLogin()
+    {
+        // Replace with real authentication flow
+        if (!string.IsNullOrWhiteSpace(username))
+        {
+            LauncherState.SimulateLogin(username!);
+            // navigate back
+            NavigationManager.NavigateTo("/");
+        }
+    }
+
+    [Inject]
+    public NavigationManager NavigationManager { get; set; } = default!;
+}

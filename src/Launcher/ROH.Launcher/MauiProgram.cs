@@ -15,6 +15,8 @@ public static class MauiProgram
             });
 
         builder.Services.AddMauiBlazorWebView();
+        // Launcher state service used by launcher UI (login, update progress, settings)
+        builder.Services.AddSingleton<Services.LauncherState>();
 
 #if DEBUG
 		builder.Services.AddBlazorWebViewDeveloperTools();
