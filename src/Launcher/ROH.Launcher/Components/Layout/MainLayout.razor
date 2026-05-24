@@ -1,16 +1,24 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
+@implements IDisposable
+@inject ROH.Launcher.Services.LauncherState LauncherState
 
 <div class="page">
-    <div class="sidebar">
+    <aside class="sidebar">
         <NavMenu />
-    </div>
+    </aside>
 
     <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
+        <header class="top-row">
+            <div class="top-status">
+                <span class="status-dot @(LauncherState.IsUpdating ? "status-busy" : LauncherState.IsReadyToPlay ? "status-ready" : "status-warn")"></span>
+                <span>@LauncherState.StatusMessage</span>
+            </div>
+            <div class="top-account">
+                @(LauncherState.IsLoggedIn ? LauncherState.Username : "Offline")
+            </div>
+        </header>
 
-        <article class="content px-4">
+        <article class="content">
             @Body
         </article>
 
@@ -18,3 +26,17 @@
         <ConfirmDialog />
     </main>
 </div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        LauncherState.OnChange += StateChanged;
+    }
+
+    public void Dispose()
+    {
+        LauncherState.OnChange -= StateChanged;
+    }
+
+    void StateChanged() => InvokeAsync(StateHasChanged);
+}

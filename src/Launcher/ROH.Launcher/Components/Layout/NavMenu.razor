@@ -1,6 +1,8 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">ROH.Launcher</a>
+<div class="nav-brand">
+    <div class="brand-mark">RH</div>
+    <div>
+        <strong>Reign Of Humanae</strong>
+        <span>Launcher</span>
     </div>
 </div>
 
@@ -8,17 +10,24 @@
 
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="nav flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">Home</NavLink>
+        <div class="nav-section">Principal</div>
+        <div class="nav-item">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="nav-icon">P</span>
+                <span>Jogar</span>
+            </NavLink>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="login">Login</NavLink>
+        <div class="nav-item">
+            <NavLink class="nav-link" href="login">
+                <span class="nav-icon">L</span>
+                <span>Login</span>
+            </NavLink>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="settings">Settings</NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/">Play</NavLink>
+        <div class="nav-item">
+            <NavLink class="nav-link" href="settings">
+                <span class="nav-icon">S</span>
+                <span>Configuracoes</span>
+            </NavLink>
         </div>
     </nav>
 </div>

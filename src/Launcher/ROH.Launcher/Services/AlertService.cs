@@ -1,23 +1,41 @@
-using System;
-using System.Threading.Tasks;
-
 namespace ROH.Launcher.Services
 {
-    // Simple alert service - currently writes to Console but can be replaced with platform UI (Maui Alerts) or JS toast
+    public enum AlertKind
+    {
+        Success,
+        Error,
+    }
+
+    public sealed class LauncherAlert
+    {
+        public string Title { get; init; } = string.Empty;
+
+        public string Message { get; init; } = string.Empty;
+
+        public AlertKind Kind { get; init; }
+    }
+
     public class AlertService
     {
-        public event Action<string, string, bool>? OnAlert;
-        public Task ShowInfo(string title, string message)
-        {
-            Console.WriteLine($"INFO: {title} - {message}");
-            OnAlert?.Invoke(title, message, false);
-            return Task.CompletedTask;
-        }
+        public event Action<LauncherAlert>? OnAlert;
 
-        public Task ShowError(string title, string message)
+        public Task ShowSuccess(string title, string message) => Show(title, message, AlertKind.Success);
+
+        public Task ShowInfo(string title, string message) => ShowSuccess(title, message);
+
+        public Task ShowError(string title, string message) => Show(title, message, AlertKind.Error);
+
+        Task Show(string title, string message, AlertKind kind)
         {
-            Console.WriteLine($"ERROR: {title} - {message}");
-            OnAlert?.Invoke(title, message, true);
+            Console.WriteLine($"{kind}: {title} - {message}");
+            OnAlert?.Invoke(
+                new LauncherAlert
+                {
+                    Title = title,
+                    Message = message,
+                    Kind = kind,
+                });
+
             return Task.CompletedTask;
         }
     }

@@ -1,80 +1,101 @@
 @page "/settings"
+@inject ROH.Launcher.Services.AlertService AlertService
 @inject ROH.Launcher.Services.LauncherState LauncherState
 @inject ROH.Launcher.Services.SettingsService SettingsService
-@inject ROH.Launcher.Services.AlertService AlertService
 
-<div class="container mt-3">
-    <h2>Settings</h2>
+<div class="settings-page">
+    <section class="settings-panel">
+        <div class="panel-title">
+            <span>Configuracoes</span>
+            <strong>@(LauncherState.InstallDirectoryExists ? "Valido" : "Pendente")</strong>
+        </div>
 
-    <div class="mb-3">
-        <label class="form-label">Install Directory</label>
-        <input class="form-control" @bind="installDirectory" />
-        @if (saveResult.HasValue)
-        {
-            if (saveResult.Value)
-            {
-                <div class="alert alert-success mt-2">Install directory exists or was created successfully.</div>
-            }
-            else
-            {
-                <div class="alert alert-danger mt-2">Failed to create or validate install directory.</div>
-            }
-        }
-    </div>
+        <div class="form-row">
+            <label class="form-label">Pasta de instalacao</label>
+            <div class="input-action">
+                <input class="form-control launcher-input" @bind="installDirectory" @bind:event="oninput" />
+                <button class="btn btn-secondary" @onclick="Browse" disabled="@_saving">Selecionar</button>
+            </div>
+        </div>
 
-    <div class="mb-3">
-        <button class="btn btn-secondary me-2" @onclick="Browse">Browse...</button>
-        <button class="btn btn-primary" @onclick="Save">Save</button>
-        <NavLink class="btn btn-link ms-2" href="/">Back</NavLink>
-    </div>
+        <div class="form-row">
+            <label class="form-label">Executavel do jogo</label>
+            <input class="form-control launcher-input" @bind="gameExecutableName" @bind:event="oninput" />
+        </div>
 
+        <div class="settings-summary">
+            <div>
+                <span>Versao instalada</span>
+                <strong>@LauncherState.InstalledVersionLabel</strong>
+            </div>
+            <div>
+                <span>Ultima atualizacao</span>
+                <strong>@LauncherState.LastUpdatedLabel</strong>
+            </div>
+        </div>
+
+        <div class="auth-actions">
+            <button class="btn btn-primary" @onclick="Save" disabled="@_saving">
+                @(_saving ? "Salvando..." : "Salvar")
+            </button>
+            <button class="btn btn-secondary" @onclick="OpenFolder" disabled="@_saving">Abrir pasta</button>
+            <NavLink class="btn btn-secondary" href="/">Voltar</NavLink>
+        </div>
+    </section>
 </div>
 
-@code{
-    private string installDirectory = string.Empty;
+@code {
+    string gameExecutableName = string.Empty;
+    string installDirectory = string.Empty;
+    bool _saving;
 
     protected override async Task OnInitializedAsync()
     {
         await SettingsService.LoadAsync();
+        await LauncherState.EnsureLoadedAsync();
         installDirectory = SettingsService.InstallDirectory;
-        AlertService.OnAlert += OnAlert;
+        gameExecutableName = SettingsService.GameExecutableName;
     }
 
-    public void Dispose()
-    {
-        AlertService.OnAlert -= OnAlert;
-    }
-
-    private void OnAlert(string title, string message, bool isError)
-    {
-        InvokeAsync(StateHasChanged);
-    }
-
-    private async Task Browse()
+    async Task Browse()
     {
         string? picked = await SettingsService.PickInstallDirectoryAsync();
         if (!string.IsNullOrWhiteSpace(picked))
         {
             installDirectory = picked;
-            StateHasChanged();
+            LauncherState.RefreshInstallState();
         }
     }
 
-    private bool? saveResult = null;
-
-    private async Task Save()
+    async Task OpenFolder()
     {
-        SettingsService.InstallDirectory = installDirectory;
-        bool ok = await SettingsService.SaveAsync();
-        saveResult = ok;
-        if (ok)
+        await LauncherState.OpenInstallDirectoryAsync();
+    }
+
+    async Task Save()
+    {
+        if (_saving)
+            return;
+
+        _saving = true;
+        try
         {
-            await AlertService.ShowInfo("Settings", "Settings saved");
+            SettingsService.InstallDirectory = installDirectory.Trim();
+            SettingsService.GameExecutableName = string.IsNullOrWhiteSpace(gameExecutableName)
+                ? "ReignOfHumanae.exe"
+                : gameExecutableName.Trim();
+
+            bool ok = await SettingsService.SaveAsync();
+            LauncherState.RefreshInstallState();
+
+            if (ok)
+                await AlertService.ShowSuccess("Configuracoes", "Configuracoes salvas com sucesso.");
+            else
+                await AlertService.ShowError("Configuracoes", "Nao foi possivel validar a pasta de instalacao.");
         }
-        else
+        finally
         {
-            await AlertService.ShowError("Settings", "Failed to create/install directory");
+            _saving = false;
         }
-        StateHasChanged();
     }
 }

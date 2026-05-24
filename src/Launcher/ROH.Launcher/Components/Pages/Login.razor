@@ -1,47 +1,64 @@
 @page "/login"
+@inject ROH.Launcher.Services.AlertService AlertService
 @inject ROH.Launcher.Services.LauncherState LauncherState
+@inject NavigationManager NavigationManager
 
-<div class="container mt-3">
-    <h2>Login</h2>
+<div class="auth-page">
+    <section class="auth-panel">
+        <div class="eyebrow">Conta ROH</div>
+        <h1>Login</h1>
 
-    <div class="mb-3">
-        <label class="form-label">Username</label>
-        <input @bind="username" class="form-control" />
-    </div>
+        <div class="form-row">
+            <label class="form-label">Usuario ou e-mail</label>
+            <input @bind="username" @bind:event="oninput" class="form-control launcher-input" autocomplete="username" disabled="@_submitting" />
+        </div>
 
-    <div class="mb-3">
-        <label class="form-label">Password</label>
-        <input type="password" @bind="password" class="form-control" />
-    </div>
+        <div class="form-row">
+            <label class="form-label">Senha</label>
+            <input type="password" @bind="password" @bind:event="oninput" class="form-control launcher-input" autocomplete="current-password" disabled="@_submitting" />
+        </div>
 
-    <div>
-        <button class="btn btn-primary" @onclick="DoLogin">Login</button>
-        <NavLink class="btn btn-link ms-2" href="/">Back</NavLink>
-    </div>
+        <div class="auth-actions">
+            <button class="btn btn-primary" @onclick="DoLogin" disabled="@_submitting">
+                @(_submitting ? "Entrando..." : "Entrar")
+            </button>
+            <NavLink class="btn btn-secondary" href="/">Voltar</NavLink>
+        </div>
+    </section>
 </div>
 
 @code {
-    private string? username;
-    private string? password;
+    string? password;
+    bool _submitting;
+    string? username;
 
-    private async Task DoLogin()
+    async Task DoLogin()
     {
-        if (string.IsNullOrWhiteSpace(username))
+        if (_submitting)
             return;
 
-        var model = new ROH.StandardModels.Account.LoginModel { Login = username, Password = password };
-        bool ok = await LauncherState.LoginAsync(model);
-        if (ok)
+        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
         {
-            NavigationManager.NavigateTo("/");
+            await AlertService.ShowError("Login", "Informe usuario e senha.");
+            return;
         }
-        else
+
+        _submitting = true;
+        try
         {
-            // TODO: show error to user - keep simple for now
-            Console.WriteLine("Login failed");
+            var model = new ROH.StandardModels.Account.LoginModel
+            {
+                Login = username.Trim(),
+                Password = password,
+            };
+
+            bool ok = await LauncherState.LoginAsync(model);
+            if (ok)
+                NavigationManager.NavigateTo("/");
+        }
+        finally
+        {
+            _submitting = false;
         }
     }
-
-    [Inject]
-    public NavigationManager NavigationManager { get; set; } = default!;
 }

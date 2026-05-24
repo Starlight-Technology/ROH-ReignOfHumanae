@@ -1,55 +1,140 @@
-﻿@page "/"
+@page "/"
+@implements IDisposable
+@inject ROH.Launcher.Services.AlertService AlertService
 @inject ROH.Launcher.Services.LauncherState LauncherState
-@inject ROH.Launcher.Services.UpdaterService UpdaterService
 @inject ROH.Launcher.Services.SettingsService SettingsService
-@using Microsoft.AspNetCore.Components
-@using System
-@using System.IO
+@inject ROH.Launcher.Services.UpdaterService UpdaterService
+@inject NavigationManager NavigationManager
+@using ROH.Launcher.Services
+@using ROH.StandardModels.Version
 
-<div class="container mt-3">
-    <h1>ROH Launcher</h1>
-
-    <div class="mb-3">
-        <label>Update Progress</label>
-        <div class="progress">
-            <div class="progress-bar" role="progressbar" style="width:@LauncherState.UpdateProgress%">@String.Format("{0:0}%", LauncherState.UpdateProgress)</div>
+<div class="launcher-page">
+    <section class="launcher-hero">
+        <div class="hero-copy">
+            <div class="eyebrow">Reign Of Humanae</div>
+            <h1>Launcher</h1>
+            <div class="hero-status">
+                <span class="status-dot @(LauncherState.IsUpdating ? "status-busy" : LauncherState.IsReadyToPlay ? "status-ready" : "status-warn")"></span>
+                <span>@LauncherState.StatusMessage</span>
+            </div>
         </div>
-    </div>
 
-    <div class="mb-3">
-        @if (LauncherState.IsUpdating)
-        {
-            <button class="btn btn-warning" @onclick="StopUpdate">Stop Update</button>
-        }
-        else
-        {
-            <button class="btn btn-primary me-2" @onclick="StartUpdate">Start Update</button>
-            <button class="btn btn-success" @onclick="StartGame">Play</button>
-        }
-    </div>
+        <div class="hero-actions">
+            <button class="btn btn-play" @onclick="StartGame" disabled="@(!LauncherState.IsReadyToPlay)">
+                Jogar
+            </button>
 
-    <div class="mb-3">
-        <strong>User:</strong>
-        @if (LauncherState.IsLoggedIn)
-        {
-            <span class="ms-2">@LauncherState.Username</span>
-            <button class="btn btn-link ms-2" @onclick="Logout">Logout</button>
-        }
-        else
-        {
-            <NavLink class="btn btn-outline-secondary ms-2" href="login">Login</NavLink>
-        }
-    </div>
+            @if (LauncherState.IsUpdating)
+            {
+                <button class="btn btn-outline-light" @onclick="StopUpdate">
+                    Parar
+                </button>
+            }
+            else
+            {
+                <button class="btn btn-primary" @onclick="() => StartUpdate(false)" disabled="@_checkingVersion">
+                    @(LauncherState.IsInstalled ? "Atualizar" : "Instalar")
+                </button>
+            }
+        </div>
+    </section>
 
-    <div>
-        <NavLink class="btn btn-outline-primary me-2" href="settings">Settings</NavLink>
-    </div>
+    <section class="launcher-progress">
+        <div class="progress-header">
+            <div>
+                <span class="progress-label">Progresso</span>
+                <strong>@String.Format("{0:0}%", LauncherState.UpdateProgress)</strong>
+            </div>
+            <span>@(string.IsNullOrWhiteSpace(LauncherState.CurrentFileName) ? "Aguardando" : LauncherState.CurrentFileName)</span>
+        </div>
+        <div class="launcher-progress-track">
+            <div class="launcher-progress-bar" style="width:@LauncherState.UpdateProgress%"></div>
+        </div>
+        <div class="progress-footer">
+            <span>@LauncherState.CompletedFiles de @LauncherState.TotalFiles arquivos</span>
+            <span>@LauncherState.InstallDirectory</span>
+        </div>
+    </section>
+
+    <section class="launcher-grid">
+        <div class="stat-card">
+            <span>Instalada</span>
+            <strong>@LauncherState.InstalledVersionLabel</strong>
+        </div>
+        <div class="stat-card">
+            <span>Online</span>
+            <strong>@LauncherState.LatestVersionLabel</strong>
+        </div>
+        <div class="stat-card">
+            <span>Arquivos</span>
+            <strong>@LauncherState.AvailableFiles</strong>
+        </div>
+        <div class="stat-card">
+            <span>Ultimo update</span>
+            <strong>@LauncherState.LastUpdatedLabel</strong>
+        </div>
+    </section>
+
+    <section class="launcher-panels">
+        <div class="launcher-panel">
+            <div class="panel-title">
+                <span>Conta</span>
+                <strong>@(LauncherState.IsLoggedIn ? "Conectado" : "Offline")</strong>
+            </div>
+
+            @if (LauncherState.IsLoggedIn)
+            {
+                <div class="account-row">
+                    <div class="avatar">@GetInitials()</div>
+                    <div>
+                        <strong>@LauncherState.Username</strong>
+                        <span>Sessao ativa</span>
+                    </div>
+                </div>
+                <button class="btn btn-secondary w-100" @onclick="Logout">Sair</button>
+            }
+            else
+            {
+                <div class="account-row muted">
+                    <div class="avatar">ROH</div>
+                    <div>
+                        <strong>Entrar</strong>
+                        <span>Necessario para baixar updates</span>
+                    </div>
+                </div>
+                <NavLink class="btn btn-primary w-100" href="login">Login</NavLink>
+            }
+        </div>
+
+        <div class="launcher-panel">
+            <div class="panel-title">
+                <span>Manutencao</span>
+                <strong>@(LauncherState.InstallDirectoryExists ? "Pasta OK" : "Pasta ausente")</strong>
+            </div>
+
+            <div class="action-stack">
+                <button class="btn btn-secondary" @onclick="CheckForUpdates" disabled="@(_checkingVersion || LauncherState.IsUpdating)">
+                    @(_checkingVersion ? "Verificando..." : "Verificar versao")
+                </button>
+                <button class="btn btn-secondary" @onclick="() => StartUpdate(true)" disabled="@(!LauncherState.IsInstalled || LauncherState.IsUpdating || _checkingVersion)">
+                    Reparar arquivos
+                </button>
+                <button class="btn btn-secondary" @onclick="OpenInstallFolder" disabled="@LauncherState.IsUpdating">
+                    Abrir pasta
+                </button>
+                <NavLink class="btn btn-secondary" href="settings">Configuracoes</NavLink>
+            </div>
+        </div>
+    </section>
 </div>
 
 @code {
-    protected override void OnInitialized()
+    bool _checkingVersion;
+
+    protected override async Task OnInitializedAsync()
     {
         LauncherState.OnChange += StateChanged;
+        await LauncherState.EnsureLoadedAsync();
     }
 
     public void Dispose()
@@ -57,55 +142,152 @@
         LauncherState.OnChange -= StateChanged;
     }
 
-    private void StateChanged() => InvokeAsync(StateHasChanged);
-
-    private void StartUpdate()
+    async Task CheckForUpdates()
     {
-        // Start a real update process: get current version, list files, download them
-        LauncherState.StartUpdate(async (progress, ct) =>
+        if (!await RequireLoginAsync())
+            return;
+
+        _checkingVersion = true;
+        try
         {
-            var version = await UpdaterService.GetCurrentVersionAsync(ct).ConfigureAwait(true);
-            if (version is null)
-            {
-                progress.Report(100);
-                return null;
-            }
-
-            var files = await UpdaterService.GetFilesForVersionAsync(version.Guid, ct, LauncherState.Token).ConfigureAwait(true);
-            if (files is null)
-            {
-                progress.Report(100);
-                return null;
-            }
-
-            string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ROH", $"{version.Version}.{version.Release}.{version.Review}");
-            try
-            {
-                await UpdaterService.DownloadFilesAsync(files, folder, progress, ct, LauncherState.Token).ConfigureAwait(true);
-                return folder;
-            }
-            catch (Exception ex)
-            {
-                // show alert through LauncherState's alert service (LauncherState will also handle alerts)
-                Console.WriteLine("Update failed: " + ex.Message);
-                return null;
-            }
-        });
+            (GameVersionModel version, List<GameVersionFileModel> files) = await LoadLatestReleaseAsync(CancellationToken.None);
+            string versionLabel = FormatVersion(version);
+            LauncherState.SetLatestVersion(versionLabel, files.Count);
+            await AlertService.ShowSuccess("Versao encontrada", $"Versao {versionLabel} com {files.Count} arquivos disponiveis.");
+        }
+        catch (Exception ex)
+        {
+            await AlertService.ShowError("Verificar versao", ex.Message);
+        }
+        finally
+        {
+            _checkingVersion = false;
+            await InvokeAsync(StateHasChanged);
+        }
     }
 
-    private void StopUpdate()
+    string GetInitials()
     {
-        LauncherState.StopUpdate();
+        string name = LauncherState.Username ?? "ROH";
+        string[] parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length == 0)
+            return "ROH";
+
+        return string.Concat(parts.Take(2).Select(part => char.ToUpperInvariant(part[0])));
     }
 
-    private void StartGame()
+    async Task<bool> EnsureInstallFolderAsync()
     {
-        // Launch game from configured install directory
-        _ = LauncherState.LaunchGameAsync(SettingsService.InstallDirectory);
+        await LauncherState.EnsureLoadedAsync();
+        if (LauncherState.InstallDirectoryExists)
+            return true;
+
+        bool saved = await SettingsService.SaveAsync();
+        LauncherState.RefreshInstallState();
+        if (saved)
+            return true;
+
+        await AlertService.ShowError("Pasta do jogo", "Configure uma pasta de instalacao valida antes de atualizar.");
+        return false;
     }
 
-    private async Task Logout()
+    static string FormatVersion(GameVersionModel version) => $"{version.Version}.{version.Release}.{version.Review}";
+
+    async Task<(GameVersionModel Version, List<GameVersionFileModel> Files)> LoadLatestReleaseAsync(CancellationToken cancellationToken)
+    {
+        LauncherState.ReportUpdate(
+            new UpdateProgressInfo
+            {
+                Percentage = LauncherState.IsUpdating ? 5 : LauncherState.UpdateProgress,
+                Message = "Consultando servidor",
+            });
+
+        GameVersionModel? version = await UpdaterService.GetCurrentVersionAsync(cancellationToken, LauncherState.Token);
+        if (version is null)
+            throw new InvalidOperationException("Nenhuma versao liberada foi encontrada.");
+
+        List<GameVersionFileModel>? files = await UpdaterService.GetFilesForVersionAsync(
+            version.Guid,
+            cancellationToken,
+            LauncherState.Token);
+
+        if (files is null)
+            throw new InvalidOperationException("Nao foi possivel listar os arquivos da versao atual.");
+
+        return (version, files);
+    }
+
+    async Task Logout()
     {
         await LauncherState.Logout();
+    }
+
+    async Task OpenInstallFolder()
+    {
+        await LauncherState.OpenInstallDirectoryAsync();
+    }
+
+    async Task<bool> RequireLoginAsync()
+    {
+        if (LauncherState.IsLoggedIn)
+            return true;
+
+        await AlertService.ShowError("Login necessario", "Faca login para acessar atualizacoes.");
+        NavigationManager.NavigateTo("/login");
+        return false;
+    }
+
+    async Task StartGame()
+    {
+        await LauncherState.LaunchGameAsync();
+    }
+
+    async Task StartUpdate(bool repair)
+    {
+        if (!await RequireLoginAsync())
+            return;
+
+        if (!await EnsureInstallFolderAsync())
+            return;
+
+        if (!LauncherState.BeginUpdate(repair ? "Reparando instalacao" : "Preparando atualizacao"))
+            return;
+
+        try
+        {
+            CancellationToken cancellationToken = LauncherState.UpdateCancellationToken;
+            (GameVersionModel version, List<GameVersionFileModel> files) = await LoadLatestReleaseAsync(cancellationToken);
+            string versionLabel = FormatVersion(version);
+
+            LauncherState.SetLatestVersion(versionLabel, files.Count);
+
+            if (files.Count == 0)
+                throw new InvalidOperationException("A versao atual nao possui arquivos publicados.");
+
+            Progress<UpdateProgressInfo> progress = new(LauncherState.ReportUpdate);
+            await UpdaterService.DownloadFilesAsync(
+                files,
+                SettingsService.InstallDirectory,
+                progress,
+                cancellationToken,
+                LauncherState.Token);
+
+            await LauncherState.CompleteUpdateAsync(versionLabel);
+        }
+        catch (OperationCanceledException)
+        {
+            await LauncherState.CancelUpdateAsync();
+        }
+        catch (Exception ex)
+        {
+            await LauncherState.FailUpdateAsync(ex.Message);
+        }
+    }
+
+    void StateChanged() => InvokeAsync(StateHasChanged);
+
+    void StopUpdate()
+    {
+        LauncherState.RequestStopUpdate();
     }
 }

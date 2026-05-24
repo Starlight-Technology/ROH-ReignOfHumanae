@@ -117,12 +117,16 @@ app.MapGet(
 
 app.MapGet(
     "DownloadFileRaw",
-    async (ROH.Context.File.Interface.IGameFileRepository repo, string fileGuid) =>
+    async (
+        ROH.Context.File.Interface.IGameFileRepository fileRepository,
+        ROH.Context.File.Interface.IGameVersionFileRepository versionFileRepository,
+        string fileGuid) =>
     {
         if (!Guid.TryParse(fileGuid, out Guid guid))
             return Results.BadRequest();
 
-        var file = await repo.GetFileAsync(guid).ConfigureAwait(true);
+        var versionFile = await versionFileRepository.GetFileAsync(guid).ConfigureAwait(true);
+        var file = versionFile?.GameFile ?? await fileRepository.GetFileAsync(guid).ConfigureAwait(true);
         if (file is null)
             return Results.NotFound();
 
@@ -138,12 +142,16 @@ app.MapGet(
 
 app.MapGet(
     "FileChecksum",
-    async (ROH.Context.File.Interface.IGameFileRepository repo, string fileGuid) =>
+    async (
+        ROH.Context.File.Interface.IGameFileRepository fileRepository,
+        ROH.Context.File.Interface.IGameVersionFileRepository versionFileRepository,
+        string fileGuid) =>
     {
         if (!Guid.TryParse(fileGuid, out Guid guid))
             return Results.BadRequest();
 
-        var file = await repo.GetFileAsync(guid).ConfigureAwait(true);
+        var versionFile = await versionFileRepository.GetFileAsync(guid).ConfigureAwait(true);
+        var file = versionFile?.GameFile ?? await fileRepository.GetFileAsync(guid).ConfigureAwait(true);
         if (file is null)
             return Results.NotFound();
 

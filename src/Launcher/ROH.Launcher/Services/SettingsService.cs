@@ -1,20 +1,30 @@
 using System;
 using System.IO;
+using System.Text.Json;
 
 namespace ROH.Launcher.Services
 {
     public class SettingsService
     {
         readonly ConfirmService _confirmService;
+        readonly IFolderPicker _folderPicker;
 
-        public SettingsService(ConfirmService confirmService)
+        public SettingsService(ConfirmService confirmService, IFolderPicker folderPicker)
         {
             _confirmService = confirmService;
+            _folderPicker = folderPicker;
         }
+
         // Simple settings holder persisted to disk.
         const string SETTINGS_FILE = "launcher-settings.json";
 
         public string InstallDirectory { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ROH", "game");
+
+        public string GameExecutableName { get; set; } = "ReignOfHumanae.exe";
+
+        public string LastInstalledVersion { get; set; } = string.Empty;
+
+        public DateTime? LastUpdatedAtUtc { get; set; }
 
         public async Task LoadAsync()
         {
@@ -26,12 +36,29 @@ namespace ROH.Launcher.Services
                     return;
 
                 string json = await File.ReadAllTextAsync(path).ConfigureAwait(true);
-                var doc = System.Text.Json.JsonDocument.Parse(json);
+                var doc = JsonDocument.Parse(json);
                 if (doc.RootElement.TryGetProperty("InstallDirectory", out var node))
                 {
                     string v = node.GetString() ?? string.Empty;
                     if (!string.IsNullOrWhiteSpace(v))
                         InstallDirectory = v;
+                }
+
+                if (doc.RootElement.TryGetProperty("GameExecutableName", out var executableNode))
+                {
+                    string executable = executableNode.GetString() ?? string.Empty;
+                    if (!string.IsNullOrWhiteSpace(executable))
+                        GameExecutableName = executable;
+                }
+
+                if (doc.RootElement.TryGetProperty("LastInstalledVersion", out var versionNode))
+                    LastInstalledVersion = versionNode.GetString() ?? string.Empty;
+
+                if (doc.RootElement.TryGetProperty("LastUpdatedAtUtc", out var updatedNode) &&
+                    updatedNode.ValueKind != JsonValueKind.Null &&
+                    updatedNode.TryGetDateTime(out DateTime updatedAt))
+                {
+                    LastUpdatedAtUtc = updatedAt;
                 }
             }
             catch
@@ -44,40 +71,31 @@ namespace ROH.Launcher.Services
         {
             try
             {
-                string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ROH");
-                if (!Directory.Exists(folder))
-                    Directory.CreateDirectory(folder);
-
                 // validate install directory exists - request confirmation to create if needed
-                try
-                {
-                    if (!string.IsNullOrWhiteSpace(InstallDirectory) && !Directory.Exists(InstallDirectory))
-                    {
-                        // ask for confirmation via injected ConfirmService
-                        bool ok = await _confirmService.RequestConfirm("Create folder?", $"Install directory '{InstallDirectory}' does not exist. Create it?").ConfigureAwait(true);
+                if (string.IsNullOrWhiteSpace(InstallDirectory))
+                    return false;
 
-                        if (ok)
-                        {
-                            try
-                            {
-                                Directory.CreateDirectory(InstallDirectory);
-                            }
-                            catch
-                            {
-                                // creation failed
-                            }
-                        }
+                if (!Directory.Exists(InstallDirectory))
+                {
+                    bool ok = await _confirmService.RequestConfirm(
+                            "Criar pasta?",
+                            $"A pasta de instalacao '{InstallDirectory}' nao existe. Deseja cria-la?")
+                        .ConfigureAwait(true);
+
+                    if (!ok)
+                        return false;
+
+                    try
+                    {
+                        Directory.CreateDirectory(InstallDirectory);
+                    }
+                    catch
+                    {
+                        return false;
                     }
                 }
-                catch
-                {
-                    // ignore installation dir creation failures
-                }
 
-                string path = Path.Combine(folder, SETTINGS_FILE);
-                var doc = new { InstallDirectory };
-                string json = System.Text.Json.JsonSerializer.Serialize(doc, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
-                await File.WriteAllTextAsync(path, json).ConfigureAwait(true);
+                await WriteSettingsAsync().ConfigureAwait(true);
                 // return whether install directory exists after save
                 return !string.IsNullOrWhiteSpace(InstallDirectory) && Directory.Exists(InstallDirectory);
             }
@@ -88,20 +106,22 @@ namespace ROH.Launcher.Services
             }
         }
 
+        public async Task SaveInstallMetadataAsync(string versionLabel)
+        {
+            LastInstalledVersion = versionLabel;
+            LastUpdatedAtUtc = DateTime.UtcNow;
+            await WriteSettingsAsync().ConfigureAwait(true);
+        }
+
         public async Task<string?> PickInstallDirectoryAsync()
         {
             try
             {
-                // resolve platform-specific folder picker via DI
-                var picker = MauiProgram.CreateMauiApp().Services.GetService(typeof(IFolderPicker)) as IFolderPicker;
-                if (picker != null)
+                var picked = await _folderPicker.PickFolderAsync().ConfigureAwait(true);
+                if (!string.IsNullOrWhiteSpace(picked))
                 {
-                    var picked = await picker.PickFolderAsync().ConfigureAwait(true);
-                    if (!string.IsNullOrWhiteSpace(picked))
-                    {
-                        InstallDirectory = picked;
-                        return picked;
-                    }
+                    InstallDirectory = picked;
+                    return picked;
                 }
 
                 // fallback
@@ -122,6 +142,24 @@ namespace ROH.Launcher.Services
             {
                 return null;
             }
+        }
+
+        async Task WriteSettingsAsync()
+        {
+            string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ROH");
+            if (!Directory.Exists(folder))
+                Directory.CreateDirectory(folder);
+
+            string path = Path.Combine(folder, SETTINGS_FILE);
+            var doc = new
+            {
+                InstallDirectory,
+                GameExecutableName,
+                LastInstalledVersion,
+                LastUpdatedAtUtc,
+            };
+            string json = JsonSerializer.Serialize(doc, new JsonSerializerOptions { WriteIndented = true });
+            await File.WriteAllTextAsync(path, json).ConfigureAwait(true);
         }
     }
 }
