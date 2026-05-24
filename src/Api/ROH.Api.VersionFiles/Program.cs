@@ -115,4 +115,51 @@ app.MapGet(
     .WithName("DownloadFile")
     .WithOpenApi();
 
+app.MapGet(
+    "DownloadFileRaw",
+    async (ROH.Context.File.Interface.IGameFileRepository repo, string fileGuid) =>
+    {
+        if (!Guid.TryParse(fileGuid, out Guid guid))
+            return Results.BadRequest();
+
+        var file = await repo.GetFileAsync(guid).ConfigureAwait(true);
+        if (file is null)
+            return Results.NotFound();
+
+        string filePath = Path.Combine(file.Path, file.Name);
+        if (!System.IO.File.Exists(filePath))
+            return Results.NotFound();
+
+        var stream = System.IO.File.OpenRead(filePath);
+        return Results.File(stream, "application/octet-stream", file.Name, lastModified: System.IO.File.GetLastWriteTimeUtc(filePath), entityTag: null, enableRangeProcessing: true);
+    })
+    .WithName("DownloadFileRaw")
+    .WithOpenApi();
+
+app.MapGet(
+    "FileChecksum",
+    async (ROH.Context.File.Interface.IGameFileRepository repo, string fileGuid) =>
+    {
+        if (!Guid.TryParse(fileGuid, out Guid guid))
+            return Results.BadRequest();
+
+        var file = await repo.GetFileAsync(guid).ConfigureAwait(true);
+        if (file is null)
+            return Results.NotFound();
+
+        string filePath = Path.Combine(file.Path, file.Name);
+        if (!System.IO.File.Exists(filePath))
+            return Results.NotFound();
+
+        using var sha = System.Security.Cryptography.SHA256.Create();
+        await using var fs = System.IO.File.OpenRead(filePath);
+        byte[] hash = sha.ComputeHash(fs);
+        string checksum = BitConverter.ToString(hash).Replace("-", string.Empty).ToLowerInvariant();
+
+        var resp = new ROH.StandardModels.Response.DefaultResponse(objectResponse: checksum);
+        return Results.Ok(resp);
+    })
+    .WithName("FileChecksum")
+    .WithOpenApi();
+
 await app.RunAsync().ConfigureAwait(false);

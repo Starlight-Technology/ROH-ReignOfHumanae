@@ -67,9 +67,21 @@
     </ItemGroup>
 
     <ItemGroup>
+        <None Include="wwwroot\launcher-config.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
         <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.70" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="10.0.70" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.8" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Common\ROH.Utils\ROH.Utils.csproj" />
+        <ProjectReference Include="..\..\Common\ROH.StandardModels\ROH.StandardModels.csproj" />
     </ItemGroup>
 
 </Project>

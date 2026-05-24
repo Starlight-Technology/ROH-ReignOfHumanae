@@ -1,23 +1,80 @@
 @page "/settings"
 @inject ROH.Launcher.Services.LauncherState LauncherState
+@inject ROH.Launcher.Services.SettingsService SettingsService
+@inject ROH.Launcher.Services.AlertService AlertService
 
 <div class="container mt-3">
     <h2>Settings</h2>
 
     <div class="mb-3">
-        <label class="form-label">Launch Options</label>
-        <select class="form-select">
-            <option value="windowed">Windowed</option>
-            <option value="fullscreen">Fullscreen</option>
-        </select>
+        <label class="form-label">Install Directory</label>
+        <input class="form-control" @bind="installDirectory" />
+        @if (saveResult.HasValue)
+        {
+            if (saveResult.Value)
+            {
+                <div class="alert alert-success mt-2">Install directory exists or was created successfully.</div>
+            }
+            else
+            {
+                <div class="alert alert-danger mt-2">Failed to create or validate install directory.</div>
+            }
+        }
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Game Directory</label>
-        <input class="form-control" placeholder="C:\\Program Files\\ROH" />
+        <button class="btn btn-secondary me-2" @onclick="Browse">Browse...</button>
+        <button class="btn btn-primary" @onclick="Save">Save</button>
+        <NavLink class="btn btn-link ms-2" href="/">Back</NavLink>
     </div>
 
-    <div>
-        <NavLink class="btn btn-primary me-2" href="/">Back</NavLink>
-    </div>
 </div>
+
+@code{
+    private string installDirectory = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await SettingsService.LoadAsync();
+        installDirectory = SettingsService.InstallDirectory;
+        AlertService.OnAlert += OnAlert;
+    }
+
+    public void Dispose()
+    {
+        AlertService.OnAlert -= OnAlert;
+    }
+
+    private void OnAlert(string title, string message, bool isError)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    private async Task Browse()
+    {
+        string? picked = await SettingsService.PickInstallDirectoryAsync();
+        if (!string.IsNullOrWhiteSpace(picked))
+        {
+            installDirectory = picked;
+            StateHasChanged();
+        }
+    }
+
+    private bool? saveResult = null;
+
+    private async Task Save()
+    {
+        SettingsService.InstallDirectory = installDirectory;
+        bool ok = await SettingsService.SaveAsync();
+        saveResult = ok;
+        if (ok)
+        {
+            await AlertService.ShowInfo("Settings", "Settings saved");
+        }
+        else
+        {
+            await AlertService.ShowError("Settings", "Failed to create/install directory");
+        }
+        StateHasChanged();
+    }
+}

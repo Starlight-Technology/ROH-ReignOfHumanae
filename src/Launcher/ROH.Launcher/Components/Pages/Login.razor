@@ -24,14 +24,21 @@
     private string? username;
     private string? password;
 
-    private void DoLogin()
+    private async Task DoLogin()
     {
-        // Replace with real authentication flow
-        if (!string.IsNullOrWhiteSpace(username))
+        if (string.IsNullOrWhiteSpace(username))
+            return;
+
+        var model = new ROH.StandardModels.Account.LoginModel { Login = username, Password = password };
+        bool ok = await LauncherState.LoginAsync(model);
+        if (ok)
         {
-            LauncherState.SimulateLogin(username!);
-            // navigate back
             NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            // TODO: show error to user - keep simple for now
+            Console.WriteLine("Login failed");
         }
     }
 

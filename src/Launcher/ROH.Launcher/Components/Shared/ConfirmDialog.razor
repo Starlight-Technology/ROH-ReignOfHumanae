@@ -1,0 +1,76 @@
+@using ROH.Launcher.Services
+@inject ConfirmService ConfirmService
+
+@if (_visible)
+{
+    <div class="modal-backdrop fade show"></div>
+    <div class="modal d-block" tabindex="-1" style="display:block; z-index:2001">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@_title</h5>
+                    <button type="button" class="btn-close" aria-label="Close" @onclick="Cancel"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p class="text-body">@_message</p>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+                    <button class="btn btn-primary" @onclick="Confirm">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code{
+    bool _visible = false;
+    string _title = string.Empty;
+    string _message = string.Empty;
+    ConfirmRequest? _current;
+
+    protected override void OnInitialized()
+    {
+        ConfirmService.OnConfirmRequested += OnRequested;
+    }
+
+    void OnRequested(ConfirmRequest req)
+    {
+        _current = req;
+        _title = req.Title;
+        _message = req.Message;
+        _visible = true;
+        InvokeAsync(StateHasChanged);
+    }
+
+    async Task Confirm()
+    {
+        if (_current != null)
+        {
+            _current.Tcs.TrySetResult(true);
+            _current = null;
+        }
+
+        _visible = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    async Task Cancel()
+    {
+        if (_current != null)
+        {
+            _current.Tcs.TrySetResult(false);
+            _current = null;
+        }
+
+        _visible = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        ConfirmService.OnConfirmRequested -= OnRequested;
+    }
+}

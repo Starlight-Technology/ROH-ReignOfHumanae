@@ -1,6 +1,10 @@
 ﻿@page "/"
 @inject ROH.Launcher.Services.LauncherState LauncherState
+@inject ROH.Launcher.Services.UpdaterService UpdaterService
+@inject ROH.Launcher.Services.SettingsService SettingsService
 @using Microsoft.AspNetCore.Components
+@using System
+@using System.IO
 
 <div class="container mt-3">
     <h1>ROH Launcher</h1>
@@ -57,7 +61,36 @@
 
     private void StartUpdate()
     {
-        LauncherState.StartUpdate();
+        // Start a real update process: get current version, list files, download them
+        LauncherState.StartUpdate(async (progress, ct) =>
+        {
+            var version = await UpdaterService.GetCurrentVersionAsync(ct).ConfigureAwait(true);
+            if (version is null)
+            {
+                progress.Report(100);
+                return null;
+            }
+
+            var files = await UpdaterService.GetFilesForVersionAsync(version.Guid, ct, LauncherState.Token).ConfigureAwait(true);
+            if (files is null)
+            {
+                progress.Report(100);
+                return null;
+            }
+
+            string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ROH", $"{version.Version}.{version.Release}.{version.Review}");
+            try
+            {
+                await UpdaterService.DownloadFilesAsync(files, folder, progress, ct, LauncherState.Token).ConfigureAwait(true);
+                return folder;
+            }
+            catch (Exception ex)
+            {
+                // show alert through LauncherState's alert service (LauncherState will also handle alerts)
+                Console.WriteLine("Update failed: " + ex.Message);
+                return null;
+            }
+        });
     }
 
     private void StopUpdate()
@@ -67,12 +100,12 @@
 
     private void StartGame()
     {
-        // Placeholder - in a real launcher this would start the game executable or switch to a different flow
-        Console.WriteLine("Start Game pressed");
+        // Launch game from configured install directory
+        _ = LauncherState.LaunchGameAsync(SettingsService.InstallDirectory);
     }
 
-    private void Logout()
+    private async Task Logout()
     {
-        LauncherState.Logout();
+        await LauncherState.Logout();
     }
 }

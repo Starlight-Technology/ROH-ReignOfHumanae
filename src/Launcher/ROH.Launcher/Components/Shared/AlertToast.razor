@@ -1,0 +1,56 @@
+@inject ROH.Launcher.Services.AlertService AlertService
+
+@if (_visible)
+{
+    <div class="modal-backdrop fade show"></div>
+    <div class="modal d-block" tabindex="-1" style="display:block; z-index:2001">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@_title</h5>
+                    <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="@( _isError ? "text-danger" : "text-body")">@_message</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" @onclick="Close">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code{
+    string _title = string.Empty;
+    string _message = string.Empty;
+    bool _isError = false;
+    bool _visible = false;
+
+    protected override void OnInitialized()
+    {
+        AlertService.OnAlert += OnAlert;
+    }
+
+    void OnAlert(string title, string message, bool isError)
+    {
+        _title = title;
+        _message = message;
+        _isError = isError;
+        _visible = true;
+        InvokeAsync(StateHasChanged);
+    }
+
+    void Close()
+    {
+        _visible = false;
+        _title = string.Empty;
+        _message = string.Empty;
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        AlertService.OnAlert -= OnAlert;
+    }
+}
