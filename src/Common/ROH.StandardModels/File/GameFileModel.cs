@@ -8,13 +8,14 @@ namespace ROH.StandardModels.File
 {
     public class GameFileModel
     {
-        public GameFileModel(string name, string format, byte[]? content, long size, bool active)
+        public GameFileModel(string name, string format, byte[]? content, long size, bool active, string path = "")
         {
             Name = name;
             Format = format;
             Content = content;
             Size = size;
             Active = active;
+            Path = path;
         }
 
         public bool Active { get; set; }
@@ -24,6 +25,8 @@ namespace ROH.StandardModels.File
         public string Format { get; set; }
 
         public string Name { get; set; }
+
+        public string Path { get; set; }
 
         public long Size { get; set; }
     }

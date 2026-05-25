@@ -84,25 +84,25 @@
 
         </MudTable>
 
-        <MudStack Direction="Row" Row="true" Justify="Justify.SpaceBetween" Class="sm-3">
+        <CoronaStack Direction="CoronaStackDirection.Row"
+                     Justify="CoronaStackJustify.SpaceBetween"
+                     Wrap="CoronaStackWrap.Wrap"
+                     Spacing=".75rem"
+                     Class="roh-pagination-actions">
 
-            <MudButton Variant="Variant.Outlined"
-                       Disabled="@IsFirstPage"
-                       OnClick="PreviousPage"
-                       StartIcon="@Icons.Material.Filled.NavigateBefore">
-
+            <CoronaButton Variant="CoronaButtonVariant.Outlined"
+                          Disabled="@IsFirstPage"
+                          OnClick="@PreviousPage">
                 Previous
-            </MudButton>
+            </CoronaButton>
 
-            <MudButton Variant="Variant.Outlined"
-                       Disabled="@IsLastPage"
-                       OnClick="NextPage"
-                       EndIcon="@Icons.Material.Filled.NavigateNext">
-
+            <CoronaButton Variant="CoronaButtonVariant.Outlined"
+                          Disabled="@IsLastPage"
+                          OnClick="@NextPage">
                 Next
-            </MudButton>
+            </CoronaButton>
 
-        </MudStack>
+        </CoronaStack>
 
     </MudPaper>
 }

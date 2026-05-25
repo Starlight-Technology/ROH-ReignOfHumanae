@@ -1,0 +1,66 @@
+@namespace Manager.Version.Components
+
+<div class="roh-version-summary @Class">
+    <div class="roh-version-summary__badges">
+        <CoronaBadge Content="@VersionLabel"
+                     Variant="CoronaBadgeVariant.Soft" />
+
+        @if (ShowStatus)
+        {
+            <CoronaBadge Content="@StatusLabel"
+                         Color="@StatusColor"
+                         Variant="CoronaBadgeVariant.Outlined" />
+        }
+    </div>
+
+    <div class="roh-version-summary__metrics">
+        <div class="roh-version-summary__metric">
+            <span>Version</span>
+            <strong>@Version</strong>
+        </div>
+
+        <div class="roh-version-summary__metric">
+            <span>Release</span>
+            <strong>@Release</strong>
+        </div>
+
+        <div class="roh-version-summary__metric">
+            <span>Review</span>
+            <strong>@Review</strong>
+        </div>
+
+        @if (ShowReleaseDate)
+        {
+            <div class="roh-version-summary__metric">
+                <span>Release Date</span>
+                <strong>@ReleaseDateLabel</strong>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public int Version { get; set; }
+
+    [Parameter] public int Release { get; set; }
+
+    [Parameter] public int Review { get; set; }
+
+    [Parameter] public DateTime? ReleaseDate { get; set; }
+
+    [Parameter] public bool Released { get; set; }
+
+    [Parameter] public bool ShowStatus { get; set; }
+
+    [Parameter] public bool ShowReleaseDate { get; set; }
+
+    [Parameter] public string Class { get; set; } = string.Empty;
+
+    private string VersionLabel => $"v{Version}.{Release}.{Review}";
+
+    private string StatusLabel => Released ? "Released" : "Review";
+
+    private CoronaColorSemantic StatusColor => Released ? CoronaColorSemantic.Success : CoronaColorSemantic.Warning;
+
+    private string ReleaseDateLabel => ReleaseDate?.ToShortDateString() ?? "Pending";
+}

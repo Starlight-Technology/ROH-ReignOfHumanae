@@ -1,13 +1,11 @@
-﻿@namespace ROH.Site.Components.Custom
+@namespace ROH.Site.Components.Custom
 
-<div class="card roh-card">
-    <div class="card-header roh-card-header">
-        @Header
-    </div>
-    <div class="card-body roh-card-body">
-        @ChildContent
-    </div>
-</div>
+<CoronaCard Title="@Header"
+            Class="@CssClass"
+            HeaderTextAlign="CoronaTextAlign.Center"
+            ContentTextAlign="CoronaTextAlign.Left">
+    @ChildContent
+</CoronaCard>
 
 @code {
     [Parameter]
@@ -15,4 +13,7 @@
 
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public string CssClass { get; set; } = "roh-card";
 }

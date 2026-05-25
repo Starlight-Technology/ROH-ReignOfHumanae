@@ -81,6 +81,29 @@ builder.Services.AddSingleton(mapper);
 
 WebApplication app = builder.Build();
 
+static string GetSafeStoredFilePath(ROH.Context.File.Entities.GameFile file)
+{
+    string rootPath = Path.GetFullPath(file.Path);
+    string relativePath = NormalizeRelativePath(file.Name);
+    string filePath = Path.GetFullPath(Path.Combine(rootPath, relativePath));
+    string rootWithSeparator = rootPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+        + Path.DirectorySeparatorChar;
+
+    if (!filePath.StartsWith(rootWithSeparator, StringComparison.OrdinalIgnoreCase))
+        throw new InvalidOperationException("Invalid file path.");
+
+    return filePath;
+}
+
+static string NormalizeRelativePath(string fileName)
+{
+    string safeName = string.IsNullOrWhiteSpace(fileName) ? "download.bin" : fileName;
+    return safeName
+        .Replace('\\', Path.DirectorySeparatorChar)
+        .Replace('/', Path.DirectorySeparatorChar)
+        .TrimStart(Path.DirectorySeparatorChar);
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -130,12 +153,13 @@ app.MapGet(
         if (file is null)
             return Results.NotFound();
 
-        string filePath = Path.Combine(file.Path, file.Name);
+        string filePath = GetSafeStoredFilePath(file);
         if (!System.IO.File.Exists(filePath))
             return Results.NotFound();
 
         var stream = System.IO.File.OpenRead(filePath);
-        return Results.File(stream, "application/octet-stream", file.Name, lastModified: System.IO.File.GetLastWriteTimeUtc(filePath), entityTag: null, enableRangeProcessing: true);
+        string downloadName = Path.GetFileName(NormalizeRelativePath(file.Name));
+        return Results.File(stream, "application/octet-stream", downloadName, lastModified: System.IO.File.GetLastWriteTimeUtc(filePath), entityTag: null, enableRangeProcessing: true);
     })
     .WithName("DownloadFileRaw")
     .WithOpenApi();
@@ -155,7 +179,7 @@ app.MapGet(
         if (file is null)
             return Results.NotFound();
 
-        string filePath = Path.Combine(file.Path, file.Name);
+        string filePath = GetSafeStoredFilePath(file);
         if (!System.IO.File.Exists(filePath))
             return Results.NotFound();
 

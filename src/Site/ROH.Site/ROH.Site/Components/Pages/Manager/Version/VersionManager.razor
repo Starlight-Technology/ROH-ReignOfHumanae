@@ -6,22 +6,19 @@
 @using ROH.StandardModels.Version;
 
 <AuthorizeComponent>
-    <div class="row">
-        <div class="col-sm-12">
-            <Manager.Version.Components.CurrentVersionComponent>
-            </Manager.Version.Components.CurrentVersionComponent>
-        </div>
-    </div>
+    <CardComponent Header="Version Manager">
+        <CoronaTabs Variant="CoronaTabsVariant.Segmented" LazyRender="true">
+            <CoronaTabItem Header="Current">
+                <Manager.Version.Components.CurrentVersionComponent />
+            </CoronaTabItem>
 
-    <div class="row">
-        <div class="col-sm-12">
-            <Manager.Version.Components.AllVersionsComponent></Manager.Version.Components.AllVersionsComponent>
-        </div>
-    </div>
+            <CoronaTabItem Header="Versions">
+                <Manager.Version.Components.AllVersionsComponent />
+            </CoronaTabItem>
 
-    <div class="row">
-        <div class="col-sm-12">
-            <Manager.Version.Components.NewVersionComponent></Manager.Version.Components.NewVersionComponent>
-        </div>
-    </div>
+            <CoronaTabItem Header="New Version">
+                <Manager.Version.Components.NewVersionComponent />
+            </CoronaTabItem>
+        </CoronaTabs>
+    </CardComponent>
 </AuthorizeComponent>

@@ -26,11 +26,11 @@ namespace ROH.StandardModels.Version
             DetailsLink = $"/Manager/Version/VersionDetails/{guid}";
         }
 
+        public int Version { get; set; }
+
         public int Release { get; set; }
 
         public int Review { get; set; }
-
-        public int Version { get; set; }
 
         public DateTime VersionDate { get; set; }
 

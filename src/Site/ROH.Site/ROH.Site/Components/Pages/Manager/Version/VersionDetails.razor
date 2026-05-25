@@ -1,4 +1,4 @@
-﻿@page "/Manager/Version/VersionDetails/{versionGuid}"
+@page "/Manager/Version/VersionDetails/{versionGuid}"
 
 @using Interfaces.Api;
 @using Interfaces.Helpers;
@@ -13,91 +13,107 @@
 @inject IVersionService _versionService;
 @inject IVersionFileService _versionFileService;
 @inject IRohAlertService _sweetAlert;
+@inject IJSRuntime JS
 
 <AuthorizeComponent>
     @if (gameVersion is not null)
     {
         <CardComponent Header="Version">
-            <div class="row">
-                <div class="col-sm-2">
-                    <MudTextField T="int"
-                                  Label="Release"
-                                  Variant="Variant.Outlined"
-                                  Value="@gameVersion!.Release"
-                                  Disabled="true" />
-                </div>
+            <CoronaStack Direction="CoronaStackDirection.Row"
+                         Align="CoronaStackAlign.Center"
+                         Justify="CoronaStackJustify.SpaceBetween"
+                         Wrap="CoronaStackWrap.Wrap"
+                         Spacing="1rem"
+                         FullWidth="true">
 
-                <div class="col-sm-2">
-                    <MudTextField T="int"
-                                  Label="Review"
-                                  Variant="Variant.Outlined"
-                                  Value="@gameVersion!.Review"
-                                  Disabled="true" />
-                </div>
-
-                <div class="col-sm-2">
-                    <MudTextField T="int"
-                                  Label="Version"
-                                  Variant="Variant.Outlined"
-                                  Value="@gameVersion!.Version"
-                                  Disabled="true" />
-                </div>
+                <Manager.Version.Components.VersionSummaryComponent Version="@gameVersion!.Version"
+                                                                    Release="@gameVersion!.Release"
+                                                                    Review="@gameVersion!.Review"
+                                                                    ReleaseDate="@gameVersion!.ReleaseDate"
+                                                                    Released="@gameVersion!.Released"
+                                                                    ShowStatus="true"
+                                                                    ShowReleaseDate="true"
+                                                                    Class="roh-version-summary--inline" />
 
                 @if (!gameVersion.Released)
                 {
-
-                    <div class="col-sm-2">
-                        <MudButton ButtonType="ButtonType.Button"
-                                   Color="Color.Primary"
-                                   Variant="Variant.Outlined"
-                                   OnClick="ReleaseVersion">Release Version</MudButton>
-                    </div>
+                    <CoronaButton Color="CoronaColorSemantic.Primary"
+                                  Variant="CoronaButtonVariant.Outlined"
+                                  OnClick="ReleaseVersion">
+                        Release Version
+                    </CoronaButton>
                 }
-
-                @if (gameVersion.ReleaseDate.HasValue)
-                {
-
-                    <div class="col-sm-4">
-                        <MudTextField T="string"
-                                      Label="Release Date"
-                                      Variant="Variant.Outlined"
-                                      Value="@gameVersion!.ReleaseDate?.ToShortDateString()"
-                                      Disabled="true" />
-                    </div>
-                }
-
-            </div>
+            </CoronaStack>
         </CardComponent>
 
         <CardComponent Header="Upload File">
-            <EditForm Model="gameVersionFile" OnValidSubmit="HandleSubmit" style="margin:20px">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <MudFileUpload T="IReadOnlyList<IBrowserFile>"
-                                           FilesChanged="HandleFilesChanged"
-                                           Multiple="true"
-                                           MaxFileSize="1000000000">
+            <EditForm Model="gameVersionFile" style="margin:20px">
+                <CoronaStack Direction="CoronaStackDirection.Row"
+                             Align="CoronaStackAlign.Center"
+                             Wrap="CoronaStackWrap.Wrap"
+                             Spacing="1rem"
+                             FullWidth="true">
 
-                                <ActivatorContent>
-                                    <MudButton Variant="Variant.Outlined"
-                                               Color="Color.Primary"
-                                               StartIcon="@Icons.Material.Filled.UploadFile">
-                                        Select Files
-                                    </MudButton>
-                                </ActivatorContent>
+                    <MudFileUpload T="IReadOnlyList<IBrowserFile>"
+                                   FilesChanged="HandleFilesChanged"
+                                   Multiple="true"
+                                   MaxFileSize="@MaxFileSize">
 
-                            </MudFileUpload>
+                        <ActivatorContent>
+                            <MudButton Variant="Variant.Outlined"
+                                       Color="Color.Primary"
+                                       StartIcon="@Icons.Material.Filled.UploadFile">
+                                Select Files
+                            </MudButton>
+                        </ActivatorContent>
 
-                        </div>
+                    </MudFileUpload>
+
+                    <CoronaButton Color="CoronaColorSemantic.Primary"
+                                  Variant="CoronaButtonVariant.Filled"
+                                  Disabled="@(!CanSubmitUpload)"
+                                  Loading="@isUploading"
+                                  OnClick="HandleSubmit">
+                        Submit
+                    </CoronaButton>
+                </CoronaStack>
+
+                @if (selectedUploadFiles.Any())
+                {
+                    <div class="roh-upload-list">
+                        @foreach (var item in selectedUploadFiles)
+                        {
+                            <div class="roh-upload-item">
+                                <div class="roh-upload-item__meta">
+                                    <strong>@item.File.Name</strong>
+                                    <span>@FormatFileSize(item.File.Size)</span>
+                                </div>
+
+                                <CoronaInput Label="Target Folder"
+                                             Placeholder="Data/Maps"
+                                             @bind-Value="item.TargetFolder" />
+
+                                <div class="roh-upload-item__status">
+                                    <CoronaBadge Content="@item.Status"
+                                                 Color="@GetStatusColor(item.Status)"
+                                                 Variant="CoronaBadgeVariant.Outlined" />
+
+                                    @if (!string.IsNullOrWhiteSpace(item.Message))
+                                    {
+                                        <span>@item.Message</span>
+                                    }
+                                </div>
+
+                                <CoronaButton Color="CoronaColorSemantic.Danger"
+                                              Variant="CoronaButtonVariant.Text"
+                                              Disabled="@isUploading"
+                                              OnClick="@(() => RemoveSelectedFile(item))">
+                                    Remove
+                                </CoronaButton>
+                            </div>
+                        }
                     </div>
-                    <div class="col-sm-1"></div>
-                    <div class="col-sm-2">
-                        <MudButton ButtonType="ButtonType.Submit"
-                                   Color="Color.Primary"
-                                   Variant="Variant.Outlined">Submit</MudButton>
-                    </div>
-                </div>
+                }
             </EditForm>
 
             @if (isUploading)
@@ -106,14 +122,15 @@
                     <div class="col-sm-12">
                         <div class="text-center">
                             <MudProgressLinear Value="uploadProgress" Color="Color.Primary" />
-                            <p>Uploading... (@uploadProgress%)</p>
+                            <p>Uploading... (@uploadProgress.ToString("0")%)</p>
                         </div>
                     </div>
                 </div>
             }
             <div class="row">
                 <div class="col-sm-12">
-                    <Manager.Version.Components.AllFilesComponent VersionGuid="@versionGuid">
+                    <Manager.Version.Components.AllFilesComponent @key="filesListRefreshKey"
+                                                                  VersionGuid="@versionGuid">
                     </Manager.Version.Components.AllFilesComponent>
                 </div>
             </div>
@@ -121,30 +138,24 @@
     }
 </AuthorizeComponent>
 
-
-
 @code {
+    private const long MaxFileSize = 1000000000;
+
     [Parameter]
     public string? versionGuid { get; set; }
 
     private GameVersionModel? gameVersion = null;
     private readonly ICollection<GameVersionFileModel> gameVersionFile = new List<GameVersionFileModel>();
-    private IReadOnlyList<IBrowserFile>? selectedFiles;
+    private List<SelectedUploadFile> selectedUploadFiles = new();
     private bool isUploading = false;
     private double uploadProgress = 0;
+    private int filesListRefreshKey = 0;
     private DefaultResponse? defaultResponse = new();
+    private bool CanSubmitUpload => selectedUploadFiles.Any(item => item.Status != "Uploaded") && !isUploading;
 
     protected override async Task OnInitializedAsync()
     {
         await GetVersionByGuid();
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (!firstRender && gameVersion is null)
-        {
-            await HandleGetVersionResponse(defaultResponse);
-        }
     }
 
     private async Task GetVersionByGuid()
@@ -152,6 +163,7 @@
         if (Guid.TryParse(versionGuid, out Guid guid))
         {
             defaultResponse = await _versionService.GetVersionDetails(guid);
+            await HandleGetVersionResponse(defaultResponse);
         }
         else
         {
@@ -163,94 +175,121 @@
 
     private Task HandleFilesChanged(IReadOnlyList<IBrowserFile> files)
     {
-        selectedFiles = files;
+        selectedUploadFiles = files.Select(file => new SelectedUploadFile(file)).ToList();
         return Task.CompletedTask;
     }
 
-
-    private async Task HandleSubmit(EditContext editContext)
+    private void RemoveSelectedFile(SelectedUploadFile file)
     {
+        selectedUploadFiles.Remove(file);
+    }
 
-        if (selectedFiles != null && selectedFiles.Any())
+    private async Task HandleSubmit()
+    {
+        List<SelectedUploadFile> filesToUpload = selectedUploadFiles
+            .Where(item => item.Status != "Uploaded")
+            .ToList();
+
+        if (!filesToUpload.Any())
         {
-            try
-            {
-                string fileName;
-                string fileExtension;
-                long fileSize = 0;
-                long maxFileSize = 1000000000;
-                bool uploaded = false;
-                isUploading = true;
-                int totalFiles = selectedFiles.Count; // Total files being uploaded
-                int filesUploaded = 0;
+            await _sweetAlert.Show("Upload File", "Select at least one file to upload.", RohAlertType.Warning);
+            return;
+        }
 
-                foreach (var file in selectedFiles)
+        try
+        {
+            bool uploaded = false;
+            isUploading = true;
+            int filesUploaded = 0;
+            int totalFiles = filesToUpload.Count;
+
+            foreach (SelectedUploadFile selectedFile in filesToUpload)
+            {
+                selectedFile.Status = "Uploading";
+                selectedFile.Message = null;
+                StateHasChanged();
+
+                if (selectedFile.File.Size > MaxFileSize)
                 {
-                    fileName = file.Name;
-                    fileExtension = Path.GetExtension(fileName);
-                    fileSize = file.Size;
-                    if (fileSize > maxFileSize)
+                    selectedFile.Status = "Skipped";
+                    selectedFile.Message = "The file size must be less than 1 Gb.";
+                }
+                else
+                {
+                    using Stream stream = selectedFile.File.OpenReadStream(MaxFileSize);
+                    using MemoryStream ms = new();
+                    await stream.CopyToAsync(ms);
+
+                    byte[] fileContent = ms.ToArray();
+                    string targetFolder = NormalizeUploadFolder(selectedFile.TargetFolder);
+                    string fileName = BuildUploadFileName(targetFolder, selectedFile.File.Name);
+                    string fileExtension = Path.GetExtension(selectedFile.File.Name);
+
+                    DefaultResponse? responseUpload = await _versionFileService.UploadVersionFile(
+                        new GameVersionFileModel()
+                        {
+                            Guid = Guid.Empty,
+                            Name = fileName,
+                            Path = targetFolder,
+                            Format = fileExtension,
+                            Content = fileContent,
+                            Size = selectedFile.File.Size,
+                            GameVersion = gameVersion
+                        });
+
+                    if (responseUpload != null && responseUpload.HttpStatus.IsSuccessStatusCode())
                     {
-                        await _sweetAlert.Show("Upload File", "The file size must be less than 1 Gb.", RohAlertType.Warning);
+                        selectedFile.Status = "Uploaded";
+                        uploaded = true;
                     }
                     else
                     {
-                        using (var stream = file.OpenReadStream(maxFileSize))
-                        using (var ms = new MemoryStream())
-                        {
-                            await stream.CopyToAsync(ms);
-                            var fileContent = ms.ToArray();
+                        selectedFile.Status = "Error";
+                        selectedFile.Message = responseUpload?.Message ?? "Upload failed.";
 
-                            filesUploaded++;
-                            uploadProgress = ((double)filesUploaded / totalFiles * 100);
-                            StateHasChanged();
-
-                            var responseUpload = await _versionFileService.UploadVersionFile(
-                            new GameVersionFileModel()
-                            {
-                                Guid = Guid.Empty,
-                                Name = fileName,
-                                Format = fileExtension,
-                                Content = fileContent,
-                                Size = fileSize,
-                                GameVersion = gameVersion
-                            }
-                            );
-
-                            if (responseUpload != null && !responseUpload.HttpStatus.IsSuccessStatusCode())
-                                await _sweetAlert.ShowResponse(responseUpload);
-                            else if (responseUpload != null && responseUpload.HttpStatus.IsSuccessStatusCode())
-                                uploaded = true;
-                        }
+                        if (responseUpload is not null)
+                            await _sweetAlert.ShowResponse(responseUpload);
                     }
-
                 }
 
-                if (uploaded)
-                    await _sweetAlert.Show("Upload File", "File has been uploaded", RohAlertType.Success);
-            }
-            finally
-            {
-                selectedFiles = null;
-                isUploading = false;
-                uploadProgress = 0;
+                filesUploaded++;
+                uploadProgress = (double)filesUploaded / totalFiles * 100;
                 StateHasChanged();
             }
 
+            if (uploaded)
+            {
+                filesListRefreshKey++;
+                await _sweetAlert.Show("Upload File", "File has been uploaded", RohAlertType.Success);
+            }
         }
-        StateHasChanged();
-        await Task.CompletedTask;
+        finally
+        {
+            isUploading = false;
+            uploadProgress = 0;
+            StateHasChanged();
+        }
     }
 
-    private async Task ReleaseVersion(MouseEventArgs e)
+    private async Task ReleaseVersion()
     {
         if (gameVersion is null)
             return;
 
-        var response = await _versionService.ReleaseVersion(gameVersion);
+        bool confirmed = await JS.InvokeAsync<bool>(
+            "confirm",
+            $"Release version v{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}? Uploading new files will be blocked after release.");
+
+        if (!confirmed)
+            return;
+
+        DefaultResponse? response = await _versionService.ReleaseVersion(gameVersion);
 
         if (response is not null)
             await _sweetAlert.ShowResponse(response);
+
+        if (response?.HttpStatus.IsSuccessStatusCode() is true)
+            await GetVersionByGuid();
 
         StateHasChanged();
     }
@@ -259,12 +298,68 @@
     {
         if (response is not null
             && response.HttpStatus.IsSuccessStatusCode()
-            && response.ObjectResponse is not null
-            && gameVersion is null)
-            gameVersion = response?.ResponseToModel<GameVersionModel>() ?? new();
+            && response.ObjectResponse is not null)
+            gameVersion = response.ResponseToModel<GameVersionModel>() ?? new();
         else if (response is not null)
             await _sweetAlert.ShowResponse(response);
 
         StateHasChanged();
+    }
+
+    private static string FormatFileSize(long size)
+    {
+        double sizeInMegaBytes = (double)size / 1024 / 1024;
+        return $"{Math.Round(sizeInMegaBytes, 2)} Mb";
+    }
+
+    private static string BuildUploadFileName(string targetFolder, string fileName)
+    {
+        string safeFileName = Path.GetFileName(
+            fileName
+                .Replace('\\', Path.DirectorySeparatorChar)
+                .Replace('/', Path.DirectorySeparatorChar));
+
+        return string.IsNullOrWhiteSpace(targetFolder)
+            ? safeFileName
+            : $"{targetFolder}/{safeFileName}";
+    }
+
+    private static string NormalizeUploadFolder(string folder)
+    {
+        if (string.IsNullOrWhiteSpace(folder))
+            return string.Empty;
+
+        string normalized = folder
+            .Replace('\\', '/')
+            .Trim()
+            .Trim('/');
+
+        IEnumerable<string> segments = normalized
+            .Split('/', StringSplitOptions.RemoveEmptyEntries)
+            .Where(segment => segment != "." && segment != "..")
+            .Select(segment => string.Join("_", segment.Split(Path.GetInvalidFileNameChars(), StringSplitOptions.RemoveEmptyEntries)))
+            .Where(segment => !string.IsNullOrWhiteSpace(segment));
+
+        return string.Join("/", segments);
+    }
+
+    private static CoronaColorSemantic GetStatusColor(string status) => status switch
+    {
+        "Uploaded" => CoronaColorSemantic.Success,
+        "Uploading" => CoronaColorSemantic.Warning,
+        "Skipped" => CoronaColorSemantic.Neutral,
+        "Error" => CoronaColorSemantic.Danger,
+        _ => CoronaColorSemantic.Primary
+    };
+
+    private sealed class SelectedUploadFile(IBrowserFile file)
+    {
+        public IBrowserFile File { get; } = file;
+
+        public string TargetFolder { get; set; } = string.Empty;
+
+        public string Status { get; set; } = "Ready";
+
+        public string? Message { get; set; }
     }
 }

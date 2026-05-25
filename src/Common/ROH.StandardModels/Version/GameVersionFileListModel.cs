@@ -13,11 +13,12 @@ namespace ROH.StandardModels.Version
 {
     public class GameVersionFileListModel
     {
-        public GameVersionFileListModel(string name, long size, Guid fileGuid)
+        public GameVersionFileListModel(string name, string path, long size, Guid fileGuid)
         {
             double sizeInMegaBytes = ((double)size) / 1024 / 1024;
 
             Name = name;
+            Path = path;
             Size = $"{Math.Round(sizeInMegaBytes, 2)} Mb";
             FileGuid = fileGuid;
         }
@@ -29,6 +30,8 @@ namespace ROH.StandardModels.Version
         public Guid FileGuid { get; set; }
 
         public string Name { get; set; }
+
+        public string Path { get; set; }
 
         public string Size { get; set; }
     }

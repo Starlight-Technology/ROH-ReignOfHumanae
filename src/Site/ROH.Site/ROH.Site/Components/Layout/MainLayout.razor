@@ -1,22 +1,102 @@
-﻿@using ROH.Site.Helpers.Components.Layout
+@using ROH.Site.Helpers.Components.Layout
+@using ROH.Site.Interfaces.Helpers
+@implements IDisposable
 @inherits LayoutComponentBase
+@inject DrawerState DrawerState
+@inject ICustomAuthenticationStateProvider CustomAuthStateProvider
+@inject NavigationManager Nav
 
 <MudThemeProvider Theme="@RohTheme.Dark" IsDarkMode="true" />
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-<AppBarRoh />
+<CoronaPageHeader Title="Reign of Humanae"
+                  Height="64px"
+                  Class="roh-corona-header"
+                  Actions="@HeaderActions" />
 
-<div class="roh-layout">
-    <MudDrawerContainer>
+<div class="roh-corona-shell @(DrawerState.Open ? "drawer-open" : "drawer-closed")">
+    <CoronaDrawer Open="@DrawerState.Open"
+                  OpenChanged="@DrawerState.SetOpen"
+                  Overlay="false"
+                  Width="280px"
+                  TopOffset="64px"
+                  Padding="1rem"
+                  Class="roh-corona-drawer">
+        <CoronaStack Spacing="1rem" FullWidth="true">
+            <p class="roh-drawer-title">Humanae Archive</p>
+            <CoronaNavMenu Items="@NavigationItems"
+                           Padding="0"
+                           ItemPadding=".85rem 1rem"
+                           Class="roh-corona-nav" />
+        </CoronaStack>
+    </CoronaDrawer>
 
-        <DrawerRoh />
-
-        <div class="d-flex card-container">
+    <main class="roh-corona-content">
+        <div class="roh-content-shell">
             @Body
         </div>
-    </MudDrawerContainer>
+    </main>
 </div>
-@inject DrawerState DrawerState
 
+@code {
+    private bool IsAuthorized { get; set; }
+
+    private IReadOnlyList<CoronaNavItem> NavigationItems =>
+    [
+        new CoronaNavItem { Text = "Home", Url = "/" },
+        IsAuthorized
+            ? new CoronaNavItem { Text = "Manager", Url = "/Manager/Version/VersionManager" }
+            : new CoronaNavItem { Text = "Login", Url = "/login" },
+        new CoronaNavItem { Text = "Crafting", Url = "/crafting" },
+        new CoronaNavItem { Text = "Lore", Url = "/lore" },
+        new CoronaNavItem { Text = "Magic Skills", Url = "/magic-skills" },
+        new CoronaNavItem { Text = "Races", Url = "/races" },
+        new CoronaNavItem { Text = "World Bosses", Url = "/world-bosses" }
+    ];
+
+    private RenderFragment HeaderActions =>
+        @<CoronaStack Direction="CoronaStackDirection.Row"
+                      Align="CoronaStackAlign.Center"
+                      Spacing=".5rem">
+            <button type="button"
+                    class="roh-header-icon-button"
+                    title="Menu"
+                    @onclick="DrawerState.Toggle">
+                <CoronaIcon Name="bars" Color="currentColor" />
+            </button>
+
+            <button type="button"
+                    class="roh-header-icon-button"
+                    title="Account"
+                    @onclick="@(() => Nav.NavigateTo("/login"))">
+                <CoronaIcon Name="user" Color="currentColor" />
+            </button>
+        </CoronaStack>;
+
+    protected override void OnInitialized()
+    {
+        DrawerState.OnChange += HandleDrawerChanged;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            CustomAuthStateProvider.Initialize();
+            IsAuthorized = !string.IsNullOrWhiteSpace(await CustomAuthStateProvider.GetToken());
+            StateHasChanged();
+        }
+    }
+
+    private void HandleDrawerChanged()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        DrawerState.OnChange -= HandleDrawerChanged;
+    }
+}

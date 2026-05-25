@@ -52,10 +52,10 @@ namespace ROH.Launcher.Services
                 cancellationToken.ThrowIfCancellationRequested();
 
                 GameVersionFileModel file = fileList[index];
-                string relativePath = NormalizeRelativePath(file.Name);
+                string relativePath = BuildDestinationRelativePath(file);
                 string targetPath = Path.GetFullPath(Path.Combine(destinationRoot, relativePath));
 
-                if (!targetPath.StartsWith(destinationRoot, StringComparison.OrdinalIgnoreCase))
+                if (!IsPathInsideRoot(destinationRoot, targetPath))
                     throw new InvalidOperationException($"Caminho de arquivo invalido: {file.Name}");
 
                 string? targetDirectory = Path.GetDirectoryName(targetPath);
@@ -271,6 +271,27 @@ namespace ROH.Launcher.Services
                 .Replace('\\', Path.DirectorySeparatorChar)
                 .Replace('/', Path.DirectorySeparatorChar)
                 .TrimStart(Path.DirectorySeparatorChar);
+        }
+
+        static string BuildDestinationRelativePath(GameVersionFileModel file)
+        {
+            string relativeName = NormalizeRelativePath(file.Name);
+
+            if (string.IsNullOrWhiteSpace(file.Path))
+                return relativeName;
+
+            string targetFolder = NormalizeRelativePath(file.Path);
+            string fileName = Path.GetFileName(relativeName);
+
+            return NormalizeRelativePath(Path.Combine(targetFolder, fileName));
+        }
+
+        static bool IsPathInsideRoot(string rootPath, string filePath)
+        {
+            string rootWithSeparator = rootPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                + Path.DirectorySeparatorChar;
+
+            return filePath.StartsWith(rootWithSeparator, StringComparison.OrdinalIgnoreCase);
         }
 
         static async Task VerifyChecksumAsync(

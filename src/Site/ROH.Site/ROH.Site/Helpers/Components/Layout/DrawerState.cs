@@ -11,4 +11,13 @@ public class DrawerState
         Open = !Open;
         OnChange?.Invoke();
     }
+
+    public void SetOpen(bool open)
+    {
+        if (Open == open)
+            return;
+
+        Open = open;
+        OnChange?.Invoke();
+    }
 }

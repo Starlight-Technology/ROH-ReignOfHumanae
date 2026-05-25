@@ -173,6 +173,8 @@ public class GameVersionFileService(
                             {
                                 Guid = item.Guid,
                                 Name = gameFileModel.Name,
+                                Path = gameFileModel.Path,
+                                Format = gameFileModel.Format,
                                 Size = gameFileModel.Size,
                                 Active = gameFileModel.Active
                             });

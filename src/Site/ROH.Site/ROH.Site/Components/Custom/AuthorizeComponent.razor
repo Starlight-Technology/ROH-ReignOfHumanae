@@ -3,6 +3,7 @@
 @using Interfaces.Helpers
 @using System.ComponentModel.DataAnnotations
 @inject ICustomAuthenticationStateProvider CustomAuthStateProvider
+@inject NavigationManager Navigation
 
 @namespace ROH.Site.Components.Custom
 
@@ -28,10 +29,14 @@
 }
 else
 {
-    <div class="alert alert-danger" role="alert">
-        <h4 class="alert-heading">Access Denied!</h4>
-        <p>You are not authorized to view this page.</p>
-        <hr>
-        <p class="mb-0">If you believe this is an error, please contact support.</p>
-    </div>
+    <CardComponent Header="Access Denied">
+        <CoronaStack Spacing="1rem" FullWidth="true">
+            <p>You are not authorized to view this page.</p>
+            <p>If you believe this is an error, please contact support.</p>
+            <CoronaButton Variant="CoronaButtonVariant.Outlined"
+                          OnClick="@(() => Navigation.NavigateTo("/login"))">
+                Login
+            </CoronaButton>
+        </CoronaStack>
+    </CardComponent>
 }

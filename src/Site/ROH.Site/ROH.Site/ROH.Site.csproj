@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Corona\Corona\Corona.csproj" />
     <ProjectReference Include="..\..\..\Common\ROH.StandardModels\ROH.StandardModels.csproj" />
     <ProjectReference Include="..\..\..\Common\ROH.Utils\ROH.Utils.csproj" />
     <ProjectReference Include="..\ROH.Site.Client\ROH.Site.Client.csproj" />
