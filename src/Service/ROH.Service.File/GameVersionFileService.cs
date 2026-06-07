@@ -13,7 +13,6 @@ using ROH.Context.File.Entities;
 using ROH.Context.File.Interface;
 using ROH.Service.Exception.Interface;
 using ROH.Service.File.Interface;
-using ROH.StandardModels.File;
 using ROH.StandardModels.Response;
 using ROH.StandardModels.Version;
 using ROH.Utils.Helpers;
@@ -60,6 +59,50 @@ public class GameVersionFileService(
     @$"/app/ROH/updateFiles/{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}/";
 #endif
 
+    static string BuildStoredRelativeName(GameVersionFileModel fileModel)
+    {
+        string normalizedName = NormalizeInstallPath(fileModel.Name);
+        string fileName = Path.GetFileName(normalizedName.Replace('/', Path.DirectorySeparatorChar));
+        string targetFolder = NormalizeInstallPath(fileModel.Path);
+
+        if (string.IsNullOrWhiteSpace(fileName))
+            fileName = "download.bin";
+
+        if (!string.IsNullOrWhiteSpace(targetFolder))
+            return $"{targetFolder}/{fileName}";
+
+        return string.IsNullOrWhiteSpace(normalizedName) ? fileName : normalizedName;
+    }
+
+    static string GetRelativeDirectory(string fileName)
+    {
+        string relativePath = NormalizeInstallPath(fileName);
+        string? directory = Path.GetDirectoryName(relativePath.Replace('/', Path.DirectorySeparatorChar));
+
+        return string.IsNullOrWhiteSpace(directory)
+            ? string.Empty
+            : directory.Replace(Path.DirectorySeparatorChar, '/');
+    }
+
+    static string NormalizeInstallPath(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return string.Empty;
+
+        char[] invalidChars = Path.GetInvalidFileNameChars();
+
+        IEnumerable<string> segments = value
+            .Replace('\\', '/')
+            .Trim()
+            .Trim('/')
+            .Split('/', StringSplitOptions.RemoveEmptyEntries)
+            .Where(segment => segment is not "." and not "..")
+            .Select(segment => string.Join("_", segment.Split(invalidChars, StringSplitOptions.RemoveEmptyEntries)))
+            .Where(segment => !string.IsNullOrWhiteSpace(segment));
+
+        return string.Join("/", segments);
+    }
+
     static string GetRejectionMessage(GameVersionModel gameVersion) => gameVersion.Released
         ? "File Upload Failed: This version has already been released. You cannot upload new files for a released version."
         : "File Upload Failed: This version has already been released with a yearly schedule. Uploading new files is not allowed for past versions.";
@@ -76,7 +119,11 @@ public class GameVersionFileService(
 
         GameFile file = mapper.Map<GameFile>(fileModel);
         string path = GetFilePath(fileModel.GameVersion!);
-        file = file with { Path = path };
+        file = file with
+        {
+            Name = BuildStoredRelativeName(fileModel),
+            Path = path
+        };
 
         await gameFileService.SaveFileAsync(file, fileModel.Content!, cancellationToken).ConfigureAwait(true);
 
@@ -158,27 +205,20 @@ public class GameVersionFileService(
                     List<GameVersionFile> files = await versionFileRepository.GetFilesAsync(guid, cancellationToken)
                         .ConfigureAwait(true);
 
-                    List<GameVersionFileModel> filesModels = [];
-
-                    foreach (GameVersionFile item in files)
-                    {
-                        DefaultResponse result = await DownloadFileAsync(item.IdGameFile, cancellationToken)
-                            .ConfigureAwait(true);
-
-                        if (result.ObjectResponse is not GameFileModel gameFileModel)
-                            continue;
-
-                        filesModels.Add(
-                            new GameVersionFileModel
+                    List<GameVersionFileModel> filesModels = files
+                        .Where(item => item.GameFile is not null)
+                        .Select(
+                            item => new GameVersionFileModel
                             {
                                 Guid = item.Guid,
-                                Name = gameFileModel.Name,
-                                Path = gameFileModel.Path,
-                                Format = gameFileModel.Format,
-                                Size = gameFileModel.Size,
-                                Active = gameFileModel.Active
-                            });
-                    }
+                                Name = item.GameFile!.Name,
+                                Path = GetRelativeDirectory(item.GameFile.Name),
+                                Format = item.GameFile.Format,
+                                Size = item.GameFile.Size,
+                                Active = item.GameFile.Active
+                            })
+                        .ToList();
+
                     return new DefaultResponse(objectResponse: filesModels);
                 }
             }

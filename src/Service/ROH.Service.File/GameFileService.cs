@@ -53,6 +53,9 @@ public class GameFileService(IGameFileRepository gameFileRepository, IExceptionH
     {
         try
         {
+            if (string.IsNullOrWhiteSpace(gameFile.Path) && !string.IsNullOrWhiteSpace(gameFile.Name))
+                return new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File not found.");
+
             string filePath = GetSafeFilePath(gameFile);
 
             if (string.IsNullOrWhiteSpace(filePath))

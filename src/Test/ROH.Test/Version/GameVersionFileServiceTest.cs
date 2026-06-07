@@ -228,6 +228,47 @@ public class GameVersionFileServiceTest
     }
 
     [Fact]
+    public async Task GetFilesVersionExistsReturnsManifestWithoutFileContent()
+    {
+        // Arrange
+        Guid versionGuid = Guid.NewGuid();
+        Guid fileGuid = Guid.NewGuid();
+        List<GameVersionFile> files =
+        [
+            new(GuidVersion: versionGuid, Guid: fileGuid)
+            {
+                GameFile = new Context.File.Entities.GameFile(
+                    Name: "ReignOfHumanae_Data/StreamingAssets/aa/StandaloneWindows64/catalog.json",
+                    Format: ".json",
+                    Size: 123,
+                    Active: true)
+            }
+        ];
+
+        _mockGameVersionService.Setup(
+            service => service.VerifyIfVersionExistAsync(versionGuid, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+
+        _mockGameVersionFileRepository.Setup(
+            repo => repo.GetFilesAsync(versionGuid, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(files);
+
+        // Act
+        DefaultResponse result = await _service.GetFilesAsync(versionGuid.ToString(), CancellationToken.None)
+            .ConfigureAwait(true);
+
+        // Assert
+        List<GameVersionFileModel> manifest = Assert.IsType<List<GameVersionFileModel>>(result.ObjectResponse);
+        GameVersionFileModel manifestFile = Assert.Single(manifest);
+        Assert.Equal(fileGuid, manifestFile.Guid);
+        Assert.Equal("ReignOfHumanae_Data/StreamingAssets/aa/StandaloneWindows64/catalog.json", manifestFile.Name);
+        Assert.Equal("ReignOfHumanae_Data/StreamingAssets/aa/StandaloneWindows64", manifestFile.Path);
+        Assert.Null(manifestFile.Content);
+        Assert.True(manifestFile.Active);
+        Assert.Equal(123, manifestFile.Size);
+    }
+
+    [Fact]
     public async Task GetFilesVersionNotExistsReturnsNotFound()
     {
         // Arrange

@@ -46,8 +46,142 @@
             </CoronaStack>
         </CardComponent>
 
+        <CardComponent Header="Unity Update Guide">
+            <div class="roh-update-guide">
+                <div class="roh-guide-intro">
+                    <div>
+                        <strong>Fluxo recomendado para gerar um update</strong>
+                        <p>
+                            Gere os arquivos na mesma versao da Unity do projeto, envie cada grupo para o alvo correto
+                            e so depois libere a versao. O launcher aplica os arquivos respeitando o caminho relativo
+                            salvo em cada upload.
+                        </p>
+                    </div>
+
+                    <CoronaBadge Content="Unity 6000.4.8f1"
+                                 Color="CoronaColorSemantic.Primary"
+                                 Variant="CoronaBadgeVariant.Outlined" />
+                </div>
+
+                <div class="roh-guide-timeline">
+                    @foreach (UnityUpdateGuide guide in unityUpdateGuides)
+                    {
+                        <section class="roh-guide-step">
+                            <div class="roh-guide-step__marker">@guide.Step</div>
+
+                            <div class="roh-guide-step__content">
+                                <div class="roh-guide-step__header">
+                                    <div>
+                                        <h3>@guide.Title</h3>
+                                        <p>@guide.TargetLabel</p>
+                                    </div>
+                                </div>
+
+                                <div class="roh-guide-columns">
+                                    <div class="roh-guide-block">
+                                        <span>Passo na Unity</span>
+                                        <p>@guide.UnityPath</p>
+                                    </div>
+
+                                    <div class="roh-guide-block">
+                                        <span>Arquivos para enviar</span>
+                                        <ul>
+                                            @foreach (string fileHint in guide.Files)
+                                            {
+                                                <li>@fileHint</li>
+                                            }
+                                        </ul>
+                                    </div>
+
+                                    <div class="roh-guide-block">
+                                        <span>Validacao antes do release</span>
+                                        <ul>
+                                            @foreach (string validationHint in guide.Validation)
+                                            {
+                                                <li>@validationHint</li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    }
+                </div>
+
+                <div class="roh-guide-tips">
+                    <div class="roh-guide-tip">
+                        <strong>Dica de caminho</strong>
+                        <span>Se o arquivo fica dentro de uma subpasta do build, selecione essa pasta em Target Folder antes de enviar.</span>
+                    </div>
+
+                    <div class="roh-guide-tip">
+                        <strong>Dica de release</strong>
+                        <span>Evite liberar a versao enquanto houver erro de validacao ou arquivos essenciais faltando.</span>
+                    </div>
+                </div>
+            </div>
+        </CardComponent>
+
         <CardComponent Header="Upload File">
             <EditForm Model="gameVersionFile" style="margin:20px">
+                <div class="roh-upload-folder-bar">
+                    <MudSelect T="string"
+                               Label="Update Target"
+                               Variant="Variant.Outlined"
+                               Class="roh-field"
+                               Value="@selectedTargetPreset"
+                               ValueChanged="OnTargetPresetChanged">
+
+                        @foreach (UploadTargetPreset preset in targetFolderPresets)
+                        {
+                            <MudSelectItem Value="@preset.Key">
+                                @preset.Label
+                            </MudSelectItem>
+                        }
+
+                    </MudSelect>
+
+                    <CoronaInput Label="Target Folder"
+                                 Placeholder="ReignOfHumanae_Data/StreamingAssets/aa/StandaloneWindows64"
+                                 @bind-Value="currentTargetFolder" />
+
+                    <CoronaButton Color="CoronaColorSemantic.Primary"
+                                  Variant="CoronaButtonVariant.Outlined"
+                                  Disabled="@isUploading"
+                                  OnClick="CreateUploadFolder">
+                        Create Folder
+                    </CoronaButton>
+
+                    <CoronaButton Color="CoronaColorSemantic.Neutral"
+                                  Variant="CoronaButtonVariant.Outlined"
+                                  TextColor="#e6d3a1"
+                                  BorderColor="rgba(201, 162, 77, 0.45)"
+                                  Disabled="@(!selectedUploadFiles.Any() || isUploading)"
+                                  OnClick="ApplyFolderToPendingFiles">
+                        Apply To Files
+                    </CoronaButton>
+                </div>
+
+                <div class="roh-upload-target-preview">
+                    <span>Current target</span>
+                    <strong>@GetFolderDisplayName(currentTargetFolder)</strong>
+                </div>
+
+                @if (uploadFolders.Any())
+                {
+                    <div class="roh-folder-list">
+                        @foreach (string folder in uploadFolders)
+                        {
+                            <button type="button"
+                                    class="roh-folder-pill @(IsCurrentFolder(folder) ? "is-active" : string.Empty)"
+                                    disabled="@isUploading"
+                                    @onclick="@(() => SelectUploadFolder(folder))">
+                                @GetFolderDisplayName(folder)
+                            </button>
+                        }
+                    </div>
+                }
+
                 <CoronaStack Direction="CoronaStackDirection.Row"
                              Align="CoronaStackAlign.Center"
                              Wrap="CoronaStackWrap.Wrap"
@@ -63,7 +197,7 @@
                             <MudButton Variant="Variant.Outlined"
                                        Color="Color.Primary"
                                        StartIcon="@Icons.Material.Filled.UploadFile">
-                                Select Files
+                                Select Files For Target
                             </MudButton>
                         </ActivatorContent>
 
@@ -76,10 +210,45 @@
                                   OnClick="HandleSubmit">
                         Submit
                     </CoronaButton>
+
+                    <CoronaButton Color="CoronaColorSemantic.Neutral"
+                                  Variant="CoronaButtonVariant.Text"
+                                  Disabled="@(!selectedUploadFiles.Any() || isUploading)"
+                                  OnClick="ClearSelectedFiles">
+                        Clear Selection
+                    </CoronaButton>
                 </CoronaStack>
 
                 @if (selectedUploadFiles.Any())
                 {
+                    List<UploadValidationItem> uploadValidationItems = GetUploadValidationItems();
+
+                    <div class="roh-upload-validation">
+                        <div class="roh-upload-validation__header">
+                            <strong>Validacao da selecao</strong>
+                            <CoronaBadge Content="@GetValidationSummary(uploadValidationItems)"
+                                         Color="@GetValidationSummaryColor(uploadValidationItems)"
+                                         Variant="CoronaBadgeVariant.Outlined" />
+                        </div>
+
+                        @if (uploadValidationItems.Any())
+                        {
+                            <div class="roh-upload-validation__list">
+                                @foreach (UploadValidationItem validationItem in uploadValidationItems)
+                                {
+                                    <div class="roh-validation-item roh-validation-item--@validationItem.SeverityCssClass">
+                                        <span>@validationItem.SeverityLabel</span>
+                                        <p>@validationItem.Message</p>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="roh-upload-validation__empty">Selecao pronta para envio.</p>
+                        }
+                    </div>
+
                     <div class="roh-upload-list">
                         @foreach (var item in selectedUploadFiles)
                         {
@@ -140,18 +309,130 @@
 
 @code {
     private const long MaxFileSize = 1000000000;
+    private const string CustomTargetPresetKey = "custom";
+    private const string AddressablesWindowsFolder = "ReignOfHumanae_Data/StreamingAssets/aa/StandaloneWindows64";
+    private const string StreamingAssetsFolder = "ReignOfHumanae_Data/StreamingAssets";
+    private const string UnityDataFolder = "ReignOfHumanae_Data";
 
     [Parameter]
     public string? versionGuid { get; set; }
 
     private GameVersionModel? gameVersion = null;
     private readonly ICollection<GameVersionFileModel> gameVersionFile = new List<GameVersionFileModel>();
+    private readonly List<string> uploadFolders = new();
+    private readonly List<UnityUpdateGuide> unityUpdateGuides =
+    [
+        new(
+            1,
+            "Build raiz do player",
+            "Target: IL2CPP Build / Patch ou Game Root",
+            "File > Build Profiles > Windows > Build. Use Standalone Windows x64 com IL2CPP e gere o build em uma pasta limpa.",
+            [
+                "ReignOfHumanae.exe",
+                "UnityPlayer.dll, GameAssembly.dll e demais DLLs da raiz",
+                "UnityCrashHandler64.exe quando for gerado pela Unity"
+            ],
+            [
+                "O alvo deve ser Game Root.",
+                "Nao envie arquivos da pasta ReignOfHumanae_Data nesse alvo.",
+                "Nao envie pastas de backup, logs, PDB ou arquivos .meta."
+            ]),
+        new(
+            2,
+            "Pasta de dados da Unity",
+            $"Target: {UnityDataFolder} ou subpastas dentro dela",
+            "Depois do build, abra a pasta ReignOfHumanae_Data gerada ao lado do executavel e envie os arquivos alterados mantendo o mesmo caminho relativo.",
+            [
+                "globalgamemanagers, resources.assets e sharedassets*.assets",
+                "Arquivos .resource, .resS, .dat e subpastas como Managed, Plugins ou il2cpp_data",
+                "Arquivos de cena e recursos gerados pela Unity"
+            ],
+            [
+                "Use Target Folder comecando por ReignOfHumanae_Data.",
+                "Arquivos sem extensao pertencem normalmente a esta pasta, nao a raiz.",
+                "Mantenha cada subpasta igual ao build gerado pela Unity."
+            ]),
+        new(
+            3,
+            "Addressables Windows",
+            $"Target: {AddressablesWindowsFolder}",
+            "Window > Asset Management > Addressables > Groups > Build > New Build > Default Build Script. Depois copie a saida de StandaloneWindows64 para o alvo indicado.",
+            [
+                "catalog*.json",
+                "*.hash",
+                "*.bundle"
+            ],
+            [
+                "O alvo deve ser StandaloneWindows64.",
+                "O catalogo .json e o .hash devem ir juntos quando o catalogo mudar.",
+                "Bundles devem permanecer no mesmo alvo do catalogo."
+            ]),
+        new(
+            4,
+            "StreamingAssets manuais",
+            $"Target: {StreamingAssetsFolder} ou subpastas dentro dela",
+            "Coloque configs ou dados manuais em Assets/StreamingAssets antes do build. A Unity copia essa pasta para ReignOfHumanae_Data/StreamingAssets.",
+            [
+                "Configs .json, .xml, .txt ou .bytes usados em runtime",
+                "Dados baixados pelo jogo a partir de StreamingAssets",
+                "Subpastas que o codigo do jogo espera encontrar"
+            ],
+            [
+                "Use Target Folder comecando por ReignOfHumanae_Data/StreamingAssets.",
+                "Nao envie scripts .cs, arquivos .asmdef ou .meta.",
+                "Confirme se o caminho final bate com o caminho lido pelo jogo."
+            ])
+    ];
+    private readonly List<UploadTargetPreset> targetFolderPresets =
+    [
+        new("build-root", "IL2CPP Build / Patch", string.Empty),
+        new("unity-data", "Unity Data Folder", UnityDataFolder),
+        new("addressables-windows", "Addressables Windows", AddressablesWindowsFolder),
+        new("streaming-assets", "StreamingAssets", StreamingAssetsFolder),
+        new(CustomTargetPresetKey, "Custom Folder", string.Empty)
+    ];
+
     private List<SelectedUploadFile> selectedUploadFiles = new();
+    private string currentTargetFolder = string.Empty;
+    private string selectedTargetPreset = "build-root";
     private bool isUploading = false;
     private double uploadProgress = 0;
     private int filesListRefreshKey = 0;
     private DefaultResponse? defaultResponse = new();
-    private bool CanSubmitUpload => selectedUploadFiles.Any(item => item.Status != "Uploaded") && !isUploading;
+    private bool CanSubmitUpload => selectedUploadFiles.Any(item => item.Status != "Uploaded")
+        && !isUploading
+        && !GetUploadValidationItems().Any(item => item.Severity == UploadValidationSeverity.Error);
+
+    private static readonly HashSet<string> AddressablesExtensions = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ".bundle",
+        ".hash",
+        ".json"
+    };
+
+    private static readonly HashSet<string> UnityEditorOnlyExtensions = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ".asmdef",
+        ".asmref",
+        ".cs",
+        ".meta",
+        ".tmp"
+    };
+
+    private static readonly HashSet<string> DebugOnlyExtensions = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ".log",
+        ".mdb",
+        ".pdb"
+    };
+
+    private static readonly HashSet<string> UnityDataExtensions = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ".assets",
+        ".dat",
+        ".resource",
+        ".ress"
+    };
 
     protected override async Task OnInitializedAsync()
     {
@@ -175,13 +456,70 @@
 
     private Task HandleFilesChanged(IReadOnlyList<IBrowserFile> files)
     {
-        selectedUploadFiles = files.Select(file => new SelectedUploadFile(file)).ToList();
+        string targetFolder = NormalizeUploadFolder(currentTargetFolder);
+        currentTargetFolder = targetFolder;
+
+        selectedUploadFiles.AddRange(files.Select(file => new SelectedUploadFile(file, targetFolder)));
+        return Task.CompletedTask;
+    }
+
+    private Task ApplyFolderToPendingFiles()
+    {
+        string targetFolder = NormalizeUploadFolder(currentTargetFolder);
+        currentTargetFolder = targetFolder;
+
+        foreach (SelectedUploadFile file in selectedUploadFiles.Where(item => item.Status != "Uploaded"))
+            file.TargetFolder = targetFolder;
+
+        return Task.CompletedTask;
+    }
+
+    private Task ClearSelectedFiles()
+    {
+        selectedUploadFiles.RemoveAll(item => item.Status != "Uploaded");
+        return Task.CompletedTask;
+    }
+
+    private async Task CreateUploadFolder()
+    {
+        string targetFolder = NormalizeUploadFolder(currentTargetFolder);
+
+        if (string.IsNullOrWhiteSpace(targetFolder))
+        {
+            await _sweetAlert.Show("Upload Folder", "Type a target folder or use the build root preset.", RohAlertType.Warning);
+            return;
+        }
+
+        currentTargetFolder = targetFolder;
+        selectedTargetPreset = ResolvePresetKey(targetFolder);
+
+        if (!uploadFolders.Contains(targetFolder, StringComparer.OrdinalIgnoreCase))
+            uploadFolders.Add(targetFolder);
+    }
+
+    private bool IsCurrentFolder(string folder) =>
+        string.Equals(NormalizeUploadFolder(currentTargetFolder), NormalizeUploadFolder(folder), StringComparison.OrdinalIgnoreCase);
+
+    private Task OnTargetPresetChanged(string key)
+    {
+        selectedTargetPreset = key;
+
+        UploadTargetPreset? preset = targetFolderPresets.FirstOrDefault(item => item.Key == key);
+        if (preset is not null && key != CustomTargetPresetKey)
+            currentTargetFolder = preset.Folder;
+
         return Task.CompletedTask;
     }
 
     private void RemoveSelectedFile(SelectedUploadFile file)
     {
         selectedUploadFiles.Remove(file);
+    }
+
+    private void SelectUploadFolder(string folder)
+    {
+        currentTargetFolder = NormalizeUploadFolder(folder);
+        selectedTargetPreset = ResolvePresetKey(currentTargetFolder);
     }
 
     private async Task HandleSubmit()
@@ -193,6 +531,17 @@
         if (!filesToUpload.Any())
         {
             await _sweetAlert.Show("Upload File", "Select at least one file to upload.", RohAlertType.Warning);
+            return;
+        }
+
+        List<UploadValidationItem> validationItems = GetUploadValidationItems();
+        List<UploadValidationItem> blockingItems = validationItems
+            .Where(item => item.Severity == UploadValidationSeverity.Error)
+            .ToList();
+
+        if (blockingItems.Any())
+        {
+            await _sweetAlert.Show("Upload File", blockingItems.First().Message, RohAlertType.Warning);
             return;
         }
 
@@ -312,6 +661,9 @@
         return $"{Math.Round(sizeInMegaBytes, 2)} Mb";
     }
 
+    private static string GetFolderDisplayName(string folder) =>
+        string.IsNullOrWhiteSpace(NormalizeUploadFolder(folder)) ? "Game Root" : NormalizeUploadFolder(folder);
+
     private static string BuildUploadFileName(string targetFolder, string fileName)
     {
         string safeFileName = Path.GetFileName(
@@ -343,6 +695,145 @@
         return string.Join("/", segments);
     }
 
+    private string ResolvePresetKey(string folder)
+    {
+        string targetFolder = NormalizeUploadFolder(folder);
+        UploadTargetPreset? preset = targetFolderPresets.FirstOrDefault(
+            item => string.Equals(NormalizeUploadFolder(item.Folder), targetFolder, StringComparison.OrdinalIgnoreCase));
+
+        return preset?.Key ?? CustomTargetPresetKey;
+    }
+
+    private List<UploadValidationItem> GetUploadValidationItems()
+    {
+        List<UploadValidationItem> items = new();
+        List<SelectedUploadFile> pendingFiles = selectedUploadFiles
+            .Where(item => item.Status != "Uploaded")
+            .ToList();
+
+        foreach (SelectedUploadFile selectedFile in pendingFiles)
+        {
+            string targetFolder = NormalizeUploadFolder(selectedFile.TargetFolder);
+            string fileName = GetSafeBrowserFileName(selectedFile.File.Name);
+            string extension = Path.GetExtension(fileName);
+
+            if (selectedFile.File.Size <= 0)
+                items.Add(new UploadValidationItem(UploadValidationSeverity.Error, $"{fileName}: arquivo vazio nao pode ser enviado."));
+
+            if (selectedFile.File.Size > MaxFileSize)
+                items.Add(new UploadValidationItem(UploadValidationSeverity.Error, $"{fileName}: o tamanho precisa ser menor que 1 Gb."));
+
+            if (UnityEditorOnlyExtensions.Contains(extension))
+                items.Add(new UploadValidationItem(UploadValidationSeverity.Error, $"{fileName}: arquivo de Editor/Asset Database nao deve entrar no update do launcher."));
+
+            if (DebugOnlyExtensions.Contains(extension))
+                items.Add(new UploadValidationItem(UploadValidationSeverity.Warning, $"{fileName}: arquivo de debug/log geralmente nao deve ser publicado para jogadores."));
+
+            if (IsAddressablesWindowsTarget(targetFolder) && !AddressablesExtensions.Contains(extension))
+                items.Add(new UploadValidationItem(UploadValidationSeverity.Error, $"{fileName}: Addressables Windows aceita catalog*.json, *.hash ou *.bundle."));
+
+            if (IsBuildRootTarget(targetFolder) && IsUnityDataRuntimeFile(fileName, extension))
+                items.Add(new UploadValidationItem(UploadValidationSeverity.Error, $"{fileName}: este arquivo parece ser da pasta ReignOfHumanae_Data. Escolha Unity Data Folder ou uma subpasta dela."));
+
+            if (IsStreamingAssetsTarget(targetFolder) && string.IsNullOrWhiteSpace(extension))
+                items.Add(new UploadValidationItem(UploadValidationSeverity.Warning, $"{fileName}: confirme se o jogo realmente le esse arquivo sem extensao em StreamingAssets."));
+        }
+
+        AddGroupValidationHints(items, pendingFiles);
+        return items;
+    }
+
+    private static void AddGroupValidationHints(List<UploadValidationItem> items, List<SelectedUploadFile> pendingFiles)
+    {
+        List<SelectedUploadFile> rootFiles = pendingFiles
+            .Where(item => IsBuildRootTarget(NormalizeUploadFolder(item.TargetFolder)))
+            .ToList();
+
+        if (rootFiles.Any())
+        {
+            bool hasExecutable = rootFiles.Any(item => string.Equals(Path.GetExtension(item.File.Name), ".exe", StringComparison.OrdinalIgnoreCase));
+            bool hasUnityPlayer = rootFiles.Any(item => string.Equals(GetSafeBrowserFileName(item.File.Name), "UnityPlayer.dll", StringComparison.OrdinalIgnoreCase));
+
+            if (!hasExecutable)
+                items.Add(new UploadValidationItem(UploadValidationSeverity.Warning, "Build root sem .exe: confira se o executavel do jogo tambem precisa entrar neste update."));
+
+            if (!hasUnityPlayer)
+                items.Add(new UploadValidationItem(UploadValidationSeverity.Warning, "Build root sem UnityPlayer.dll: envie quando a Unity gerar uma DLL nova."));
+
+            bool hasDataTarget = pendingFiles.Any(item => IsUnityDataTarget(NormalizeUploadFolder(item.TargetFolder)));
+            if (!hasDataTarget)
+                items.Add(new UploadValidationItem(UploadValidationSeverity.Warning, "Voce selecionou apenas arquivos de raiz. Se cenas ou recursos mudaram, envie tambem a pasta ReignOfHumanae_Data correspondente."));
+        }
+
+        List<SelectedUploadFile> addressableFiles = pendingFiles
+            .Where(item => IsAddressablesWindowsTarget(NormalizeUploadFolder(item.TargetFolder)))
+            .ToList();
+
+        if (addressableFiles.Any())
+        {
+            bool hasCatalog = addressableFiles.Any(
+                item => GetSafeBrowserFileName(item.File.Name).Contains("catalog", StringComparison.OrdinalIgnoreCase)
+                        && string.Equals(Path.GetExtension(item.File.Name), ".json", StringComparison.OrdinalIgnoreCase));
+            bool hasHash = addressableFiles.Any(item => string.Equals(Path.GetExtension(item.File.Name), ".hash", StringComparison.OrdinalIgnoreCase));
+            bool hasBundle = addressableFiles.Any(item => string.Equals(Path.GetExtension(item.File.Name), ".bundle", StringComparison.OrdinalIgnoreCase));
+
+            if (!hasCatalog)
+                items.Add(new UploadValidationItem(UploadValidationSeverity.Warning, "Addressables sem catalog*.json: envie o catalogo quando a lista de bundles mudar."));
+
+            if (!hasHash)
+                items.Add(new UploadValidationItem(UploadValidationSeverity.Warning, "Addressables sem *.hash: envie o hash junto do catalogo para o cliente detectar mudancas."));
+
+            if (!hasBundle)
+                items.Add(new UploadValidationItem(UploadValidationSeverity.Warning, "Addressables sem *.bundle: confirme se nao houve bundle novo ou alterado."));
+        }
+    }
+
+    private static string GetValidationSummary(IReadOnlyCollection<UploadValidationItem> items)
+    {
+        int errors = items.Count(item => item.Severity == UploadValidationSeverity.Error);
+        if (errors > 0)
+            return $"{errors} bloqueio(s)";
+
+        int warnings = items.Count(item => item.Severity == UploadValidationSeverity.Warning);
+        return warnings > 0 ? $"{warnings} aviso(s)" : "Pronto";
+    }
+
+    private static CoronaColorSemantic GetValidationSummaryColor(IReadOnlyCollection<UploadValidationItem> items)
+    {
+        if (items.Any(item => item.Severity == UploadValidationSeverity.Error))
+            return CoronaColorSemantic.Danger;
+
+        return items.Any(item => item.Severity == UploadValidationSeverity.Warning)
+            ? CoronaColorSemantic.Warning
+            : CoronaColorSemantic.Success;
+    }
+
+    private static bool IsBuildRootTarget(string targetFolder) => string.IsNullOrWhiteSpace(NormalizeUploadFolder(targetFolder));
+
+    private static bool IsAddressablesWindowsTarget(string targetFolder) =>
+        string.Equals(NormalizeUploadFolder(targetFolder), AddressablesWindowsFolder, StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsStreamingAssetsTarget(string targetFolder) =>
+        NormalizeUploadFolder(targetFolder).StartsWith(StreamingAssetsFolder, StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsUnityDataTarget(string targetFolder) =>
+        NormalizeUploadFolder(targetFolder).StartsWith(UnityDataFolder, StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsUnityDataRuntimeFile(string fileName, string extension)
+    {
+        if (UnityDataExtensions.Contains(extension))
+            return true;
+
+        return string.Equals(fileName, "globalgamemanagers", StringComparison.OrdinalIgnoreCase)
+               || fileName.Contains("sharedassets", StringComparison.OrdinalIgnoreCase)
+               || fileName.Contains("level", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string GetSafeBrowserFileName(string fileName) => Path.GetFileName(
+        fileName
+            .Replace('\\', Path.DirectorySeparatorChar)
+            .Replace('/', Path.DirectorySeparatorChar));
+
     private static CoronaColorSemantic GetStatusColor(string status) => status switch
     {
         "Uploaded" => CoronaColorSemantic.Success,
@@ -352,11 +843,38 @@
         _ => CoronaColorSemantic.Primary
     };
 
-    private sealed class SelectedUploadFile(IBrowserFile file)
+    private sealed record UnityUpdateGuide(
+        int Step,
+        string Title,
+        string TargetLabel,
+        string UnityPath,
+        IReadOnlyList<string> Files,
+        IReadOnlyList<string> Validation);
+
+    private sealed record UploadTargetPreset(string Key, string Label, string Folder);
+
+    private enum UploadValidationSeverity
+    {
+        Warning,
+        Error
+    }
+
+    private sealed record UploadValidationItem(UploadValidationSeverity Severity, string Message)
+    {
+        public string SeverityCssClass => Severity.ToString().ToLowerInvariant();
+
+        public string SeverityLabel => Severity switch
+        {
+            UploadValidationSeverity.Error => "Bloqueia",
+            _ => "Dica"
+        };
+    }
+
+    private sealed class SelectedUploadFile(IBrowserFile file, string targetFolder)
     {
         public IBrowserFile File { get; } = file;
 
-        public string TargetFolder { get; set; } = string.Empty;
+        public string TargetFolder { get; set; } = targetFolder;
 
         public string Status { get; set; } = "Ready";
 

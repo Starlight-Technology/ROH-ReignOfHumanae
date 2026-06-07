@@ -24,7 +24,7 @@ namespace ROH.Launcher.Services
             string? token = null)
         {
             List<GameVersionFileModel> fileList = files
-                .Where(file => file.Active || file.Guid != Guid.Empty)
+                .Where(file => file.Active && file.Guid != Guid.Empty)
                 .ToList();
 
             if (fileList.Count == 0)

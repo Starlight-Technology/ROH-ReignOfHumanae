@@ -48,6 +48,7 @@ public class GameVersionFileRepository(IFileContext context) : IGameVersionFileR
         CancellationToken cancellationToken = default)
     {
         List<GameVersionFile> result = await context.GameVersionFiles
+            .Include(v => v.GameFile)
             .Where(v => v.GuidVersion == versionGuid)
             .ToListAsync(cancellationToken: cancellationToken)
             .ConfigureAwait(true);
