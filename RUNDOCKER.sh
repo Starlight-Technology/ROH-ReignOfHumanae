@@ -85,7 +85,7 @@ docker run -d \
 # BLAZOR SERVER
 ###############################################
 
-docker build -t roh.blazor.server -f ./src/Blazor/ROH.Blazor.Server/Dockerfile .
+docker build -t roh.blazor.server -f ./src/Site/ROH.Site/Dockerfile .
 docker run -d \
   --name ROH.Blazor \
   --network $NETWORK_NAME \
