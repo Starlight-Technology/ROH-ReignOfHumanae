@@ -6,6 +6,7 @@ package playerPosition;
 
 service PlayerService {
     rpc SavePlayerData (PlayerRequest) returns (SaveResponse);
+    rpc RemovePlayerData (RemovePlayerRequest) returns (SaveResponse);
 }
 
 message PlayerRequest {
@@ -13,6 +14,13 @@ message PlayerRequest {
     Position position = 2;
     Rotation rotation = 3;
     uint32 animationSate = 4;
+    string accountId = 5;
+    string worldId = 6;
+    bool persistPosition = 7;
+}
+
+message RemovePlayerRequest {
+    string playerId = 1;
 }
 
 message Position {

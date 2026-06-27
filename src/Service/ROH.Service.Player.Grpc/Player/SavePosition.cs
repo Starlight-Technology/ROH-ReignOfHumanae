@@ -29,6 +29,8 @@ public class SavePosition(
     {
         Context.Player.Mongo.Entities.PlayerPosition position = new Context.Player.Mongo.Entities.PlayerPosition
         {
+            AccountId = request.AccountId,
+            CharacterId = request.PlayerId,
             Id = ObjectId.GenerateNewId(),
             PlayerId = request.PlayerId,
             PositionX = request.Position.X,
@@ -38,10 +40,18 @@ public class SavePosition(
             RotationY = request.Rotation.Y,
             RotationZ = request.Rotation.Z,
             RotationW = request.Rotation.W,
+            Timestamp = DateTime.UtcNow,
+            UpdatedAtUtc = DateTime.UtcNow,
+            WorldId = request.WorldId
         };
 
         await repository.SavePlayerPositionAsync(position, context.CancellationToken).ConfigureAwait(true);
-        await playersPersistenceService.SavePlayerPosition(request, context.CancellationToken).ConfigureAwait(true);
+    }
+
+    public override async Task<SaveResponse> RemovePlayerData(RemovePlayerRequest request, ServerCallContext context)
+    {
+        await playersPersistenceService.RemovePlayer(request.PlayerId).ConfigureAwait(false);
+        return new SaveResponse { Success = true };
     }
 
     public override async Task<SaveResponse> SavePlayerData(PlayerRequest request, ServerCallContext context)
@@ -49,30 +59,32 @@ public class SavePosition(
         try
         {
             PlayerState? lastPlayerPosition = await playersPersistenceService.GetPlayerState(request.PlayerId);
-
-            if (lastPlayerPosition is not null)
-            {
-                Vector3 lastPositionVector = new Vector3(
+            DateTime nowUtc = DateTime.UtcNow;
+            Vector3 currentPositionVector = new(request.Position.X, request.Position.Y, request.Position.Z);
+            Vector3 lastPositionVector = lastPlayerPosition is null
+                ? currentPositionVector
+                : new Vector3(
                     lastPlayerPosition.PositionX,
                     lastPlayerPosition.PositionY,
                     lastPlayerPosition.PositionZ);
 
-                Vector3 currentPositionVector = new Vector3(request.Position.X, request.Position.Y, request.Position.Z);
+            PlayerPositionInput playerPositionInput = new(
+                new Guid(request.PlayerId),
+                lastPositionVector,
+                currentPositionVector,
+                new Vector4(request.Rotation.X, request.Rotation.Y, request.Rotation.Z, request.Rotation.W),
+                lastPlayerPosition?.Timestamp ?? nowUtc.AddMilliseconds(-1),
+                nowUtc);
 
-                PlayerPositionInput playerPositionInput = new PlayerPositionInput(
-                    new Guid(request.PlayerId),
-                    lastPositionVector,
-                    currentPositionVector,
-                    lastPlayerPosition.Timestamp,
-                    DateTime.UtcNow);
+            PlayerPositionValidationResult isPositionValid = positionService.Validate(playerPositionInput);
 
-                PlayerPositionValidationResult isPositionValid = positionService.Validate(playerPositionInput);
+            if (isPositionValid != PlayerPositionValidationResult.Valid)
+                return new SaveResponse { PositionValid = (uint)isPositionValid, Success = false };
 
-                if (isPositionValid != PlayerPositionValidationResult.Valid)
-                    return new SaveResponse { PositionValid = (uint)isPositionValid, Success = false };
-            }
+            await playersPersistenceService.SavePlayerPosition(request, context.CancellationToken).ConfigureAwait(true);
 
-            await SavePositionPersistence(request, context);
+            if (request.PersistPosition)
+                await SavePositionPersistence(request, context).ConfigureAwait(true);
 
             return new SaveResponse { PositionValid = (uint)PlayerPositionValidationResult.Valid, Success = true };
         }

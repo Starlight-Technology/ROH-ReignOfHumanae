@@ -11,6 +11,7 @@ namespace ROH.StandardModels.Character.Position
         Valid,
         InvalidSpeed,
         InvalidTeleport,
-        InvalidTimestamp
+        InvalidTimestamp,
+        InvalidCoordinates
     }
 }

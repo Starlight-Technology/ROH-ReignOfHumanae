@@ -26,6 +26,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\ROH.Contracts\ROH.Contracts.csproj" />
     <ProjectReference Include="..\..\Common\ROH.StandardModels\ROH.StandardModels.csproj" />
     <ProjectReference Include="..\..\Common\ROH.Utils\ROH.Utils.csproj" />
     <ProjectReference Include="..\..\Database\ROH.Context.Item\ROH.Context.Item.csproj" />
@@ -34,6 +35,7 @@
     <ProjectReference Include="..\..\Database\ROH.Context.Log\ROH.Context.Log.csproj" />
     <ProjectReference Include="..\..\Database\ROH.Context.Player\ROH.Context.Player.csproj" />
     <ProjectReference Include="..\..\Database\ROH.Context.Version\ROH.Context.Version.csproj" />
+    <ProjectReference Include="..\..\Gateway\ROH.Gateway\ROH.Gateway.csproj" />
     <ProjectReference Include="..\..\Service\ROH.Service.Account\ROH.Service.Account.csproj" />
     <ProjectReference Include="..\..\Service\ROH.Service.Authentication\ROH.Service.Authentication.csproj" />
     <ProjectReference Include="..\..\Service\ROH.Service.Exception\ROH.Service.Exception.csproj" />

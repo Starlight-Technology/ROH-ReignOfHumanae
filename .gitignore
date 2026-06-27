@@ -384,6 +384,34 @@ Thumbs.db
 *.asset
 *.prefab
 *.unity
+*.meta
+
+# The project directory itself ends in ".unity"; keep source files discoverable.
+!src/Unity/ReignOfHumanae.Unity/
+src/Unity/ReignOfHumanae.Unity/*
+!src/Unity/ReignOfHumanae.Unity/Assets/
+src/Unity/ReignOfHumanae.Unity/Assets/*
+!src/Unity/ReignOfHumanae.Unity/Assets/_ROH/
+src/Unity/ReignOfHumanae.Unity/Assets/_ROH/*
+!src/Unity/ReignOfHumanae.Unity/Assets/_ROH/Core/
+src/Unity/ReignOfHumanae.Unity/Assets/_ROH/Core/*
+!src/Unity/ReignOfHumanae.Unity/Assets/_ROH/Core/Models/
+src/Unity/ReignOfHumanae.Unity/Assets/_ROH/Core/Models/*
+!src/Unity/ReignOfHumanae.Unity/Assets/_ROH/Core/Models/Websocket/
+src/Unity/ReignOfHumanae.Unity/Assets/_ROH/Core/Models/Websocket/*
+!src/Unity/ReignOfHumanae.Unity/Assets/_ROH/Core/Models/Websocket/ChatChannel.cs
+!src/Unity/ReignOfHumanae.Unity/Assets/_ROH/Core/Models/Websocket/ChatErrorMessage.cs
+!src/Unity/ReignOfHumanae.Unity/Assets/_ROH/Core/Models/Websocket/ChatHistoryRequest.cs
+!src/Unity/ReignOfHumanae.Unity/Assets/_ROH/Core/Models/Websocket/ChatHistoryResponse.cs
+!src/Unity/ReignOfHumanae.Unity/Assets/_ROH/Core/Models/Websocket/ChatMessageModel.cs
+!src/Unity/ReignOfHumanae.Unity/Assets/_ROH/Core/Models/Websocket/ChatSendMessage.cs
+!src/Unity/ReignOfHumanae.Unity/Assets/_ROH/Core/Models/Websocket/DisconnectNoticeMessage.cs
+!src/Unity/ReignOfHumanae.Unity/Assets/_ROH/Core/Models/Websocket/InitialPlayerStateMessage.cs
+!src/Unity/ReignOfHumanae.Unity/Assets/_ROH/UI/
+src/Unity/ReignOfHumanae.Unity/Assets/_ROH/UI/*
+!src/Unity/ReignOfHumanae.Unity/Assets/_ROH/UI/Chat/
+src/Unity/ReignOfHumanae.Unity/Assets/_ROH/UI/Chat/*
+!src/Unity/ReignOfHumanae.Unity/Assets/_ROH/UI/Chat/GlobalChatController.cs
 
 # Exclude these files for security reasons
 *.unityproj.user

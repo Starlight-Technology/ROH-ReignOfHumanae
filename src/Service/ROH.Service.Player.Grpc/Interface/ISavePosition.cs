@@ -12,5 +12,7 @@ namespace ROH.Service.Player.Grpc.Interface;
 
 public interface ISavePosition
 {
+    Task<SaveResponse> RemovePlayerData(RemovePlayerRequest request, ServerCallContext context);
+
     Task<SaveResponse> SavePlayerData(PlayerRequest request, ServerCallContext context);
 }

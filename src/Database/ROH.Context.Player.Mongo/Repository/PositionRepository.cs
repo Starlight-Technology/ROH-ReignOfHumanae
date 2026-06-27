@@ -31,6 +31,23 @@ public class PositionRepository : IPositionRepository
         return all.Select(p => p.ToLegacy()).ToList();
     }
 
+    public async Task<PlayerPosition?> GetPlayerPositionAsync(
+        string characterId,
+        CancellationToken cancellationToken = default)
+    {
+        FilterDefinition<PlayerPositionGeo> filter = Builders<PlayerPositionGeo>.Filter.Or(
+            Builders<PlayerPositionGeo>.Filter.Eq(p => p.CharacterId, characterId),
+            Builders<PlayerPositionGeo>.Filter.Eq(p => p.PlayerId, characterId));
+
+        PlayerPositionGeo? position = await _collection
+            .Find(filter)
+            .SortByDescending(p => p.UpdatedAtUtc)
+            .FirstOrDefaultAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        return position?.ToLegacy();
+    }
+
     public async Task<List<PlayerPosition>> GetPlayersNearbyAsync(
         string playerId,
         Vector3 position,
@@ -71,19 +88,26 @@ public class PositionRepository : IPositionRepository
     {
         PlayerPositionGeo geo = data.ToGeo();
 
-        FilterDefinition<PlayerPositionGeo> filter = Builders<PlayerPositionGeo>.Filter
-            .Eq(p => p.PlayerId, geo.PlayerId);
+        string characterId = string.IsNullOrWhiteSpace(geo.CharacterId) ? geo.PlayerId : geo.CharacterId;
+        DateTime updatedAtUtc = geo.UpdatedAtUtc == default ? DateTime.UtcNow : geo.UpdatedAtUtc;
+
+        FilterDefinition<PlayerPositionGeo> filter = Builders<PlayerPositionGeo>.Filter.Or(
+            Builders<PlayerPositionGeo>.Filter.Eq(p => p.CharacterId, characterId),
+            Builders<PlayerPositionGeo>.Filter.Eq(p => p.PlayerId, characterId));
 
         UpdateDefinition<PlayerPositionGeo> update = Builders<PlayerPositionGeo>.Update
+            .Set(p => p.AccountId, geo.AccountId)
+            .Set(p => p.CharacterId, characterId)
+            .Set(p => p.PlayerId, characterId)
             .Set(p => p.Position, geo.Position)
             .Set(p => p.PositionY, geo.PositionY)
             .Set(p => p.RotationX, geo.RotationX)
             .Set(p => p.RotationY, geo.RotationY)
             .Set(p => p.RotationZ, geo.RotationZ)
             .Set(p => p.RotationW, geo.RotationW)
-            .Set(p => p.Timestamp, geo.Timestamp)
-            // Só será aplicado se o documento NÃO existir
-            .SetOnInsert(p => p.PlayerId, geo.PlayerId);
+            .Set(p => p.Timestamp, updatedAtUtc)
+            .Set(p => p.UpdatedAtUtc, updatedAtUtc)
+            .Set(p => p.WorldId, geo.WorldId);
 
         await _collection.UpdateOneAsync(filter, update, new UpdateOptions { IsUpsert = true }, cancellationToken)
             .ConfigureAwait(false);

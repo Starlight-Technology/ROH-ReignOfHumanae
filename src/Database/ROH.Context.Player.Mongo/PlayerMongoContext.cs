@@ -17,10 +17,14 @@ public class PlayerMongoContext : IPlayerMongoContext
 
     public PlayerMongoContext()
     {
-        string? connectionString = Environment.GetEnvironmentVariable("ROH_MONGO_PLAYER_CONNECTION_STRING");
+        string connectionString =
+            Environment.GetEnvironmentVariable("ROH_MONGO_PLAYER_CONNECTION_STRING") ?? "mongodb://localhost:27017";
         MongoClient client = new MongoClient(connectionString);
         _database = client.GetDatabase("ROHPlayerPosition");
     }
+
+    public IMongoCollection<ChatMessageEntity> ChatMessagesCollection => _database.GetCollection<ChatMessageEntity>(
+        "chat_messages");
 
     public IMongoCollection<PlayerPosition> PlayerPositionCollection => _database.GetCollection<PlayerPosition>(
         "PlayerPositionCollection");

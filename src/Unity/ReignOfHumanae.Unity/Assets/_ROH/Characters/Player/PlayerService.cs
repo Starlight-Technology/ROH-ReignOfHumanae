@@ -12,6 +12,7 @@ using Assets.Scripts.Helpers;
 using Assets.Scripts.Models.Character;
 using Assets.Scripts.Models.Configuration;
 using Assets.Scripts.Models.Websocket;
+using Assets.Scripts.UI.Chat;
 
 using MessagePack;
 
@@ -34,6 +35,7 @@ namespace Assets.Scripts.Player
         private CharacterModel player;
 
         private WebSocketService _socket;
+        private GlobalChatController _chatController;
 
         public GameObject PlayerObj;
 
@@ -42,6 +44,7 @@ namespace Assets.Scripts.Player
         private Vector3 _lastSentPosition;
         private Quaternion _lastSentRotation;
         private bool _hasLastPosition;
+        private bool _hasReceivedInitialState;
 
         private const float POSITION_THRESHOLD = 0.01f;
         private const float ROTATION_THRESHOLD = 0.5f;
@@ -60,7 +63,7 @@ namespace Assets.Scripts.Player
             apiService.Start();
             MessagePackBootstrap.Initialize();
 
-            if (Application.isEditor)
+            if (Application.isEditor && GameState.CharacterGuid == Guid.Empty)
             {
                 player = new CharacterModel(0, GameState.UserGuid, 0, 0, GameState.CharacterGuid, "GOD TEST", Race.God);
                 player.PlayerPosition = new PlayerPositionModel();
@@ -100,6 +103,7 @@ namespace Assets.Scripts.Player
                                         () =>
                                         {
                                             InitializePlayer();
+                                            InitializeChat();
                                             InitializeWebSocket();
                                             StartCoroutine(SendPositionCoroutine());
                                             StartCoroutine(CleanupNearbyPlayerCoroutine());
@@ -120,6 +124,9 @@ namespace Assets.Scripts.Player
         private void Update()
         {
             _socket?.Dispatch();
+
+            if (_status_HUD == null)
+                return;
 
             if (_status_HUD._hp > 10)
             {
@@ -149,6 +156,10 @@ namespace Assets.Scripts.Player
 
         private void InitializePlayer()
         {
+            player.PlayerPosition ??= new PlayerPositionModel();
+            player.PlayerPosition.Position ??= new PositionModel();
+            player.PlayerPosition.Rotation ??= new RotationModel();
+
             Vector3 position = new(
                 player.PlayerPosition.Position.X,
                 player.PlayerPosition.Position.Y,
@@ -196,19 +207,29 @@ namespace Assets.Scripts.Player
 
             string baseUrl = config.ServerUrlWebSocket.TrimEnd('/');
             string jwt = config.JwToken;
+            string endpoint = baseUrl.EndsWith("/ws", StringComparison.OrdinalIgnoreCase)
+                ? baseUrl
+                : $"{baseUrl}/ws";
+            string worldId = SceneManager.GetActiveScene().name;
 
-            string wsUrl = $"{baseUrl}/ws?access_token={jwt}";
+            string wsUrl =
+                $"{endpoint}?access_token={Uri.EscapeDataString(jwt)}"
+                + $"&character_id={Uri.EscapeDataString(player.Guid.ToString())}"
+                + $"&world_id={Uri.EscapeDataString(worldId)}";
 
             _socket = new WebSocketService();
 
             _socket.OnConnected += () =>
             {
                 Debug.Log("[WS] Connected");
+                _ = SendChatHistoryRequestAsync();
             };
 
             _socket.OnDisconnected += () =>
             {
                 Debug.LogWarning("[WS] Disconnected");
+                UnityMainThreadDispatcher.Instance().Enqueue(
+                    () => _chatController?.ShowSystemMessage("Conexão realtime encerrada."));
             };
 
             _socket.OnError += error =>
@@ -219,6 +240,18 @@ namespace Assets.Scripts.Player
             _socket.OnMessage += HandleRealtimeMessage;
 
             _ = ConnectWebSocketAsync(wsUrl);
+        }
+
+        private void InitializeChat()
+        {
+            _chatController = FindFirstObjectByType<GlobalChatController>();
+            if (_chatController == null)
+            {
+                GameObject chatObject = new("GlobalChat");
+                _chatController = chatObject.AddComponent<GlobalChatController>();
+            }
+
+            _chatController.Bind(SendGlobalChatMessage);
         }
 
         private async Task ConnectWebSocketAsync(string wsUrl)
@@ -276,7 +309,7 @@ namespace Assets.Scripts.Player
 
         private async void SendPlayerPositionWs()
         {
-            if (!_hasLastPosition || playerInstance == null)
+            if (!_hasLastPosition || !_hasReceivedInitialState || playerInstance == null)
                 return;
 
             Vector3 pos = playerInstance.transform.position;
@@ -291,6 +324,7 @@ namespace Assets.Scripts.Player
                 RotX = rot.eulerAngles.x,
                 RotY = rot.eulerAngles.y,
                 RotZ = rot.eulerAngles.z,
+                RotW = rot.w,
                 AnimationState = (int)playerInstance.GetComponent<PlayerMovements>().currentAnimState
             };
 
@@ -320,6 +354,14 @@ namespace Assets.Scripts.Player
 
             switch (env.Type)
             {
+                case RealtimeEventTypes.InitialPlayerState:
+                    {
+                        var msg = MessagePackSerializer
+                            .Deserialize<InitialPlayerStateMessage>(env.Payload);
+
+                        UnityMainThreadDispatcher.Instance().Enqueue(() => ApplyInitialPlayerState(msg));
+                        break;
+                    }
                 case RealtimeEventTypes.GetNearbyPlayers:
                     {
                         var msg = MessagePackSerializer
@@ -332,7 +374,95 @@ namespace Assets.Scripts.Player
                         });
                         break;
                     }
+                case RealtimeEventTypes.ChatMessage:
+                    {
+                        var msg = MessagePackSerializer.Deserialize<ChatMessageModel>(env.Payload);
+                        UnityMainThreadDispatcher.Instance().Enqueue(
+                            () => _chatController?.AppendMessage(msg));
+                        break;
+                    }
+                case RealtimeEventTypes.ChatHistoryResponse:
+                    {
+                        var msg = MessagePackSerializer.Deserialize<ChatHistoryResponse>(env.Payload);
+                        UnityMainThreadDispatcher.Instance().Enqueue(
+                            () => _chatController?.LoadHistory(msg.Messages));
+                        break;
+                    }
+                case RealtimeEventTypes.ChatError:
+                    {
+                        var msg = MessagePackSerializer.Deserialize<ChatErrorMessage>(env.Payload);
+                        UnityMainThreadDispatcher.Instance().Enqueue(
+                            () => _chatController?.ShowSystemMessage(msg.Message));
+                        break;
+                    }
+                case RealtimeEventTypes.DisconnectNotice:
+                    {
+                        var msg = MessagePackSerializer.Deserialize<DisconnectNoticeMessage>(env.Payload);
+                        UnityMainThreadDispatcher.Instance().Enqueue(
+                            () => _chatController?.ShowSystemMessage(msg.Message));
+                        break;
+                    }
             }
+        }
+
+        private void ApplyInitialPlayerState(InitialPlayerStateMessage state)
+        {
+            if (playerInstance == null)
+                return;
+
+            Vector3 position = new(state.X, state.Y, state.Z);
+            Quaternion rotation = Quaternion.Euler(state.RotX, state.RotY, state.RotZ);
+            playerInstance.transform.SetPositionAndRotation(position, rotation);
+
+            player.PlayerPosition.Position.X = state.X;
+            player.PlayerPosition.Position.Y = state.Y;
+            player.PlayerPosition.Position.Z = state.Z;
+            player.PlayerPosition.Rotation.X = state.RotX;
+            player.PlayerPosition.Rotation.Y = state.RotY;
+            player.PlayerPosition.Rotation.Z = state.RotZ;
+            player.PlayerPosition.Rotation.W = state.RotW;
+
+            _lastSentPosition = position;
+            _lastSentRotation = rotation;
+            _hasReceivedInitialState = true;
+        }
+
+        private async void SendGlobalChatMessage(string message)
+        {
+            if (_socket == null)
+                return;
+
+            var request = new ChatSendMessage
+            {
+                Channel = ChatChannel.Global,
+                Message = message
+            };
+
+            await _socket.SendAsync(
+                new RealtimeEnvelope
+                {
+                    Type = RealtimeEventTypes.ChatSend,
+                    Payload = MessagePackSerializer.Serialize(request)
+                });
+        }
+
+        private async Task SendChatHistoryRequestAsync()
+        {
+            if (_socket == null)
+                return;
+
+            var request = new ChatHistoryRequest
+            {
+                Channel = ChatChannel.Global,
+                Limit = 50
+            };
+
+            await _socket.SendAsync(
+                new RealtimeEnvelope
+                {
+                    Type = RealtimeEventTypes.ChatHistoryRequest,
+                    Payload = MessagePackSerializer.Serialize(request)
+                });
         }
 
         private void UpdateNearbyPlayer(NearbyPlayerMessage info)
@@ -394,5 +524,11 @@ namespace Assets.Scripts.Player
         }
 
         #endregion
+
+        private async void OnDestroy()
+        {
+            if (_socket != null)
+                await _socket.CloseAsync();
+        }
     }
 }

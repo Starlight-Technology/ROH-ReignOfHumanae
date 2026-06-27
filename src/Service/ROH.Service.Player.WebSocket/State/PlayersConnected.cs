@@ -66,13 +66,13 @@ public class PlayersConnected(IPlayerPositionServiceSocket playerPositionService
                         })]
             };
 
-            await WebSocketService.SendAsync(
-                socket,
+            await socket.SendAsync(
                 new RealtimeEnvelope
                 {
                     Type = RealtimeEventTypes.GetNearbyPlayers,
                     Payload = MessagePackSerializer.Serialize(message)
-                });
+                },
+                context.CancellationToken);
         }
 
         return new Default { A = true };

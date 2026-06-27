@@ -104,6 +104,12 @@ public class PlayersPersistenceService : IPlayersPersistenceService
         return null;
     }
 
+    public Task RemovePlayer(string guid)
+    {
+        players.TryRemove(guid, out _);
+        return Task.CompletedTask;
+    }
+
     public Task SavePlayerPosition(PlayerRequest player, CancellationToken token)
     {
         players.AddOrUpdate(player.PlayerId, _ => CreateState(player), (_, __) => CreateState(player));

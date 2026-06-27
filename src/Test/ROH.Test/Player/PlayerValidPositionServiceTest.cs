@@ -24,7 +24,13 @@ public class PlayerValidPositionServiceTest
         DateTime lastServerTime = DateTime.UtcNow;
         DateTime serverTime = lastServerTime.AddSeconds(0.1);
 
-        PlayerPositionInput input = new(_playerId, Vector3.Zero, new Vector3(10, 0, 0), lastServerTime, serverTime);
+        PlayerPositionInput input = new(
+            _playerId,
+            Vector3.Zero,
+            new Vector3(10, 0, 0),
+            Vector4.Zero,
+            lastServerTime,
+            serverTime);
 
         PlayerPositionValidationResult result = _service.Validate(input);
 
@@ -37,7 +43,13 @@ public class PlayerValidPositionServiceTest
         DateTime lastServerTime = DateTime.UtcNow;
         DateTime serverTime = lastServerTime.AddSeconds(0.3);
 
-        PlayerPositionInput input = new(_playerId, Vector3.Zero, new Vector3(50, 0, 0), lastServerTime, serverTime);
+        PlayerPositionInput input = new(
+            _playerId,
+            Vector3.Zero,
+            new Vector3(50, 0, 0),
+            Vector4.Zero,
+            lastServerTime,
+            serverTime);
 
         PlayerPositionValidationResult result = _service.Validate(input);
 
@@ -50,7 +62,13 @@ public class PlayerValidPositionServiceTest
         DateTime lastServerTime = DateTime.UtcNow;
         DateTime serverTime = lastServerTime.AddSeconds(-0.5);
 
-        PlayerPositionInput input = new(_playerId, Vector3.Zero, new Vector3(1, 0, 0), lastServerTime, serverTime);
+        PlayerPositionInput input = new(
+            _playerId,
+            Vector3.Zero,
+            new Vector3(1, 0, 0),
+            Vector4.Zero,
+            lastServerTime,
+            serverTime);
 
         PlayerPositionValidationResult result = _service.Validate(input);
 
@@ -63,7 +81,13 @@ public class PlayerValidPositionServiceTest
         DateTime lastServerTime = DateTime.UtcNow;
         DateTime serverTime = lastServerTime.AddSeconds(10);
 
-        PlayerPositionInput input = new(_playerId, Vector3.Zero, new Vector3(1, 0, 0), lastServerTime, serverTime);
+        PlayerPositionInput input = new(
+            _playerId,
+            Vector3.Zero,
+            new Vector3(1, 0, 0),
+            Vector4.Zero,
+            lastServerTime,
+            serverTime);
 
         PlayerPositionValidationResult result = _service.Validate(input);
 
@@ -76,10 +100,67 @@ public class PlayerValidPositionServiceTest
         DateTime lastServerTime = DateTime.UtcNow;
         DateTime serverTime = lastServerTime.AddSeconds(0.2);
 
-        PlayerPositionInput input = new(_playerId, Vector3.Zero, new Vector3(1, 0, 0), lastServerTime, serverTime);
+        PlayerPositionInput input = new(
+            _playerId,
+            Vector3.Zero,
+            new Vector3(1, 0, 0),
+            Vector4.Zero,
+            lastServerTime,
+            serverTime);
 
         PlayerPositionValidationResult result = _service.Validate(input);
 
         Assert.Equal(PlayerPositionValidationResult.Valid, result);
+    }
+
+    [Fact]
+    public void Validate_ShouldReturnInvalidCoordinates_WhenPositionContainsNaN()
+    {
+        DateTime lastServerTime = DateTime.UtcNow;
+        PlayerPositionInput input = new(
+            _playerId,
+            Vector3.Zero,
+            new Vector3(float.NaN, 0, 0),
+            Vector4.Zero,
+            lastServerTime,
+            lastServerTime.AddSeconds(0.1));
+
+        PlayerPositionValidationResult result = _service.Validate(input);
+
+        Assert.Equal(PlayerPositionValidationResult.InvalidCoordinates, result);
+    }
+
+    [Fact]
+    public void Validate_ShouldReturnInvalidCoordinates_WhenRotationContainsInfinity()
+    {
+        DateTime lastServerTime = DateTime.UtcNow;
+        PlayerPositionInput input = new(
+            _playerId,
+            Vector3.Zero,
+            Vector3.Zero,
+            new Vector4(0, float.PositiveInfinity, 0, 1),
+            lastServerTime,
+            lastServerTime.AddSeconds(0.1));
+
+        PlayerPositionValidationResult result = _service.Validate(input);
+
+        Assert.Equal(PlayerPositionValidationResult.InvalidCoordinates, result);
+    }
+
+    [Fact]
+    public void Validate_ShouldReturnInvalidCoordinates_WhenPositionIsOutsideWorldBounds()
+    {
+        DateTime lastServerTime = DateTime.UtcNow;
+        PlayerPositionInput input = new(
+            _playerId,
+            Vector3.Zero,
+            new Vector3(1_000_001, 0, 0),
+            Vector4.Zero,
+            lastServerTime,
+            lastServerTime.AddSeconds(0.1));
+
+        PlayerPositionValidationResult result = _service.Validate(input);
+
+        Assert.Equal(PlayerPositionValidationResult.InvalidCoordinates, result);
     }
 }

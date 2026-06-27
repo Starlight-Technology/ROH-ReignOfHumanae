@@ -16,6 +16,8 @@ public static class PlayerPositionGeoMapper
 
         return new PlayerPositionGeo
         {
+            AccountId = legacy.AccountId,
+            CharacterId = string.IsNullOrWhiteSpace(legacy.CharacterId) ? legacy.PlayerId : legacy.CharacterId,
             PlayerId = legacy.PlayerId,
 
             Position = new GeoPoint { Coordinates = new[] { lng, lat } },
@@ -25,7 +27,9 @@ public static class PlayerPositionGeoMapper
             RotationY = legacy.RotationY,
             RotationZ = legacy.RotationZ,
             RotationW = legacy.RotationW,
-            Timestamp = legacy.Timestamp
+            Timestamp = legacy.Timestamp,
+            UpdatedAtUtc = legacy.UpdatedAtUtc,
+            WorldId = legacy.WorldId
         };
     }
 
@@ -35,6 +39,8 @@ public static class PlayerPositionGeoMapper
 
         return new PlayerPosition
         {
+            AccountId = geo.AccountId,
+            CharacterId = string.IsNullOrWhiteSpace(geo.CharacterId) ? geo.PlayerId : geo.CharacterId,
             Id = geo.Id,
             PlayerId = geo.PlayerId,
             PositionX = x,
@@ -44,7 +50,9 @@ public static class PlayerPositionGeoMapper
             RotationY = geo.RotationY,
             RotationZ = geo.RotationZ,
             RotationW = geo.RotationW,
-            Timestamp = geo.Timestamp
+            Timestamp = geo.Timestamp,
+            UpdatedAtUtc = geo.UpdatedAtUtc == default ? geo.Timestamp : geo.UpdatedAtUtc,
+            WorldId = geo.WorldId
         };
     }
 }

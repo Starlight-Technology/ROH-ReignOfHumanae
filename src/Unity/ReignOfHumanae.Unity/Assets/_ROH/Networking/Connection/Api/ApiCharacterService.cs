@@ -3,8 +3,6 @@ using Assets.Scripts.Models.Character;
 using Assets.Scripts.Models.File;
 using Assets.Scripts.Models.Response;
 
-using Google.Protobuf.WellKnownTypes;
-
 using Newtonsoft.Json;
 
 using System;

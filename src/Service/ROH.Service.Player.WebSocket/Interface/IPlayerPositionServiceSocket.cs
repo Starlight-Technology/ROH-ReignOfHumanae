@@ -14,7 +14,22 @@ public interface IPlayerPositionServiceSocket
 {
     Task<ConcurrentDictionary<string, System.Net.WebSockets.WebSocket>> GetPlayersClient();
 
-    Task<SaveResponse> HandlePlayerPosition(byte[] payload, System.Net.WebSockets.WebSocket socket);
+    Task<SaveResponse> FlushPlayerPosition(
+        string characterId,
+        CancellationToken cancellationToken = default);
 
-    Task NewPlayerClient(string guid, System.Net.WebSockets.WebSocket socket);
+    Task<SaveResponse> HandlePlayerPosition(
+        byte[] payload,
+        string characterId,
+        string accountId,
+        string worldId,
+        System.Net.WebSockets.WebSocket socket,
+        CancellationToken cancellationToken = default);
+
+    Task RegisterPlayerClient(string characterId, System.Net.WebSockets.WebSocket socket);
+
+    Task RemovePlayerClient(
+        string characterId,
+        System.Net.WebSockets.WebSocket socket,
+        CancellationToken cancellationToken = default);
 }

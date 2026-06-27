@@ -21,6 +21,7 @@ namespace Assets.Scripts.Connection.WebSocket
     {
         private ClientWebSocket _socket;
         private CancellationTokenSource _cts;
+        private readonly SemaphoreSlim _sendLock = new(1, 1);
 
         private readonly ConcurrentQueue<RealtimeEnvelope> _receiveQueue = new();
 
@@ -67,12 +68,20 @@ namespace Assets.Scripts.Connection.WebSocket
                                 .WithSecurity(MessagePackSecurity.UntrustedData);
                 var bytes = MessagePackSerializer.Serialize(message, options);
 
-                await _socket.SendAsync(
-                    new ArraySegment<byte>(bytes),
-                    WebSocketMessageType.Binary,
-                    true,
-                    CancellationToken.None
-                );
+                await _sendLock.WaitAsync();
+                try
+                {
+                    await _socket.SendAsync(
+                        new ArraySegment<byte>(bytes),
+                        WebSocketMessageType.Binary,
+                        true,
+                        CancellationToken.None
+                    );
+                }
+                finally
+                {
+                    _sendLock.Release();
+                }
             }
             catch (Exception ex)
             {
@@ -89,23 +98,51 @@ namespace Assets.Scripts.Connection.WebSocket
             {
                 while (_socket?.State == WebSocketState.Open)
                 {
-                    var result = await _socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-
-                    if (result.MessageType == WebSocketMessageType.Close)
+                    byte[] messageBytes;
+                    using (var stream = new MemoryStream())
                     {
-                        await _socket.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
-                        break;
-                    }
+                        WebSocketReceiveResult result;
+                        do
+                        {
+                            result = await _socket.ReceiveAsync(
+                                new ArraySegment<byte>(buffer),
+                                CancellationToken.None);
 
-                    var messageBytes = new byte[result.Count];
-                    Array.Copy(buffer, messageBytes, result.Count);
+                            if (result.MessageType == WebSocketMessageType.Close)
+                            {
+                                await _sendLock.WaitAsync();
+                                try
+                                {
+                                    if (_socket.State == WebSocketState.CloseReceived)
+                                    {
+                                        await _socket.CloseOutputAsync(
+                                            WebSocketCloseStatus.NormalClosure,
+                                            string.Empty,
+                                            CancellationToken.None);
+                                    }
+                                }
+                                finally
+                                {
+                                    _sendLock.Release();
+                                }
+
+                                OnDisconnected?.Invoke();
+                                return;
+                            }
+
+                            stream.Write(buffer, 0, result.Count);
+                        }
+                        while (!result.EndOfMessage);
+
+                        messageBytes = stream.ToArray();
+                    }
 
                     try
                     {
                         var options = MessagePackBootstrap.Options ?? MessagePackSerializerOptions.Standard;
                         var message = MessagePackSerializer.Deserialize<RealtimeEnvelope>(messageBytes, options);
 
-                        OnMessage?.Invoke(message);
+                        _receiveQueue.Enqueue(message);
                     }
                     catch (MessagePackSerializationException ex)
                     {
@@ -116,6 +153,8 @@ namespace Assets.Scripts.Connection.WebSocket
             catch (Exception ex)
             {
                 Debug.LogError($"[WS] Receive error: {ex.Message}");
+                OnError?.Invoke(ex.Message);
+                OnDisconnected?.Invoke();
             }
         }
 
@@ -131,12 +170,22 @@ namespace Assets.Scripts.Connection.WebSocket
         {
             try
             {
-                if (_socket.State == WebSocketState.Open)
+                _cts?.Cancel();
+
+                await _sendLock.WaitAsync();
+                try
                 {
-                    await _socket.CloseAsync(
-                        WebSocketCloseStatus.NormalClosure,
-                        "Client closing",
-                        CancellationToken.None);
+                    if (_socket?.State == WebSocketState.Open)
+                    {
+                        await _socket.CloseAsync(
+                            WebSocketCloseStatus.NormalClosure,
+                            "Client closing",
+                            CancellationToken.None);
+                    }
+                }
+                finally
+                {
+                    _sendLock.Release();
                 }
             }
             catch { }

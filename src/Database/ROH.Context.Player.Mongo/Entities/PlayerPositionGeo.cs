@@ -11,6 +11,10 @@ namespace ROH.Context.Player.Mongo.Entities;
 
 public class PlayerPositionGeo
 {
+    public string AccountId { get; set; } = string.Empty;
+
+    public string CharacterId { get; set; } = string.Empty;
+
     [BsonElement("distance")]
     public double DistanceMeters { get; set; }
 
@@ -38,4 +42,8 @@ public class PlayerPositionGeo
     public float RotationZ { get; set; }
 
     public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+
+    public DateTime UpdatedAtUtc { get; set; } = DateTime.UtcNow;
+
+    public string WorldId { get; set; } = string.Empty;
 }
