@@ -85,7 +85,7 @@ docker run -d \
 # BLAZOR SERVER
 ###############################################
 
-docker build -t roh.site -f ./src/Site/ROH.Site/Dockerfile .
+docker build -t roh.site -f ./src/Site/ROH.Site/ROH.Site/Dockerfile .
 docker run -d \
   --name roh.site \
   --network $NETWORK_NAME \
