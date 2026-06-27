@@ -18,14 +18,14 @@ docker network inspect $NETWORK_NAME > /dev/null 2>&1 || docker network create $
 # REMOVE OLD CONTAINERS
 ###############################################
 
-docker rm -f roh.postgres roh.mongo gateway blazor \
+docker rm -f  \
   $(docker ps -a -q --filter="name=ROH.*" --format="{{.Names}}") 2>/dev/null
 
 ###############################################
 # REMOVE OLD IMAGES
 ###############################################
 
-docker rmi -f roh.postgres.custom roh.mongo.custom \
+docker rmi -f \
   $(docker images -q --filter="reference=roh.*") 2>/dev/null
 
 ###############################################
@@ -76,7 +76,7 @@ docker run -d \
 
 docker build -t roh.gateway -f ./src/Gateway/ROH.Gateway/Dockerfile .
 docker run -d \
-  --name ROH.Gateway \
+  --name roh.gateway \
   --network $NETWORK_NAME \
   -p 9001:9001 \
   roh.gateway
@@ -85,12 +85,12 @@ docker run -d \
 # BLAZOR SERVER
 ###############################################
 
-docker build -t roh.blazor.server -f ./src/Site/ROH.Site/Dockerfile .
+docker build -t roh.site -f ./src/Site/ROH.Site/Dockerfile .
 docker run -d \
-  --name ROH.Blazor \
+  --name roh.site \
   --network $NETWORK_NAME \
   -p 9010:9010 \
-  roh.blazor.server
+  roh.site
 
 ###############################################
 # API VERSIONFILES
@@ -98,7 +98,7 @@ docker run -d \
 
 docker build -t roh.api.versionfiles -f ./src/Api/ROH.Api.VersionFiles/Dockerfile .
 docker run -d \
-  --name ROH.Api.VersionFiles \
+  --name roh.api.versionfiles \
   --network $NETWORK_NAME \
   -p 9100:9100 \
   -v /home/roh:/app/ROH/updateFiles \
@@ -113,7 +113,7 @@ docker run -d \
 
 docker build -t roh.api.version -f ./src/Api/ROH.Api.Version/Dockerfile .
 docker run -d \
-  --name ROH.Api.Version \
+  --name roh.api.version \
   --network $NETWORK_NAME \
   -p 9101:9101 \
   -e ROH_DATABASE_CONNECTION_STRING_VERSION="Host=roh.postgres;Port=5432;Database=ROH.VERSION;Username=$POSTGRES_USER;Password=$POSTGRES_PASSWORD;" \
@@ -126,7 +126,7 @@ docker run -d \
 
 docker build -t roh.api.account -f ./src/Api/ROH.Api.Account/Dockerfile .
 docker run -d \
-  --name ROH.Api.Account \
+  --name roh.api.account \
   --network $NETWORK_NAME \
   -p 9102:9102 \
   -e ROH_DATABASE_CONNECTION_STRING_ACCOUNT="Host=roh.postgres;Port=5432;Database=ROH.ACCOUNT;Username=$POSTGRES_USER;Password=$POSTGRES_PASSWORD;" \
@@ -139,7 +139,7 @@ docker run -d \
 
 docker build -t roh.api.login -f ./src/Api/ROH.Api.Login/Dockerfile .
 docker run -d \
-  --name ROH.Api.Login \
+  --name roh.api.login \
   --network $NETWORK_NAME \
   -p 9103:9103 \
   -e ROH_DATABASE_CONNECTION_STRING_ACCOUNT="Host=roh.postgres;Port=5432;Database=ROH.ACCOUNT;Username=$POSTGRES_USER;Password=$POSTGRES_PASSWORD;" \
@@ -152,7 +152,7 @@ docker run -d \
 
 docker build -t roh.api.log -f ./src/Api/ROH.Api.Log/Dockerfile .
 docker run -d \
-  --name ROH.Api.Log \
+  --name roh.api.log \
   --network $NETWORK_NAME \
   -p 9104:9104 \
   -e ROH_DATABASE_CONNECTION_STRING_LOG="Host=roh.postgres;Port=5432;Database=ROH.LOG;Username=$POSTGRES_USER;Password=$POSTGRES_PASSWORD;" \
@@ -165,7 +165,7 @@ docker run -d \
 
 docker build -t roh.api.player -f ./src/Api/ROH.Api.Player/Dockerfile .
 docker run -d \
-  --name ROH.Api.Player \
+  --name roh.api.player \
   --network $NETWORK_NAME \
   -p 9105:9105 \
   -e ROH_DATABASE_CONNECTION_STRING_PLAYER="Host=roh.postgres;Port=5432;Database=ROH.PLAYER;Username=$POSTGRES_USER;Password=$POSTGRES_PASSWORD;" \
@@ -178,7 +178,7 @@ docker run -d \
 
 docker build -t roh.api.playersync.state -f ./src/Api/ROH.Api.PlayerSync.State/Dockerfile .
 docker run -d \
-  --name ROH.Api.PlayerSync.State \
+  --name roh.api.playersync.state \
   --network $NETWORK_NAME \
   -p 9210:9210 \
   -e ROH_MONGO_PLAYER_CONNECTION_STRING="mongodb://roh.mongo:27017/?retryWrites=true&loadBalanced=false&serverSelectionTimeoutMS=5000&connectTimeoutMS=10000" \
@@ -191,7 +191,7 @@ docker run -d \
 
 docker build -t roh.worker.getnearbyplayer -f ./src/Worker/ROH.Worker.GetNearbyPlayer/Dockerfile .
 docker run -d \
-  --name ROH.Worker.GetNearbyPlayer \
+  --name roh.worker.getnearbyplayer \
   --network $NETWORK_NAME \
   roh.worker.getnearbyplayer
 
