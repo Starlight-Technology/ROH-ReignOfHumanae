@@ -5,6 +5,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.EntityFrameworkCore;
 
 using ROH.Api.Log.Services;
 using ROH.Context.Log;
@@ -46,6 +47,13 @@ builder.WebHost
         });
 
 WebApplication app = builder.Build();
+
+// Apply pending migrations
+using (IServiceScope scope = app.Services.CreateScope())
+{
+    ROH.Context.Log.LogContext db = (ROH.Context.Log.LogContext)scope.ServiceProvider.GetRequiredService<ILogContext>();
+    db.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

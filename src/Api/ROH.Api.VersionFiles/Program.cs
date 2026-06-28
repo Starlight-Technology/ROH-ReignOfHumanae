@@ -9,6 +9,7 @@ using AutoMapper;
 using FluentValidation;
 
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 
 using ROH.Context.File;
@@ -80,6 +81,13 @@ IMapper mapper = mappingConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
 WebApplication app = builder.Build();
+
+// Apply pending migrations
+using (IServiceScope scope = app.Services.CreateScope())
+{
+    ROH.Context.File.FileContext db = (ROH.Context.File.FileContext)scope.ServiceProvider.GetRequiredService<IFileContext>();
+    db.Database.Migrate();
+}
 
 static string GetSafeStoredFilePath(ROH.Context.File.Entities.GameFile file)
 {

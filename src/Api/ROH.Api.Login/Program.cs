@@ -9,6 +9,7 @@ using AutoMapper;
 using FluentValidation;
 
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 
 using ROH.Context.Account;
@@ -77,6 +78,13 @@ builder.WebHost
         });
 
 WebApplication app = builder.Build();
+
+// Apply pending migrations
+using (IServiceScope scope = app.Services.CreateScope())
+{
+    ROH.Context.Account.AccountContext db = (ROH.Context.Account.AccountContext)scope.ServiceProvider.GetRequiredService<IAccountContext>();
+    db.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

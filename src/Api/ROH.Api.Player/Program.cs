@@ -8,6 +8,7 @@
 using AutoMapper;
 
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 
 using ROH.Context.Player;
@@ -52,6 +53,13 @@ builder.WebHost
             }));
 
 WebApplication app = builder.Build();
+
+// Apply pending migrations
+using (IServiceScope scope = app.Services.CreateScope())
+{
+    ROH.Context.Player.PlayerContext db = (ROH.Context.Player.PlayerContext)scope.ServiceProvider.GetRequiredService<IPlayerContext>();
+    db.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
