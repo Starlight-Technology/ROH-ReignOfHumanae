@@ -25,9 +25,9 @@ public class SavePosition(
     IExceptionHandler handler,
     IPlayerValidPositionService positionService) : PlayerService.PlayerServiceBase, ISavePosition
 {
-    async Task SavePositionPersistence(PlayerRequest request, ServerCallContext context)
+    private async Task SavePositionPersistence(PlayerRequest request, ServerCallContext context)
     {
-        Context.Player.Mongo.Entities.PlayerPosition position = new Context.Player.Mongo.Entities.PlayerPosition
+        Context.Player.Mongo.Entities.PlayerPosition position = new()
         {
             AccountId = request.AccountId,
             CharacterId = request.PlayerId,

@@ -1,7 +1,7 @@
 ﻿using Android.App;
 using Android.Runtime;
 
-namespace ROH.Launcher;
+namespace ROH.Launcher.Platforms.Android;
 
 [Application]
 public class MainApplication : MauiApplication

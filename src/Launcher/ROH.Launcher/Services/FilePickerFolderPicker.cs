@@ -1,31 +1,27 @@
-using System.Threading.Tasks;
-using ROH.Launcher.Services;
+namespace ROH.Launcher.Services;
 
-namespace ROH.Launcher.Services
+// fallback implementation using FilePicker
+public class FilePickerFolderPicker : IFolderPicker
 {
-    // fallback implementation using FilePicker
-    public class FilePickerFolderPicker : IFolderPicker
+    public async Task<string?> PickFolderAsync()
     {
-        public async Task<string?> PickFolderAsync()
+        try
         {
-            try
-            {
-                var result = await Microsoft.Maui.Storage.FilePicker.Default.PickAsync().ConfigureAwait(true);
-                if (result == null)
-                    return null;
-
-                if (!string.IsNullOrWhiteSpace(result.FullPath))
-                {
-                    var dir = System.IO.Path.GetDirectoryName(result.FullPath);
-                    return dir;
-                }
-
+            var result = await Microsoft.Maui.Storage.FilePicker.Default.PickAsync().ConfigureAwait(true);
+            if (result == null)
                 return null;
-            }
-            catch
+
+            if (!string.IsNullOrWhiteSpace(result.FullPath))
             {
-                return null;
+                var dir = System.IO.Path.GetDirectoryName(result.FullPath);
+                return dir;
             }
+
+            return null;
+        }
+        catch
+        {
+            return null;
         }
     }
 }

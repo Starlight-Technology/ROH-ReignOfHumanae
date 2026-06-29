@@ -1,9 +1,6 @@
-using System.Threading.Tasks;
+namespace ROH.Launcher.Services;
 
-namespace ROH.Launcher.Services
+public interface IFolderPicker
 {
-    public interface IFolderPicker
-    {
-        Task<string?> PickFolderAsync();
-    }
+    Task<string?> PickFolderAsync();
 }

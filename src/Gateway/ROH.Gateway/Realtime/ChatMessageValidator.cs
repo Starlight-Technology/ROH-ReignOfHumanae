@@ -21,14 +21,11 @@ public static partial class ChatMessageValidator
             return ChatValidationResult.Failure("EmptyMessage", "A mensagem não pode estar vazia.");
 
         int safeMaximumLength = maximumLength > 0 ? maximumLength : 300;
-        if (sanitized.Length > safeMaximumLength)
-        {
-            return ChatValidationResult.Failure(
+        return sanitized.Length > safeMaximumLength
+            ? ChatValidationResult.Failure(
                 "MessageTooLong",
-                $"A mensagem excede o limite de {safeMaximumLength} caracteres.");
-        }
-
-        return ChatValidationResult.Success(sanitized);
+                $"A mensagem excede o limite de {safeMaximumLength} caracteres.")
+            : ChatValidationResult.Success(sanitized);
     }
 
     public static string Sanitize(string? message)

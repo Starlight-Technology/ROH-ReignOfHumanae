@@ -17,7 +17,7 @@ namespace ROH.Gateway.Controllers.Player;
 [Authorize]
 public class PlayerController : ControllerBase
 {
-    readonly Api _api = new();
+    private readonly Api _api = new();
 
     [HttpPost("CreateCharacter")]
     public async Task<IActionResult> CreateCharacter(CharacterModel model, CancellationToken token = default)

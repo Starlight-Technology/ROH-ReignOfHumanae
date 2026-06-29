@@ -24,7 +24,7 @@ public class RealtimeSessionRegistryTests
         Assert.True(registry.Remove(newSession));
     }
 
-    static RealtimeClientSession CreateSession(string characterId)
+    private static RealtimeClientSession CreateSession(string characterId)
     {
         AuthenticatedRealtimeIdentity identity = new(
             "account-1",

@@ -17,7 +17,7 @@ namespace ROH.Utils.ApiConfiguration
 {
     public class ApiConfigReader
     {
-        readonly XDocument _config;
+        private readonly XDocument _config;
 
         public ApiConfigReader()
         {

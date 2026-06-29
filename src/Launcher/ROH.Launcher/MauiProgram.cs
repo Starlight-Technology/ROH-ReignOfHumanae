@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
 using ROH.Launcher.Services;
-using Microsoft.Maui.Storage;
 
 namespace ROH.Launcher;
 
@@ -40,8 +39,8 @@ public static class MauiProgram
         builder.Services.AddSingleton<UpdaterService>();
 
 #if DEBUG
-		builder.Services.AddBlazorWebViewDeveloperTools();
-		builder.Logging.AddDebug();
+        builder.Services.AddBlazorWebViewDeveloperTools();
+        builder.Logging.AddDebug();
 #endif
 
         return builder.Build();

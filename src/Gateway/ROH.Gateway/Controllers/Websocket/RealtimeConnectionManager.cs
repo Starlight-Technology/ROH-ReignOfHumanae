@@ -32,9 +32,9 @@ public class RealtimeConnectionManager(
     IOptions<RealtimeOptions> options,
     ILogger<RealtimeConnectionManager> logger) : IRealtimeConnectionManager
 {
-    const int MaximumMessageBytes = 64 * 1024;
-    readonly RealtimeOptions _options = options.Value;
-    readonly SemaphoreSlim _sessionReplacementGate = new(1, 1);
+    private const int MaximumMessageBytes = 64 * 1024;
+    private readonly RealtimeOptions _options = options.Value;
+    private readonly SemaphoreSlim _sessionReplacementGate = new(1, 1);
 
     public async Task HandleClientAsync(HttpContext context, WebSocket socket)
     {
@@ -106,7 +106,7 @@ public class RealtimeConnectionManager(
         }
     }
 
-    async Task HandleMessageAsync(
+    private async Task HandleMessageAsync(
         RealtimeClientSession session,
         RealtimeEnvelope envelope,
         CancellationToken cancellationToken)
@@ -138,7 +138,7 @@ public class RealtimeConnectionManager(
         }
     }
 
-    async Task ReceiveLoopAsync(RealtimeClientSession session, CancellationToken cancellationToken)
+    private async Task ReceiveLoopAsync(RealtimeClientSession session, CancellationToken cancellationToken)
     {
         while (session.Socket.State == WebSocketState.Open && sessionRegistry.IsCurrent(session))
         {
@@ -151,7 +151,7 @@ public class RealtimeConnectionManager(
         }
     }
 
-    async Task ReplacePreviousSessionAsync(RealtimeClientSession previousSession, string characterId)
+    private async Task ReplacePreviousSessionAsync(RealtimeClientSession previousSession, string characterId)
     {
         await FlushPositionSafelyAsync(characterId).ConfigureAwait(false);
 
@@ -182,7 +182,7 @@ public class RealtimeConnectionManager(
         }
     }
 
-    async Task SendInitialPositionAsync(
+    private async Task SendInitialPositionAsync(
         RealtimeClientSession session,
         CancellationToken cancellationToken)
     {
@@ -239,7 +239,7 @@ public class RealtimeConnectionManager(
             .ConfigureAwait(false);
     }
 
-    async Task FlushPositionSafelyAsync(string characterId)
+    private async Task FlushPositionSafelyAsync(string characterId)
     {
         try
         {
@@ -256,7 +256,7 @@ public class RealtimeConnectionManager(
         }
     }
 
-    async Task RemovePlayerSafelyAsync(RealtimeClientSession session)
+    private async Task RemovePlayerSafelyAsync(RealtimeClientSession session)
     {
         try
         {
@@ -273,7 +273,7 @@ public class RealtimeConnectionManager(
         }
     }
 
-    static async Task<byte[]?> ReceiveMessageAsync(
+    private static async Task<byte[]?> ReceiveMessageAsync(
         WebSocket socket,
         CancellationToken cancellationToken)
     {
@@ -301,7 +301,7 @@ public class RealtimeConnectionManager(
         }
     }
 
-    static async Task CloseSocketSafelyAsync(
+    private static async Task CloseSocketSafelyAsync(
         WebSocket socket,
         WebSocketCloseStatus closeStatus,
         string description,

@@ -18,7 +18,7 @@ const int DEFAULT_NEARBY_RANGE = 100;
 
 Console.WriteLine("Initialized GetNearbyPlayers worker.");
 
-using CancellationTokenSource cts = new CancellationTokenSource();
+using CancellationTokenSource cts = new();
 
 Console.CancelKeyPress += (_, e) =>
 {
@@ -36,10 +36,10 @@ GrpcChannel gatewayChannel = GrpcChannel.ForAddress(
     {
         HttpHandler =
             new HttpClientHandler
-                {
-                    ServerCertificateCustomValidationCallback =
+            {
+                ServerCertificateCustomValidationCallback =
                         HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-                }
+            }
     });
 
 GrpcChannel nearbyPlayerChannel = GrpcChannel.ForAddress(
@@ -48,20 +48,20 @@ GrpcChannel nearbyPlayerChannel = GrpcChannel.ForAddress(
     {
         HttpHandler =
             new HttpClientHandler
-                {
-                    ServerCertificateCustomValidationCallback =
+            {
+                ServerCertificateCustomValidationCallback =
                         HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-                }
+            }
     });
 #pragma warning restore S4830 // Server certificates should be verified during SSL/TLS connections
 
-PlayerConnectedService.PlayerConnectedServiceClient playerSocketGrpc = new PlayerConnectedService.PlayerConnectedServiceClient(
+PlayerConnectedService.PlayerConnectedServiceClient playerSocketGrpc = new(
     gatewayChannel);
-NearbyPlayerService.NearbyPlayerServiceClient nearbyPlayerApi = new NearbyPlayerService.NearbyPlayerServiceClient(
+NearbyPlayerService.NearbyPlayerServiceClient nearbyPlayerApi = new(
     nearbyPlayerChannel);
 
-LogService logService = new LogService();
-ExceptionHandler exceptionHandler = new ExceptionHandler(logService);
+LogService logService = new();
+ExceptionHandler exceptionHandler = new(logService);
 
 while (!cts.Token.IsCancellationRequested)
 {
@@ -77,10 +77,10 @@ while (!cts.Token.IsCancellationRequested)
                     NearbyPlayersResponse nearbyPlayers =
                 await nearbyPlayerApi.GetNearbyPlayersAsync(
                         new NearbyPlayersRequest
-                            {
-                                PlayerId = player.Id,
-                                Radius = Math.Max(player.NearbyRadius, DEFAULT_NEARBY_RANGE)
-                            });
+                        {
+                            PlayerId = player.Id,
+                            Radius = Math.Max(player.NearbyRadius, DEFAULT_NEARBY_RANGE)
+                        });
 
                     await playerSocketGrpc.SendNearbyPlayersAsync(nearbyPlayers);
                 });

@@ -12,7 +12,7 @@ namespace ROH.Context.Player.Redis;
 
 public class PlayerRedisContext : IPlayerRedisContext
 {
-    readonly ConnectionMultiplexer _connection;
+    private readonly ConnectionMultiplexer _connection;
 
     public PlayerRedisContext()
     {

@@ -24,10 +24,10 @@ namespace ROH.Test.Account;
 
 public class UserServiceTest
 {
-    readonly IMapper _mapper;
-    readonly Mock<IExceptionHandler> _mockExceptionHandler;
-    readonly Mock<IUserRepository> _mockRepository;
-    readonly UserModelValidator _userValidator;
+    private readonly IMapper _mapper;
+    private readonly Mock<IExceptionHandler> _mockExceptionHandler;
+    private readonly Mock<IUserRepository> _mockRepository;
+    private readonly UserModelValidator _userValidator;
 
     public UserServiceTest()
     {

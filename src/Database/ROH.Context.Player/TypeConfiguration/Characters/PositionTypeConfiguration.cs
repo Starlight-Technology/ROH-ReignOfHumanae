@@ -11,7 +11,7 @@ using ROH.Context.Player.Entities.Characters;
 
 namespace ROH.Context.Player.TypeConfiguration.Characters;
 
-class PositionTypeConfiguration : IEntityTypeConfiguration<Position>
+internal class PositionTypeConfiguration : IEntityTypeConfiguration<Position>
 {
     public void Configure(EntityTypeBuilder<Position> builder) => builder.HasKey(p => p.Id);
 }

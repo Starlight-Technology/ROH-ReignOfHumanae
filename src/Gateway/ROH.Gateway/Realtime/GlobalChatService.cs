@@ -17,7 +17,7 @@ public class GlobalChatService(
     IOptions<RealtimeOptions> options,
     ILogger<GlobalChatService> logger) : IGlobalChatService
 {
-    readonly RealtimeOptions _options = options.Value;
+    private readonly RealtimeOptions _options = options.Value;
 
     public async Task HandleHistoryRequestAsync(
         RealtimeClientSession session,
@@ -140,7 +140,7 @@ public class GlobalChatService(
             .ConfigureAwait(false);
     }
 
-    static ChatMessage ToContract(ChatMessageEntity entity) => new()
+    private static ChatMessage ToContract(ChatMessageEntity entity) => new()
     {
         Channel = ChatChannel.Global,
         CreatedAtUtc = entity.CreatedAtUtc,
@@ -152,7 +152,7 @@ public class GlobalChatService(
         TargetCharacterId = entity.TargetCharacterId
     };
 
-    async Task SendBroadcastAsync(
+    private async Task SendBroadcastAsync(
         RealtimeClientSession recipient,
         RealtimeEnvelope envelope,
         CancellationToken cancellationToken)
@@ -170,7 +170,7 @@ public class GlobalChatService(
         }
     }
 
-    static Task SendErrorAsync(
+    private static Task SendErrorAsync(
         RealtimeClientSession session,
         string code,
         string message,

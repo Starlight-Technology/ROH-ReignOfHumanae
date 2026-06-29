@@ -13,8 +13,8 @@ namespace ROH.Test.Player;
 
 public class PlayerValidPositionServiceTest
 {
-    readonly Guid _playerId = Guid.NewGuid();
-    readonly PlayerValidPositionService _service;
+    private readonly Guid _playerId = Guid.NewGuid();
+    private readonly PlayerValidPositionService _service;
 
     public PlayerValidPositionServiceTest() => _service = new PlayerValidPositionService();
 

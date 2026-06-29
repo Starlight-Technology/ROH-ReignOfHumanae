@@ -23,13 +23,13 @@ namespace ROH.Test.Version;
 
 public class GameVersionServiceTests
 {
-    readonly GameVersion _gameVersion;
-    readonly GameVersionModel _gameVersionModel;
-    readonly Mock<IExceptionHandler> _mockExceptionHandler;
-    readonly Mock<IMapper> _mockMapper;
-    readonly Mock<IGameVersionRepository> _mockVersionRepository;
-    readonly Paginated _paginatedResult;
-    readonly GameVersionService _service;
+    private readonly GameVersion _gameVersion;
+    private readonly GameVersionModel _gameVersionModel;
+    private readonly Mock<IExceptionHandler> _mockExceptionHandler;
+    private readonly Mock<IMapper> _mockMapper;
+    private readonly Mock<IGameVersionRepository> _mockVersionRepository;
+    private readonly Paginated _paginatedResult;
+    private readonly GameVersionService _service;
 
     public GameVersionServiceTests()
     {

@@ -19,15 +19,15 @@ namespace ROH.Test.GameFile;
 
 public class GameFileServiceTest
 {
-    readonly Mock<IExceptionHandler> _mockExceptionHandler;
-    readonly Mock<IGameFileRepository> _mockRepository;
-    readonly GameFileService _service;
-    readonly Context.File.Entities.GameFile _testFile = new(
+    private readonly Mock<IExceptionHandler> _mockExceptionHandler;
+    private readonly Mock<IGameFileRepository> _mockRepository;
+    private readonly GameFileService _service;
+    private readonly Context.File.Entities.GameFile _testFile = new(
         Name: "testFile.txt",
         Format: "txt",
         Path: Path.GetTempPath(),
         Guid: Guid.NewGuid());
-    readonly Guid _testGuid = Guid.NewGuid();
+    private readonly Guid _testGuid = Guid.NewGuid();
 
     public GameFileServiceTest()
     {

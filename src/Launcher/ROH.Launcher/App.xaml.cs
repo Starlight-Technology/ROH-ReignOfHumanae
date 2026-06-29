@@ -2,13 +2,7 @@
 
 public partial class App : Application
 {
-    public App()
-    {
-        InitializeComponent();
-    }
+    public App() => InitializeComponent();
 
-    protected override Window CreateWindow(IActivationState? activationState)
-    {
-        return new Window(new MainPage()) { Title = "ROH.Launcher" };
-    }
+    protected override Window CreateWindow(IActivationState? activationState) => new(new MainPage()) { Title = "ROH.Launcher" };
 }

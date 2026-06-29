@@ -2,8 +2,8 @@ namespace ROH.Gateway.Realtime;
 
 public class RealtimeSessionRegistry : IRealtimeSessionRegistry
 {
-    readonly Dictionary<string, RealtimeClientSession> _sessions = new(StringComparer.Ordinal);
-    readonly object _sync = new();
+    private readonly Dictionary<string, RealtimeClientSession> _sessions = new(StringComparer.Ordinal);
+    private readonly object _sync = new();
 
     public bool IsCurrent(RealtimeClientSession session)
     {
@@ -18,13 +18,8 @@ public class RealtimeSessionRegistry : IRealtimeSessionRegistry
     {
         lock (_sync)
         {
-            if (!_sessions.TryGetValue(session.CharacterId, out RealtimeClientSession? active)
-                || active.ConnectionId != session.ConnectionId)
-            {
-                return false;
-            }
-
-            return _sessions.Remove(session.CharacterId);
+            return _sessions.TryGetValue(session.CharacterId, out RealtimeClientSession? active)
+                && active.ConnectionId == session.ConnectionId && _sessions.Remove(session.CharacterId);
         }
     }
 

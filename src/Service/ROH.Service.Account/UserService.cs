@@ -29,10 +29,7 @@ public class UserService(
     public async Task<UserModel?> FindUserByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
         User? user = await repository.FindUserByEmailAsync(email, cancellationToken).ConfigureAwait(true);
-        if (user is null)
-            return null;
-
-        return mapper.Map<UserModel>(user);
+        return user is null ? null : mapper.Map<UserModel>(user);
     }
 
     public async Task<UserModel?> FindUserByUserNameAsync(
@@ -41,10 +38,7 @@ public class UserService(
     {
         User? user = await repository.FindUserByUserNameAsync(userName, cancellationToken).ConfigureAwait(true);
 
-        if (user is null)
-            return null;
-
-        return mapper.Map<UserModel>(user);
+        return user is null ? null : mapper.Map<UserModel>(user);
     }
 
     public async Task<UserModel> GetUserByGuidAsync(Guid userGuid, CancellationToken cancellationToken = default) => mapper.Map<UserModel>(

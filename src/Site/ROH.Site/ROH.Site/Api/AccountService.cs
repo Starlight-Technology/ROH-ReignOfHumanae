@@ -14,7 +14,7 @@ namespace ROH.Site.Api;
 
 public class AccountService(ICustomAuthenticationStateProvider customAuthenticationStateProvider) : IAccountService
 {
-    readonly Gateway _gateway = new();
+    private readonly Gateway _gateway = new();
 
     public async Task<DefaultResponse?> CreateNewUser(UserModel user) => await _gateway.PostAsync(
         Gateway.Services.CreateNewUser,

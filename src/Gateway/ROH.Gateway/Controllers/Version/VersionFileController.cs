@@ -17,7 +17,7 @@ namespace ROH.Gateway.Controllers.Version;
 [Authorize]
 public class VersionFileController : ControllerBase
 {
-    readonly Api _api = new();
+    private readonly Api _api = new();
 
     [HttpGet("DownloadFile")]
     public async Task<IActionResult> DownloadFileAsync(string fileGuid, CancellationToken cancellationToken = default)

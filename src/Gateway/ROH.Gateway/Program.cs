@@ -9,7 +9,6 @@ using MessagePack.Resolvers;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 
@@ -25,7 +24,6 @@ using ROH.Service.Exception.Communication;
 using ROH.Service.Exception.Interface;
 using ROH.Service.Player.WebSocket.Interface;
 using ROH.Service.Player.WebSocket.State;
-using ROH.Service.WebSocket;
 
 using System.Text;
 
@@ -75,14 +73,14 @@ builder.Services
             c.AddSecurityDefinition(
                 "Bearer",
                 new OpenApiSecurityScheme
-                    {
-                        Description =
+                {
+                    Description =
                             "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                        Name = "Authorization",
-                        In = ParameterLocation.Header,
-                        Type = SecuritySchemeType.ApiKey,
-                        Scheme = "Bearer"
-                    });
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
         });
 
 // Configure Kestrel to listen on a specific port

@@ -14,7 +14,7 @@ namespace ROH.Site.Api;
 
 public class VersionFileService(ICustomAuthenticationStateProvider customAuthenticationStateProvider) : IVersionFileService
 {
-    readonly Gateway _gateway = new();
+    private readonly Gateway _gateway = new();
 
     public async Task<DefaultResponse?> DownloadVersionFile(string FileGuid) => await _gateway.GetAsync(
         Gateway.Services.DownloadFile,

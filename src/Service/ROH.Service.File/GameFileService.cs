@@ -17,7 +17,7 @@ namespace ROH.Service.File;
 
 public class GameFileService(IGameFileRepository gameFileRepository, IExceptionHandler exceptionHandler) : IGameFileService
 {
-    static string GetSafeFilePath(GameFile gameFile)
+    private static string GetSafeFilePath(GameFile gameFile)
     {
         string rootPath = Path.GetFullPath(gameFile.Path);
         string relativePath = NormalizeRelativePath(gameFile.Name);
@@ -25,13 +25,12 @@ public class GameFileService(IGameFileRepository gameFileRepository, IExceptionH
         string rootWithSeparator = rootPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
             + Path.DirectorySeparatorChar;
 
-        if (!filePath.StartsWith(rootWithSeparator, StringComparison.OrdinalIgnoreCase))
-            throw new InvalidOperationException("Invalid file path.");
-
-        return filePath;
+        return !filePath.StartsWith(rootWithSeparator, StringComparison.OrdinalIgnoreCase)
+            ? throw new InvalidOperationException("Invalid file path.")
+            : filePath;
     }
 
-    static string GetRelativeDirectory(string fileName)
+    private static string GetRelativeDirectory(string fileName)
     {
         string relativePath = NormalizeRelativePath(fileName);
         string? directory = Path.GetDirectoryName(relativePath);
@@ -40,7 +39,7 @@ public class GameFileService(IGameFileRepository gameFileRepository, IExceptionH
             : directory.Replace(Path.DirectorySeparatorChar, '/');
     }
 
-    static string NormalizeRelativePath(string fileName)
+    private static string NormalizeRelativePath(string fileName)
     {
         string safeName = string.IsNullOrWhiteSpace(fileName) ? "download.bin" : fileName;
         return safeName
@@ -49,7 +48,7 @@ public class GameFileService(IGameFileRepository gameFileRepository, IExceptionH
             .TrimStart(Path.DirectorySeparatorChar);
     }
 
-    async Task<DefaultResponse> GetGameFileAsync(GameFile gameFile, CancellationToken cancellationToken = default)
+    private async Task<DefaultResponse> GetGameFileAsync(GameFile gameFile, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -95,7 +94,7 @@ public class GameFileService(IGameFileRepository gameFileRepository, IExceptionH
             GameFile? file = await gameFileRepository.GetFileAsync(fileGuid, cancellationToken).ConfigureAwait(true);
 
             return (file is null)
-                ? (new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File Not Found."))
+                ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File Not Found.")
                 : (await GetGameFileAsync(file, cancellationToken).ConfigureAwait(true));
         }
         catch (System.Exception ex)
@@ -111,7 +110,7 @@ public class GameFileService(IGameFileRepository gameFileRepository, IExceptionH
             GameFile? file = await gameFileRepository.GetFileAsync(id, cancellationToken).ConfigureAwait(true);
 
             return (file is null)
-                ? (new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File Not Found."))
+                ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File Not Found.")
                 : (await GetGameFileAsync(file, cancellationToken).ConfigureAwait(true));
         }
         catch (System.Exception ex)

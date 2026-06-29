@@ -7,7 +7,7 @@ namespace ROH.Context.Player.Mongo.Repository;
 
 public class ChatRepository(IPlayerMongoContext context) : IChatRepository
 {
-    readonly IMongoCollection<ChatMessageEntity> _collection = context.ChatMessagesCollection;
+    private readonly IMongoCollection<ChatMessageEntity> _collection = context.ChatMessagesCollection;
 
     public async Task<long> DeleteOlderThanAsync(
         DateTime cutoffUtc,

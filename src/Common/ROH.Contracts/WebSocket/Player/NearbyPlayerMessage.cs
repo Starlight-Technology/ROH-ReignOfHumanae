@@ -12,8 +12,8 @@ namespace ROH.Contracts.WebSocket.Player;
 public class NearbyPlayerMessage
 {
     [Key(9)] public int AnimationState;
-    [Key(8)] public string ModelName;
-    [Key(0)] public string PlayerId;
+    [Key(8)] public required string ModelName;
+    [Key(0)] public required string PlayerId;
     [Key(7)] public float RotW;
     [Key(4)] public float RotX;
     [Key(5)] public float RotY;

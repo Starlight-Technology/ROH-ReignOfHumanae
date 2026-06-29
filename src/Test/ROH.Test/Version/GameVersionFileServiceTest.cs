@@ -27,13 +27,13 @@ namespace ROH.Test.Version;
 
 public class GameVersionFileServiceTest
 {
-    readonly Mock<IExceptionHandler> _mockExceptionHandler;
-    readonly Mock<IGameFileService> _mockGameFileService;
-    readonly Mock<IGameVersionFileRepository> _mockGameVersionFileRepository;
-    readonly Mock<IGameVersionService> _mockGameVersionService;
-    readonly Mock<IMapper> _mockMapper;
-    readonly Mock<IValidator<GameVersionFileModel>> _mockValidator;
-    readonly GameVersionFileService _service;
+    private readonly Mock<IExceptionHandler> _mockExceptionHandler;
+    private readonly Mock<IGameFileService> _mockGameFileService;
+    private readonly Mock<IGameVersionFileRepository> _mockGameVersionFileRepository;
+    private readonly Mock<IGameVersionService> _mockGameVersionService;
+    private readonly Mock<IMapper> _mockMapper;
+    private readonly Mock<IValidator<GameVersionFileModel>> _mockValidator;
+    private readonly GameVersionFileService _service;
 
     public GameVersionFileServiceTest()
     {

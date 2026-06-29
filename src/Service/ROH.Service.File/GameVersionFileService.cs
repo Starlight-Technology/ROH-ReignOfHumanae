@@ -29,7 +29,7 @@ public class GameVersionFileService(
     IMapper mapper,
     IExceptionHandler exceptionHandler) : IGameVersionFileService
 {
-    async Task<GameVersionModel?> GetCurrentVersionAsync(CancellationToken cancellationToken = default)
+    private async Task<GameVersionModel?> GetCurrentVersionAsync(CancellationToken cancellationToken = default)
     {
         VersionServiceApi.DefaultResponse? response = await gameVersion.GetCurrentVersionAsync(cancellationToken)
             .ConfigureAwait(true);
@@ -51,7 +51,7 @@ public class GameVersionFileService(
         return version;
     }
 
-    static string GetFilePath(GameVersionModel gameVersion) =>
+    private static string GetFilePath(GameVersionModel gameVersion) =>
 #if DEBUG
         @$".\ROHUpdateFiles\{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}\";
 
@@ -59,7 +59,7 @@ public class GameVersionFileService(
     @$"/app/ROH/updateFiles/{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}/";
 #endif
 
-    static string BuildStoredRelativeName(GameVersionFileModel fileModel)
+    private static string BuildStoredRelativeName(GameVersionFileModel fileModel)
     {
         string normalizedName = NormalizeInstallPath(fileModel.Name);
         string fileName = Path.GetFileName(normalizedName.Replace('/', Path.DirectorySeparatorChar));
@@ -68,13 +68,12 @@ public class GameVersionFileService(
         if (string.IsNullOrWhiteSpace(fileName))
             fileName = "download.bin";
 
-        if (!string.IsNullOrWhiteSpace(targetFolder))
-            return $"{targetFolder}/{fileName}";
-
-        return string.IsNullOrWhiteSpace(normalizedName) ? fileName : normalizedName;
+        return !string.IsNullOrWhiteSpace(targetFolder)
+            ? $"{targetFolder}/{fileName}"
+            : string.IsNullOrWhiteSpace(normalizedName) ? fileName : normalizedName;
     }
 
-    static string GetRelativeDirectory(string fileName)
+    private static string GetRelativeDirectory(string fileName)
     {
         string relativePath = NormalizeInstallPath(fileName);
         string? directory = Path.GetDirectoryName(relativePath.Replace('/', Path.DirectorySeparatorChar));
@@ -84,7 +83,7 @@ public class GameVersionFileService(
             : directory.Replace(Path.DirectorySeparatorChar, '/');
     }
 
-    static string NormalizeInstallPath(string value)
+    private static string NormalizeInstallPath(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
             return string.Empty;
@@ -103,11 +102,11 @@ public class GameVersionFileService(
         return string.Join("/", segments);
     }
 
-    static string GetRejectionMessage(GameVersionModel gameVersion) => gameVersion.Released
+    private static string GetRejectionMessage(GameVersionModel gameVersion) => gameVersion.Released
         ? "File Upload Failed: This version has already been released. You cannot upload new files for a released version."
         : "File Upload Failed: This version has already been released with a yearly schedule. Uploading new files is not allowed for past versions.";
 
-    async Task<DefaultResponse> SaveFileAsync(
+    private async Task<DefaultResponse> SaveFileAsync(
         GameVersionFileModel fileModel,
         GameVersionFile versionFile,
         GameVersionModel? currentVersion,
@@ -133,7 +132,7 @@ public class GameVersionFileService(
         return new DefaultResponse(HttpStatusCode.OK);
     }
 
-    static Task<bool> ShouldRejectFileUploadAsync(
+    private static Task<bool> ShouldRejectFileUploadAsync(
         GameVersionModel gameVersion,
         GameVersionModel? currentVersion,
         CancellationToken cancellationToken = default)
@@ -145,7 +144,7 @@ public class GameVersionFileService(
         return Task.FromResult(gameVersion.Released || (gameVersion.VersionDate < currentVersion?.VersionDate));
     }
 
-    Task<ValidationResult> ValidateFileAsync(GameVersionFileModel file, CancellationToken cancellationToken = default) => validator.ValidateAsync(
+    private Task<ValidationResult> ValidateFileAsync(GameVersionFileModel file, CancellationToken cancellationToken = default) => validator.ValidateAsync(
         file,
         cancellationToken);
 
@@ -159,10 +158,10 @@ public class GameVersionFileService(
             return (versionFile?.GameFile != null)
                 ? (await gameFileService.DownloadFileAsync(versionFile.GameFile.Guid, cancellationToken)
                     .ConfigureAwait(true))
-                : (new DefaultResponse(
+                : new DefaultResponse(
                     null,
                     httpStatus: HttpStatusCode.NotFound,
-                    message: "Game Version File Not Found."));
+                    message: "Game Version File Not Found.");
         }
         catch (System.Exception ex)
         {
@@ -180,10 +179,10 @@ public class GameVersionFileService(
             return (versionFile?.GameFile != null)
                 ? (await gameFileService.DownloadFileAsync(versionFile.GameFile.Id, cancellationToken)
                     .ConfigureAwait(true))
-                : (new DefaultResponse(
+                : new DefaultResponse(
                     null,
                     httpStatus: HttpStatusCode.NotFound,
-                    message: "Game Version File Not Found."));
+                    message: "Game Version File Not Found.");
         }
         catch (System.Exception ex)
         {
@@ -254,7 +253,7 @@ public class GameVersionFileService(
                     (await gameVersion.VerifyIfVersionExistAsync(fileModel.GameVersion!.Guid, cancellationToken)
                         .ConfigureAwait(true)))
                 ? (await SaveFileAsync(fileModel, versionFile, currentVersion, cancellationToken).ConfigureAwait(true))
-                : (new DefaultResponse(null, HttpStatusCode.BadRequest, "Game Version Not Found."));
+                : new DefaultResponse(null, HttpStatusCode.BadRequest, "Game Version Not Found.");
         }
         catch (System.Exception ex)
         {

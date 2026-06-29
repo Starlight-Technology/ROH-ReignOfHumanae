@@ -17,11 +17,11 @@ namespace ROH.Site.Helpers;
 /// <summary>
 /// I tried to use AuthenticationState with claims identity, but don't worked so i make just with jwt and local storage
 /// </summary>
-public class CustomAuthenticationStateProvider(ILocalStorageService localStorage) :  ICustomAuthenticationStateProvider
+public class CustomAuthenticationStateProvider(ILocalStorageService localStorage) : ICustomAuthenticationStateProvider
 {
-    readonly string _authToken = "authToken";
-    bool _isInitialized;
-    readonly string _userKey = "userKey";
+    private readonly string _authToken = "authToken";
+    private bool _isInitialized;
+    private readonly string _userKey = "userKey";
 
     public async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
@@ -72,14 +72,7 @@ public class CustomAuthenticationStateProvider(ILocalStorageService localStorage
         //await Task.FromResult(new AuthenticationState(authenticatedUser));
     }
 
-    public async Task MarkUserAsLoggedOut()
-    {
-        await localStorage.RemoveItemAsync("authToken").ConfigureAwait(false);
-
-        //ClaimsPrincipal anonymousUser = new(new ClaimsIdentity());
-
-        //await Task.FromResult(new AuthenticationState(anonymousUser));
-    }
+    public async Task MarkUserAsLoggedOut() => await localStorage.RemoveItemAsync("authToken").ConfigureAwait(false);//ClaimsPrincipal anonymousUser = new(new ClaimsIdentity());//await Task.FromResult(new AuthenticationState(anonymousUser));
 
     public async Task SetUserToken(string user = "", string token = "")
     {

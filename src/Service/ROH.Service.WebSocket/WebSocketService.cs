@@ -15,7 +15,7 @@ namespace ROH.Service.WebSocket;
 
 public static class WebSocketService
 {
-    static readonly ConditionalWeakTable<System.Net.WebSockets.WebSocket, SemaphoreSlim> SendLocks = new();
+    private static readonly ConditionalWeakTable<System.Net.WebSockets.WebSocket, SemaphoreSlim> SendLocks = [];
 
     public static async Task CloseSerializedAsync(
         this System.Net.WebSockets.WebSocket socket,

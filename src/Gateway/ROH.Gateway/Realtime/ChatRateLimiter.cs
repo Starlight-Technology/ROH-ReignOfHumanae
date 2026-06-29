@@ -2,12 +2,12 @@ namespace ROH.Gateway.Realtime;
 
 public sealed class ChatRateLimiter
 {
-    readonly int _capacity;
-    readonly double _messagesPerSecond;
-    readonly object _sync = new();
-    readonly Func<DateTime> _utcNow;
-    DateTime _lastRefillUtc;
-    double _tokens;
+    private readonly int _capacity;
+    private readonly double _messagesPerSecond;
+    private readonly object _sync = new();
+    private readonly Func<DateTime> _utcNow;
+    private DateTime _lastRefillUtc;
+    private double _tokens;
 
     public ChatRateLimiter(double messagesPerSecond, int burst, Func<DateTime>? utcNow = null)
     {
@@ -34,7 +34,7 @@ public sealed class ChatRateLimiter
                 return true;
             }
 
-            retryAfterMilliseconds = (int)Math.Ceiling(((1 - _tokens) / _messagesPerSecond) * 1000);
+            retryAfterMilliseconds = (int)Math.Ceiling((1 - _tokens) / _messagesPerSecond * 1000);
             return false;
         }
     }

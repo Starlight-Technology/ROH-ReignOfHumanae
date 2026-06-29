@@ -17,7 +17,7 @@ namespace ROH.Context.Player.Mongo.Repository;
 
 public class PositionRepository : IPositionRepository
 {
-    readonly IMongoCollection<PlayerPositionGeo> _collection;
+    private readonly IMongoCollection<PlayerPositionGeo> _collection;
 
     public PositionRepository(IPlayerMongoContext context) => _collection = context.PlayerPositionGeoCollection;
 
@@ -81,7 +81,7 @@ public class PositionRepository : IPositionRepository
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
 
-        return[.. geoResults.Select(p => p.ToLegacy())];
+        return [.. geoResults.Select(p => p.ToLegacy())];
     }
 
     public async Task SavePlayerPositionAsync(PlayerPosition data, CancellationToken cancellationToken = default)

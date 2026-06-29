@@ -17,7 +17,7 @@ namespace ROH.Gateway.Controllers.Version;
 [Authorize]
 public class VersionController : ControllerBase
 {
-    readonly Api _api = new();
+    private readonly Api _api = new();
 
     [HttpPost("CreateNewVersion")]
     public async Task<IActionResult> CreateNewVersionAsync(

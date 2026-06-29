@@ -16,7 +16,7 @@ namespace ROH.Site.Api;
 
 public class VersionService(ICustomAuthenticationStateProvider customAuthenticationStateProvider) : IVersionService
 {
-    readonly Gateway _gateway = new();
+    private readonly Gateway _gateway = new();
 
     public async Task<DefaultResponse?> CreateNewVersion(GameVersionModel model) => await _gateway.PostAsync(
         Gateway.Services.CreateNewVersion,

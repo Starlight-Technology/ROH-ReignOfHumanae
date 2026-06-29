@@ -17,7 +17,7 @@ namespace ROH.Gateway.Controllers.Account;
 [Authorize]
 public class AccountController : ControllerBase
 {
-    readonly Api _api = new();
+    private readonly Api _api = new();
 
     [AllowAnonymous]
     [HttpPost("CreateNewUser")]

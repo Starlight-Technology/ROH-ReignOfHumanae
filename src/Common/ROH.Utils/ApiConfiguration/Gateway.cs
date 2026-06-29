@@ -25,12 +25,12 @@ namespace ROH.Utils.ApiConfiguration
 {
     public class Gateway
     {
-        const string ERROR_MESSAGE = "Error, the connection has failed!";
-        const string UNAUTHORIZED_MESSAGE = "You must to be logged to do that.";
+        private const string ERROR_MESSAGE = "Error, the connection has failed!";
+        private const string UNAUTHORIZED_MESSAGE = "You must to be logged to do that.";
 
-        static readonly ApiConfigReader _apiConfig = new ApiConfigReader();
-        static readonly Dictionary<ApiUrl, Uri> _apiUrl = _apiConfig.GetApiUrl();
-        static readonly Dictionary<Services, Uri> _gatewayServiceUrl = new Dictionary<Services, Uri>
+        private static readonly ApiConfigReader _apiConfig = new ApiConfigReader();
+        private static readonly Dictionary<ApiUrl, Uri> _apiUrl = _apiConfig.GetApiUrl();
+        private static readonly Dictionary<Services, Uri> _gatewayServiceUrl = new Dictionary<Services, Uri>
         {
             #region VERSION
             {
@@ -106,11 +106,11 @@ namespace ROH.Utils.ApiConfiguration
             { Services.SavePosition, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.PlayerState), string.Empty) },
             #endregion PLAYER
         };
-        readonly Api _api = new Api();
-        readonly DefaultResponse? _errorResponse = new DefaultResponse(
+        private readonly Api _api = new Api();
+        private readonly DefaultResponse? _errorResponse = new DefaultResponse(
             httpStatus: HttpStatusCode.BadRequest,
             message: ERROR_MESSAGE);
-        readonly DefaultResponse? _unauthorizedResponse = new DefaultResponse(
+        private readonly DefaultResponse? _unauthorizedResponse = new DefaultResponse(
             httpStatus: HttpStatusCode.Unauthorized,
             message: UNAUTHORIZED_MESSAGE);
 
@@ -122,7 +122,7 @@ namespace ROH.Utils.ApiConfiguration
         {
             HttpClientHandler handler = new HttpClientHandler();
 #if DEBUG
-            handler.ServerCertificateCustomValidationCallback =(httpRequestMessage, cert, cetChain, policyErrors) => true;
+            handler.ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => true;
 #endif
             using HttpClient client = new HttpClient(handler);
 
@@ -163,7 +163,7 @@ namespace ROH.Utils.ApiConfiguration
             {
                 HttpClientHandler handler = new HttpClientHandler();
 #if DEBUG
-                handler.ServerCertificateCustomValidationCallback =(httpRequestMessage, cert, cetChain, policyErrors) => true;
+                handler.ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => true;
 #endif
                 using HttpClient client = new HttpClient(handler);
 
@@ -207,7 +207,7 @@ namespace ROH.Utils.ApiConfiguration
         {
             HttpClientHandler handler = new HttpClientHandler();
 #if DEBUG
-            handler.ServerCertificateCustomValidationCallback =(httpRequestMessage, cert, cetChain, policyErrors) => true;
+            handler.ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => true;
 #endif
             using HttpClient client = new HttpClient(handler);
 
@@ -243,7 +243,7 @@ namespace ROH.Utils.ApiConfiguration
         {
             HttpClientHandler handler = new HttpClientHandler();
 #if DEBUG
-            handler.ServerCertificateCustomValidationCallback =(httpRequestMessage, cert, cetChain, policyErrors) => true;
+            handler.ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => true;
 #endif
             using HttpClient client = new HttpClient(handler);
 

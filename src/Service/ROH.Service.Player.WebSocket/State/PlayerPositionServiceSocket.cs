@@ -21,10 +21,10 @@ namespace ROH.Service.Player.WebSocket.State;
 
 public class PlayerPositionServiceSocket(TimeSpan persistenceInterval) : IPlayerPositionServiceSocket
 {
-    readonly ConcurrentDictionary<string, DateTime> _lastPersistedAtUtc = new();
-    readonly ConcurrentDictionary<string, PlayerRequest> _latestPositions = new();
-    readonly ConcurrentDictionary<string, System.Net.WebSockets.WebSocket> _playerConnections = new();
-    readonly Lazy<PlayerService.PlayerServiceClient> _savePlayerPositionApi = new(CreateClient);
+    private readonly ConcurrentDictionary<string, DateTime> _lastPersistedAtUtc = new();
+    private readonly ConcurrentDictionary<string, PlayerRequest> _latestPositions = new();
+    private readonly ConcurrentDictionary<string, System.Net.WebSockets.WebSocket> _playerConnections = new();
+    private readonly Lazy<PlayerService.PlayerServiceClient> _savePlayerPositionApi = new(CreateClient);
 
     public Task<ConcurrentDictionary<string, System.Net.WebSockets.WebSocket>> GetPlayersClient() =>
         Task.FromResult(_playerConnections);
@@ -68,7 +68,7 @@ public class PlayerPositionServiceSocket(TimeSpan persistenceInterval) : IPlayer
         bool persistPosition = !_lastPersistedAtUtc.TryGetValue(characterId, out DateTime lastPersistedAtUtc)
             || nowUtc - lastPersistedAtUtc >= persistenceInterval;
 
-        PlayerRequest request = new PlayerRequest
+        PlayerRequest request = new()
         {
             AccountId = accountId,
             AnimationSate = (uint)Math.Max(0, msg.AnimationState),
@@ -124,7 +124,7 @@ public class PlayerPositionServiceSocket(TimeSpan persistenceInterval) : IPlayer
             .ConfigureAwait(false);
     }
 
-    static PlayerRequest CloneRequest(PlayerRequest source, bool persistPosition) => new()
+    private static PlayerRequest CloneRequest(PlayerRequest source, bool persistPosition) => new()
     {
         AccountId = source.AccountId,
         AnimationSate = source.AnimationSate,
@@ -141,7 +141,7 @@ public class PlayerPositionServiceSocket(TimeSpan persistenceInterval) : IPlayer
         WorldId = source.WorldId
     };
 
-    static PlayerService.PlayerServiceClient CreateClient()
+    private static PlayerService.PlayerServiceClient CreateClient()
     {
         ApiConfigReader _apiConfig = new();
         Dictionary<ApiUrl, Uri> _apiUrl = _apiConfig.GetApiUrl();
@@ -151,10 +151,10 @@ public class PlayerPositionServiceSocket(TimeSpan persistenceInterval) : IPlayer
             {
                 HttpHandler =
                     new HttpClientHandler
-                        {
-                            ServerCertificateCustomValidationCallback =
+                    {
+                        ServerCertificateCustomValidationCallback =
                                 HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-                        }
+                    }
             });
 
         return new PlayerService.PlayerServiceClient(channel);

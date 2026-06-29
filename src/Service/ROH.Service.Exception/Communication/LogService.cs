@@ -17,8 +17,8 @@ namespace ROH.Service.Exception.Communication;
 
 public class LogService : ILogService
 {
-    static readonly ApiConfigReader _apiConfig = new();
-    static readonly Dictionary<ApiUrl, Uri> _apiUrl = _apiConfig.GetApiUrl();
+    private static readonly ApiConfigReader _apiConfig = new();
+    private static readonly Dictionary<ApiUrl, Uri> _apiUrl = _apiConfig.GetApiUrl();
 
     public async Task SaveLog(string message)
     {
@@ -29,13 +29,13 @@ public class LogService : ILogService
             {
                 HttpHandler =
                     new HttpClientHandler
-                        {
-                            ServerCertificateCustomValidationCallback =
+                    {
+                        ServerCertificateCustomValidationCallback =
                                 HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-                        }
+                    }
             });
 #pragma warning restore S4830 // Server certificates should be verified during SSL/TLS connections
-        LogServiceApi.LogService.LogServiceClient client = new LogServiceApi.LogService.LogServiceClient(channel);
+        LogServiceApi.LogService.LogServiceClient client = new(channel);
 
         await client.LogAsync(new LogRequest { Message = message });
     }

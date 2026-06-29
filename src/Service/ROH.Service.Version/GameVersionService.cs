@@ -25,7 +25,7 @@ public class GameVersionService(
     IMapper mapper,
     IExceptionHandler exceptionHandler) : IGameVersionService
 {
-    async Task<DefaultResponse> ReleaseVersionAsync(
+    private async Task<DefaultResponse> ReleaseVersionAsync(
         DefaultResponse defaultResponse,
         CancellationToken cancellationToken = default)
     {
@@ -52,7 +52,7 @@ public class GameVersionService(
         }
     }
 
-    static Task<DefaultResponse> ReturnGuidInvalidAsync(CancellationToken cancellationToken = default) => cancellationToken.IsCancellationRequested
+    private static Task<DefaultResponse> ReturnGuidInvalidAsync(CancellationToken cancellationToken = default) => cancellationToken.IsCancellationRequested
         ? Task.FromCanceled<DefaultResponse>(cancellationToken)
         : Task.FromResult(
             new DefaultResponse { HttpStatus = HttpStatusCode.ExpectationFailed, Message = "The Guid is invalid!" });

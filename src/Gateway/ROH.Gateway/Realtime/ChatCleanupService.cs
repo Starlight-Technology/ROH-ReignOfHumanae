@@ -9,7 +9,7 @@ public class ChatCleanupService(
     IOptions<RealtimeOptions> options,
     ILogger<ChatCleanupService> logger) : BackgroundService
 {
-    readonly RealtimeOptions _options = options.Value;
+    private readonly RealtimeOptions _options = options.Value;
 
     public static DateTime CalculateCutoffUtc(DateTime nowUtc, int retentionHours)
     {
@@ -27,7 +27,7 @@ public class ChatCleanupService(
             await CleanupAsync(stoppingToken).ConfigureAwait(false);
     }
 
-    async Task CleanupAsync(CancellationToken cancellationToken)
+    private async Task CleanupAsync(CancellationToken cancellationToken)
     {
         try
         {

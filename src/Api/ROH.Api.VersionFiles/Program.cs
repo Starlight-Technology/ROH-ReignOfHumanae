@@ -97,10 +97,9 @@ static string GetSafeStoredFilePath(ROH.Context.File.Entities.GameFile file)
     string rootWithSeparator = rootPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
         + Path.DirectorySeparatorChar;
 
-    if (!filePath.StartsWith(rootWithSeparator, StringComparison.OrdinalIgnoreCase))
-        throw new InvalidOperationException("Invalid file path.");
-
-    return filePath;
+    return !filePath.StartsWith(rootWithSeparator, StringComparison.OrdinalIgnoreCase)
+        ? throw new InvalidOperationException("Invalid file path.")
+        : filePath;
 }
 
 static string NormalizeRelativePath(string fileName)

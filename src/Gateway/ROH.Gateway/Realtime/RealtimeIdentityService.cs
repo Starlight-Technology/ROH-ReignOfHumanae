@@ -62,7 +62,7 @@ public partial class RealtimeIdentityService(IServiceScopeFactory scopeFactory) 
             initialTransform);
     }
 
-    static string SanitizeWorldId(string worldId)
+    private static string SanitizeWorldId(string worldId)
     {
         if (string.IsNullOrWhiteSpace(worldId))
             return "default";
@@ -71,7 +71,7 @@ public partial class RealtimeIdentityService(IServiceScopeFactory scopeFactory) 
         return string.IsNullOrEmpty(value) ? "default" : value[..Math.Min(value.Length, 64)];
     }
 
-    static ClaimsPrincipal ValidateToken(HttpContext context)
+    private static ClaimsPrincipal ValidateToken(HttpContext context)
     {
         if (!context.Request.Query.TryGetValue("access_token", out var tokenValue))
             throw new UnauthorizedAccessException("WebSocket sem token JWT.");

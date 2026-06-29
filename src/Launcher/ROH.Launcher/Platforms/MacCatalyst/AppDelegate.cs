@@ -1,6 +1,6 @@
 ﻿using Foundation;
 
-namespace ROH.Launcher;
+namespace ROH.Launcher.Platforms.MacCatalyst;
 
 [Register("AppDelegate")]
 public class AppDelegate : MauiUIApplicationDelegate

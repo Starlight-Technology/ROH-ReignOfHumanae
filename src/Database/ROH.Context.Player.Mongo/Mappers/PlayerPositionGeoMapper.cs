@@ -60,16 +60,16 @@ public static class PlayerPositionGeoMapper
 public static class WorldProjection
 {
     // Raio médio da Terra em metros (WGS84)
-    const double EarthRadiusMeters = 6378137.0;
-    const double RadToDeg = 180.0 / Math.PI;
+    private const double EarthRadiusMeters = 6378137.0;
+    private const double RadToDeg = 180.0 / Math.PI;
 
     /// <summary>
     /// Converte posição X/Z do mundo (em metros) para coordenadas GeoJSON
     /// </summary>
     public static (double lng, double lat) Project(float worldX, float worldZ)
     {
-        double lng = (worldX / EarthRadiusMeters) * RadToDeg;
-        double lat = (worldZ / EarthRadiusMeters) * RadToDeg;
+        double lng = worldX / EarthRadiusMeters * RadToDeg;
+        double lat = worldZ / EarthRadiusMeters * RadToDeg;
 
         return (lng, lat);
     }
@@ -79,8 +79,8 @@ public static class WorldProjection
     /// </summary>
     public static (float x, float z) Unproject(double lng, double lat)
     {
-        float x = (float)(((lng * Math.PI) / 180.0) * EarthRadiusMeters);
-        float z = (float)(((lat * Math.PI) / 180.0) * EarthRadiusMeters);
+        float x = (float)(lng * Math.PI / 180.0 * EarthRadiusMeters);
+        float z = (float)(lat * Math.PI / 180.0 * EarthRadiusMeters);
 
         return (x, z);
     }

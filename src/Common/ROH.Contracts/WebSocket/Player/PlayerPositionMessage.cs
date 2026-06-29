@@ -12,8 +12,8 @@ namespace ROH.Contracts.WebSocket.Player;
 public class PlayerPositionMessage
 {
     [Key(10)] public int AnimationState;
-    [Key(8)] public string ModelName;
-    [Key(0)] public string PlayerId;
+    [Key(8)] public required string ModelName;
+    [Key(0)] public required string PlayerId;
     [Key(9)] public float Radius;
     [Key(7)] public float RotW;
     [Key(4)] public float RotX;
