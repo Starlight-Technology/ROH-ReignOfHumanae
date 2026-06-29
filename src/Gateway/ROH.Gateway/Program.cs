@@ -145,13 +145,6 @@ builder.Services.AddHostedService<ChatCleanupService>();
 
 WebApplication app = builder.Build();
 
-// Apply pending migrations
-using (IServiceScope scope = app.Services.CreateScope())
-{
-    ROH.Context.Player.PlayerContext db = (ROH.Context.Player.PlayerContext)scope.ServiceProvider.GetRequiredService<IPlayerContext>();
-    db.Database.Migrate();
-}
-
 app.UseWebSockets(new WebSocketOptions { KeepAliveInterval = TimeSpan.FromSeconds(15) });
 
 app.UseSwagger();
