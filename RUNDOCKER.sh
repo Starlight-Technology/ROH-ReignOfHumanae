@@ -18,24 +18,38 @@ docker network inspect $NETWORK_NAME > /dev/null 2>&1 || docker network create $
 # REMOVE OLD CONTAINERS
 ###############################################
 
-docker rm -f  \
-  $(docker ps -a -q --filter="name=ROH.*" --format="{{.Names}}") 2>/dev/null
+# REMOVE OLD CONTAINERS EXCEPT DATABASES
+for c in $(docker ps -a -q --filter="name=roh.*" --format="{{.Names}}"); do
+  if [[ "$c" != "roh.postgres" && "$c" != "roh.mongo" ]]; then
+    docker rm -f "$c"
+  fi
+done
+
 
 ###############################################
 # REMOVE OLD IMAGES
 ###############################################
 
-docker rmi -f \
-  $(docker images -q --filter="reference=roh.*") 2>/dev/null
+# REMOVE OLD IMAGES EXCEPT DATABASE IMAGES
+for img in $(docker images -q --filter="reference=roh.*"); do
+  name=$(docker images --format "{{.Repository}}" --filter "reference=$img")
+  if [[ "$name" != "roh.postgres.custom" && "$name" != "mongo" ]]; then
+    docker rmi -f "$img"
+  fi
+done
+
 
 ###############################################
-# POSTGRES – DATABASE CREATION
+# POSTGRES – DATABASE CREATION (ONLY IF NEW)
 ###############################################
 
-INIT_DIR="./postgres-init"
-mkdir -p $INIT_DIR
+if ! docker ps -a --format "{{.Names}}" | grep -q "^roh.postgres$"; then
+  echo "Postgres não existe — criando novo container..."
 
-cat > $INIT_DIR/create_databases.sql <<EOF
+  INIT_DIR="./postgres-init"
+  mkdir -p $INIT_DIR
+
+  cat > $INIT_DIR/create_databases.sql <<EOF
 CREATE DATABASE "ROH.FILE";
 CREATE DATABASE "ROH.VERSION";
 CREATE DATABASE "ROH.ACCOUNT";
@@ -43,32 +57,43 @@ CREATE DATABASE "ROH.LOG";
 CREATE DATABASE "ROH.PLAYER";
 EOF
 
-cat > $INIT_DIR/Dockerfile <<EOF
+  cat > $INIT_DIR/Dockerfile <<EOF
 FROM postgres:16
 ENV POSTGRES_USER=$POSTGRES_USER
 ENV POSTGRES_PASSWORD=$POSTGRES_PASSWORD
 COPY create_databases.sql /docker-entrypoint-initdb.d/
 EOF
 
-docker build -t roh.postgres.custom $INIT_DIR
+  docker build -t roh.postgres.custom $INIT_DIR
 
-docker run -d \
-  --name roh.postgres \
-  --network $NETWORK_NAME \
-  -p 5432:5432 \
-  -e POSTGRES_USER=$POSTGRES_USER \
-  -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
-  roh.postgres.custom
+  docker run -d \
+    --name roh.postgres \
+    --network $NETWORK_NAME \
+    -p 5432:5432 \
+    -e POSTGRES_USER=$POSTGRES_USER \
+    -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
+    roh.postgres.custom
+else
+  echo "Postgres já existe — não será recriado."
+fi
+
 
 ###############################################
-# MONGO – READY TO USE
+# MONGO – READY TO USE (ONLY IF NEW)
 ###############################################
 
-docker run -d \
-  --name roh.mongo \
-  --network $NETWORK_NAME \
-  -p 27017:27017 \
-  mongo:7
+if ! docker ps -a --format "{{.Names}}" | grep -q "^roh.mongo$"; then
+  echo "Mongo não existe — criando novo container..."
+
+  docker run -d \
+    --name roh.mongo \
+    --network $NETWORK_NAME \
+    -p 27017:27017 \
+    mongo:7
+else
+  echo "Mongo já existe — não será recriado."
+fi
+
 
 ###############################################
 # GATEWAY
