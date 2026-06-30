@@ -104,7 +104,7 @@ public class GameVersionFileService(
 
     private static string GetRejectionMessage(GameVersionModel gameVersion) => gameVersion.Released
         ? "File Upload Failed: This version has already been released. You cannot upload new files for a released version."
-        : "File Upload Failed: This version has already been released with a yearly schedule. Uploading new files is not allowed for past versions.";
+        : "File Upload Failed: Cannot upload files to a version older than the current released version.";
 
     private async Task<DefaultResponse> SaveFileAsync(
         GameVersionFileModel fileModel,
