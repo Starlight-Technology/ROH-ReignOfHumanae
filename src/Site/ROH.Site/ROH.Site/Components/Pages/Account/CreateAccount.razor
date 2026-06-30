@@ -7,8 +7,9 @@
 @inject NavigationManager Navigation;
 @inject IAccountService _accountService;
 @inject IRohAlertService _sweetAlert;
+@inject IStringLocalizer<SharedResource> _loc;
 
-<CardComponent Header="Create Account">
+<CardComponent Header="@_loc["Account.CreateAccount"]">
     @if (isLoading)
     {
         <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center">
@@ -18,25 +19,25 @@
     else
     {
         <CoronaStack Spacing="1rem" FullWidth="true">
-            <CoronaInput Label="Email"
+            <CoronaInput Label="@_loc["Account.Email"]"
                          Type="email"
                          @bind-Value="@EmailValue" />
 
-            <CoronaInput Label="Username"
+            <CoronaInput Label="@_loc["Account.Username"]"
                          @bind-Value="@UsernameValue" />
 
-            <CoronaInput Label="Password"
+            <CoronaInput Label="@_loc["Account.Password"]"
                          Type="password"
                          @bind-Value="@PasswordValue" />
 
-            <CoronaInput Label="Confirm Password"
+            <CoronaInput Label="@_loc["Account.ConfirmPassword"]"
                          Type="password"
                          @bind-Value="@ConfirmPasswordValue" />
 
             <CoronaButton Color="CoronaColorSemantic.Primary"
                           Variant="CoronaButtonVariant.Filled"
                           OnClick="Confirm">
-                Create Account
+                @_loc["Account.CreateAccount"]
             </CoronaButton>
         </CoronaStack>
     }
@@ -73,7 +74,7 @@
         }
         else
         {
-            await _sweetAlert.Show("", "Passwords don't match!", RohAlertType.Error);
+            await _sweetAlert.Show("", _loc["Account.PasswordsDontMatch"], RohAlertType.Error);
         }
         isLoading = false;
         StateHasChanged();

@@ -13,8 +13,9 @@
 @inject IDownloadFileService _downloadFile
 @inject IVersionFileService _versionFileService;
 @inject IRohAlertService _sweetAlert;
+@inject IStringLocalizer<SharedResource> _loc
 
-<CardComponent Header="Files">
+<CardComponent Header="@_loc["Version.Files"]">
 
     @if (isLoading)
     {
@@ -34,10 +35,10 @@
                       Items="@gameVersionFileListModels">
 
                 <HeaderContent>
-                    <MudTh>Name</MudTh>
-                    <MudTh>Path</MudTh>
-                    <MudTh>Size</MudTh>
-                    <MudTh>Active</MudTh>
+                    <MudTh>@_loc["Shared.Name"]</MudTh>
+                    <MudTh>@_loc["Shared.Path"]</MudTh>
+                    <MudTh>@_loc["Shared.Size"]</MudTh>
+                    <MudTh>@_loc["Shared.Active"]</MudTh>
                     <MudTh />
                 </HeaderContent>
 
@@ -46,7 +47,7 @@
                     <MudTd>@GetDisplayPath(file)</MudTd>
                     <MudTd>@file.Size</MudTd>
                     <MudTd>
-                        <CoronaBadge Content="@(file.Active ? "Active" : "Inactive")"
+                        <CoronaBadge Content="@(file.Active ? _loc["Shared.Active"] : _loc["Shared.Inactive"])"
                                      Color="@(file.Active ? CoronaColorSemantic.Success : CoronaColorSemantic.Neutral)"
                                      Variant="CoronaBadgeVariant.Outlined" />
                     </MudTd>
@@ -62,7 +63,7 @@
     }
     else
     {
-        <div class="roh-empty-state">No files uploaded for this version.</div>
+        <div class="roh-empty-state">@_loc["Version.NoFiles"]</div>
     }
 
 </CardComponent>
@@ -123,7 +124,7 @@
 
         if (response is null)
         {
-            await _sweetAlert.Show("Error", "Cannot get any response from server.", RohAlertType.Error);
+            await _sweetAlert.Show(_loc["Shared.Error"], _loc["Shared.NoResponse"], RohAlertType.Error);
             return;
         }
 

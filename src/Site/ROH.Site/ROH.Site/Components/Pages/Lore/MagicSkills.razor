@@ -1,83 +1,67 @@
 @page "/magic-skills"
 @using ROH.Site.Components.Custom
+@inject IStringLocalizer<SharedResource> _loc
 
 <div class="card-container">
-    <CardComponent Header="Magic and Skills">
+    <CardComponent Header="@_loc["MagicSkills.Title"]">
 
         <p>
-            In <strong>Reign of Humanae</strong>, magic and skills are integral to character development and gameplay.
-            Here's an overview of how they work:
+            @_loc["MagicSkills.Intro"]
         </p>
 
         <div class="card-divider"></div>
 
-        <CardComponent Header="Skill Development">
+        <CardComponent Header="@_loc["MagicSkills.Development"]">
             <p>
-                Players improve their skills through use. The more a player engages with a specific skill, the more
-                proficient they become.
-                For example, using a bow regularly increases the player's archery skill, unlocking new abilities and
-                advantages in the skill tree.
+                @_loc["MagicSkills.DevelopmentText"]
             </p>
         </CardComponent>
 
         <div class="card-divider"></div>
 
-        <CardComponent Header="Skill Trees">
+        <CardComponent Header="@_loc["MagicSkills.Trees"]">
             <p>
-                Each skill has a dedicated tree where players can unlock and choose specific advantages or perks as they
-                reach certain proficiency levels.
-                This system allows for customization, enabling players to tailor their abilities to their preferred
-                playstyle.
+                @_loc["MagicSkills.TreesText"]
             </p>
         </CardComponent>
 
         <div class="card-divider"></div>
 
-        <CardComponent Header="Magic Channeling">
+        <CardComponent Header="@_loc["MagicSkills.Channeling"]">
             <p>
-                Players can channel magic to enhance its effects. The longer a spell is channeled, the more powerful it
-                becomes, but it also consumes more mana.
-                As a player’s affinity with a particular type of magic increases, both the mana consumption and
-                channeling time required to reach maximum power are reduced.
+                @_loc["MagicSkills.ChannelingText"]
             </p>
         </CardComponent>
 
         <div class="card-divider"></div>
 
-        <CardComponent Header="Magic Affinity">
+        <CardComponent Header="@_loc["MagicSkills.Affinity"]">
             <p>
-                Players develop affinities for different types of magic based on their race and personal choices.
-                Racial affinities may provide bonuses, such as Elves learning nature magic more quickly, while Demons
-                excel in fire magic.
+                @_loc["MagicSkills.AffinityText"]
             </p>
         </CardComponent>
 
         <div class="card-divider"></div>
 
-        <CardComponent Header="Skill Categories">
+        <CardComponent Header="@_loc["MagicSkills.Categories"]">
             <p>
-                Skills are divided into various categories, such as combat, crafting, and magic, each offering unique
-                abilities and enhancements.
-                Players can choose to specialize in certain skills or develop a broad range of abilities.
+                @_loc["MagicSkills.CategoriesText"]
             </p>
         </CardComponent>
 
         <div class="card-divider"></div>
 
-        <CardComponent Header="Cross-Disciplinary Skills">
+        <CardComponent Header="@_loc["MagicSkills.CrossDisciplinary"]">
             <p>
-                Some skills may benefit from others; for example, enhancing a crafting skill might improve the quality
-                of magical items, or mastering agility could aid in dodging during spellcasting.
+                @_loc["MagicSkills.CrossDisciplinaryText"]
             </p>
         </CardComponent>
 
         <div class="card-divider"></div>
 
-        <CardComponent Header="Skill Progression">
+        <CardComponent Header="@_loc["MagicSkills.Progression"]">
             <p>
-                Progression is incremental, and players can see visible improvements in their abilities and the impact
-                they have in gameplay scenarios.
-                As players gain skill levels, they unlock new techniques, spells, and crafting recipes.
+                @_loc["MagicSkills.ProgressionText"]
             </p>
         </CardComponent>
     </CardComponent>

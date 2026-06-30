@@ -10,7 +10,9 @@ using MudBlazor.Services;
 using ROH.Site.Components;
 using ROH.Site.Helpers;
 using ROH.Site.Helpers.Components.Layout;
+using ROH.Site.Services;
 
+using System.Globalization;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -81,7 +83,20 @@ builder.Services.AddScoped<DrawerState>();
 
 servicesManager.ConfigureServices(builder.Services);
 
+builder.Services.AddLocalization();
+
+builder.Services.AddScoped<LanguageService>();
+
 var app = builder.Build();
+
+string[] supportedCultures = ["en", "pt", "es", "fr", "de", "it", "ja", "ko", "zh", "ru"];
+
+app.UseRequestLocalization(new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new("en"),
+    SupportedCultures = supportedCultures.Select(c => new CultureInfo(c)).ToList(),
+    SupportedUICultures = supportedCultures.Select(c => new CultureInfo(c)).ToList()
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

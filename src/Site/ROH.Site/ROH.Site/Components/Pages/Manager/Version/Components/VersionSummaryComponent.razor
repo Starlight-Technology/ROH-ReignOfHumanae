@@ -1,5 +1,7 @@
 @namespace Manager.Version.Components
 
+@inject IStringLocalizer<SharedResource> _loc
+
 <div class="roh-version-summary @Class">
     <div class="roh-version-summary__badges">
         <CoronaBadge Content="@VersionLabel"
@@ -15,24 +17,24 @@
 
     <div class="roh-version-summary__metrics">
         <div class="roh-version-summary__metric">
-            <span>Version</span>
+            <span>@_loc["Shared.Version"]</span>
             <strong>@Version</strong>
         </div>
 
         <div class="roh-version-summary__metric">
-            <span>Release</span>
+            <span>@_loc["Shared.Release"]</span>
             <strong>@Release</strong>
         </div>
 
         <div class="roh-version-summary__metric">
-            <span>Review</span>
+            <span>@_loc["Shared.Review"]</span>
             <strong>@Review</strong>
         </div>
 
         @if (ShowReleaseDate)
         {
             <div class="roh-version-summary__metric">
-                <span>Release Date</span>
+                <span>@_loc["Shared.ReleaseDate"]</span>
                 <strong>@ReleaseDateLabel</strong>
             </div>
         }
@@ -58,9 +60,9 @@
 
     private string VersionLabel => $"v{Version}.{Release}.{Review}";
 
-    private string StatusLabel => Released ? "Released" : "Review";
+    private string StatusLabel => Released ? _loc["Version.Released"] : _loc["Version.Review"];
 
     private CoronaColorSemantic StatusColor => Released ? CoronaColorSemantic.Success : CoronaColorSemantic.Warning;
 
-    private string ReleaseDateLabel => ReleaseDate?.ToShortDateString() ?? "Pending";
+    private string ReleaseDateLabel => ReleaseDate?.ToShortDateString() ?? _loc["Version.Pending"];
 }

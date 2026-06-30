@@ -12,11 +12,12 @@
 @inject IVersionService _versionService;
 @inject IRohAlertService _sweetAlert;
 @inject NavigationManager Navigation;
+@inject IStringLocalizer<SharedResource> _loc
 
-<CardComponent Header="Versions">
+<CardComponent Header="@_loc["Version.Versions"]">
     <div class="roh-version-filters">
         <MudSelect T="string"
-                   Label="Version Type"
+                   Label="@_loc["Version.VersionType"]"
                    Variant="Variant.Outlined"
                    Class="roh-field"
                    Value="@selectedVersionType"
@@ -25,17 +26,17 @@
             @foreach (var type in versionTypes)
             {
                 <MudSelectItem Value="@type">
-                    @type
+                    @_loc[type]
                 </MudSelectItem>
             }
 
         </MudSelect>
 
-        <CoronaInput Label="Search"
+        <CoronaInput Label="@_loc["Shared.Search"]"
                      Placeholder="v1.2.3"
                      @bind-Value="searchText" />
 
-        <CoronaInput Label="Version Date"
+        <CoronaInput Label="@_loc["Version.VersionDate"]"
                      Type="date"
                      @bind-Value="versionDateFilter" />
 
@@ -44,7 +45,7 @@
                       TextColor="#e6d3a1"
                       BorderColor="rgba(201, 162, 77, 0.45)"
                       OnClick="ClearFilters">
-            Clear
+            @_loc["Shared.Clear"]
         </CoronaButton>
     </div>
 
@@ -66,12 +67,12 @@
                       Items="@FilteredVersions">
 
                 <HeaderContent>
-                    <MudTh>Version</MudTh>
-                    <MudTh>Release</MudTh>
-                    <MudTh>Review</MudTh>
-                    <MudTh>Version Date</MudTh>
-                    <MudTh>Release Date</MudTh>
-                    <MudTh>Status</MudTh>
+                    <MudTh>@_loc["Shared.Version"]</MudTh>
+                    <MudTh>@_loc["Shared.Release"]</MudTh>
+                    <MudTh>@_loc["Shared.Review"]</MudTh>
+                    <MudTh>@_loc["Version.VersionDate"]</MudTh>
+                    <MudTh>@_loc["Shared.ReleaseDate"]</MudTh>
+                    <MudTh>@_loc["Shared.Status"]</MudTh>
                     <MudTh />
                 </HeaderContent>
 
@@ -85,7 +86,7 @@
                     <MudTd>@FormatDate(version.VersionDate)</MudTd>
                     <MudTd>@FormatDate(version.ReleaseDate)</MudTd>
                     <MudTd>
-                        <CoronaBadge Content="@(version.Released ? "Released" : "Review")"
+                        <CoronaBadge Content="@(version.Released ? _loc["Version.Released"] : _loc["Version.Review"])"
                                      Color="@(version.Released ? CoronaColorSemantic.Success : CoronaColorSemantic.Warning)"
                                      Variant="CoronaBadgeVariant.Outlined" />
                     </MudTd>
@@ -107,15 +108,15 @@
                 <CoronaButton Variant="CoronaButtonVariant.Outlined"
                               Disabled="@IsFirstPage"
                               OnClick="@PreviousPage">
-                    Previous
+                    @_loc["Shared.Previous"]
                 </CoronaButton>
 
-                <span class="roh-pagination-page">Page @CurrentPage of @Math.Max(TotalPages, 1)</span>
+                <span class="roh-pagination-page">@_loc["Version.Page"] @CurrentPage @_loc["Version.Of"] @Math.Max(TotalPages, 1)</span>
 
                 <CoronaButton Variant="CoronaButtonVariant.Outlined"
                               Disabled="@IsLastPage"
                               OnClick="@NextPage">
-                    Next
+                    @_loc["Shared.Next"]
                 </CoronaButton>
 
             </CoronaStack>
@@ -123,7 +124,7 @@
     }
     else
     {
-        <div class="roh-empty-state">No versions match the current filters.</div>
+        <div class="roh-empty-state">@_loc["Version.NoVersionsMatch"]</div>
     }
 
 </CardComponent>
@@ -131,11 +132,11 @@
 @code {
     private readonly List<string> versionTypes = new()
     {
-        "All Versions",
-        "Released Versions"
+        "Version.AllVersions",
+        "Version.ReleasedVersions"
     };
 
-    private string selectedVersionType = "All Versions";
+    private string selectedVersionType = "Version.AllVersions";
     private string searchText = string.Empty;
     private string versionDateFilter = string.Empty;
     private bool isLoadingCurrentVersion = true;
@@ -193,9 +194,9 @@
         isLoadingCurrentVersion = true;
         PagedGameVersions = new List<GameVersionModel>();
         apiResponse = null;
-        if (selectedVersionType == "All Versions")
+        if (selectedVersionType == "Version.AllVersions")
             apiResponse = await _versionService.GetAllVersionsPaginated(page, take);
-        else if (selectedVersionType == "Released Versions")
+        else if (selectedVersionType == "Version.ReleasedVersions")
             apiResponse = await _versionService.GetAllReleasedVersionsPaginated(page, take);
 
         if (apiResponse != null)

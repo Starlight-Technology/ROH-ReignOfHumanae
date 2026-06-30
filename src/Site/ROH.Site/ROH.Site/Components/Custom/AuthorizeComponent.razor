@@ -4,6 +4,7 @@
 @using System.ComponentModel.DataAnnotations
 @inject ICustomAuthenticationStateProvider CustomAuthStateProvider
 @inject NavigationManager Navigation
+@inject IStringLocalizer<SharedResource> _loc
 
 @namespace ROH.Site.Components.Custom
 
@@ -29,13 +30,13 @@
 }
 else
 {
-    <CardComponent Header="Access Denied">
+    <CardComponent Header="@_loc["Shared.AccessDenied"]">
         <CoronaStack Spacing="1rem" FullWidth="true">
-            <p>You are not authorized to view this page.</p>
-            <p>If you believe this is an error, please contact support.</p>
+            <p>@_loc["Shared.NotAuthorized"]</p>
+            <p>@_loc["Shared.ContactSupport"]</p>
             <CoronaButton Variant="CoronaButtonVariant.Outlined"
                           OnClick="@(() => Navigation.NavigateTo("/login"))">
-                Login
+                @_loc["Nav.Login"]
             </CoronaButton>
         </CoronaStack>
     </CardComponent>

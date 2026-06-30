@@ -10,6 +10,7 @@
 @inject IRohAlertService _alertService
 @inject IDownloadFileService _downloadFile
 @inject NavigationManager Navigation
+@inject IStringLocalizer<SharedResource> _loc
 
 @if (Items != null && Items.Any())
 {
@@ -93,13 +94,13 @@
             <CoronaButton Variant="CoronaButtonVariant.Outlined"
                           Disabled="@IsFirstPage"
                           OnClick="@PreviousPage">
-                Previous
+                @_loc["Shared.Previous"]
             </CoronaButton>
 
             <CoronaButton Variant="CoronaButtonVariant.Outlined"
                           Disabled="@IsLastPage"
                           OnClick="@NextPage">
-                Next
+                @_loc["Shared.Next"]
             </CoronaButton>
 
         </CoronaStack>
@@ -179,7 +180,7 @@
         }
         else
         {
-            await _alertService.Show("Error", "Cannot get any response from server.", RohAlertType.Error);
+            await _alertService.Show(_loc["Shared.Error"], _loc["Shared.NoResponse"], RohAlertType.Error);
         }
     }
 }

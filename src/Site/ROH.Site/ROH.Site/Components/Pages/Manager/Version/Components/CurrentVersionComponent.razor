@@ -9,8 +9,9 @@
 @inject IVersionService _versionService;
 @inject IRohAlertService _sweetAlert;
 @inject NavigationManager Navigation;
+@inject IStringLocalizer<SharedResource> _loc
 
-<CardComponent Header="Current Version">
+<CardComponent Header="@_loc["Version.Current"]">
     @if (isLoadingCurrentVersion)
     {
         <div class="roh-loading">

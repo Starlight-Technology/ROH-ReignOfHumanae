@@ -9,14 +9,15 @@
 @inject IAccountService _accountService;
 @inject IRohAlertService _sweetAlert;
 @inject ICustomAuthenticationStateProvider _customAuthenticationStateProviderProvider;
+@inject IStringLocalizer<SharedResource> _loc;
 @rendermode InteractiveServer
 
-<CardComponent Header="Login">
+<CardComponent Header="@_loc["Account.Login"]">
     <CoronaStack Spacing="1rem" FullWidth="true">
-        <CoronaInput Label="Login"
+        <CoronaInput Label="@_loc["Account.LoginLabel"]"
                      @bind-Value="@LoginValue" />
 
-        <CoronaInput Label="Password"
+        <CoronaInput Label="@_loc["Account.Password"]"
                      Type="password"
                      @bind-Value="@PasswordValue" />
 
@@ -26,7 +27,7 @@
             <CoronaButton Color="CoronaColorSemantic.Primary"
                           Variant="CoronaButtonVariant.Filled"
                           OnClick="Confirm">
-                Confirm
+                @_loc["Account.Confirm"]
             </CoronaButton>
 
             <CoronaButton Color="CoronaColorSemantic.Neutral"
@@ -34,13 +35,13 @@
                           TextColor="#e6d3a1"
                           BorderColor="rgba(201, 162, 77, 0.45)"
                           OnClick="@(() => Navigation.NavigateTo("/createaccount"))">
-                New Account
+                @_loc["Account.NewAccount"]
             </CoronaButton>
 
             <CoronaButton Color="CoronaColorSemantic.Warning"
                           Variant="CoronaButtonVariant.Outlined"
                           Disabled="true">
-                Forgot Password
+                @_loc["Account.ForgotPassword"]
             </CoronaButton>
         </CoronaStack>
     </CoronaStack>

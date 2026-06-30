@@ -14,11 +14,12 @@
 @inject IVersionFileService _versionFileService;
 @inject IRohAlertService _sweetAlert;
 @inject IJSRuntime JS
+@inject IStringLocalizer<SharedResource> _loc
 
 <AuthorizeComponent>
     @if (gameVersion is not null)
     {
-        <CardComponent Header="Version">
+        <CardComponent Header="@_loc["Version.Version"]">
             <CoronaStack Direction="CoronaStackDirection.Row"
                          Align="CoronaStackAlign.Center"
                          Justify="CoronaStackJustify.SpaceBetween"
@@ -40,13 +41,13 @@
                     <CoronaButton Color="CoronaColorSemantic.Primary"
                                   Variant="CoronaButtonVariant.Outlined"
                                   OnClick="ReleaseVersion">
-                        Release Version
+                        @_loc["Version.ReleaseVersion"]
                     </CoronaButton>
                 }
             </CoronaStack>
         </CardComponent>
 
-        <CardComponent Header="Unity Update Guide">
+        <CardComponent Header="@_loc["Version.UnityUpdateGuide"]">
             <div class="roh-update-guide">
                 <div class="roh-guide-intro">
                     <div>
@@ -122,11 +123,11 @@
             </div>
         </CardComponent>
 
-        <CardComponent Header="Upload File">
+        <CardComponent Header="@_loc["Upload.UploadFile"]">
             <EditForm Model="gameVersionFile" style="margin:20px">
                 <div class="roh-upload-folder-bar">
                     <MudSelect T="string"
-                               Label="Update Target"
+                               Label="@_loc["Upload.UpdateTarget"]"
                                Variant="Variant.Outlined"
                                Class="roh-field"
                                Value="@selectedTargetPreset"
@@ -141,7 +142,7 @@
 
                     </MudSelect>
 
-                    <CoronaInput Label="Target Folder"
+                    <CoronaInput Label="@_loc["Upload.TargetFolder"]"
                                  Placeholder="ReignOfHumanae_Data/StreamingAssets/aa/StandaloneWindows64"
                                  @bind-Value="currentTargetFolder" />
 
@@ -149,7 +150,7 @@
                                   Variant="CoronaButtonVariant.Outlined"
                                   Disabled="@isUploading"
                                   OnClick="CreateUploadFolder">
-                        Create Folder
+                        @_loc["Upload.CreateFolder"]
                     </CoronaButton>
 
                     <CoronaButton Color="CoronaColorSemantic.Neutral"
@@ -158,12 +159,12 @@
                                   BorderColor="rgba(201, 162, 77, 0.45)"
                                   Disabled="@(!selectedUploadFiles.Any() || isUploading)"
                                   OnClick="ApplyFolderToPendingFiles">
-                        Apply To Files
+                        @_loc["Upload.ApplyToFiles"]
                     </CoronaButton>
                 </div>
 
                 <div class="roh-upload-target-preview">
-                    <span>Current target</span>
+                    <span>@_loc["Upload.CurrentTarget"]</span>
                     <strong>@GetFolderDisplayName(currentTargetFolder)</strong>
                 </div>
 
@@ -197,7 +198,7 @@
                             <MudButton Variant="Variant.Outlined"
                                        Color="Color.Primary"
                                        StartIcon="@Icons.Material.Filled.UploadFile">
-                                Select Files For Target
+                                @_loc["Upload.SelectFilesForTarget"]
                             </MudButton>
                         </ActivatorContent>
 
@@ -208,14 +209,14 @@
                                   Disabled="@(!CanSubmitUpload)"
                                   Loading="@isUploading"
                                   OnClick="HandleSubmit">
-                        Submit
+                        @_loc["Shared.Submit"]
                     </CoronaButton>
 
                     <CoronaButton Color="CoronaColorSemantic.Neutral"
                                   Variant="CoronaButtonVariant.Text"
                                   Disabled="@(!selectedUploadFiles.Any() || isUploading)"
                                   OnClick="ClearSelectedFiles">
-                        Clear Selection
+                        @_loc["Upload.ClearSelection"]
                     </CoronaButton>
                 </CoronaStack>
 
@@ -258,7 +259,7 @@
                                     <span>@FormatFileSize(item.File.Size)</span>
                                 </div>
 
-                                <CoronaInput Label="Target Folder"
+                                <CoronaInput Label="@_loc["Upload.TargetFolder"]"
                                              Placeholder="Data/Maps"
                                              @bind-Value="item.TargetFolder" />
 
@@ -277,7 +278,7 @@
                                               Variant="CoronaButtonVariant.Text"
                                               Disabled="@isUploading"
                                               OnClick="@(() => RemoveSelectedFile(item))">
-                                    Remove
+                                    @_loc["Shared.Remove"]
                                 </CoronaButton>
                             </div>
                         }
@@ -291,7 +292,7 @@
                     <div class="col-sm-12">
                         <div class="text-center">
                             <MudProgressLinear Value="uploadProgress" Color="Color.Primary" />
-                            <p>Uploading... (@uploadProgress.ToString("0")%)</p>
+                            <p>@_loc["Upload.UploadingProgress"] (@uploadProgress.ToString("0")%)</p>
                         </div>
                     </div>
                 </div>
@@ -448,7 +449,7 @@
         }
         else
         {
-            await _sweetAlert.Show("ERROR", "Incorrect uuid version", RohAlertType.Error);
+            await _sweetAlert.Show(_loc["Shared.Error"], _loc["Version.IncorrectUuid"], RohAlertType.Error);
         }
 
         StateHasChanged();
@@ -486,7 +487,7 @@
 
         if (string.IsNullOrWhiteSpace(targetFolder))
         {
-            await _sweetAlert.Show("Upload Folder", "Type a target folder or use the build root preset.", RohAlertType.Warning);
+            await _sweetAlert.Show(_loc["Upload.UploadFolder"], _loc["Upload.TypeTargetFolder"], RohAlertType.Warning);
             return;
         }
 
@@ -530,7 +531,7 @@
 
         if (!filesToUpload.Any())
         {
-            await _sweetAlert.Show("Upload File", "Select at least one file to upload.", RohAlertType.Warning);
+            await _sweetAlert.Show(_loc["Upload.UploadFile"], _loc["Upload.SelectFile"], RohAlertType.Warning);
             return;
         }
 
@@ -561,7 +562,7 @@
                 if (selectedFile.File.Size > MaxFileSize)
                 {
                     selectedFile.Status = "Skipped";
-                    selectedFile.Message = "The file size must be less than 1 Gb.";
+                    selectedFile.Message = _loc["Upload.MaxFileSize1Gb"];
                 }
                 else
                 {
@@ -594,7 +595,7 @@
                     else
                     {
                         selectedFile.Status = "Error";
-                        selectedFile.Message = responseUpload?.Message ?? "Upload failed.";
+                        selectedFile.Message = responseUpload?.Message ?? _loc["Upload.UploadFailed"];
 
                         if (responseUpload is not null)
                             await _sweetAlert.ShowResponse(responseUpload);
@@ -609,7 +610,7 @@
             if (uploaded)
             {
                 filesListRefreshKey++;
-                await _sweetAlert.Show("Upload File", "File has been uploaded", RohAlertType.Success);
+                await _sweetAlert.Show(_loc["Upload.UploadFile"], _loc["Upload.Uploaded"], RohAlertType.Success);
             }
         }
         finally
@@ -627,7 +628,7 @@
 
         bool confirmed = await JS.InvokeAsync<bool>(
             "confirm",
-            $"Release version v{gameVersion.Version}.{gameVersion.Release}.{gameVersion.Review}? Uploading new files will be blocked after release.");
+            string.Format(_loc["Version.ReleaseConfirm"], gameVersion.Version, gameVersion.Release, gameVersion.Review));
 
         if (!confirmed)
             return;

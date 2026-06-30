@@ -7,10 +7,10 @@
 @using ROH.Utils.Helpers;
 
 @inject IRohAlertService _sweetAlert;
-
 @inject IVersionService _versionService;
+@inject IStringLocalizer<SharedResource> _loc
 
-<CardComponent Header="New Version">
+<CardComponent Header="@_loc["Version.NewVersion"]">
     <CoronaStack Spacing="1rem" FullWidth="true">
         <VersionSummaryComponent Version="@ParsedVersion"
                                  Release="@ParsedRelease"
@@ -18,15 +18,15 @@
                                  ShowStatus="true" />
 
         <CoronaStack Direction="CoronaStackDirection.Row" Spacing=".75rem">
-            <CoronaInput Label="Version" @bind-Value="inputVersion" Type="number" Min="0" />
-            <CoronaInput Label="Release" @bind-Value="inputRelease" Type="number" Min="0" />
-            <CoronaInput Label="Review" @bind-Value="inputReview" Type="number" Min="0" />
+            <CoronaInput Label="@_loc["Shared.Version"]" @bind-Value="inputVersion" Type="number" Min="0" />
+            <CoronaInput Label="@_loc["Shared.Release"]" @bind-Value="inputRelease" Type="number" Min="0" />
+            <CoronaInput Label="@_loc["Shared.Review"]" @bind-Value="inputReview" Type="number" Min="0" />
         </CoronaStack>
 
         <CoronaButton Color="CoronaColorSemantic.Primary"
                       Variant="CoronaButtonVariant.Filled"
                       OnClick="CreateNewVersion">
-            Create New Version
+            @_loc["Version.CreateNew"]
         </CoronaButton>
     </CoronaStack>
 

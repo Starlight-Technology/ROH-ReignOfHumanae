@@ -1,8 +1,10 @@
 ﻿@rendermode InteractiveServer
 @using MudBlazor
 @using ROH.Site.Helpers.Components.Layout
+@using ROH.Site.Resources
 @inject DrawerState DrawerState
 @inject NavigationManager Nav
+@inject IStringLocalizer<SharedResource> _loc
 
 <MudAppBar Elevation="4" Color="Color.Primary" Fixed="true" Class="roh-appbar">
 
@@ -10,9 +12,11 @@
                    Color="Color.Primary"
                    OnClick="@DrawerState.Toggle" />
 
-    <MudText Typo="Typo.h6">Reign of Humanae</MudText>
+    <MudText Typo="Typo.h6">@_loc["Layout.Title"]</MudText>
 
     <MudSpacer />
+
+    <LanguageSwitcher />
 
     <MudIconButton Icon="@Icons.Material.Filled.AccountCircle"
                    Color="Color.Primary"
