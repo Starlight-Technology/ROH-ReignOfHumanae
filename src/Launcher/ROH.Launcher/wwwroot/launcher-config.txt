@@ -1,3 +1,0 @@
-# ROH Launcher configuration
-# Gateway base url (used by launcher to find gateway/versionfile endpoints)
-GatewayBaseUrl=http://localhost:9001/

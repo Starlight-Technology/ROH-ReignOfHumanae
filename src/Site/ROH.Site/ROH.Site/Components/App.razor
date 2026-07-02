@@ -32,7 +32,24 @@
     <script src="Interop/sweetalertInterop.js"></script>
     <script src="Interop/downloadFileInterop.js"></script>
     <script src="@Assets["_content/MudBlazor/MudBlazor.min.js"]"></script>
+    <script>
+        (function() {
+            var lang = localStorage.getItem('lang');
+            if (lang) {
+                lang = lang.replace(/"/g, '');
+                if (lang !== 'en') {
+                    document.cookie = ".AspNetCore.Culture=c=" + lang + "|uic=" + lang + ";path=/;max-age=" + (365 * 86400);
+                }
+            }
+        })();
+    </script>
     <script src="_framework/blazor.web.js"></script>
+    <script>
+        window.setCultureCookie = function(culture) {
+            var cookie = ".AspNetCore.Culture=c=" + culture + "|uic=" + culture + ";path=/;max-age=" + (365 * 86400);
+            document.cookie = cookie;
+        };
+    </script>
 </body>
 
 </html>

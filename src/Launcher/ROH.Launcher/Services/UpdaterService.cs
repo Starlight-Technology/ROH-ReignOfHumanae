@@ -1,20 +1,19 @@
 using Newtonsoft.Json;
 
+using ROH.StandardModels.File;
 using ROH.StandardModels.Response;
 using ROH.StandardModels.Version;
-using ROH.Utils.ApiConfiguration;
-using ROH.Utils.Helpers;
 
 using System.Net;
 using System.Net.Http.Headers;
-using System.Security.Cryptography;
 
 namespace ROH.Launcher.Services;
 
 public class UpdaterService
 {
-    private readonly ApiConfigReader _apiConfig = new();
-    private readonly Gateway _gateway = new();
+    private readonly SettingsService _settings;
+
+    public UpdaterService(SettingsService settings) => _settings = settings;
 
     public async Task DownloadFilesAsync(
         IEnumerable<GameVersionFileModel> files,
@@ -23,9 +22,7 @@ public class UpdaterService
         CancellationToken cancellationToken = default,
         string? token = null)
     {
-        List<GameVersionFileModel> fileList = files
-            .Where(file => file.Active && file.Guid != Guid.Empty)
-            .ToList();
+        List<GameVersionFileModel> fileList = [.. files.Where(file => file.Active && file.Guid != Guid.Empty)];
 
         if (fileList.Count == 0)
         {
@@ -42,7 +39,7 @@ public class UpdaterService
             throw new InvalidOperationException("A pasta de instalacao nao foi configurada.");
 
         Directory.CreateDirectory(destinationFolder);
-        Uri versionFileBase = GetVersionFileBaseUrl();
+        Uri gatewayBase = GetGatewayBaseUrl();
 
         using HttpClient client = CreateHttpClient(token);
         string destinationRoot = Path.GetFullPath(destinationFolder);
@@ -74,7 +71,7 @@ public class UpdaterService
 
             await DownloadSingleFileAsync(
                     client,
-                    versionFileBase,
+                    gatewayBase,
                     file.Guid,
                     file.Name,
                     targetPath,
@@ -83,8 +80,6 @@ public class UpdaterService
                     progress,
                     cancellationToken)
                 .ConfigureAwait(true);
-
-            await VerifyChecksumAsync(client, versionFileBase, file.Guid, targetPath, cancellationToken).ConfigureAwait(true);
 
             progress.Report(
                 new UpdateProgressInfo
@@ -102,14 +97,23 @@ public class UpdaterService
         CancellationToken cancellationToken = default,
         string? token = null)
     {
-        DefaultResponse? resp = await _gateway.GetAsync<object?>(
-                Gateway.Services.GetCurrentVersion,
-                null,
-                token ?? string.Empty,
-                cancellationToken)
+        Uri gatewayBase = GetGatewayBaseUrl();
+
+        using HttpClient client = CreateHttpClient(token);
+
+        HttpResponseMessage response = await client.GetAsync(
+            new Uri(gatewayBase, "api/Version/GetCurrentVersion"),
+            cancellationToken)
             .ConfigureAwait(true);
 
-        return resp == null || !resp.HttpStatus.IsSuccessStatusCode() ? null : ConvertObjectResponse<GameVersionModel>(resp);
+        if (!response.IsSuccessStatusCode)
+            return null;
+
+        string json = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(true);
+
+        DefaultResponse? resp = JsonConvert.DeserializeObject<DefaultResponse>(json);
+
+        return resp == null || !IsSuccessStatus(resp.HttpStatus) ? null : ConvertObjectResponse<GameVersionModel>(resp);
     }
 
     public async Task<List<GameVersionFileModel>?> GetFilesForVersionAsync(
@@ -117,14 +121,25 @@ public class UpdaterService
         CancellationToken cancellationToken = default,
         string? token = null)
     {
-        DefaultResponse? resp = await _gateway.GetAsync(
-                Gateway.Services.GetAllVersionFiles,
-                new { VersionGuid = versionGuid.ToString() },
-                token ?? string.Empty,
-                cancellationToken)
+        Uri gatewayBase = GetGatewayBaseUrl();
+
+        using HttpClient client = CreateHttpClient(token);
+
+        string query = $"?VersionGuid={Uri.EscapeDataString(versionGuid.ToString())}";
+
+        HttpResponseMessage response = await client.GetAsync(
+            new Uri(gatewayBase, $"api/VersionFile/GetAllVersionFiles{query}"),
+            cancellationToken)
             .ConfigureAwait(true);
 
-        return resp == null || !resp.HttpStatus.IsSuccessStatusCode() ? null : ConvertObjectResponse<List<GameVersionFileModel>>(resp);
+        if (!response.IsSuccessStatusCode)
+            return null;
+
+        string json = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(true);
+
+        DefaultResponse? resp = JsonConvert.DeserializeObject<DefaultResponse>(json);
+
+        return resp == null || !IsSuccessStatus(resp.HttpStatus) ? null : ConvertObjectResponse<List<GameVersionFileModel>>(resp);
     }
 
     private static T? ConvertObjectResponse<T>(DefaultResponse response) => ConvertPayload<T>(response.ObjectResponse);
@@ -165,7 +180,11 @@ public class UpdaterService
 
     private static HttpClient CreateHttpClient(string? token)
     {
-        HttpClient client = new();
+        HttpClientHandler handler = new HttpClientHandler();
+#if DEBUG
+        handler.ServerCertificateCustomValidationCallback = (_, _, _, _) => true;
+#endif
+        HttpClient client = new HttpClient(handler);
         if (!string.IsNullOrWhiteSpace(token))
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
@@ -174,7 +193,7 @@ public class UpdaterService
 
     private static async Task DownloadSingleFileAsync(
         HttpClient client,
-        Uri versionFileBase,
+        Uri gatewayBase,
         Guid fileGuid,
         string fileName,
         string targetPath,
@@ -183,76 +202,53 @@ public class UpdaterService
         IProgress<UpdateProgressInfo> progress,
         CancellationToken cancellationToken)
     {
-        Uri rawUri = new(versionFileBase, $"DownloadFileRaw?fileGuid={fileGuid}");
-        long existingBytes = File.Exists(targetPath) ? new FileInfo(targetPath).Length : 0;
-
-        using HttpRequestMessage request = new(HttpMethod.Get, rawUri);
-        if (existingBytes > 0)
-            request.Headers.Range = new RangeHeaderValue(existingBytes, null);
+        Uri downloadUri = new(gatewayBase, $"api/VersionFile/DownloadFile?fileGuid={fileGuid}");
 
         using HttpResponseMessage response = await client
-            .SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
+            .GetAsync(downloadUri, cancellationToken)
             .ConfigureAwait(true);
 
-        if (response.StatusCode == HttpStatusCode.OK && existingBytes > 0)
-            existingBytes = 0;
-
-        if (response.StatusCode is not HttpStatusCode.OK and
-            not HttpStatusCode.PartialContent)
-        {
+        if (!response.IsSuccessStatusCode)
             throw new InvalidOperationException($"Falha ao baixar '{fileName}': {(int)response.StatusCode} {response.ReasonPhrase}");
-        }
 
-        long contentLength = response.Content.Headers.ContentLength ?? 0;
-        long totalFileBytes = Math.Max(1, existingBytes + contentLength);
-        FileMode fileMode = existingBytes > 0 && response.StatusCode == HttpStatusCode.PartialContent
-            ? FileMode.Append
-            : FileMode.Create;
+        string json = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(true);
 
-        await using Stream responseStream = await response.Content.ReadAsStreamAsync(cancellationToken)
-            .ConfigureAwait(true);
-        await using FileStream outputStream = new(targetPath, fileMode, FileAccess.Write, FileShare.None);
+        DefaultResponse? defaultResponse = JsonConvert.DeserializeObject<DefaultResponse>(json);
 
-        byte[] buffer = new byte[81920];
-        int read;
-        long downloadedBytes = existingBytes;
+        if (defaultResponse == null || !IsSuccessStatus(defaultResponse.HttpStatus))
+            throw new InvalidOperationException($"Falha ao baixar '{fileName}': resposta invalida do servidor.");
 
-        while ((read = await responseStream.ReadAsync(buffer.AsMemory(0, buffer.Length), cancellationToken)
-                   .ConfigureAwait(true)) > 0)
-        {
-            await outputStream.WriteAsync(buffer.AsMemory(0, read), cancellationToken).ConfigureAwait(true);
-            downloadedBytes += read;
+        GameFileModel? fileModel = defaultResponse.ObjectResponse != null
+            ? JsonConvert.DeserializeObject<GameFileModel>(defaultResponse.ObjectResponse.ToString())
+            : null;
 
-            double fileProgress = (double)downloadedBytes / totalFileBytes;
-            double overall = (fileIndex + Math.Clamp(fileProgress, 0, 1)) / totalFiles * 100;
+        if (fileModel?.Content == null)
+            throw new InvalidOperationException($"Falha ao baixar '{fileName}': conteudo vazio.");
 
-            progress.Report(
-                new UpdateProgressInfo
-                {
-                    Percentage = overall,
-                    CompletedFiles = fileIndex,
-                    TotalFiles = totalFiles,
-                    CurrentFileName = fileName,
-                    Message = "Baixando arquivos do jogo",
-                });
-        }
+        await File.WriteAllBytesAsync(targetPath, fileModel.Content, cancellationToken).ConfigureAwait(true);
+
+        double overall = (double)(fileIndex + 1) / totalFiles * 100;
+
+        progress.Report(
+            new UpdateProgressInfo
+            {
+                Percentage = overall,
+                CompletedFiles = fileIndex + 1,
+                TotalFiles = totalFiles,
+                CurrentFileName = fileName,
+                Message = "Baixando arquivos do jogo",
+            });
     }
 
-    private Uri GetVersionFileBaseUrl()
+    private Uri GetGatewayBaseUrl()
     {
-        try
-        {
-            Dictionary<ApiConfigReader.ApiUrl, Uri> apiUrls = _apiConfig.GetApiUrl();
-            Uri? uri = apiUrls.GetValueOrDefault(ApiConfigReader.ApiUrl.VersionFile);
-            if (uri is not null)
-                return uri;
-        }
-        catch
-        {
-        }
+        if (Uri.TryCreate(_settings.GatewayBaseUrl, UriKind.Absolute, out Uri? uri))
+            return uri;
 
-        throw new InvalidOperationException("Nao foi possivel localizar a URL do servico de arquivos.");
+        throw new InvalidOperationException("Nao foi possivel localizar a URL do gateway.");
     }
+
+    private static bool IsSuccessStatus(HttpStatusCode statusCode) => (int)statusCode >= 200 && (int)statusCode < 300;
 
     private static string NormalizeRelativePath(string fileName)
     {
@@ -282,36 +278,5 @@ public class UpdaterService
             + Path.DirectorySeparatorChar;
 
         return filePath.StartsWith(rootWithSeparator, StringComparison.OrdinalIgnoreCase);
-    }
-
-    private static async Task VerifyChecksumAsync(
-        HttpClient client,
-        Uri versionFileBase,
-        Guid fileGuid,
-        string targetPath,
-        CancellationToken cancellationToken)
-    {
-        Uri checksumUri = new(versionFileBase, $"FileChecksum?fileGuid={fileGuid}");
-        using HttpResponseMessage checksumResponse = await client.SendAsync(
-                new HttpRequestMessage(HttpMethod.Get, checksumUri),
-                cancellationToken)
-            .ConfigureAwait(true);
-
-        if (!checksumResponse.IsSuccessStatusCode)
-            return;
-
-        string json = await checksumResponse.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(true);
-        DefaultResponse? defaultResponse = JsonConvert.DeserializeObject<DefaultResponse>(json);
-        string serverChecksum = defaultResponse?.ObjectResponse?.ToString() ?? string.Empty;
-
-        if (string.IsNullOrWhiteSpace(serverChecksum))
-            return;
-
-        await using FileStream fs = File.OpenRead(targetPath);
-        byte[] localHash = await SHA256.HashDataAsync(fs, cancellationToken).ConfigureAwait(true);
-        string localChecksum = BitConverter.ToString(localHash).Replace("-", string.Empty).ToLowerInvariant();
-
-        if (!string.Equals(serverChecksum, localChecksum, StringComparison.OrdinalIgnoreCase))
-            throw new InvalidOperationException($"Falha na verificacao do arquivo '{Path.GetFileName(targetPath)}'.");
     }
 }

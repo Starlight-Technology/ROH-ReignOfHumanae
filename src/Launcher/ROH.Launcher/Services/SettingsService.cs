@@ -20,6 +20,8 @@ public class SettingsService
 
     public string GameExecutableName { get; set; } = "ReignOfHumanae.exe";
 
+    public string GatewayBaseUrl { get; set; } = "http://10.0.0.200:9001/";
+
     public string LastInstalledVersion { get; set; } = string.Empty;
 
     public DateTime? LastUpdatedAtUtc { get; set; }
@@ -57,6 +59,13 @@ public class SettingsService
                 updatedNode.TryGetDateTime(out DateTime updatedAt))
             {
                 LastUpdatedAtUtc = updatedAt;
+            }
+
+            if (doc.RootElement.TryGetProperty("GatewayBaseUrl", out var gwNode))
+            {
+                string v = gwNode.GetString() ?? string.Empty;
+                if (!string.IsNullOrWhiteSpace(v))
+                    GatewayBaseUrl = v;
             }
         }
         catch
@@ -155,6 +164,7 @@ public class SettingsService
             GameExecutableName,
             LastInstalledVersion,
             LastUpdatedAtUtc,
+            GatewayBaseUrl,
         };
         string json = JsonSerializer.Serialize(doc, new JsonSerializerOptions { WriteIndented = true });
         await File.WriteAllTextAsync(path, json).ConfigureAwait(true);

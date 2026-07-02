@@ -17,7 +17,11 @@ using ROH.StandardModels.Response;
 using ROH.StandardModels.Version;
 using ROH.Utils.Helpers;
 
+using System.Collections.Concurrent;
+using System.IO;
+using System.IO.Compression;
 using System.Net;
+using System.Security.Cryptography;
 
 namespace ROH.Service.File;
 
@@ -29,6 +33,38 @@ public class GameVersionFileService(
     IMapper mapper,
     IExceptionHandler exceptionHandler) : IGameVersionFileService
 {
+    private static readonly ConcurrentDictionary<Guid, BuildUploadData> _pendingAnalyses = new();
+
+    private static readonly HashSet<string> _blockedExtensions = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ".asmdef", ".asmref", ".cs", ".meta", ".tmp"
+    };
+
+    private record BuildUploadData(
+        Guid VersionGuid,
+        string TempRoot,
+        string VersionPath,
+        GameVersionModel GameVersion,
+        List<FileAnalysis> Files);
+
+    private record FileAnalysis(
+        string RelativePath,
+        long Size,
+        string Format,
+        FileAction Action,
+        Guid? ExistingFileGuid);
+
+    private enum FileAction { New, Update, Identical, Deactivate }
+
+    private static string GetTempRoot()
+    {
+#if DEBUG
+        return @".\ROHUpdateFiles\_uploadTemp";
+#else
+        return "/app/ROH/updateFiles/_uploadTemp";
+#endif
+    }
+
     private async Task<GameVersionModel?> GetCurrentVersionAsync(CancellationToken cancellationToken = default)
     {
         VersionServiceApi.DefaultResponse? response = await gameVersion.GetCurrentVersionAsync(cancellationToken)
@@ -126,7 +162,7 @@ public class GameVersionFileService(
 
         await gameFileService.SaveFileAsync(file, fileModel.Content!, cancellationToken).ConfigureAwait(true);
 
-        versionFile = versionFile with { GameFile = file };
+        versionFile = versionFile with { Guid = file.Guid, GameFile = file };
         await versionFileRepository.SaveFileAsync(versionFile, cancellationToken).ConfigureAwait(true);
 
         return new DefaultResponse(HttpStatusCode.OK);
@@ -259,5 +295,272 @@ public class GameVersionFileService(
         {
             return exceptionHandler.HandleException(ex);
         }
+    }
+
+    public async Task<DefaultResponse> UploadBuildZipAsync(
+        Stream zipStream,
+        Guid versionGuid,
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            bool versionExists = await gameVersion.VerifyIfVersionExistAsync(versionGuid, cancellationToken)
+                .ConfigureAwait(true);
+
+            if (!versionExists)
+                return new DefaultResponse(null, HttpStatusCode.BadRequest, "Game Version Not Found.");
+
+            GameVersionModel? versionInfo = await GetCurrentVersionAsync(cancellationToken).ConfigureAwait(true);
+
+            string versionPath = GetFilePath(versionInfo ?? new GameVersionModel { Guid = versionGuid });
+
+            Guid analysisId = Guid.NewGuid();
+            string tempRoot = Path.Combine(GetTempRoot(), analysisId.ToString());
+
+            List<FileAnalysis> files = [];
+            List<string> errors = [];
+
+            using ZipArchive archive = new(zipStream, ZipArchiveMode.Read);
+
+            List<GameVersionFile> existingFiles = await versionFileRepository
+                .GetFilesAsync(versionGuid, cancellationToken).ConfigureAwait(true);
+            Dictionary<string, GameFile> existingMap = [];
+            foreach (GameVersionFile vf in existingFiles)
+            {
+                if (vf.GameFile is not null && vf.GameFile.Active)
+                    existingMap[NormalizeInstallPath(vf.GameFile.Name)] = vf.GameFile;
+            }
+
+            foreach (ZipArchiveEntry entry in archive.Entries)
+            {
+                if (string.IsNullOrWhiteSpace(entry.Name))
+                    continue;
+
+                string relativePath = NormalizeInstallPath(entry.FullName);
+                string ext = Path.GetExtension(relativePath);
+
+                if (_blockedExtensions.Contains(ext))
+                    continue;
+
+                string tempFilePath = Path.GetFullPath(Path.Combine(tempRoot, relativePath));
+                string tempDir = Path.GetDirectoryName(tempFilePath)!;
+                if (!Directory.Exists(tempDir))
+                    Directory.CreateDirectory(tempDir);
+
+                entry.ExtractToFile(tempFilePath, overwrite: true);
+
+                long size = entry.Length;
+                string format = ext;
+
+                if (existingMap.TryGetValue(relativePath, out GameFile? existingFile))
+                {
+                    string existingFilePath = GetSafeFilePath(existingFile);
+                    bool contentIdentical = FilesAreIdentical(tempFilePath, existingFilePath);
+
+                    files.Add(new FileAnalysis(
+                        relativePath, size, format,
+                        contentIdentical ? FileAction.Identical : FileAction.Update,
+                        existingFile.Guid));
+                    existingMap.Remove(relativePath);
+                }
+                else
+                {
+                    files.Add(new FileAnalysis(
+                        relativePath, size, format,
+                        FileAction.New, null));
+                }
+            }
+
+            foreach ((string _, GameFile remaining) in existingMap)
+            {
+                files.Add(new FileAnalysis(
+                    NormalizeInstallPath(remaining.Name),
+                    remaining.Size,
+                    remaining.Format,
+                    FileAction.Deactivate,
+                    remaining.Guid));
+            }
+
+            var data = new BuildUploadData(versionGuid, tempRoot, versionPath, versionInfo ?? new(), files);
+            _pendingAnalyses[analysisId] = data;
+
+            var analysis = new BuildUploadAnalysis
+            {
+                AnalysisId = analysisId,
+                NewFiles = files.Where(f => f.Action == FileAction.New)
+                    .Select(f => new FileEntry { RelativePath = f.RelativePath, Size = f.Size, Format = f.Format }).ToList(),
+                UpdatedFiles = files.Where(f => f.Action == FileAction.Update)
+                    .Select(f => new FileEntry { RelativePath = f.RelativePath, Size = f.Size, Format = f.Format }).ToList(),
+                IdenticalFiles = files.Where(f => f.Action == FileAction.Identical)
+                    .Select(f => new FileEntry { RelativePath = f.RelativePath, Size = f.Size, Format = f.Format }).ToList(),
+                DeactivatedFiles = files.Where(f => f.Action == FileAction.Deactivate)
+                    .Select(f => new FileEntry { RelativePath = f.RelativePath, Size = f.Size, Format = f.Format }).ToList(),
+                Errors = errors
+            };
+
+            return new DefaultResponse(objectResponse: analysis, httpStatus: HttpStatusCode.OK);
+        }
+        catch (System.Exception ex)
+        {
+            return exceptionHandler.HandleException(ex);
+        }
+    }
+
+    public async Task<DefaultResponse> ConfirmBuildUploadAsync(
+        BuildUploadConfirmation confirmation,
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            if (!_pendingAnalyses.TryRemove(confirmation.AnalysisId, out BuildUploadData? data))
+                return new DefaultResponse(null, HttpStatusCode.BadRequest, "Analysis not found or expired.");
+
+            BuildUploadResult result = new() { Success = true };
+
+            foreach (FileAnalysis file in data.Files)
+            {
+                try
+                {
+                    switch (file.Action)
+                    {
+                        case FileAction.New:
+                            await AddNewFileFromTempAsync(data, file, cancellationToken).ConfigureAwait(true);
+                            result.Added++;
+                            break;
+
+                        case FileAction.Update:
+                            await UpdateExistingFileFromTempAsync(data, file, cancellationToken).ConfigureAwait(true);
+                            result.Updated++;
+                            break;
+
+                        case FileAction.Identical when confirmation.ReplaceIdentical:
+                            await UpdateExistingFileFromTempAsync(data, file, cancellationToken).ConfigureAwait(true);
+                            result.Updated++;
+                            break;
+
+                        case FileAction.Identical:
+                            result.Skipped++;
+                            break;
+
+                        case FileAction.Deactivate:
+                            await gameFileService.MakeFileHasDeprecatedAsync(
+                                file.ExistingFileGuid!.Value, cancellationToken).ConfigureAwait(true);
+                            result.Deactivated++;
+                            break;
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    result.Errors.Add($"Failed to process '{file.RelativePath}': {ex.Message}");
+                }
+            }
+
+            try
+            {
+                if (Directory.Exists(data.TempRoot))
+                    Directory.Delete(data.TempRoot, recursive: true);
+            }
+            catch
+            {
+            }
+
+            result.Success = result.Errors.Count == 0;
+            return new DefaultResponse(objectResponse: result, httpStatus: HttpStatusCode.OK);
+        }
+        catch (System.Exception ex)
+        {
+            return exceptionHandler.HandleException(ex);
+        }
+    }
+
+    private static string GetSafeFilePath(GameFile gameFile)
+    {
+        string rootPath = Path.GetFullPath(gameFile.Path);
+        string relativePath = NormalizeRelativePath(gameFile.Name);
+        string filePath = Path.GetFullPath(Path.Combine(rootPath, relativePath));
+        string rootWithSeparator = rootPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+            + Path.DirectorySeparatorChar;
+
+        return !filePath.StartsWith(rootWithSeparator, StringComparison.OrdinalIgnoreCase)
+            ? throw new InvalidOperationException("Invalid file path.")
+            : filePath;
+    }
+
+    private static string NormalizeRelativePath(string fileName)
+    {
+        string safeName = string.IsNullOrWhiteSpace(fileName) ? "download.bin" : fileName;
+        return safeName
+            .Replace('\\', Path.DirectorySeparatorChar)
+            .Replace('/', Path.DirectorySeparatorChar)
+            .TrimStart(Path.DirectorySeparatorChar);
+    }
+
+    private static bool FilesAreIdentical(string pathA, string pathB)
+    {
+        if (!System.IO.File.Exists(pathA) || !System.IO.File.Exists(pathB))
+            return false;
+
+        byte[] hashA = SHA256.HashData(System.IO.File.ReadAllBytes(pathA));
+        byte[] hashB = SHA256.HashData(System.IO.File.ReadAllBytes(pathB));
+
+        return CryptographicOperations.FixedTimeEquals(hashA, hashB);
+    }
+
+    private async Task AddNewFileFromTempAsync(
+        BuildUploadData data,
+        FileAnalysis file,
+        CancellationToken cancellationToken)
+    {
+        string tempFilePath = Path.GetFullPath(Path.Combine(data.TempRoot, file.RelativePath));
+        byte[] content = await System.IO.File.ReadAllBytesAsync(tempFilePath, cancellationToken).ConfigureAwait(true);
+
+        var fileModel = new GameVersionFileModel
+        {
+            Name = file.RelativePath,
+            Path = GetRelativeDirectory(file.RelativePath),
+            Format = file.Format,
+            Content = content,
+            Size = file.Size,
+            Active = true,
+            GameVersion = data.GameVersion
+        };
+
+        GameVersionFile versionFile = mapper.Map<GameVersionFile>(fileModel);
+        GameVersionModel? currentVersion = await GetCurrentVersionAsync(cancellationToken).ConfigureAwait(true);
+
+        if (await ShouldRejectFileUploadAsync(data.GameVersion, currentVersion, cancellationToken).ConfigureAwait(true))
+            throw new InvalidOperationException(GetRejectionMessage(data.GameVersion));
+
+        GameFile dbFile = mapper.Map<GameFile>(fileModel);
+        dbFile = dbFile with
+        {
+            Name = BuildStoredRelativeName(fileModel),
+            Path = data.VersionPath
+        };
+
+        await gameFileService.SaveFileAsync(dbFile, content, cancellationToken).ConfigureAwait(true);
+
+        versionFile = versionFile with { Guid = dbFile.Guid, GameFile = dbFile };
+        await versionFileRepository.SaveFileAsync(versionFile, cancellationToken).ConfigureAwait(true);
+    }
+
+    private async Task UpdateExistingFileFromTempAsync(
+        BuildUploadData data,
+        FileAnalysis file,
+        CancellationToken cancellationToken)
+    {
+        string tempFilePath = Path.GetFullPath(Path.Combine(data.TempRoot, file.RelativePath));
+        byte[] content = await System.IO.File.ReadAllBytesAsync(tempFilePath, cancellationToken).ConfigureAwait(true);
+
+        GameVersionFile? versionFile = await versionFileRepository.GetFileAsync(
+            file.ExistingFileGuid!.Value, cancellationToken).ConfigureAwait(true);
+
+        GameFile? existingFile = versionFile?.GameFile;
+
+        if (existingFile is null)
+            return;
+
+        GameFile updatedFile = existingFile with { Size = file.Size };
+        await gameFileService.UpdateFileContentAsync(updatedFile, content, cancellationToken).ConfigureAwait(true);
     }
 }

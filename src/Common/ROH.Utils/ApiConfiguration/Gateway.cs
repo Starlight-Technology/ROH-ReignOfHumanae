@@ -12,6 +12,7 @@ using ROH.StandardModels.Response;
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -68,6 +69,14 @@ namespace ROH.Utils.ApiConfiguration
             {
                 Services.DownloadFile,
                 new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay), "Api/VersionFile/DownloadFile")
+            },
+            {
+                Services.UploadBuildZip,
+                new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay), "Api/VersionFile/UploadBuildZip")
+            },
+            {
+                Services.ConfirmBuildUpload,
+                new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay), "Api/VersionFile/ConfirmBuildUpload")
             },
             #endregion FILES
 
@@ -235,6 +244,53 @@ namespace ROH.Utils.ApiConfiguration
             return _errorResponse;
         }
 
+        public async Task<DefaultResponse?> PostFileAsync(
+            Services service,
+            Stream fileStream,
+            string fileName,
+            string versionGuid,
+            string token = "",
+            CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                HttpClientHandler handler = new HttpClientHandler();
+#if DEBUG
+                handler.ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => true;
+#endif
+                using HttpClient client = new HttpClient(handler);
+
+                if (!string.IsNullOrWhiteSpace(token))
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                using MultipartFormDataContent content = new MultipartFormDataContent();
+                content.Add(new StreamContent(fileStream), "file", fileName);
+                content.Add(new StringContent(versionGuid), "versionGuid");
+
+                HttpResponseMessage response = await client.PostAsync(
+                    _gatewayServiceUrl.GetValueOrDefault(service),
+                    content,
+                    cancellationToken)
+                    .ConfigureAwait(true);
+
+                if (response != null)
+                {
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                        return _unauthorizedResponse;
+
+                    string responseJson = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+
+                    return JsonConvert.DeserializeObject<DefaultResponse>(responseJson);
+                }
+
+                return _errorResponse;
+            }
+            catch (Exception e)
+            {
+                return new DefaultResponse(httpStatus: HttpStatusCode.InternalServerError, message: e.Message);
+            }
+        }
+
         public async Task<DefaultResponse?> UpdateAsync(
             Services service,
             object objectToSend,
@@ -287,6 +343,8 @@ namespace ROH.Utils.ApiConfiguration
             UploadFile,
             GetAllVersionFiles,
             DownloadFile,
+            UploadBuildZip,
+            ConfirmBuildUpload,
             #endregion VERSIONFILE
 
             #region ACCOUNT

@@ -1,16 +1,18 @@
+using Newtonsoft.Json;
+
 using ROH.StandardModels.Account;
 using ROH.StandardModels.Response;
-using ROH.Utils.ApiConfiguration;
-using ROH.Utils.Helpers;
 
 using System.Diagnostics;
+using System.Net;
+using System.Net.Http.Headers;
+using System.Text;
 
 namespace ROH.Launcher.Services;
 
 public class LauncherState
 {
     private readonly AlertService _alert;
-    private readonly Gateway _gateway = new();
     private readonly SettingsService _settings;
     private CancellationTokenSource? _updateCts;
     private bool _settingsLoaded;
@@ -179,18 +181,53 @@ public class LauncherState
     {
         try
         {
-            DefaultResponse? response = await _gateway.PostAsync(
-                    Gateway.Services.Login,
-                    model,
-                    string.Empty,
-                    cancellationToken)
+            if (!Uri.TryCreate(_settings.GatewayBaseUrl, UriKind.Absolute, out Uri? gatewayBase))
+            {
+                await _alert.ShowError("Login", "Gateway nao configurado. Verifique as configuracoes.")
+                    .ConfigureAwait(true);
+                return false;
+            }
+
+            HttpClientHandler handler = new HttpClientHandler();
+#if DEBUG
+            handler.ServerCertificateCustomValidationCallback = (_, _, _, _) => true;
+#endif
+            using HttpClient client = new HttpClient(handler);
+
+            string jsonContent = JsonConvert.SerializeObject(model);
+            StringContent httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await client.PostAsync(
+                new Uri(gatewayBase, "api/Account/Login"),
+                httpContent,
+                cancellationToken)
                 .ConfigureAwait(true);
 
-            if ((response != null) && response.HttpStatus.IsSuccessStatusCode())
+            if (!response.IsSuccessStatusCode)
+            {
+                await _alert.ShowError("Login", "Credenciais invalidas ou servidor indisponivel.")
+                    .ConfigureAwait(true);
+                return false;
+            }
+
+            string json = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(true);
+            DefaultResponse? defaultResponse = JsonConvert.DeserializeObject<DefaultResponse>(json);
+
+            if (defaultResponse != null && IsSuccessStatus(defaultResponse.HttpStatus))
             {
                 try
                 {
-                    UserModel user = response.ResponseToModel<UserModel>();
+                    UserModel? user = defaultResponse.ObjectResponse != null
+                        ? JsonConvert.DeserializeObject<UserModel>(defaultResponse.ObjectResponse.ToString())
+                        : null;
+
+                    if (user == null)
+                    {
+                        await _alert.ShowError("Login", "Falha ao processar a resposta do servidor.")
+                            .ConfigureAwait(true);
+                        return false;
+                    }
+
                     Username = user.UserName ?? user.Email;
                     Token = user.Token;
                     IsLoggedIn = true;
@@ -208,7 +245,7 @@ public class LauncherState
                 }
             }
 
-            await _alert.ShowError("Login", response?.Message ?? "Credenciais invalidas ou servidor indisponivel.")
+            await _alert.ShowError("Login", defaultResponse?.Message ?? "Credenciais invalidas ou servidor indisponivel.")
                 .ConfigureAwait(true);
             return false;
         }
@@ -389,6 +426,8 @@ public class LauncherState
         {
         }
     }
+
+    private static bool IsSuccessStatus(HttpStatusCode statusCode) => (int)statusCode >= 200 && (int)statusCode < 300;
 
     private void NotifyChanged() => OnChange?.Invoke();
 

@@ -5,6 +5,7 @@
 @using ROH.Site.Resources
 @inject LanguageService LanguageService
 @inject NavigationManager Navigation
+@inject IJSRuntime JS
 @inject IStringLocalizer<SharedResource> _loc
 
 <MudIconButton Icon="@Icons.Material.Filled.Language"
@@ -31,6 +32,7 @@
     private async Task SetLanguage(string culture)
     {
         await LanguageService.SetCurrentCultureAsync(culture);
+        await JS.InvokeVoidAsync("setCultureCookie", culture);
         _menuOpen = false;
         Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
     }

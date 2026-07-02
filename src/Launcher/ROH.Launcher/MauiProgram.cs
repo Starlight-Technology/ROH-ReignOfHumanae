@@ -28,7 +28,7 @@ public static class MauiProgram
 #if WINDOWS
         builder.Services.AddSingleton<Services.IFolderPicker, ROH.Launcher.Platforms.Windows.FolderPickerImplementation>();
 #elif MACCATALYST || MACOS
-        builder.Services.AddSingleton<Services.IFolderPicker, ROH.Launcher.Platforms.Mac.FolderPickerImplementation>();
+        builder.Services.AddSingleton<Services.IFolderPicker, ROH.Launcher.Platforms.MacCatalyst.FolderPickerImplementation>();
 #else
         // fallback to FilePicker-based directory selection
         builder.Services.AddSingleton<Services.IFolderPicker, Services.FilePickerFolderPicker>();

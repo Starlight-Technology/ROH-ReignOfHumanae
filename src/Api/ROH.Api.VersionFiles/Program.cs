@@ -201,4 +201,37 @@ app.MapGet(
     .WithName("FileChecksum")
     .WithOpenApi();
 
+app.MapPost(
+    "UploadBuildZip",
+    async (IGameVersionFileService gameVersionFileService, IFormFile file, string versionGuid) =>
+    {
+        if (file is null || file.Length == 0)
+            return Results.BadRequest();
+
+        if (!Guid.TryParse(versionGuid, out Guid guid))
+            return Results.BadRequest();
+
+        await using Stream stream = file.OpenReadStream();
+        ROH.StandardModels.Response.DefaultResponse result = await gameVersionFileService
+            .UploadBuildZipAsync(stream, guid)
+            .ConfigureAwait(false);
+
+        return Results.Ok(result);
+    })
+    .WithName("UploadBuildZip")
+    .WithOpenApi();
+
+app.MapPost(
+    "ConfirmBuildUpload",
+    async (IGameVersionFileService gameVersionFileService, BuildUploadConfirmation confirmation) =>
+    {
+        ROH.StandardModels.Response.DefaultResponse result = await gameVersionFileService
+            .ConfirmBuildUploadAsync(confirmation)
+            .ConfigureAwait(false);
+
+        return Results.Ok(result);
+    })
+    .WithName("ConfirmBuildUpload")
+    .WithOpenApi();
+
 await app.RunAsync().ConfigureAwait(false);

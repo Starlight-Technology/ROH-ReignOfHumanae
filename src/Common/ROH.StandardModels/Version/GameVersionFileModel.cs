@@ -16,7 +16,7 @@ namespace ROH.StandardModels.Version
 
         public GameVersionFileListModel ToListModel() => new GameVersionFileListModel(Name, Path, Size, Guid);
 
-        public bool Active { get; set; } = false;
+        public bool Active { get; set; } = true;
 
         public byte[]? Content { get; set; } = null;
 

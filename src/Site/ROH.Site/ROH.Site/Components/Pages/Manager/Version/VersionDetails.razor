@@ -305,6 +305,186 @@
                 </div>
             </div>
         </CardComponent>
+
+        <CardComponent Header="Build Upload for ZIP">
+            <EditForm style="margin:20px">
+                <p class="mb-3 text-muted">
+                    Selecione um arquivo .zip contendo os arquivos do build. O sistema vai analisar o conteudo
+                    comparando com os arquivos ja existentes e mostrar o que sera adicionado, atualizado ou removido.
+                </p>
+
+                <CoronaStack Direction="CoronaStackDirection.Row"
+                             Align="CoronaStackAlign.Center"
+                             Wrap="CoronaStackWrap.Wrap"
+                             Spacing="1rem"
+                             FullWidth="true">
+
+                    <MudFileUpload T="IBrowserFile"
+                                   FilesChanged="HandleZipFileSelected"
+                                   Accept=".zip"
+                                   MaxFileSize="@MaxBuildZipSize">
+                        <ActivatorContent>
+                            <MudButton Variant="Variant.Outlined"
+                                       Color="Color.Primary"
+                                       StartIcon="@Icons.Material.Filled.Archive">
+                                @_loc["Upload.SelectBuildZip"]
+                            </MudButton>
+                        </ActivatorContent>
+                    </MudFileUpload>
+
+                    @if (selectedBuildZip is not null)
+                    {
+                        <span class="roh-zip-filename">@selectedBuildZip.Name</span>
+                    }
+
+                    <CoronaButton Color="CoronaColorSemantic.Primary"
+                                  Variant="CoronaButtonVariant.Filled"
+                                  Disabled="@(selectedBuildZip is null || isAnalyzingBuild)"
+                                  Loading="@isAnalyzingBuild"
+                                  OnClick="AnalyzeBuildZip">
+                        Analisar Build
+                    </CoronaButton>
+                </CoronaStack>
+
+                @if (isAnalyzingBuild)
+                {
+                    <div class="row mt-3">
+                        <div class="col-sm-12">
+                            <MudProgressLinear Color="Color.Primary" Indeterminate="true" />
+                            <p class="text-center mt-2">Analisando arquivos do build...</p>
+                        </div>
+                    </div>
+                }
+
+                @if (buildAnalysis is not null)
+                {
+                    <div class="roh-build-analysis mt-3">
+                        <h4>Resultado da Analise</h4>
+
+                        <CoronaStack Direction="CoronaStackDirection.Row"
+                                     Align="CoronaStackAlign.Center"
+                                     Wrap="CoronaStackWrap.Wrap"
+                                     Spacing="0.5rem"
+                                     FullWidth="true"
+                                     Class="roh-build-analysis__badges">
+                            <CoronaBadge Content="@($"Novos: {buildAnalysis.NewFiles.Count}")"
+                                         Color="@(buildAnalysis.NewFiles.Count > 0 ? CoronaColorSemantic.Success : CoronaColorSemantic.Neutral)"
+                                         Variant="CoronaBadgeVariant.Outlined" />
+                            <CoronaBadge Content="@($"Atualizados: {buildAnalysis.UpdatedFiles.Count}")"
+                                         Color="@(buildAnalysis.UpdatedFiles.Count > 0 ? CoronaColorSemantic.Warning : CoronaColorSemantic.Neutral)"
+                                         Variant="CoronaBadgeVariant.Outlined" />
+                            <CoronaBadge Content="@($"Identicos: {buildAnalysis.IdenticalFiles.Count}")"
+                                         Color="CoronaColorSemantic.Neutral"
+                                         Variant="CoronaBadgeVariant.Outlined" />
+                            <CoronaBadge Content="@($"Desativados: {buildAnalysis.DeactivatedFiles.Count}")"
+                                         Color="@(buildAnalysis.DeactivatedFiles.Count > 0 ? CoronaColorSemantic.Danger : CoronaColorSemantic.Neutral)"
+                                         Variant="CoronaBadgeVariant.Outlined" />
+                        </CoronaStack>
+
+                        @if (buildAnalysis.NewFiles.Count > 0)
+                        {
+                            <details class="roh-build-analysis__details">
+                                <summary>Novos arquivos (@buildAnalysis.NewFiles.Count)</summary>
+                                <ul class="roh-build-analysis__list">
+                                    @foreach (FileEntry file in buildAnalysis.NewFiles)
+                                    {
+                                        <li><code>@file.RelativePath</code> (@FormatFileSize(file.Size))</li>
+                                    }
+                                </ul>
+                            </details>
+                        }
+
+                        @if (buildAnalysis.UpdatedFiles.Count > 0)
+                        {
+                            <details class="roh-build-analysis__details">
+                                <summary>Arquivos atualizados (@buildAnalysis.UpdatedFiles.Count)</summary>
+                                <ul class="roh-build-analysis__list">
+                                    @foreach (FileEntry file in buildAnalysis.UpdatedFiles)
+                                    {
+                                        <li><code>@file.RelativePath</code> (@FormatFileSize(file.Size))</li>
+                                    }
+                                </ul>
+                            </details>
+                        }
+
+                        @if (buildAnalysis.IdenticalFiles.Count > 0)
+                        {
+                            <details class="roh-build-analysis__details">
+                                <summary>Arquivos identicos (@buildAnalysis.IdenticalFiles.Count)</summary>
+                                <ul class="roh-build-analysis__list">
+                                    @foreach (FileEntry file in buildAnalysis.IdenticalFiles)
+                                    {
+                                        <li><code>@file.RelativePath</code> (@FormatFileSize(file.Size))</li>
+                                    }
+                                </ul>
+                            </details>
+                        }
+
+                        @if (buildAnalysis.DeactivatedFiles.Count > 0)
+                        {
+                            <details class="roh-build-analysis__details">
+                                <summary>Arquivos que serao desativados (@buildAnalysis.DeactivatedFiles.Count)</summary>
+                                <ul class="roh-build-analysis__list">
+                                    @foreach (FileEntry file in buildAnalysis.DeactivatedFiles)
+                                    {
+                                        <li><code>@file.RelativePath</code> (@FormatFileSize(file.Size))</li>
+                                    }
+                                </ul>
+                            </details>
+                        }
+
+                        @if (buildAnalysis.Errors.Count > 0)
+                        {
+                            <div class="roh-build-analysis__errors">
+                                <strong>Erros durante analise:</strong>
+                                <ul>
+                                    @foreach (string error in buildAnalysis.Errors)
+                                    {
+                                        <li>@error</li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+
+                        <div class="roh-build-analysis__actions mt-3">
+                            <label class="roh-build-analysis__checkbox">
+                                <input type="checkbox" @bind="replaceIdentical" />
+                                <span>Substituir arquivos identicos (mantem os mesmos arquivos mas atualiza o registro)</span>
+                            </label>
+
+                            <CoronaStack Direction="CoronaStackDirection.Row"
+                                         Align="CoronaStackAlign.Center"
+                                         Wrap="CoronaStackWrap.Wrap"
+                                         Spacing="1rem"
+                                         FullWidth="true">
+                                <CoronaButton Color="CoronaColorSemantic.Primary"
+                                              Variant="CoronaButtonVariant.Filled"
+                                              Disabled="@isConfirmingBuildUpload"
+                                              Loading="@isConfirmingBuildUpload"
+                                              OnClick="ConfirmBuildUpload">
+                                    Confirmar Upload
+                                </CoronaButton>
+
+                                <CoronaButton Color="CoronaColorSemantic.Neutral"
+                                              Variant="CoronaButtonVariant.Text"
+                                              OnClick="CancelBuildUpload">
+                                    Cancelar
+                                </CoronaButton>
+                            </CoronaStack>
+                        </div>
+
+                        @if (isConfirmingBuildUpload)
+                        {
+                            <div class="row mt-3">
+                                <div class="col-sm-12">
+                                    <MudProgressLinear Color="Color.Primary" Indeterminate="true" />
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </EditForm>
+        </CardComponent>
     }
 </AuthorizeComponent>
 
@@ -434,6 +614,130 @@
         ".resource",
         ".ress"
     };
+
+    private const long MaxBuildZipSize = 5000000000;
+
+    private IBrowserFile? selectedBuildZip = null;
+    private BuildUploadAnalysis? buildAnalysis = null;
+    private bool isAnalyzingBuild = false;
+    private bool isConfirmingBuildUpload = false;
+    private bool replaceIdentical = false;
+
+    private Task HandleZipFileSelected(IBrowserFile file)
+    {
+        selectedBuildZip = file;
+        buildAnalysis = null;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    private async Task AnalyzeBuildZip()
+    {
+        if (selectedBuildZip is null || !Guid.TryParse(versionGuid, out Guid guid))
+            return;
+
+        try
+        {
+            isAnalyzingBuild = true;
+            buildAnalysis = null;
+            StateHasChanged();
+
+            using Stream stream = selectedBuildZip.OpenReadStream(MaxBuildZipSize);
+
+            DefaultResponse? response = await _versionFileService.UploadBuildZipAsync(
+                stream, selectedBuildZip.Name, guid);
+
+            if (response is not null && response.HttpStatus.IsSuccessStatusCode() && response.ObjectResponse is not null)
+            {
+                buildAnalysis = response.ResponseToModel<BuildUploadAnalysis>();
+                if (buildAnalysis is null)
+                    await _sweetAlert.Show("Erro", "Nao foi possivel interpretar o resultado da analise.", RohAlertType.Error);
+            }
+            else
+            {
+                await _sweetAlert.ShowResponse(response ?? new DefaultResponse(
+                    httpStatus: System.Net.HttpStatusCode.BadRequest, message: "Resposta vazia do servidor."));
+            }
+        }
+        catch (Exception ex)
+        {
+            await _sweetAlert.Show("Erro", $"Falha ao analisar build: {ex.Message}", RohAlertType.Error);
+        }
+        finally
+        {
+            isAnalyzingBuild = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task ConfirmBuildUpload()
+    {
+        if (buildAnalysis is null)
+            return;
+
+        try
+        {
+            isConfirmingBuildUpload = true;
+            StateHasChanged();
+
+            DefaultResponse? response = await _versionFileService.ConfirmBuildUploadAsync(
+                new BuildUploadConfirmation
+                {
+                    AnalysisId = buildAnalysis.AnalysisId,
+                    ReplaceIdentical = replaceIdentical
+                });
+
+            if (response is not null && response.HttpStatus.IsSuccessStatusCode() && response.ObjectResponse is not null)
+            {
+                BuildUploadResult? result = response.ResponseToModel<BuildUploadResult>();
+                if (result is not null)
+                {
+                    string message = $"Upload concluido! Adicionados: {result.Added}, Atualizados: {result.Updated}, Pulos: {result.Skipped}, Desativados: {result.Deactivated}.";
+
+                    if (result.Errors.Count > 0)
+                        message += $" Erros: {string.Join("; ", result.Errors)}";
+
+                    await _sweetAlert.Show(
+                        result.Success ? "Sucesso" : "Upload com erros",
+                        message,
+                        result.Success ? RohAlertType.Success : RohAlertType.Warning);
+
+                    if (result.Success)
+                    {
+                        buildAnalysis = null;
+                        selectedBuildZip = null;
+                        filesListRefreshKey++;
+                    }
+                }
+                else
+                {
+                    await _sweetAlert.Show("Erro", "Nao foi possivel interpretar o resultado do upload.", RohAlertType.Error);
+                }
+            }
+            else
+            {
+                await _sweetAlert.ShowResponse(response ?? new DefaultResponse(
+                    httpStatus: System.Net.HttpStatusCode.BadRequest, message: "Resposta vazia do servidor."));
+            }
+        }
+        catch (Exception ex)
+        {
+            await _sweetAlert.Show("Erro", $"Falha ao confirmar upload: {ex.Message}", RohAlertType.Error);
+        }
+        finally
+        {
+            isConfirmingBuildUpload = false;
+            StateHasChanged();
+        }
+    }
+
+    private Task CancelBuildUpload()
+    {
+        buildAnalysis = null;
+        selectedBuildZip = null;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
 
     protected override async Task OnInitializedAsync()
     {

@@ -169,4 +169,30 @@ public class GameFileService(IGameFileRepository gameFileRepository, IExceptionH
             _ = exceptionHandler.HandleException(ex);
         }
     }
+
+    public async Task UpdateFileContentAsync(GameFile file, byte[] content, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            string filePath = GetSafeFilePath(file);
+            string? targetDirectory = Path.GetDirectoryName(filePath);
+
+            if (!string.IsNullOrWhiteSpace(targetDirectory) && !Directory.Exists(targetDirectory))
+                _ = Directory.CreateDirectory(targetDirectory);
+
+            if (System.IO.File.Exists(filePath))
+                System.IO.File.Delete(filePath);
+
+            using (FileStream fs = System.IO.File.Create(filePath))
+            {
+                await fs.WriteAsync(content.AsMemory(), CancellationToken.None).ConfigureAwait(true);
+            }
+
+            await gameFileRepository.UpdateFileAsync(file, cancellationToken).ConfigureAwait(true);
+        }
+        catch (System.Exception ex)
+        {
+            _ = exceptionHandler.HandleException(ex);
+        }
+    }
 }
