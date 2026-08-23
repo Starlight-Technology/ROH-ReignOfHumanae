@@ -4,13 +4,15 @@
 
 @if (_visible && _alert is not null)
 {
-    <div class="launcher-alert @GetAlertClass()" role="alert" aria-live="assertive">
-        <div class="alert-icon">@GetAlertIcon()</div>
-        <div class="alert-body">
-            <strong>@_alert.Title</strong>
-            <span>@_alert.Message</span>
+    <div class="corona-alert-toast alert-@GetAlertType()" role="alert" aria-live="assertive">
+        <div class="corona-alert-content">
+            <div class="corona-alert-icon">@GetAlertIcon()</div>
+            <div class="corona-alert-body">
+                <strong class="corona-alert-title">@_alert.Title</strong>
+                <span class="corona-alert-message">@_alert.Message</span>
+            </div>
+            <button type="button" class="corona-alert-close" aria-label="Fechar alerta" @onclick="Close">×</button>
         </div>
-        <button type="button" class="alert-close" aria-label="Fechar alerta" @onclick="Close">x</button>
     </div>
 }
 
@@ -38,9 +40,9 @@
         InvokeAsync(StateHasChanged);
     }
 
-    string GetAlertClass() => _alert?.Kind == AlertKind.Error ? "alert-error" : "alert-success";
+    string GetAlertType() => _alert?.Kind == AlertKind.Error ? "error" : "success";
 
-    string GetAlertIcon() => _alert?.Kind == AlertKind.Error ? "!" : "OK";
+    string GetAlertIcon() => _alert?.Kind == AlertKind.Error ? "⚠" : "✓";
 
     void OnAlert(LauncherAlert alert)
     {

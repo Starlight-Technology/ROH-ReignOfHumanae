@@ -2,30 +2,30 @@
 @implements IDisposable
 @inject ROH.Launcher.Services.LauncherState LauncherState
 
-<div class="page">
-    <aside class="sidebar">
+<CoronaLayoutShell>
+    <SidebarContent>
         <NavMenu />
-    </aside>
+    </SidebarContent>
 
-    <main>
-        <header class="top-row">
-            <div class="top-status">
+    <MainContent>
+        <header class="launcher-header">
+            <div class="launcher-status">
                 <span class="status-dot @(LauncherState.IsUpdating ? "status-busy" : LauncherState.IsReadyToPlay ? "status-ready" : "status-warn")"></span>
-                <span>@LauncherState.StatusMessage</span>
+                <span class="status-message">@LauncherState.StatusMessage</span>
             </div>
-            <div class="top-account">
+            <div class="launcher-account">
                 @(LauncherState.IsLoggedIn ? LauncherState.Username : "Offline")
             </div>
         </header>
 
-        <article class="content">
+        <article class="launcher-content">
             @Body
         </article>
 
         <AlertToast />
         <ConfirmDialog />
-    </main>
-</div>
+    </MainContent>
+</CoronaLayoutShell>
 
 @code {
     protected override void OnInitialized()

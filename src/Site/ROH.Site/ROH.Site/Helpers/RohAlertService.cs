@@ -38,7 +38,14 @@ public class RohAlertService(IDialogService dialog,
         else if (response.HttpStatus == System.Net.HttpStatusCode.Unauthorized)
         {
             type = RohAlertType.Warning;
-            await _authenticationStateProvider.MarkUserAsLoggedOut().ConfigureAwait(false);
+            try
+            {
+                await _authenticationStateProvider.MarkUserAsLoggedOut().ConfigureAwait(false);
+            }
+            catch (InvalidOperationException)
+            {
+                // JS interop not available (e.g., during prerendering), ignore
+            }
             _navigation.NavigateTo("/login");
         }
         else if (response.HttpStatus.IsClientErrorStatusCode() || response.HttpStatus.IsServerErrorStatusCode())

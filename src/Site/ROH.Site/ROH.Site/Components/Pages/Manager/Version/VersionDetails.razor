@@ -124,7 +124,7 @@
         </CardComponent>
 
         <CardComponent Header="@_loc["Upload.UploadFile"]">
-            <EditForm Model="gameVersionFile" style="margin:20px">
+            <div style="margin:20px">
                 <div class="roh-upload-folder-bar">
                     <MudSelect T="string"
                                Label="@_loc["Upload.UpdateTarget"]"
@@ -284,7 +284,7 @@
                         }
                     </div>
                 }
-            </EditForm>
+            </div>
 
             @if (isUploading)
             {
@@ -307,7 +307,7 @@
         </CardComponent>
 
         <CardComponent Header="Build Upload for ZIP">
-            <EditForm style="margin:20px">
+            <div style="margin:20px">
                 <p class="mb-3 text-muted">
                     Selecione um arquivo .zip contendo os arquivos do build. O sistema vai analisar o conteudo
                     comparando com os arquivos ja existentes e mostrar o que sera adicionado, atualizado ou removido.
@@ -360,6 +360,18 @@
                 {
                     <div class="roh-build-analysis mt-3">
                         <h4>Resultado da Analise</h4>
+
+                        @{
+                            var structureInfo = DetectBuildStructure(buildAnalysis);
+                        }
+
+                        @if (!string.IsNullOrEmpty(structureInfo.hint))
+                        {
+                            <div class="alert alert-info mt-2 mb-3">
+                                <strong>Dica de estrutura detectada:</strong>
+                                <p>@structureInfo.hint</p>
+                            </div>
+                        }
 
                         <CoronaStack Direction="CoronaStackDirection.Row"
                                      Align="CoronaStackAlign.Center"
@@ -483,7 +495,7 @@
                         }
                     </div>
                 }
-            </EditForm>
+            </div>
         </CardComponent>
     }
 </AuthorizeComponent>
@@ -741,7 +753,15 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await GetVersionByGuid();
+        // Initialization moved to OnAfterRenderAsync to ensure CustomAuthStateProvider.Initialize() has run
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await GetVersionByGuid();
+        }
     }
 
     private async Task GetVersionByGuid()
@@ -1184,5 +1204,51 @@
         public string Status { get; set; } = "Ready";
 
         public string? Message { get; set; }
+    }
+
+    private (string hint, bool isCorrectStructure) DetectBuildStructure(BuildUploadAnalysis analysis)
+    {
+        if (analysis == null || !analysis.NewFiles.Any() && !analysis.UpdatedFiles.Any())
+            return (string.Empty, false);
+
+        var allFiles = analysis.NewFiles.Concat(analysis.UpdatedFiles).ToList();
+
+        // Detect executables and DLLs at root level (Game Root)
+        bool hasRootExecutables = allFiles.Any(f => 
+            f.RelativePath.IndexOf('/') < 0 && 
+            (f.Format == ".exe" || f.Format == ".dll"));
+
+        // Detect IL2CPP GameAssembly.dll (sign of IL2CPP build)
+        bool hasGameAssembly = allFiles.Any(f => 
+            f.RelativePath.EndsWith("GameAssembly.dll", StringComparison.OrdinalIgnoreCase));
+
+        // Detect Unity data files
+        bool hasUnityData = allFiles.Any(f => 
+            f.RelativePath.StartsWith(UnityDataFolder, StringComparison.OrdinalIgnoreCase));
+
+        // Detect Addressables bundles
+        bool hasAddressables = allFiles.Any(f => 
+            f.RelativePath.Contains("StreamingAssets/aa", StringComparison.OrdinalIgnoreCase) &&
+            (f.Format == ".bundle" || f.Format == ".hash" || f.Format == ".json"));
+
+        // Generate hints based on detected structure
+        if (hasRootExecutables && hasGameAssembly && !hasUnityData)
+        {
+            return ("Detectado: Build root (IL2CPP). Contém executável e GameAssembly.dll. Confirme se nao inclui arquivos da pasta ReignOfHumanae_Data.", true);
+        }
+        else if (hasUnityData && !hasRootExecutables)
+        {
+            return ("Detectado: Arquivos de dados Unity (ReignOfHumanae_Data). Estrutura parece correta para essa categoria.", true);
+        }
+        else if (hasAddressables)
+        {
+            return ("Detectado: Bundles Addressables (StandaloneWindows64). Confirme se catalog.json e .hash estao juntos.", true);
+        }
+        else if (hasRootExecutables && hasUnityData)
+        {
+            return ("Aviso: ZIP contém tanto executáveis quanto arquivos de ReignOfHumanae_Data. Considere separar em uploads diferentes (um para root, outro para data).", false);
+        }
+
+        return (string.Empty, true);
     }
 }

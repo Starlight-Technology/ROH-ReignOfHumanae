@@ -6,28 +6,12 @@
     </div>
 </div>
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
-
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="nav flex-column">
-        <div class="nav-section">Principal</div>
-        <div class="nav-item">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="nav-icon">P</span>
-                <span>Jogar</span>
-            </NavLink>
-        </div>
-        <div class="nav-item">
-            <NavLink class="nav-link" href="login">
-                <span class="nav-icon">L</span>
-                <span>Login</span>
-            </NavLink>
-        </div>
-        <div class="nav-item">
-            <NavLink class="nav-link" href="settings">
-                <span class="nav-icon">S</span>
-                <span>Configuracoes</span>
-            </NavLink>
-        </div>
-    </nav>
-</div>
+<CoronaNavMenu>
+    <CoronaNavMenuItems>
+        <CoronaNavMenuItemGroup Title="Principal">
+            <CoronaNavMenuItem Href="" Match="NavLinkMatch.All" Icon="🎮" Label="Jogar" />
+            <CoronaNavMenuItem Href="login" Icon="🔐" Label="Login" />
+            <CoronaNavMenuItem Href="settings" Icon="⚙️" Label="Configurações" />
+        </CoronaNavMenuItemGroup>
+    </CoronaNavMenuItems>
+</CoronaNavMenu>

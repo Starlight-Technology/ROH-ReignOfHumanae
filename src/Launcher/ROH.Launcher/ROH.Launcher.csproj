@@ -86,4 +86,12 @@
         <ProjectReference Include="..\..\Common\ROH.StandardModels\ROH.StandardModels.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\Corona\Corona\Corona.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Theming\" />
+    </ItemGroup>
+
 </Project>

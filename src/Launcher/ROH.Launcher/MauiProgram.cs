@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 
 using ROH.Launcher.Services;
+using Corona.Theming;
 
 namespace ROH.Launcher;
 
@@ -37,6 +38,27 @@ public static class MauiProgram
         builder.Services.AddHttpClient("GatewayClient");
         builder.Services.AddSingleton<ApiHelper>();
         builder.Services.AddSingleton<UpdaterService>();
+
+        // Corona theming with ROH brand colors (dark theme with gold accents)
+        builder.Services.AddCoronaTheming(
+            CoronaThemes.Dark(
+                new CoronaThemeOverrides(
+                    Semantic: new CoronaSemanticTokenOverrides(
+                        ColorPrimary: "#c9a24d",
+                        SurfaceBackground: "#0b0f14",
+                        SurfaceBackgroundAlt: "#10162a",
+                        CardBackground: "#161a32",
+                        TextPrimary: "#e6d3a1",
+                        TextSecondary: "#d8caa8",
+                        BorderDefault: "rgba(201, 162, 77, 0.32)",
+                        FocusOutline: "rgba(201, 162, 77, 0.18)",
+                        ElevationCard: "0 14px 32px rgba(0, 0, 0, 0.62), inset 0 0 24px rgba(201, 162, 77, 0.05)",
+                        RadiusCard: "12px",
+                        SpacingCard: "1.25rem",
+                        SpacingCardHeader: "1.25rem",
+                        FontFamilyDefault: "Inter, system-ui, sans-serif",
+                        FontSizeHeading: "1rem",
+                        FontWeightHeading: "600"))));
 
 #if DEBUG
         builder.Services.AddBlazorWebViewDeveloperTools();

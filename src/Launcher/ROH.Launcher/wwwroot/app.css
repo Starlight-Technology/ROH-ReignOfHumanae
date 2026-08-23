@@ -113,6 +113,43 @@ input {
     padding: 1.4rem;
 }
 
+.launcher-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.4rem;
+    background: rgba(33, 31, 27, 0.48);
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 1rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.launcher-status {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: var(--muted);
+}
+
+.status-message {
+    font-size: 0.95rem;
+}
+
+.launcher-account {
+    padding: 0.5rem 1rem;
+    background: rgba(201, 162, 77, 0.1);
+    border: 1px solid rgba(201, 162, 77, 0.3);
+    border-radius: 6px;
+    color: var(--gold);
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.launcher-content {
+    padding: 0 1.4rem 1.4rem;
+}
+
 .eyebrow {
     color: var(--gold-strong);
     font-size: 0.78rem;
@@ -601,5 +638,102 @@ input {
     .launcher-alert {
         bottom: 0.75rem;
         right: 0.75rem;
+    }
+}
+
+/* Corona Alert Toast Styles */
+.corona-alert-toast {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    position: fixed;
+    bottom: 1.25rem;
+    right: 1.25rem;
+    z-index: 2100;
+    max-width: min(440px, calc(100vw - 2rem));
+    animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.corona-alert-toast.alert-success {
+    background-color: rgba(86, 180, 122, 0.15);
+    border: 1px solid rgba(86, 180, 122, 0.4);
+    color: var(--green);
+}
+
+.corona-alert-toast.alert-error {
+    background-color: rgba(157, 47, 48, 0.15);
+    border: 1px solid rgba(157, 47, 48, 0.4);
+    color: var(--red);
+}
+
+.corona-alert-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.corona-alert-icon {
+    font-size: 1.25rem;
+    font-weight: bold;
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+}
+
+.corona-alert-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
+}
+
+.corona-alert-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.corona-alert-message {
+    font-size: 0.875rem;
+    opacity: 0.9;
+}
+
+.corona-alert-close {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.corona-alert-close:hover {
+    opacity: 1;
+}
+
+@media (max-width: 640px) {
+    .corona-alert-toast {
+        bottom: 0.75rem;
+        right: 0.75rem;
+        left: 0.75rem;
+        max-width: none;
     }
 }

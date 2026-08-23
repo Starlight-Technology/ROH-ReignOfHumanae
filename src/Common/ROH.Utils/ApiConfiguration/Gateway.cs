@@ -263,6 +263,10 @@ namespace ROH.Utils.ApiConfiguration
                 if (!string.IsNullOrWhiteSpace(token))
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
+                var fileContent = new StreamContent(fileStream);
+                fileContent.Headers.ContentType = new MediaTypeHeaderValue("application/zip");
+                fileContent.Headers.ContentLength = fileStream.Length;
+
                 using MultipartFormDataContent content = new MultipartFormDataContent();
                 content.Add(new StreamContent(fileStream), "file", fileName);
                 content.Add(new StringContent(versionGuid), "versionGuid");

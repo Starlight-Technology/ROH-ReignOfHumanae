@@ -72,7 +72,11 @@ public class CustomAuthenticationStateProvider(ILocalStorageService localStorage
         //await Task.FromResult(new AuthenticationState(authenticatedUser));
     }
 
-    public async Task MarkUserAsLoggedOut() => await localStorage.RemoveItemAsync("authToken").ConfigureAwait(false);//ClaimsPrincipal anonymousUser = new(new ClaimsIdentity());//await Task.FromResult(new AuthenticationState(anonymousUser));
+    public async Task MarkUserAsLoggedOut()
+    {
+        if (!_isInitialized) return;
+        await localStorage.RemoveItemAsync("authToken").ConfigureAwait(false);
+    }
 
     public async Task SetUserToken(string user = "", string token = "")
     {
