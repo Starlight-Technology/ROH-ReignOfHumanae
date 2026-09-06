@@ -1,0 +1,70 @@
+@implements IDisposable
+@using ROH.Launcher.Services
+@inject AlertService AlertService
+
+@if (_visible && _alert is not null)
+{
+    <div class="corona-alert-toast alert-@GetAlertType()" role="alert" aria-live="assertive">
+        <div class="corona-alert-content">
+            <div class="corona-alert-icon">@GetAlertIcon()</div>
+            <div class="corona-alert-body">
+                <strong class="corona-alert-title">@_alert.Title</strong>
+                <span class="corona-alert-message">@_alert.Message</span>
+            </div>
+            <button type="button" class="corona-alert-close" aria-label="Fechar alerta" @onclick="Close">×</button>
+        </div>
+    </div>
+}
+
+@code {
+    LauncherAlert? _alert;
+    CancellationTokenSource? _autoCloseCts;
+    bool _visible;
+
+    protected override void OnInitialized()
+    {
+        AlertService.OnAlert += OnAlert;
+    }
+
+    public void Dispose()
+    {
+        AlertService.OnAlert -= OnAlert;
+        _autoCloseCts?.Cancel();
+        _autoCloseCts?.Dispose();
+    }
+
+    void Close()
+    {
+        _autoCloseCts?.Cancel();
+        _visible = false;
+        InvokeAsync(StateHasChanged);
+    }
+
+    string GetAlertType() => _alert?.Kind == AlertKind.Error ? "error" : "success";
+
+    string GetAlertIcon() => _alert?.Kind == AlertKind.Error ? "⚠" : "✓";
+
+    void OnAlert(LauncherAlert alert)
+    {
+        _alert = alert;
+        _visible = true;
+        _autoCloseCts?.Cancel();
+        _autoCloseCts?.Dispose();
+        _autoCloseCts = new CancellationTokenSource();
+        _ = AutoCloseAsync(_autoCloseCts.Token);
+        InvokeAsync(StateHasChanged);
+    }
+
+    async Task AutoCloseAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
+            _visible = false;
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (OperationCanceledException)
+        {
+        }
+    }
+}

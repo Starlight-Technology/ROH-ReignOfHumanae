@@ -1,8 +1,7 @@
-﻿@namespace Manager.Version.Components
+@namespace Manager.Version.Components
 @using Newtonsoft.Json;
 @using Newtonsoft.Json.Linq;
 @using ROH.Site.Components.Custom
-@using ROH.Site.Helpers.Extensions
 @using ROH.Site.Interfaces.Api
 @using ROH.Site.Interfaces.Helpers
 @using ROH.StandardModels.Paginator;
@@ -12,25 +11,42 @@
 
 @inject IVersionService _versionService;
 @inject IRohAlertService _sweetAlert;
+@inject NavigationManager Navigation;
+@inject IStringLocalizer<SharedResource> _loc
 
-<CardComponent Header="Versions">
-    <div class="row">
-        <div class="col-sm-12">
-            <MudSelect T="string"
-                       Label="Version Type"
-                       Variant="Variant.Outlined"
-                       Class="roh-field"
-                       @bind-Value="selectedVersionType">
+<CardComponent Header="@_loc["Version.Versions"]">
+    <div class="roh-version-filters">
+        <MudSelect T="string"
+                   Label="@_loc["Version.VersionType"]"
+                   Variant="Variant.Outlined"
+                   Class="roh-field"
+                   Value="@selectedVersionType"
+                   ValueChanged="OnVersionTypeChanged">
 
-                @foreach (var type in versionTypes)
-                {
-                    <MudSelectItem Value="@type">
-                        @type
-                    </MudSelectItem>
-                }
+            @foreach (var type in versionTypes)
+            {
+                <MudSelectItem Value="@type">
+                    @_loc[type]
+                </MudSelectItem>
+            }
 
-            </MudSelect>
-        </div>
+        </MudSelect>
+
+        <CoronaInput Label="@_loc["Shared.Search"]"
+                     Placeholder="v1.2.3"
+                     @bind-Value="searchText" />
+
+        <CoronaInput Label="@_loc["Version.VersionDate"]"
+                     Type="date"
+                     @bind-Value="versionDateFilter" />
+
+        <CoronaButton Color="CoronaColorSemantic.Neutral"
+                      Variant="CoronaButtonVariant.Outlined"
+                      TextColor="#e6d3a1"
+                      BorderColor="rgba(201, 162, 77, 0.45)"
+                      OnClick="ClearFilters">
+            @_loc["Shared.Clear"]
+        </CoronaButton>
     </div>
 
     @if (isLoadingCurrentVersion)
@@ -42,41 +58,105 @@
         </div>
     }
 
+    else if (FilteredVersions.Any())
+    {
+        <MudPaper Class="roh-table-container" Elevation="3">
+            <MudTable T="GameVersionModel"
+                      Dense
+                      Hover
+                      Items="@FilteredVersions">
+
+                <HeaderContent>
+                    <MudTh>@_loc["Shared.Version"]</MudTh>
+                    <MudTh>@_loc["Shared.Release"]</MudTh>
+                    <MudTh>@_loc["Shared.Review"]</MudTh>
+                    <MudTh>@_loc["Version.VersionDate"]</MudTh>
+                    <MudTh>@_loc["Shared.ReleaseDate"]</MudTh>
+                    <MudTh>@_loc["Shared.Status"]</MudTh>
+                    <MudTh />
+                </HeaderContent>
+
+                <RowTemplate Context="version">
+                    <MudTd>
+                        <CoronaBadge Content="@GetVersionLabel(version)"
+                                     Variant="CoronaBadgeVariant.Soft" />
+                    </MudTd>
+                    <MudTd>@version.Release</MudTd>
+                    <MudTd>@version.Review</MudTd>
+                    <MudTd>@FormatDate(version.VersionDate)</MudTd>
+                    <MudTd>@FormatDate(version.ReleaseDate)</MudTd>
+                    <MudTd>
+                        <CoronaBadge Content="@(version.Released ? _loc["Version.Released"] : _loc["Version.Review"])"
+                                     Color="@(version.Released ? CoronaColorSemantic.Success : CoronaColorSemantic.Warning)"
+                                     Variant="CoronaBadgeVariant.Outlined" />
+                    </MudTd>
+                    <MudTd>
+                        <MudIconButton Icon="@Icons.Material.Filled.Visibility"
+                                       Color="Color.Primary"
+                                       OnClick="@(() => NavigateToDetails(version.Guid))" />
+                    </MudTd>
+                </RowTemplate>
+
+            </MudTable>
+
+            <CoronaStack Direction="CoronaStackDirection.Row"
+                         Justify="CoronaStackJustify.SpaceBetween"
+                         Wrap="CoronaStackWrap.Wrap"
+                         Spacing=".75rem"
+                         Class="roh-pagination-actions">
+
+                <CoronaButton Variant="CoronaButtonVariant.Outlined"
+                              Disabled="@IsFirstPage"
+                              OnClick="@PreviousPage">
+                    @_loc["Shared.Previous"]
+                </CoronaButton>
+
+                <span class="roh-pagination-page">@_loc["Version.Page"] @CurrentPage @_loc["Version.Of"] @Math.Max(TotalPages, 1)</span>
+
+                <CoronaButton Variant="CoronaButtonVariant.Outlined"
+                              Disabled="@IsLastPage"
+                              OnClick="@NextPage">
+                    @_loc["Shared.Next"]
+                </CoronaButton>
+
+            </CoronaStack>
+        </MudPaper>
+    }
     else
     {
-        <PaginatedListComponent IsFirstPage="@IsFirstPage"
-                                IsLastPage="@IsLastPage"
-                                Items="@PagedGameVersions?.ToListModel()"
-                                NextPage="@NextPage"
-                                PreviousPage="@PreviousPage"
-                                T="@GameVersionListModel" />
+        <div class="roh-empty-state">@_loc["Version.NoVersionsMatch"]</div>
     }
 
 </CardComponent>
 
 @code {
-    private readonly List<string> versionTypes = new List<string>()
+    private readonly List<string> versionTypes = new()
     {
-        "All Versions",
-        "Released Versions"
+        "Version.AllVersions",
+        "Version.ReleasedVersions"
     };
 
-    private string selectedVersionType = "All Versions";
+    private string selectedVersionType = "Version.AllVersions";
+    private string searchText = string.Empty;
+    private string versionDateFilter = string.Empty;
     private bool isLoadingCurrentVersion = true;
-    private List<GameVersionModel>? PagedGameVersions = new List<GameVersionModel>();
-    private int? TotalPages = 0;
+    private List<GameVersionModel>? PagedGameVersions = new();
+    private int TotalPages = 0;
     private readonly int PageSize = 10;
     private int CurrentPage = 1;
     private bool IsFirstPage => CurrentPage == 1;
-    private bool IsLastPage => (CurrentPage * PageSize) >= TotalPages;
+    private bool IsLastPage => CurrentPage >= Math.Max(TotalPages, 1);
     private DefaultResponse? apiResponse = null;
+    private IEnumerable<GameVersionModel> FilteredVersions => (PagedGameVersions ?? [])
+        .Where(MatchesSearch)
+        .Where(MatchesDate);
 
     private async Task PreviousPage()
     {
         if (!IsFirstPage)
         {
             CurrentPage--;
-            await GetAllVersion(page: CurrentPage);
+            await GetAllVersion(page: CurrentPage, take: PageSize);
         }
     }
 
@@ -85,23 +165,28 @@
         if (!IsLastPage)
         {
             CurrentPage++;
-            await GetAllVersion(page: CurrentPage);
+            await GetAllVersion(page: CurrentPage, take: PageSize);
         }
     }
 
-    private async Task OnVersionTypeChange(ChangeEventArgs e)
+    private async Task OnVersionTypeChanged(string value)
     {
-        if (e.Value == null)
-            return;
+        selectedVersionType = value;
+        CurrentPage = 1;
+        await GetAllVersion(take: PageSize);
+    }
 
-        selectedVersionType = e.Value?.ToString() ?? "All Versions";
-        await GetAllVersion();
+    private Task ClearFilters()
+    {
+        searchText = string.Empty;
+        versionDateFilter = string.Empty;
+        return Task.CompletedTask;
     }
 
     protected override async void OnInitialized()
     {
         await base.OnInitializedAsync();
-        await GetAllVersion();
+        await GetAllVersion(take: PageSize);
     }
 
     private async Task GetAllVersion(int page = 1, int take = 10)
@@ -109,9 +194,9 @@
         isLoadingCurrentVersion = true;
         PagedGameVersions = new List<GameVersionModel>();
         apiResponse = null;
-        if (selectedVersionType == "All Versions")
+        if (selectedVersionType == "Version.AllVersions")
             apiResponse = await _versionService.GetAllVersionsPaginated(page, take);
-        else if (selectedVersionType == "Released Versions")
+        else if (selectedVersionType == "Version.ReleasedVersions")
             apiResponse = await _versionService.GetAllReleasedVersionsPaginated(page, take);
 
         if (apiResponse != null)
@@ -125,7 +210,7 @@
 
                 if (result != null)
                 {
-                    TotalPages = result.TotalPages;
+                    TotalPages = result.TotalPages ?? 0;
 
                     if (result.ObjectResponse != null)
                     {
@@ -149,4 +234,35 @@
         StateHasChanged();
 
     }
+
+    private bool MatchesSearch(GameVersionModel version)
+    {
+        if (string.IsNullOrWhiteSpace(searchText))
+            return true;
+
+        string query = searchText.Trim();
+        string versionLabel = GetVersionLabel(version);
+
+        return versionLabel.Contains(query, StringComparison.OrdinalIgnoreCase)
+            || version.Version.ToString().Contains(query, StringComparison.OrdinalIgnoreCase)
+            || version.Release.ToString().Contains(query, StringComparison.OrdinalIgnoreCase)
+            || version.Review.ToString().Contains(query, StringComparison.OrdinalIgnoreCase)
+            || FormatDate(version.VersionDate).Contains(query, StringComparison.OrdinalIgnoreCase)
+            || FormatDate(version.ReleaseDate).Contains(query, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private bool MatchesDate(GameVersionModel version)
+    {
+        if (string.IsNullOrWhiteSpace(versionDateFilter))
+            return true;
+
+        return DateTime.TryParse(versionDateFilter, out DateTime selectedDate)
+            && version.VersionDate.Date == selectedDate.Date;
+    }
+
+    private static string GetVersionLabel(GameVersionModel version) => $"v{version.Version}.{version.Release}.{version.Review}";
+
+    private static string FormatDate(DateTime? date) => date?.ToShortDateString() ?? "Pending";
+
+    private void NavigateToDetails(Guid guid) => Navigation.NavigateTo($"/Manager/Version/VersionDetails/{guid}");
 }

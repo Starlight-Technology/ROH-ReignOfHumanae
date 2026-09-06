@@ -8,8 +8,9 @@
 namespace ROH.Context.Version.Entities;
 
 /// <summary>
-/// Version is the version of the game, greater changes like something in history Release is for changes like events or
-/// new items Review is for fixes
+/// Version is the version of the game, greater changes like something in history 
+/// Release is for changes like events or new items
+/// Review is for fixes
 /// </summary>
 /// <param name="Id"></param>
 /// <param name="Guid"></param>

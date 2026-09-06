@@ -18,4 +18,8 @@ public interface IGameVersionFileService
     Task<DefaultResponse> GetFilesAsync(string versionGuid, CancellationToken cancellationToken = default);
 
     Task<DefaultResponse> NewFileAsync(GameVersionFileModel fileModel, CancellationToken cancellationToken = default);
+
+    Task<DefaultResponse> UploadBuildZipAsync(Stream zipStream, Guid versionGuid, CancellationToken cancellationToken = default);
+
+    Task<DefaultResponse> ConfirmBuildUploadAsync(BuildUploadConfirmation confirmation, CancellationToken cancellationToken = default);
 }

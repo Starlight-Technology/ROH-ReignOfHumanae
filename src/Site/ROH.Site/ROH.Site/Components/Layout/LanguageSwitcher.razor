@@ -1,0 +1,39 @@
+@rendermode InteractiveServer
+@using MudBlazor
+@using Microsoft.Extensions.Localization
+@using ROH.Site.Services
+@using ROH.Site.Resources
+@inject LanguageService LanguageService
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+@inject IStringLocalizer<SharedResource> _loc
+
+<MudIconButton Icon="@Icons.Material.Filled.Language"
+               Color="Color.Primary"
+               OnClick="@(e => _menuOpen = !_menuOpen)" />
+
+<MudMenu Open="@_menuOpen" Class="roh-lang-menu"
+         AnchorOrigin="@Origin.BottomCenter" TransformOrigin="@Origin.TopCenter">
+    <MudMenuItem OnClick="@(() => SetLanguage("en"))">@_loc["Lang.En"]</MudMenuItem>
+    <MudMenuItem OnClick="@(() => SetLanguage("pt"))">@_loc["Lang.Pt"]</MudMenuItem>
+    <MudMenuItem OnClick="@(() => SetLanguage("es"))">@_loc["Lang.Es"]</MudMenuItem>
+    <MudMenuItem OnClick="@(() => SetLanguage("fr"))">@_loc["Lang.Fr"]</MudMenuItem>
+    <MudMenuItem OnClick="@(() => SetLanguage("de"))">@_loc["Lang.De"]</MudMenuItem>
+    <MudMenuItem OnClick="@(() => SetLanguage("it"))">@_loc["Lang.It"]</MudMenuItem>
+    <MudMenuItem OnClick="@(() => SetLanguage("ja"))">@_loc["Lang.Ja"]</MudMenuItem>
+    <MudMenuItem OnClick="@(() => SetLanguage("ko"))">@_loc["Lang.Ko"]</MudMenuItem>
+    <MudMenuItem OnClick="@(() => SetLanguage("zh"))">@_loc["Lang.Zh"]</MudMenuItem>
+    <MudMenuItem OnClick="@(() => SetLanguage("ru"))">@_loc["Lang.Ru"]</MudMenuItem>
+</MudMenu>
+
+@code {
+    private bool _menuOpen;
+
+    private async Task SetLanguage(string culture)
+    {
+        await LanguageService.SetCurrentCultureAsync(culture);
+        await JS.InvokeVoidAsync("setCultureCookie", culture);
+        _menuOpen = false;
+        Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
+    }
+}

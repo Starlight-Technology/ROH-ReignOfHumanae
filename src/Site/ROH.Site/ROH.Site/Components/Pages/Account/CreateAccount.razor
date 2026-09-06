@@ -7,8 +7,9 @@
 @inject NavigationManager Navigation;
 @inject IAccountService _accountService;
 @inject IRohAlertService _sweetAlert;
+@inject IStringLocalizer<SharedResource> _loc;
 
-<CardComponent Header="Create Account">
+<CardComponent Header="@_loc["Account.CreateAccount"]">
     @if (isLoading)
     {
         <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center">
@@ -17,31 +18,28 @@
     }
     else
     {
-        <MudStack Spacing="2">
-            <MudTextField T="string"
-                          Label="Email"
-                          Variant="Variant.Outlined"
-                          @bind-Value="@EmailValue" />
-            <MudTextField T="string"
-                          Label="Username"
-                          Variant="Variant.Outlined"
-                          @bind-Value="@UsernameValue" />
-            <MudTextField T="string"
-                          Label="Password"
-                          Variant="Variant.Outlined"
-                          InputType="InputType.Password"
-                          @bind-Value="@PasswordValue" />
-            <MudTextField T="string"
-                          Label="Confirm Password"
-                          Variant="Variant.Outlined"
-                          InputType="InputType.Password"
-                          @bind-Value="@ConfirmPasswordValue" />
-            <MudButton Color="Color.Primary"
-                       Variant="Variant.Filled"
-                       OnClick="Confirm">
-                Create Account
-            </MudButton>
-        </MudStack>
+        <CoronaStack Spacing="1rem" FullWidth="true">
+            <CoronaInput Label="@_loc["Account.Email"]"
+                         Type="email"
+                         @bind-Value="@EmailValue" />
+
+            <CoronaInput Label="@_loc["Account.Username"]"
+                         @bind-Value="@UsernameValue" />
+
+            <CoronaInput Label="@_loc["Account.Password"]"
+                         Type="password"
+                         @bind-Value="@PasswordValue" />
+
+            <CoronaInput Label="@_loc["Account.ConfirmPassword"]"
+                         Type="password"
+                         @bind-Value="@ConfirmPasswordValue" />
+
+            <CoronaButton Color="CoronaColorSemantic.Primary"
+                          Variant="CoronaButtonVariant.Filled"
+                          OnClick="Confirm">
+                @_loc["Account.CreateAccount"]
+            </CoronaButton>
+        </CoronaStack>
     }
 </CardComponent>
 
@@ -76,7 +74,7 @@
         }
         else
         {
-            await _sweetAlert.Show("", "Passwords don't match!", RohAlertType.Error);
+            await _sweetAlert.Show("", _loc["Account.PasswordsDontMatch"], RohAlertType.Error);
         }
         isLoading = false;
         StateHasChanged();

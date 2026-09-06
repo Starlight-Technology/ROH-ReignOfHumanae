@@ -14,7 +14,7 @@ namespace ROH.Site.Api;
 
 public class VersionFileService(ICustomAuthenticationStateProvider customAuthenticationStateProvider) : IVersionFileService
 {
-    readonly Gateway _gateway = new();
+    private readonly Gateway _gateway = new();
 
     public async Task<DefaultResponse?> DownloadVersionFile(string FileGuid) => await _gateway.GetAsync(
         Gateway.Services.DownloadFile,
@@ -30,4 +30,18 @@ public class VersionFileService(ICustomAuthenticationStateProvider customAuthent
         Gateway.Services.UploadFile,
         Model,
         await customAuthenticationStateProvider.GetToken());
+
+    public async Task<DefaultResponse?> UploadBuildZipAsync(Stream zipStream, string fileName, Guid versionGuid) =>
+        await _gateway.PostFileAsync(
+            Gateway.Services.UploadBuildZip,
+            zipStream,
+            fileName,
+            versionGuid.ToString(),
+            await customAuthenticationStateProvider.GetToken());
+
+    public async Task<DefaultResponse?> ConfirmBuildUploadAsync(BuildUploadConfirmation confirmation) =>
+        await _gateway.PostAsync(
+            Gateway.Services.ConfirmBuildUpload,
+            confirmation,
+            await customAuthenticationStateProvider.GetToken());
 }

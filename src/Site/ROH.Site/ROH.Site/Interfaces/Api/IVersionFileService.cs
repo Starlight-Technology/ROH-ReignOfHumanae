@@ -16,4 +16,8 @@ public interface IVersionFileService
     Task<DefaultResponse?> GetAllVersionFiles(string VersionGuid);
 
     Task<DefaultResponse?> UploadVersionFile(GameVersionFileModel Model);
+
+    Task<DefaultResponse?> UploadBuildZipAsync(Stream zipStream, string fileName, Guid versionGuid);
+
+    Task<DefaultResponse?> ConfirmBuildUploadAsync(BuildUploadConfirmation confirmation);
 }

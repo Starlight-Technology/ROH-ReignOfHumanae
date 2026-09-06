@@ -12,12 +12,18 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 
+using ROH.Context.Player;
+using ROH.Context.Player.Interface;
+using ROH.Context.Player.Mongo;
+using ROH.Context.Player.Mongo.Interface;
+using ROH.Context.Player.Mongo.Repository;
+using ROH.Context.Player.Repository;
+using ROH.Gateway.Realtime;
 using ROH.Service.Exception;
 using ROH.Service.Exception.Communication;
 using ROH.Service.Exception.Interface;
 using ROH.Service.Player.WebSocket.Interface;
 using ROH.Service.Player.WebSocket.State;
-using ROH.Service.WebSocket;
 
 using System.Text;
 
@@ -51,6 +57,10 @@ builder.Services
             });
 
 builder.Services.AddAuthorization();
+builder.Services
+    .AddOptions<RealtimeOptions>()
+    .Bind(builder.Configuration.GetSection("Realtime"))
+    .PostConfigure(options => options.ApplySafeDefaults());
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -63,14 +73,14 @@ builder.Services
             c.AddSecurityDefinition(
                 "Bearer",
                 new OpenApiSecurityScheme
-                    {
-                        Description =
+                {
+                    Description =
                             "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                        Name = "Authorization",
-                        In = ParameterLocation.Header,
-                        Type = SecuritySchemeType.ApiKey,
-                        Scheme = "Bearer"
-                    });
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
         });
 
 // Configure Kestrel to listen on a specific port
@@ -101,7 +111,35 @@ builder.Services
     .AddSingleton<ROH.Gateway.Controllers.Websocket.IRealtimeConnectionManager, ROH.Gateway.Controllers.Websocket.RealtimeConnectionManager>(
         );
 
-builder.Services.AddSingleton<IPlayerPositionServiceSocket, PlayerPositionServiceSocket>();
+builder.Services.AddScoped<IPlayerContext, PlayerContext>();
+builder.Services.AddScoped<ICharacterRepository, CharacterRepository>();
+builder.Services.AddScoped<
+    ROH.Context.Player.Interface.IPositionRepository,
+    ROH.Context.Player.Repository.PositionRepository>();
+
+builder.Services.AddSingleton<IPlayerMongoContext, PlayerMongoContext>();
+builder.Services
+    .AddSingleton<
+        ROH.Context.Player.Mongo.Interface.IPositionRepository,
+        ROH.Context.Player.Mongo.Repository.PositionRepository>();
+builder.Services.AddSingleton<IChatRepository, ChatRepository>();
+builder.Services.AddSingleton<IMongoIndexInitializer, MongoIndexInitializer>();
+
+builder.Services.AddSingleton<IRealtimeIdentityService, RealtimeIdentityService>();
+builder.Services.AddSingleton<IRealtimeSessionRegistry, RealtimeSessionRegistry>();
+builder.Services.AddSingleton<IGlobalChatService, GlobalChatService>();
+
+builder.Services.AddSingleton<IPlayerPositionServiceSocket>(
+    serviceProvider =>
+    {
+        RealtimeOptions options = serviceProvider
+            .GetRequiredService<Microsoft.Extensions.Options.IOptions<RealtimeOptions>>()
+            .Value;
+        return new PlayerPositionServiceSocket(TimeSpan.FromSeconds(options.PlayerPositionSaveIntervalSeconds));
+    });
+
+builder.Services.AddHostedService<MongoIndexHostedService>();
+builder.Services.AddHostedService<ChatCleanupService>();
 
 WebApplication app = builder.Build();
 

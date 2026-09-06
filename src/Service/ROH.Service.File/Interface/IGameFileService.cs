@@ -16,4 +16,8 @@ public interface IGameFileService
     Task<DefaultResponse> DownloadFileAsync(long id, CancellationToken cancellationToken = default);
 
     Task SaveFileAsync(GameFile file, byte[] content, CancellationToken cancellationToken = default);
+
+    Task UpdateFileContentAsync(GameFile file, byte[] content, CancellationToken cancellationToken = default);
+
+    Task<DefaultResponse> MakeFileHasDeprecatedAsync(Guid fileGuid, CancellationToken cancellationToken = default);
 }

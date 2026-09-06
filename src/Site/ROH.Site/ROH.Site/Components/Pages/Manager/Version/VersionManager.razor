@@ -4,24 +4,22 @@
 @using Api;
 @using ROH.Site.Components.Custom
 @using ROH.StandardModels.Version;
+@inject IStringLocalizer<SharedResource> _loc
 
 <AuthorizeComponent>
-    <div class="row">
-        <div class="col-sm-12">
-            <Manager.Version.Components.CurrentVersionComponent>
-            </Manager.Version.Components.CurrentVersionComponent>
-        </div>
-    </div>
+    <CardComponent Header="@_loc["Version.Manager"]">
+        <CoronaTabs Variant="CoronaTabsVariant.Segmented" LazyRender="true">
+            <CoronaTabItem Header="@_loc["Version.Current"]">
+                <Manager.Version.Components.CurrentVersionComponent />
+            </CoronaTabItem>
 
-    <div class="row">
-        <div class="col-sm-12">
-            <Manager.Version.Components.AllVersionsComponent></Manager.Version.Components.AllVersionsComponent>
-        </div>
-    </div>
+            <CoronaTabItem Header="@_loc["Version.Versions"]">
+                <Manager.Version.Components.AllVersionsComponent />
+            </CoronaTabItem>
 
-    <div class="row">
-        <div class="col-sm-12">
-            <Manager.Version.Components.NewVersionComponent></Manager.Version.Components.NewVersionComponent>
-        </div>
-    </div>
+            <CoronaTabItem Header="@_loc["Version.NewVersion"]">
+                <Manager.Version.Components.NewVersionComponent />
+            </CoronaTabItem>
+        </CoronaTabs>
+    </CardComponent>
 </AuthorizeComponent>

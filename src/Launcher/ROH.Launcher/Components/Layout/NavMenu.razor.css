@@ -1,0 +1,139 @@
+.nav-brand {
+    align-items: center;
+    display: flex;
+    gap: 0.8rem;
+    min-height: 4rem;
+    padding: 0 1rem;
+}
+
+.brand-mark {
+    align-items: center;
+    background: #352a19;
+    border: 1px solid #7a633a;
+    border-radius: 8px;
+    color: var(--gold-strong);
+    display: flex;
+    flex: 0 0 42px;
+    font-weight: 900;
+    height: 42px;
+    justify-content: center;
+    width: 42px;
+}
+
+.nav-brand strong,
+.nav-brand span {
+    display: block;
+}
+
+.nav-brand strong {
+    color: var(--text);
+    font-size: 0.95rem;
+    line-height: 1.15;
+}
+
+.nav-brand span {
+    color: var(--muted);
+    font-size: 0.78rem;
+}
+
+.navbar-toggler {
+    appearance: none;
+    background: #252019;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    cursor: pointer;
+    display: none;
+    height: 2.5rem;
+    position: absolute;
+    right: 1rem;
+    top: 0.75rem;
+    width: 3rem;
+}
+
+.navbar-toggler::before {
+    color: var(--text);
+    content: "=";
+    font-size: 1.6rem;
+    font-weight: 900;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -58%);
+}
+
+.nav-scrollable {
+    display: block;
+    height: calc(100vh - 4rem);
+    overflow-y: auto;
+    padding: 0.5rem;
+}
+
+.nav-section {
+    color: var(--muted);
+    font-size: 0.74rem;
+    font-weight: 800;
+    padding: 0.8rem 0.7rem 0.45rem;
+    text-transform: uppercase;
+}
+
+.nav-item {
+    margin-bottom: 0.35rem;
+}
+
+.nav-item ::deep .nav-link {
+    align-items: center;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: var(--muted);
+    display: flex;
+    gap: 0.75rem;
+    min-height: 44px;
+    padding: 0.55rem 0.7rem;
+    text-decoration: none;
+}
+
+.nav-item ::deep .nav-link:hover {
+    background: #211d17;
+    border-color: var(--line);
+    color: var(--text);
+}
+
+.nav-item ::deep a.active {
+    background: #2b251a;
+    border-color: #6f5a36;
+    color: var(--gold-strong);
+}
+
+.nav-icon {
+    align-items: center;
+    background: #252019;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    display: flex;
+    flex: 0 0 28px;
+    font-size: 0.75rem;
+    font-weight: 900;
+    height: 28px;
+    justify-content: center;
+    width: 28px;
+}
+
+@media (max-width: 760px) {
+    .nav-brand {
+        padding-right: 4.6rem;
+    }
+
+    .navbar-toggler {
+        display: block;
+    }
+
+    .nav-scrollable {
+        display: none;
+        height: auto;
+        padding-top: 0;
+    }
+
+    .navbar-toggler:checked ~ .nav-scrollable {
+        display: block;
+    }
+}

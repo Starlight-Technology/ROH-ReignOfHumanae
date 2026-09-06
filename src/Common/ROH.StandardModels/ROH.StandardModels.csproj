@@ -7,7 +7,7 @@
     <FileVersion>1.0.0.1</FileVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MessagePack.Annotations" Version="3.1.4" />
-    <PackageReference Include="System.Text.Json" Version="10.0.1" />
+    <PackageReference Include="MessagePack.Annotations" Version="3.1.7" />
+    <PackageReference Include="System.Text.Json" Version="10.0.9" />
   </ItemGroup>
 </Project>

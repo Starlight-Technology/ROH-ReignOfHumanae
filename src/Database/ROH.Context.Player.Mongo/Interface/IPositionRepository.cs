@@ -14,6 +14,10 @@ public interface IPositionRepository
 {
     Task<List<PlayerPosition>> GetAllPlayersAsync(CancellationToken cancellationToken = default);
 
+    Task<PlayerPosition?> GetPlayerPositionAsync(
+        string characterId,
+        CancellationToken cancellationToken = default);
+
     Task<List<PlayerPosition>> GetPlayersNearbyAsync(
         string playerId,
         Vector3 position,

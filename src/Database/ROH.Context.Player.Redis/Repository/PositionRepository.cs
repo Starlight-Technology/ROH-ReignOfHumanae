@@ -32,7 +32,7 @@ public class PositionRepository(IPlayerRedisContext context) : IPositionReposito
             return Array.Empty<PlayerPositionRedis>();
 
         IBatch batch = context.Database.CreateBatch();
-        Dictionary<string, Task<HashEntry[]>> tasks = new Dictionary<string, Task<HashEntry[]>>();
+        Dictionary<string, Task<HashEntry[]>> tasks = [];
 
         foreach (GeoRadiusResult geo in nearby)
         {
@@ -48,7 +48,7 @@ public class PositionRepository(IPlayerRedisContext context) : IPositionReposito
 
         await Task.WhenAll(tasks.Values);
 
-        List<PlayerPositionRedis> result = new List<PlayerPositionRedis>();
+        List<PlayerPositionRedis> result = [];
 
         foreach (var (id, task) in tasks)
         {
@@ -83,7 +83,7 @@ public class PositionRepository(IPlayerRedisContext context) : IPositionReposito
     {
         string key = context.PlayerStateKey(playerId);
 
-        if (!(await context.Database.KeyExistsAsync(key)))
+        if (!await context.Database.KeyExistsAsync(key))
             return null;
 
         HashEntry[] entries = await context.Database.HashGetAllAsync(key);

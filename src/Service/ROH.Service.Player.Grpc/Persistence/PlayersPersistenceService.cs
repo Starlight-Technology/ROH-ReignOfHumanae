@@ -14,9 +14,9 @@ namespace ROH.Service.Player.Grpc.Persistence;
 
 public class PlayersPersistenceService : IPlayersPersistenceService
 {
-    readonly ConcurrentDictionary<string, PlayerState> players = new();
+    private readonly ConcurrentDictionary<string, PlayerState> players = new();
 
-    static PlayerState CreateState(PlayerRequest player) => new PlayerState
+    private static PlayerState CreateState(PlayerRequest player) => new()
     {
         PlayerId = player.PlayerId,
 
@@ -39,7 +39,7 @@ public class PlayersPersistenceService : IPlayersPersistenceService
         int maxPlayers,
         CancellationToken cancellationToken)
     {
-        List<PlayerInfo> result = new List<PlayerInfo>(maxPlayers);
+        List<PlayerInfo> result = new(maxPlayers);
         while (!cancellationToken.IsCancellationRequested)
         {
             if (!players.TryGetValue(playerId, out PlayerState? mainPlayer))
@@ -102,6 +102,12 @@ public class PlayersPersistenceService : IPlayersPersistenceService
         }
         await Task.CompletedTask;
         return null;
+    }
+
+    public Task RemovePlayer(string guid)
+    {
+        players.TryRemove(guid, out _);
+        return Task.CompletedTask;
     }
 
     public Task SavePlayerPosition(PlayerRequest player, CancellationToken token)

@@ -13,7 +13,7 @@ public class VersionContextFactory : IDesignTimeDbContextFactory<VersionContext>
 {
     public VersionContext CreateDbContext(string[] args)
     {
-        DbContextOptionsBuilder<VersionContext> optionsBuilder = new DbContextOptionsBuilder<VersionContext>();
+        DbContextOptionsBuilder<VersionContext> optionsBuilder = new();
         string? connectionString = Environment.GetEnvironmentVariable("ROH_DATABASE_CONNECTION_STRING_VERSION");
 
         optionsBuilder.UseNpgsql(connectionString);

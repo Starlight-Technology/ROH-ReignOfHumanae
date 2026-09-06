@@ -1,0 +1,64 @@
+@page "/login"
+@inject ROH.Launcher.Services.AlertService AlertService
+@inject ROH.Launcher.Services.LauncherState LauncherState
+@inject NavigationManager NavigationManager
+
+<div class="auth-page">
+    <section class="auth-panel">
+        <div class="eyebrow">Conta ROH</div>
+        <h1>Login</h1>
+
+        <div class="form-row">
+            <label class="form-label">Usuario ou e-mail</label>
+            <input @bind="username" @bind:event="oninput" class="form-control launcher-input" autocomplete="username" disabled="@_submitting" />
+        </div>
+
+        <div class="form-row">
+            <label class="form-label">Senha</label>
+            <input type="password" @bind="password" @bind:event="oninput" class="form-control launcher-input" autocomplete="current-password" disabled="@_submitting" />
+        </div>
+
+        <div class="auth-actions">
+            <button class="btn btn-primary" @onclick="DoLogin" disabled="@_submitting">
+                @(_submitting ? "Entrando..." : "Entrar")
+            </button>
+            <NavLink class="btn btn-secondary" href="/">Voltar</NavLink>
+        </div>
+    </section>
+</div>
+
+@code {
+    string? password;
+    bool _submitting;
+    string? username;
+
+    async Task DoLogin()
+    {
+        if (_submitting)
+            return;
+
+        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+        {
+            await AlertService.ShowError("Login", "Informe usuario e senha.");
+            return;
+        }
+
+        _submitting = true;
+        try
+        {
+            var model = new ROH.StandardModels.Account.LoginModel
+            {
+                Login = username.Trim(),
+                Password = password,
+            };
+
+            bool ok = await LauncherState.LoginAsync(model);
+            if (ok)
+                NavigationManager.NavigateTo("/");
+        }
+        finally
+        {
+            _submitting = false;
+        }
+    }
+}

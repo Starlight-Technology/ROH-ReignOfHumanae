@@ -58,7 +58,7 @@ public static class RohTheme
                 FontFamily = ["Cinzel", "Trajan Pro", "serif"],
                 FontWeight = "500",
                 LetterSpacing = "0.12em"
-            }, 
+            },
         },
 
         LayoutProperties = new LayoutProperties

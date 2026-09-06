@@ -13,8 +13,16 @@ namespace ROH.Site.Helpers;
 
 public class DownloadFileService(IJSRuntime _jsRuntime) : IDownloadFileService
 {
-    public async Task Download(GameFileModel fileModel) => await _jsRuntime.InvokeVoidAsync(
-        "window.DownloadFile",
-        fileModel.Name,
-        fileModel.Content);
+    public async Task Download(GameFileModel fileModel)
+    {
+        string fileName = Path.GetFileName(
+            fileModel.Name
+                .Replace('\\', Path.DirectorySeparatorChar)
+                .Replace('/', Path.DirectorySeparatorChar));
+
+        await _jsRuntime.InvokeVoidAsync(
+            "window.DownloadFile",
+            string.IsNullOrWhiteSpace(fileName) ? fileModel.Name : fileName,
+            fileModel.Content);
+    }
 }

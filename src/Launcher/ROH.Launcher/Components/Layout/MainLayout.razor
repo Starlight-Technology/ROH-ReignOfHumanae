@@ -1,0 +1,42 @@
+@inherits LayoutComponentBase
+@implements IDisposable
+@inject ROH.Launcher.Services.LauncherState LauncherState
+
+<CoronaLayoutShell>
+    <SidebarContent>
+        <NavMenu />
+    </SidebarContent>
+
+    <MainContent>
+        <header class="launcher-header">
+            <div class="launcher-status">
+                <span class="status-dot @(LauncherState.IsUpdating ? "status-busy" : LauncherState.IsReadyToPlay ? "status-ready" : "status-warn")"></span>
+                <span class="status-message">@LauncherState.StatusMessage</span>
+            </div>
+            <div class="launcher-account">
+                @(LauncherState.IsLoggedIn ? LauncherState.Username : "Offline")
+            </div>
+        </header>
+
+        <article class="launcher-content">
+            @Body
+        </article>
+
+        <AlertToast />
+        <ConfirmDialog />
+    </MainContent>
+</CoronaLayoutShell>
+
+@code {
+    protected override void OnInitialized()
+    {
+        LauncherState.OnChange += StateChanged;
+    }
+
+    public void Dispose()
+    {
+        LauncherState.OnChange -= StateChanged;
+    }
+
+    void StateChanged() => InvokeAsync(StateHasChanged);
+}

@@ -13,7 +13,7 @@ namespace ROH.Service.Exception;
 
 public class ExceptionHandler(ILogService logService) : IExceptionHandler
 {
-    readonly bool _isDebugMode =
+    private readonly bool _isDebugMode =
 #if DEBUG
         true;
 
@@ -22,7 +22,7 @@ public class ExceptionHandler(ILogService logService) : IExceptionHandler
 #endif
 
 
-    void LogException(string exception) => logService.SaveLog(exception).ConfigureAwait(true);
+    private void LogException(string exception) => logService.SaveLog(exception).ConfigureAwait(true);
 
     public DefaultResponse HandleException(System.Exception exception)
     {
@@ -33,9 +33,9 @@ public class ExceptionHandler(ILogService logService) : IExceptionHandler
 
         // Return a friendly message to the user unless are in DEBUG
         return _isDebugMode
-            ? (new DefaultResponse(httpStatus: HttpStatusCode.InternalServerError, message: error))
-            : (new DefaultResponse(
+            ? new DefaultResponse(httpStatus: HttpStatusCode.InternalServerError, message: error)
+            : new DefaultResponse(
                 httpStatus: HttpStatusCode.InternalServerError,
-                message: "An error has occurred. Don't be afraid! An email with the error details has been sent to your developers."));
+                message: "An error has occurred. Don't be afraid! An email with the error details has been sent to your developers.");
     }
 }

@@ -13,14 +13,18 @@ namespace ROH.Context.Player.Mongo;
 
 public class PlayerMongoContext : IPlayerMongoContext
 {
-    readonly IMongoDatabase _database;
+    private readonly IMongoDatabase _database;
 
     public PlayerMongoContext()
     {
-        string? connectionString = Environment.GetEnvironmentVariable("ROH_MONGO_PLAYER_CONNECTION_STRING");
-        MongoClient client = new MongoClient(connectionString);
+        string connectionString =
+            Environment.GetEnvironmentVariable("ROH_MONGO_PLAYER_CONNECTION_STRING") ?? "mongodb://localhost:27017";
+        MongoClient client = new(connectionString);
         _database = client.GetDatabase("ROHPlayerPosition");
     }
+
+    public IMongoCollection<ChatMessageEntity> ChatMessagesCollection => _database.GetCollection<ChatMessageEntity>(
+        "chat_messages");
 
     public IMongoCollection<PlayerPosition> PlayerPositionCollection => _database.GetCollection<PlayerPosition>(
         "PlayerPositionCollection");

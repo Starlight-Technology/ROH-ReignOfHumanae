@@ -97,6 +97,13 @@ builder.Services.AddSingleton(mapper);
 
 WebApplication app = builder.Build();
 
+// Apply pending migrations
+using (IServiceScope scope = app.Services.CreateScope())
+{
+    VersionContext db = scope.ServiceProvider.GetRequiredService<VersionContext>();
+    db.Database.Migrate();
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

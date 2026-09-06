@@ -1,0 +1,3 @@
+[submodule "Corona"]
+	path = Corona
+	url = https://github.com/Starlight-Technology/Corona.git

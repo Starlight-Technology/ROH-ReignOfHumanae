@@ -7,52 +7,40 @@
 @using ROH.Utils.Helpers;
 
 @inject IRohAlertService _sweetAlert;
-
 @inject IVersionService _versionService;
+@inject IStringLocalizer<SharedResource> _loc
 
-<CardComponent Header="New Version">
-    <div class="row">
-        <div class="col-sm-12">
-            <MudTextField T="int"
-                          Label="Release"
-                          Variant="Variant.Outlined"
-                          Value="@inputRelease"
-                          ReadOnly="true" />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <MudTextField T="int"
-                          Label="Review"
-                          Variant="Variant.Outlined"
-                          Value="@inputReview"
-                          ReadOnly="true" />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <MudTextField T="int"
-                          Label="Version"
-                          Variant="Variant.Outlined"
-                          Value="@inputVersion"
-                          ReadOnly="true" />
-        </div>
-    </div>
-    <div class="row" style="margin-top:20px;">
-        <div class="col-sm-12">
-            <MudButton ButtonType="ButtonType.Button"
-                       Color="Color.Primary"
-                       OnClick="CreateNewVersion">Create New Version</MudButton>
-        </div>
-    </div>
+<CardComponent Header="@_loc["Version.NewVersion"]">
+    <CoronaStack Spacing="1rem" FullWidth="true">
+        <VersionSummaryComponent Version="@ParsedVersion"
+                                 Release="@ParsedRelease"
+                                 Review="@ParsedReview"
+                                 ShowStatus="true" />
+
+        <CoronaStack Direction="CoronaStackDirection.Row" Spacing=".75rem">
+            <CoronaInput Label="@_loc["Shared.Version"]" @bind-Value="inputVersion" Type="number" Min="0" />
+            <CoronaInput Label="@_loc["Shared.Release"]" @bind-Value="inputRelease" Type="number" Min="0" />
+            <CoronaInput Label="@_loc["Shared.Review"]" @bind-Value="inputReview" Type="number" Min="0" />
+        </CoronaStack>
+
+        <CoronaButton Color="CoronaColorSemantic.Primary"
+                      Variant="CoronaButtonVariant.Filled"
+                      OnClick="CreateNewVersion">
+            @_loc["Version.CreateNew"]
+        </CoronaButton>
+    </CoronaStack>
 
 </CardComponent>
 
 @code {
 
-    private int inputVersion = 0;
-    private int inputRelease = 0;
-    private int inputReview = 0;
+    private string inputVersion = "0";
+    private string inputRelease = "0";
+    private string inputReview = "0";
+
+    private int ParsedVersion => int.TryParse(inputVersion, out var v) ? v : 0;
+    private int ParsedRelease => int.TryParse(inputRelease, out var r) ? r : 0;
+    private int ParsedReview => int.TryParse(inputReview, out var rv) ? rv : 0;
 
     private readonly GameVersionModel currentVersion = new()
     {
@@ -64,7 +52,7 @@
 
     private async Task CreateNewVersion()
     {
-        GameVersionModel model = new GameVersionModel() { Version = inputVersion, Release = inputRelease, Review = inputReview };
+        GameVersionModel model = new() { Version = ParsedVersion, Release = ParsedRelease, Review = ParsedReview };
 
         var response = await _versionService.CreateNewVersion(model);
 

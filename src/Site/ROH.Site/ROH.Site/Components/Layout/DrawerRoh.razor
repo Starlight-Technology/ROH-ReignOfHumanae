@@ -1,10 +1,12 @@
 ﻿@rendermode InteractiveServer
 @using MudBlazor
 @using ROH.Site.Helpers.Components.Layout
+@using ROH.Site.Resources
 @using Interfaces.Helpers
 @implements IDisposable
 @inject DrawerState DrawerState
 @inject ICustomAuthenticationStateProvider CustomAuthStateProvider
+@inject IStringLocalizer<SharedResource> _loc
 
 <MudDrawer Open="@DrawerState.Open"
            Variant="DrawerVariant.Persistent"
@@ -14,20 +16,20 @@
            Overlay="false">
 
     <MudNavMenu>
-        <MudNavLink Href="/">Home</MudNavLink>
+        <MudNavLink Href="/">@_loc["Nav.Home"]</MudNavLink>
         @if (IsAuthorized)
         {
-            <MudNavLink Href="/Manager/Version/VersionManager">Manager</MudNavLink>
+            <MudNavLink Href="/Manager/Version/VersionManager">@_loc["Nav.Manager"]</MudNavLink>
         }
         else
         {
-            <MudNavLink Href="/login">Login</MudNavLink>
+            <MudNavLink Href="/login">@_loc["Nav.Login"]</MudNavLink>
         }
-        <MudNavLink Href="/crafting">Crafting</MudNavLink>
-        <MudNavLink Href="/lore">Lore</MudNavLink>
-        <MudNavLink Href="/magic-skills">Magic Skills</MudNavLink>
-        <MudNavLink Href="/races">Races</MudNavLink>
-        <MudNavLink Href="/world-bosses">World Bosses</MudNavLink>
+        <MudNavLink Href="/crafting">@_loc["Nav.Crafting"]</MudNavLink>
+        <MudNavLink Href="/lore">@_loc["Nav.Lore"]</MudNavLink>
+        <MudNavLink Href="/magic-skills">@_loc["Nav.MagicSkills"]</MudNavLink>
+        <MudNavLink Href="/races">@_loc["Nav.Races"]</MudNavLink>
+        <MudNavLink Href="/world-bosses">@_loc["Nav.WorldBosses"]</MudNavLink>
     </MudNavMenu>
 
 </MudDrawer>

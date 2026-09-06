@@ -12,6 +12,8 @@ namespace ROH.Context.Player.Mongo.Interface;
 
 public interface IPlayerMongoContext
 {
+    IMongoCollection<ChatMessageEntity> ChatMessagesCollection { get; }
+
     IMongoCollection<PlayerPosition> PlayerPositionCollection { get; }
 
     IMongoCollection<PlayerPositionGeo> PlayerPositionGeoCollection { get; }

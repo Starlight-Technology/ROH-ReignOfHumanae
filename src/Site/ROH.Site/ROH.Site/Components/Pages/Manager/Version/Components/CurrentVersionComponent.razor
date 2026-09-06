@@ -9,8 +9,9 @@
 @inject IVersionService _versionService;
 @inject IRohAlertService _sweetAlert;
 @inject NavigationManager Navigation;
+@inject IStringLocalizer<SharedResource> _loc
 
-<CardComponent Header="Current Version">
+<CardComponent Header="@_loc["Version.Current"]">
     @if (isLoadingCurrentVersion)
     {
         <div class="roh-loading">
@@ -19,49 +20,26 @@
     }
     else
     {
-         <div class="row">
-             
-            <div class="col-sm-2">
-                <MudTextField T="int"
-                      Label="Release"
-                      Variant="Variant.Outlined"
-                      Value="@currentVersion!.Release"
-                      Disabled="true"/>
-            </div>
+        <CoronaStack Direction="CoronaStackDirection.Row"
+                     Align="CoronaStackAlign.Center"
+                     Justify="CoronaStackJustify.SpaceBetween"
+                     Wrap="CoronaStackWrap.Wrap"
+                     Spacing="1rem"
+                     FullWidth="true">
 
-            <div class="col-sm-2">
-                <MudTextField T="int"
-                      Label="Review"
-                      Variant="Variant.Outlined"
-                      Value="@currentVersion!.Review"
-                      Disabled="true"/>
-            </div>
+            <VersionSummaryComponent Version="@currentVersion!.Version"
+                                     Release="@currentVersion!.Release"
+                                     Review="@currentVersion!.Review"
+                                     ReleaseDate="@currentVersion!.ReleaseDate"
+                                     Released="@currentVersion!.Released"
+                                     ShowStatus="true"
+                                     ShowReleaseDate="true"
+                                     Class="roh-version-summary--inline" />
 
-            <div class="col-sm-2">
-                <MudTextField T="int"
-                      Label="Version"
-                      Variant="Variant.Outlined"
-                      Value="@currentVersion!.Version"
-                      Disabled="true"/>
-            </div>
-
-            <div class="col-sm-4">
-                <MudTextField T="string"
-                    Label="Release Date"
-                    Variant="Variant.Outlined"
-                    Value="@currentVersion!.ReleaseDate?.ToShortDateString()" 
-                    Disabled="true"/>
-            </div>
-
-            <div class="col-sm-2">
-                <MudIconButton
-                    Icon="@Icons.Material.Filled.Visibility"
-                    Color="Color.Primary"
-                    OnClick="@(() => Navigation.NavigateTo($"/Manager/Version/VersionDetails/{currentVersion!.Guid}"))" />
-
-            </div>
-
-        </div>
+            <MudIconButton Icon="@Icons.Material.Filled.Visibility"
+                           Color="Color.Primary"
+                           OnClick="@(() => Navigation.NavigateTo($"/Manager/Version/VersionDetails/{currentVersion!.Guid}"))" />
+        </CoronaStack>
 
     }
 

@@ -14,7 +14,7 @@ namespace ROH.Test.Version;
 
 public class GameVersionRepositoryTests
 {
-    static DbContextOptions<VersionContext> GetInMemoryDbContextOptions(string dbName) => new DbContextOptionsBuilder<VersionContext>(
+    private static DbContextOptions<VersionContext> GetInMemoryDbContextOptions(string dbName) => new DbContextOptionsBuilder<VersionContext>(
         )
             .UseInMemoryDatabase(databaseName: dbName)
         .EnableSensitiveDataLogging()
@@ -25,8 +25,8 @@ public class GameVersionRepositoryTests
     {
         // Arrange
         DbContextOptions<VersionContext> options = GetInMemoryDbContextOptions("GetAllReleasedVersionsAsync_Db");
-        using VersionContext context = new VersionContext(options);
-        GameVersionRepository repository = new GameVersionRepository(context);
+        using VersionContext context = new(options);
+        GameVersionRepository repository = new(context);
 
         context.GameVersions
             .AddRange(
@@ -71,8 +71,8 @@ public class GameVersionRepositoryTests
     {
         // Arrange
         DbContextOptions<VersionContext> options = GetInMemoryDbContextOptions("GetAllVersionsAsync_Db");
-        using VersionContext context = new VersionContext(options);
-        GameVersionRepository repository = new GameVersionRepository(context);
+        using VersionContext context = new(options);
+        GameVersionRepository repository = new(context);
 
         context.GameVersions
             .AddRange(
@@ -115,8 +115,8 @@ public class GameVersionRepositoryTests
     {
         // Arrange
         DbContextOptions<VersionContext> options = GetInMemoryDbContextOptions("GetCurrentGameVersionAsync_Db");
-        using VersionContext context = new VersionContext(options);
-        GameVersionRepository repository = new GameVersionRepository(context);
+        using VersionContext context = new(options);
+        GameVersionRepository repository = new(context);
 
         context.GameVersions
             .AddRange(
@@ -153,8 +153,8 @@ public class GameVersionRepositoryTests
     {
         // Arrange
         DbContextOptions<VersionContext> options = GetInMemoryDbContextOptions("GetVersionByGuidAsync_Db");
-        using VersionContext context = new VersionContext(options);
-        GameVersionRepository repository = new GameVersionRepository(context);
+        using VersionContext context = new(options);
+        GameVersionRepository repository = new(context);
 
         Guid guid = Guid.NewGuid();
         context.GameVersions
@@ -174,10 +174,10 @@ public class GameVersionRepositoryTests
     {
         // Arrange
         DbContextOptions<VersionContext> options = GetInMemoryDbContextOptions("SetNewGameVersionAsync_Db");
-        using VersionContext context = new VersionContext(options);
-        GameVersionRepository repository = new GameVersionRepository(context);
+        using VersionContext context = new(options);
+        GameVersionRepository repository = new(context);
 
-        GameVersion version = new GameVersion(
+        GameVersion version = new(
             new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc),
             1,
             Guid.NewGuid(),
@@ -199,10 +199,10 @@ public class GameVersionRepositoryTests
     {
         // Arrange
         DbContextOptions<VersionContext> options = GetInMemoryDbContextOptions("UpdateGameVersionAsync_Db");
-        using VersionContext context = new VersionContext(options);
-        GameVersionRepository repository = new GameVersionRepository(context);
+        using VersionContext context = new(options);
+        GameVersionRepository repository = new(context);
 
-        GameVersion version = new GameVersion(
+        GameVersion version = new(
             new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc),
             1,
             Guid.NewGuid(),
@@ -227,10 +227,10 @@ public class GameVersionRepositoryTests
     {
         // Arrange
         DbContextOptions<VersionContext> options = GetInMemoryDbContextOptions("VerifyIfExistAsync_Db");
-        using VersionContext context = new VersionContext(options);
-        GameVersionRepository repository = new GameVersionRepository(context);
+        using VersionContext context = new(options);
+        GameVersionRepository repository = new(context);
 
-        GameVersion version = new GameVersion(
+        GameVersion version = new(
             new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc),
             1,
             Guid.NewGuid(),
@@ -252,11 +252,11 @@ public class GameVersionRepositoryTests
     {
         // Arrange
         DbContextOptions<VersionContext> options = GetInMemoryDbContextOptions("VerifyIfExistAsyncWithGuid_Db");
-        using VersionContext context = new VersionContext(options);
-        GameVersionRepository repository = new GameVersionRepository(context);
+        using VersionContext context = new(options);
+        GameVersionRepository repository = new(context);
         Guid guid = Guid.NewGuid();
 
-        GameVersion version = new GameVersion(new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc), 1, guid, 1, 0, 5);
+        GameVersion version = new(new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc), 1, guid, 1, 0, 5);
         context.GameVersions.Add(version);
         await context.SaveChangesAsync();
 

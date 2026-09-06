@@ -18,6 +18,9 @@ public class GameVersionFileRepository(IFileContext context) : IGameVersionFileR
         GameVersionFile? gameVersionFile = await context.GameVersionFiles
             .FirstOrDefaultAsync(a => a.IdGameFile == id, cancellationToken: cancellationToken)
             .ConfigureAwait(true);
+        if (gameVersionFile is null)
+            return null;
+
         gameVersionFile!.GameFile = await context.GameFiles
             .FindAsync([gameVersionFile.IdGameFile], cancellationToken: cancellationToken)
             .ConfigureAwait(true);
@@ -30,6 +33,9 @@ public class GameVersionFileRepository(IFileContext context) : IGameVersionFileR
         GameVersionFile? gameVersionFile = await context.GameVersionFiles
             .FirstOrDefaultAsync(v => v.Guid == fileGuid, cancellationToken: cancellationToken)
             .ConfigureAwait(true);
+        if (gameVersionFile is null)
+            return null;
+
         gameVersionFile!.GameFile = await context.GameFiles
             .FindAsync([gameVersionFile.IdGameFile], cancellationToken: cancellationToken)
             .ConfigureAwait(true);
@@ -42,6 +48,7 @@ public class GameVersionFileRepository(IFileContext context) : IGameVersionFileR
         CancellationToken cancellationToken = default)
     {
         List<GameVersionFile> result = await context.GameVersionFiles
+            .Include(v => v.GameFile)
             .Where(v => v.GuidVersion == versionGuid)
             .ToListAsync(cancellationToken: cancellationToken)
             .ConfigureAwait(true);

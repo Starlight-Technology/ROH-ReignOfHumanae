@@ -15,17 +15,21 @@ namespace ROH.StandardModels.Character.Position
             Guid playerId,
             Vector3 lastServerPosition,
             Vector3 clientReportedPosition,
+            Vector4 clientReportedRotation,
             DateTime lastServerTimestamp,
             DateTime serverTimestamp)
         {
             PlayerId = playerId;
             LastServerPosition = lastServerPosition;
             ClientReportedPosition = clientReportedPosition;
+            ClientReportedRotation = clientReportedRotation;
             LastServerTimestamp = lastServerTimestamp;
             ServerTimestamp = serverTimestamp;
         }
 
         public Vector3 ClientReportedPosition { get; set; }
+
+        public Vector4 ClientReportedRotation { get; set; }
 
         public Vector3 LastServerPosition { get; set; }
 

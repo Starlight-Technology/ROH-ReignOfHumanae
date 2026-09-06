@@ -7,25 +7,26 @@
     <Configurations>Debug;Release;Test</Configurations>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="16.0.0" />
-    <PackageReference Include="coverlet.msbuild" Version="6.0.4">
+    <PackageReference Include="AutoMapper" Version="16.1.1" />
+    <PackageReference Include="coverlet.msbuild" Version="10.0.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.9" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.7.0" />
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="coverlet.collector" Version="6.0.4">
+    <PackageReference Include="coverlet.collector" Version="10.0.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\ROH.Contracts\ROH.Contracts.csproj" />
     <ProjectReference Include="..\..\Common\ROH.StandardModels\ROH.StandardModels.csproj" />
     <ProjectReference Include="..\..\Common\ROH.Utils\ROH.Utils.csproj" />
     <ProjectReference Include="..\..\Database\ROH.Context.Item\ROH.Context.Item.csproj" />
@@ -34,6 +35,7 @@
     <ProjectReference Include="..\..\Database\ROH.Context.Log\ROH.Context.Log.csproj" />
     <ProjectReference Include="..\..\Database\ROH.Context.Player\ROH.Context.Player.csproj" />
     <ProjectReference Include="..\..\Database\ROH.Context.Version\ROH.Context.Version.csproj" />
+    <ProjectReference Include="..\..\Gateway\ROH.Gateway\ROH.Gateway.csproj" />
     <ProjectReference Include="..\..\Service\ROH.Service.Account\ROH.Service.Account.csproj" />
     <ProjectReference Include="..\..\Service\ROH.Service.Authentication\ROH.Service.Authentication.csproj" />
     <ProjectReference Include="..\..\Service\ROH.Service.Exception\ROH.Service.Exception.csproj" />

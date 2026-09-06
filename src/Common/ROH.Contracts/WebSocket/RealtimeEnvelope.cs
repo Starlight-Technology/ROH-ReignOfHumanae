@@ -11,6 +11,6 @@ namespace ROH.Contracts.WebSocket;
 [MessagePackObject]
 public class RealtimeEnvelope
 {
-    [Key(1)] public byte[] Payload;
-    [Key(0)] public string Type;
+    [Key(1)] public required byte[] Payload;
+    [Key(0)] public required string Type;
 }

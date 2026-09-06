@@ -16,6 +16,8 @@ public static class PlayerPositionGeoMapper
 
         return new PlayerPositionGeo
         {
+            AccountId = legacy.AccountId,
+            CharacterId = string.IsNullOrWhiteSpace(legacy.CharacterId) ? legacy.PlayerId : legacy.CharacterId,
             PlayerId = legacy.PlayerId,
 
             Position = new GeoPoint { Coordinates = new[] { lng, lat } },
@@ -25,7 +27,9 @@ public static class PlayerPositionGeoMapper
             RotationY = legacy.RotationY,
             RotationZ = legacy.RotationZ,
             RotationW = legacy.RotationW,
-            Timestamp = legacy.Timestamp
+            Timestamp = legacy.Timestamp,
+            UpdatedAtUtc = legacy.UpdatedAtUtc,
+            WorldId = legacy.WorldId
         };
     }
 
@@ -35,6 +39,8 @@ public static class PlayerPositionGeoMapper
 
         return new PlayerPosition
         {
+            AccountId = geo.AccountId,
+            CharacterId = string.IsNullOrWhiteSpace(geo.CharacterId) ? geo.PlayerId : geo.CharacterId,
             Id = geo.Id,
             PlayerId = geo.PlayerId,
             PositionX = x,
@@ -44,7 +50,9 @@ public static class PlayerPositionGeoMapper
             RotationY = geo.RotationY,
             RotationZ = geo.RotationZ,
             RotationW = geo.RotationW,
-            Timestamp = geo.Timestamp
+            Timestamp = geo.Timestamp,
+            UpdatedAtUtc = geo.UpdatedAtUtc == default ? geo.Timestamp : geo.UpdatedAtUtc,
+            WorldId = geo.WorldId
         };
     }
 }
@@ -52,16 +60,16 @@ public static class PlayerPositionGeoMapper
 public static class WorldProjection
 {
     // Raio médio da Terra em metros (WGS84)
-    const double EarthRadiusMeters = 6378137.0;
-    const double RadToDeg = 180.0 / Math.PI;
+    private const double EarthRadiusMeters = 6378137.0;
+    private const double RadToDeg = 180.0 / Math.PI;
 
     /// <summary>
     /// Converte posição X/Z do mundo (em metros) para coordenadas GeoJSON
     /// </summary>
     public static (double lng, double lat) Project(float worldX, float worldZ)
     {
-        double lng = (worldX / EarthRadiusMeters) * RadToDeg;
-        double lat = (worldZ / EarthRadiusMeters) * RadToDeg;
+        double lng = worldX / EarthRadiusMeters * RadToDeg;
+        double lat = worldZ / EarthRadiusMeters * RadToDeg;
 
         return (lng, lat);
     }
@@ -71,8 +79,8 @@ public static class WorldProjection
     /// </summary>
     public static (float x, float z) Unproject(double lng, double lat)
     {
-        float x = (float)(((lng * Math.PI) / 180.0) * EarthRadiusMeters);
-        float z = (float)(((lat * Math.PI) / 180.0) * EarthRadiusMeters);
+        float x = (float)(lng * Math.PI / 180.0 * EarthRadiusMeters);
+        float z = (float)(lat * Math.PI / 180.0 * EarthRadiusMeters);
 
         return (x, z);
     }

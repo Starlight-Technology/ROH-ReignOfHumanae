@@ -12,6 +12,7 @@ using ROH.StandardModels.Response;
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -25,12 +26,12 @@ namespace ROH.Utils.ApiConfiguration
 {
     public class Gateway
     {
-        const string ERROR_MESSAGE = "Error, the connection has failed!";
-        const string UNAUTHORIZED_MESSAGE = "You must to be logged to do that.";
+        private const string ERROR_MESSAGE = "Error, the connection has failed!";
+        private const string UNAUTHORIZED_MESSAGE = "You must to be logged to do that.";
 
-        static readonly ApiConfigReader _apiConfig = new ApiConfigReader();
-        static readonly Dictionary<ApiUrl, Uri> _apiUrl = _apiConfig.GetApiUrl();
-        static readonly Dictionary<Services, Uri> _gatewayServiceUrl = new Dictionary<Services, Uri>
+        private static readonly ApiConfigReader _apiConfig = new ApiConfigReader();
+        private static readonly Dictionary<ApiUrl, Uri> _apiUrl = _apiConfig.GetApiUrl();
+        private static readonly Dictionary<Services, Uri> _gatewayServiceUrl = new Dictionary<Services, Uri>
         {
             #region VERSION
             {
@@ -69,6 +70,14 @@ namespace ROH.Utils.ApiConfiguration
                 Services.DownloadFile,
                 new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay), "Api/VersionFile/DownloadFile")
             },
+            {
+                Services.UploadBuildZip,
+                new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay), "Api/VersionFile/UploadBuildZip")
+            },
+            {
+                Services.ConfirmBuildUpload,
+                new Uri(_apiUrl.GetValueOrDefault(ApiUrl.GateWay), "Api/VersionFile/ConfirmBuildUpload")
+            },
             #endregion FILES
 
             #region ACCOUNT
@@ -106,11 +115,11 @@ namespace ROH.Utils.ApiConfiguration
             { Services.SavePosition, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.PlayerState), string.Empty) },
             #endregion PLAYER
         };
-        readonly Api _api = new Api();
-        readonly DefaultResponse? _errorResponse = new DefaultResponse(
+        private readonly Api _api = new Api();
+        private readonly DefaultResponse? _errorResponse = new DefaultResponse(
             httpStatus: HttpStatusCode.BadRequest,
             message: ERROR_MESSAGE);
-        readonly DefaultResponse? _unauthorizedResponse = new DefaultResponse(
+        private readonly DefaultResponse? _unauthorizedResponse = new DefaultResponse(
             httpStatus: HttpStatusCode.Unauthorized,
             message: UNAUTHORIZED_MESSAGE);
 
@@ -122,7 +131,7 @@ namespace ROH.Utils.ApiConfiguration
         {
             HttpClientHandler handler = new HttpClientHandler();
 #if DEBUG
-            handler.ServerCertificateCustomValidationCallback =(httpRequestMessage, cert, cetChain, policyErrors) => true;
+            handler.ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => true;
 #endif
             using HttpClient client = new HttpClient(handler);
 
@@ -163,7 +172,7 @@ namespace ROH.Utils.ApiConfiguration
             {
                 HttpClientHandler handler = new HttpClientHandler();
 #if DEBUG
-                handler.ServerCertificateCustomValidationCallback =(httpRequestMessage, cert, cetChain, policyErrors) => true;
+                handler.ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => true;
 #endif
                 using HttpClient client = new HttpClient(handler);
 
@@ -207,7 +216,7 @@ namespace ROH.Utils.ApiConfiguration
         {
             HttpClientHandler handler = new HttpClientHandler();
 #if DEBUG
-            handler.ServerCertificateCustomValidationCallback =(httpRequestMessage, cert, cetChain, policyErrors) => true;
+            handler.ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => true;
 #endif
             using HttpClient client = new HttpClient(handler);
 
@@ -235,6 +244,57 @@ namespace ROH.Utils.ApiConfiguration
             return _errorResponse;
         }
 
+        public async Task<DefaultResponse?> PostFileAsync(
+            Services service,
+            Stream fileStream,
+            string fileName,
+            string versionGuid,
+            string token = "",
+            CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                HttpClientHandler handler = new HttpClientHandler();
+#if DEBUG
+                handler.ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => true;
+#endif
+                using HttpClient client = new HttpClient(handler);
+
+                if (!string.IsNullOrWhiteSpace(token))
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                var fileContent = new StreamContent(fileStream);
+                fileContent.Headers.ContentType = new MediaTypeHeaderValue("application/zip");
+                fileContent.Headers.ContentLength = fileStream.Length;
+
+                using MultipartFormDataContent content = new MultipartFormDataContent();
+                content.Add(new StreamContent(fileStream), "file", fileName);
+                content.Add(new StringContent(versionGuid), "versionGuid");
+
+                HttpResponseMessage response = await client.PostAsync(
+                    _gatewayServiceUrl.GetValueOrDefault(service),
+                    content,
+                    cancellationToken)
+                    .ConfigureAwait(true);
+
+                if (response != null)
+                {
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                        return _unauthorizedResponse;
+
+                    string responseJson = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+
+                    return JsonConvert.DeserializeObject<DefaultResponse>(responseJson);
+                }
+
+                return _errorResponse;
+            }
+            catch (Exception e)
+            {
+                return new DefaultResponse(httpStatus: HttpStatusCode.InternalServerError, message: e.Message);
+            }
+        }
+
         public async Task<DefaultResponse?> UpdateAsync(
             Services service,
             object objectToSend,
@@ -243,7 +303,7 @@ namespace ROH.Utils.ApiConfiguration
         {
             HttpClientHandler handler = new HttpClientHandler();
 #if DEBUG
-            handler.ServerCertificateCustomValidationCallback =(httpRequestMessage, cert, cetChain, policyErrors) => true;
+            handler.ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => true;
 #endif
             using HttpClient client = new HttpClient(handler);
 
@@ -287,6 +347,8 @@ namespace ROH.Utils.ApiConfiguration
             UploadFile,
             GetAllVersionFiles,
             DownloadFile,
+            UploadBuildZip,
+            ConfirmBuildUpload,
             #endregion VERSIONFILE
 
             #region ACCOUNT

@@ -1,19 +1,21 @@
-﻿@namespace Manager.Version.Components
+@namespace Manager.Version.Components
 @using Newtonsoft.Json;
-@using Newtonsoft.Json.Linq;
 
 @using ROH.Site.Components.Custom
+@using ROH.Site.Helpers.Types
 @using ROH.Site.Interfaces.Api
 @using ROH.Site.Interfaces.Helpers
-@using ROH.StandardModels.Paginator;
+@using ROH.StandardModels.File
 @using ROH.StandardModels.Response;
 @using ROH.StandardModels.Version
 @using ROH.Utils.Helpers;
 
+@inject IDownloadFileService _downloadFile
 @inject IVersionFileService _versionFileService;
 @inject IRohAlertService _sweetAlert;
+@inject IStringLocalizer<SharedResource> _loc
 
-<CardComponent Header="Files">
+<CardComponent Header="@_loc["Version.Files"]">
 
     @if (isLoading)
     {
@@ -24,10 +26,44 @@
         </div>
     }
 
+    else if (gameVersionFileListModels.Any())
+    {
+        <MudPaper Class="roh-table-container" Elevation="3">
+            <MudTable T="GameVersionFileListModel"
+                      Dense
+                      Hover
+                      Items="@gameVersionFileListModels">
+
+                <HeaderContent>
+                    <MudTh>@_loc["Shared.Name"]</MudTh>
+                    <MudTh>@_loc["Shared.Path"]</MudTh>
+                    <MudTh>@_loc["Shared.Size"]</MudTh>
+                    <MudTh>@_loc["Shared.Active"]</MudTh>
+                    <MudTh />
+                </HeaderContent>
+
+                <RowTemplate Context="file">
+                    <MudTd>@GetDisplayName(file.Name)</MudTd>
+                    <MudTd>@GetDisplayPath(file)</MudTd>
+                    <MudTd>@file.Size</MudTd>
+                    <MudTd>
+                        <CoronaBadge Content="@(file.Active ? _loc["Shared.Active"] : _loc["Shared.Inactive"])"
+                                     Color="@(file.Active ? CoronaColorSemantic.Success : CoronaColorSemantic.Neutral)"
+                                     Variant="CoronaBadgeVariant.Outlined" />
+                    </MudTd>
+                    <MudTd>
+                        <MudIconButton Icon="@Icons.Material.Filled.Download"
+                                       Color="Color.Primary"
+                                       OnClick="@(() => DownloadFile(file))" />
+                    </MudTd>
+                </RowTemplate>
+
+            </MudTable>
+        </MudPaper>
+    }
     else
     {
-        <PaginatedListComponent Items="@gameVersionFileListModels"
-                                T="@GameVersionFileListModel" />
+        <div class="roh-empty-state">@_loc["Version.NoFiles"]</div>
     }
 
 </CardComponent>
@@ -50,6 +86,7 @@
     private async Task GetAllVersion()
     {
         isLoading = true;
+        gameVersionFileListModels.Clear();
         apiResponse = await _versionFileService.GetAllVersionFiles(VersionGuid);
 
         if (apiResponse != null && !apiResponse.HttpStatus.IsSuccessStatusCode())
@@ -70,7 +107,6 @@
                     if (gameVersionFileModel != null)
                     {
                         GameVersionFileListModel gameVersionFileListModel = gameVersionFileModel.ToListModel();
-                        gameVersionFileListModel.DownloadFile = async () => await _versionFileService.DownloadVersionFile(gameVersionFileListModel.FileGuid.ToString());
                         gameVersionFileListModels?.Add(gameVersionFileListModel);
                     }
                 }
@@ -81,4 +117,47 @@
         StateHasChanged();
 
     }
+
+    private async Task DownloadFile(GameVersionFileListModel file)
+    {
+        DefaultResponse? response = await _versionFileService.DownloadVersionFile(file.FileGuid.ToString());
+
+        if (response is null)
+        {
+            await _sweetAlert.Show(_loc["Shared.Error"], _loc["Shared.NoResponse"], RohAlertType.Error);
+            return;
+        }
+
+        if (response.ObjectResponse != null)
+        {
+            GameFileModel fileModel = response.ResponseToModel<GameFileModel>();
+            await _downloadFile.Download(fileModel);
+            return;
+        }
+
+        await _sweetAlert.ShowResponse(response);
+    }
+
+    private static string GetDisplayName(string name)
+    {
+        string relativeName = NormalizeDisplayPath(name);
+        string fileName = Path.GetFileName(relativeName.Replace('/', Path.DirectorySeparatorChar));
+        return string.IsNullOrWhiteSpace(fileName) ? name : fileName;
+    }
+
+    private static string GetDisplayPath(GameVersionFileListModel file)
+    {
+        if (!string.IsNullOrWhiteSpace(file.Path))
+            return file.Path;
+
+        string relativeName = NormalizeDisplayPath(file.Name);
+        string? directory = Path.GetDirectoryName(relativeName.Replace('/', Path.DirectorySeparatorChar));
+        return string.IsNullOrWhiteSpace(directory)
+            ? "Root"
+            : directory.Replace(Path.DirectorySeparatorChar, '/');
+    }
+
+    private static string NormalizeDisplayPath(string value) => value
+        .Replace('\\', '/')
+        .Trim('/');
 }

@@ -26,8 +26,7 @@ public class PlayersConnected(IPlayerPositionServiceSocket playerPositionService
         System.Collections.Concurrent.ConcurrentDictionary<string, System.Net.WebSockets.WebSocket> connectedPlayers = await playerPositionService.GetPlayersClient(
             );
 
-        Google.Protobuf.Collections.RepeatedField<PlayerConnected> response = new Google.Protobuf.Collections.RepeatedField<PlayerConnected>(
-            );
+        Google.Protobuf.Collections.RepeatedField<PlayerConnected> response = [];
 
         foreach (KeyValuePair<string, System.Net.WebSockets.WebSocket> player in connectedPlayers)
         {
@@ -46,7 +45,7 @@ public class PlayersConnected(IPlayerPositionServiceSocket playerPositionService
 
         if (connectedPlayers.TryGetValue(response.MainPlayer, out System.Net.WebSockets.WebSocket? socket))
         {
-            NearbyPlayersMessage message = new NearbyPlayersMessage
+            NearbyPlayersMessage message = new()
             {
                 Players =
                     [.. response.Players
@@ -66,13 +65,13 @@ public class PlayersConnected(IPlayerPositionServiceSocket playerPositionService
                         })]
             };
 
-            await WebSocketService.SendAsync(
-                socket,
+            await socket.SendAsync(
                 new RealtimeEnvelope
                 {
                     Type = RealtimeEventTypes.GetNearbyPlayers,
                     Payload = MessagePackSerializer.Serialize(message)
-                });
+                },
+                context.CancellationToken);
         }
 
         return new Default { A = true };

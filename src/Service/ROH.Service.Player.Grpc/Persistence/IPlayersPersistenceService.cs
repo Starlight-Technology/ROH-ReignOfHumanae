@@ -20,5 +20,7 @@ public interface IPlayersPersistenceService
 
     Task<PlayerState?> GetPlayerState(string guid);
 
+    Task RemovePlayer(string guid);
+
     Task SavePlayerPosition(PlayerRequest player, CancellationToken token);
 }

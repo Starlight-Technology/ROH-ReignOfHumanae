@@ -9,6 +9,7 @@ using AutoMapper;
 using FluentValidation;
 
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 
 using ROH.Context.File;
@@ -81,6 +82,35 @@ builder.Services.AddSingleton(mapper);
 
 WebApplication app = builder.Build();
 
+// Apply pending migrations
+using (IServiceScope scope = app.Services.CreateScope())
+{
+    ROH.Context.File.FileContext db = (ROH.Context.File.FileContext)scope.ServiceProvider.GetRequiredService<IFileContext>();
+    db.Database.Migrate();
+}
+
+static string GetSafeStoredFilePath(ROH.Context.File.Entities.GameFile file)
+{
+    string rootPath = Path.GetFullPath(file.Path);
+    string relativePath = NormalizeRelativePath(file.Name);
+    string filePath = Path.GetFullPath(Path.Combine(rootPath, relativePath));
+    string rootWithSeparator = rootPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+        + Path.DirectorySeparatorChar;
+
+    return !filePath.StartsWith(rootWithSeparator, StringComparison.OrdinalIgnoreCase)
+        ? throw new InvalidOperationException("Invalid file path.")
+        : filePath;
+}
+
+static string NormalizeRelativePath(string fileName)
+{
+    string safeName = string.IsNullOrWhiteSpace(fileName) ? "download.bin" : fileName;
+    return safeName
+        .Replace('\\', Path.DirectorySeparatorChar)
+        .Replace('/', Path.DirectorySeparatorChar)
+        .TrimStart(Path.DirectorySeparatorChar);
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -113,6 +143,95 @@ app.MapGet(
         .ConfigureAwait(false)
 )
     .WithName("DownloadFile")
+    .WithOpenApi();
+
+app.MapGet(
+    "DownloadFileRaw",
+    async (
+        ROH.Context.File.Interface.IGameFileRepository fileRepository,
+        ROH.Context.File.Interface.IGameVersionFileRepository versionFileRepository,
+        string fileGuid) =>
+    {
+        if (!Guid.TryParse(fileGuid, out Guid guid))
+            return Results.BadRequest();
+
+        var versionFile = await versionFileRepository.GetFileAsync(guid).ConfigureAwait(true);
+        var file = versionFile?.GameFile ?? await fileRepository.GetFileAsync(guid).ConfigureAwait(true);
+        if (file is null)
+            return Results.NotFound();
+
+        string filePath = GetSafeStoredFilePath(file);
+        if (!System.IO.File.Exists(filePath))
+            return Results.NotFound();
+
+        var stream = System.IO.File.OpenRead(filePath);
+        string downloadName = Path.GetFileName(NormalizeRelativePath(file.Name));
+        return Results.File(stream, "application/octet-stream", downloadName, lastModified: System.IO.File.GetLastWriteTimeUtc(filePath), entityTag: null, enableRangeProcessing: true);
+    })
+    .WithName("DownloadFileRaw")
+    .WithOpenApi();
+
+app.MapGet(
+    "FileChecksum",
+    async (
+        ROH.Context.File.Interface.IGameFileRepository fileRepository,
+        ROH.Context.File.Interface.IGameVersionFileRepository versionFileRepository,
+        string fileGuid) =>
+    {
+        if (!Guid.TryParse(fileGuid, out Guid guid))
+            return Results.BadRequest();
+
+        var versionFile = await versionFileRepository.GetFileAsync(guid).ConfigureAwait(true);
+        var file = versionFile?.GameFile ?? await fileRepository.GetFileAsync(guid).ConfigureAwait(true);
+        if (file is null)
+            return Results.NotFound();
+
+        string filePath = GetSafeStoredFilePath(file);
+        if (!System.IO.File.Exists(filePath))
+            return Results.NotFound();
+
+        using var sha = System.Security.Cryptography.SHA256.Create();
+        await using var fs = System.IO.File.OpenRead(filePath);
+        byte[] hash = sha.ComputeHash(fs);
+        string checksum = BitConverter.ToString(hash).Replace("-", string.Empty).ToLowerInvariant();
+
+        var resp = new ROH.StandardModels.Response.DefaultResponse(objectResponse: checksum);
+        return Results.Ok(resp);
+    })
+    .WithName("FileChecksum")
+    .WithOpenApi();
+
+app.MapPost(
+    "UploadBuildZip",
+    async (IGameVersionFileService gameVersionFileService, IFormFile file, string versionGuid) =>
+    {
+        if (file is null || file.Length == 0)
+            return Results.BadRequest();
+
+        if (!Guid.TryParse(versionGuid, out Guid guid))
+            return Results.BadRequest();
+
+        await using Stream stream = file.OpenReadStream();
+        ROH.StandardModels.Response.DefaultResponse result = await gameVersionFileService
+            .UploadBuildZipAsync(stream, guid)
+            .ConfigureAwait(false);
+
+        return Results.Ok(result);
+    })
+    .WithName("UploadBuildZip")
+    .WithOpenApi();
+
+app.MapPost(
+    "ConfirmBuildUpload",
+    async (IGameVersionFileService gameVersionFileService, BuildUploadConfirmation confirmation) =>
+    {
+        ROH.StandardModels.Response.DefaultResponse result = await gameVersionFileService
+            .ConfirmBuildUploadAsync(confirmation)
+            .ConfigureAwait(false);
+
+        return Results.Ok(result);
+    })
+    .WithName("ConfirmBuildUpload")
     .WithOpenApi();
 
 await app.RunAsync().ConfigureAwait(false);

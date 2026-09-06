@@ -12,11 +12,11 @@ namespace ROH.StandardModels.Version
 {
     public class GameVersionFileModel
     {
-        public GameFileModel ToFileModel() => new GameFileModel(Name, Format, Content, Size, Active);
+        public GameFileModel ToFileModel() => new GameFileModel(Name, Format, Content, Size, Active, Path);
 
-        public GameVersionFileListModel ToListModel() => new GameVersionFileListModel(Name, Size, Guid);
+        public GameVersionFileListModel ToListModel() => new GameVersionFileListModel(Name, Path, Size, Guid);
 
-        public bool Active { get; set; } = false;
+        public bool Active { get; set; } = true;
 
         public byte[]? Content { get; set; } = null;
 

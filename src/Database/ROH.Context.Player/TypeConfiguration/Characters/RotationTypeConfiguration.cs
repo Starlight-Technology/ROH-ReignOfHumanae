@@ -11,7 +11,7 @@ using ROH.Context.Player.Entities.Characters;
 
 namespace ROH.Context.Player.TypeConfiguration.Characters;
 
-class RotationTypeConfiguration : IEntityTypeConfiguration<Rotation>
+internal class RotationTypeConfiguration : IEntityTypeConfiguration<Rotation>
 {
     public void Configure(EntityTypeBuilder<Rotation> builder) => builder.HasKey(p => p.Id);
 }

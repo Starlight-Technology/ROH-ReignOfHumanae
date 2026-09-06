@@ -17,7 +17,7 @@ namespace ROH.Gateway.Controllers.Version;
 [Authorize]
 public class VersionFileController : ControllerBase
 {
-    readonly Api _api = new();
+    private readonly Api _api = new();
 
     [HttpGet("DownloadFile")]
     public async Task<IActionResult> DownloadFileAsync(string fileGuid, CancellationToken cancellationToken = default)
@@ -68,6 +68,52 @@ public class VersionFileController : ControllerBase
         try
         {
             string result = await _api.PostAsync(Api.Services.UploadVersionFile, file, cts.Token).ConfigureAwait(true);
+            return Ok(result);
+        }
+        catch (OperationCanceledException)
+        {
+            return StatusCode(408, "The request timed out.");
+        }
+    }
+
+    [AllowAnonymous]
+    [HttpPost("UploadBuildZip")]
+    public async Task<IActionResult> UploadBuildZipAsync(
+        IFormFile file,
+        Guid versionGuid,
+        CancellationToken cancellationToken = default)
+    {
+        using CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        cts.CancelAfter(TimeSpan.FromMinutes(10));
+        try
+        {
+            using MemoryStream ms = new();
+            await file.CopyToAsync(ms, cts.Token).ConfigureAwait(true);
+            ms.Position = 0;
+
+            string result = await _api.PostFileAsync(
+                Api.Services.UploadBuildZip, ms, file.FileName, versionGuid.ToString(), cts.Token)
+                .ConfigureAwait(true);
+            return Ok(result);
+        }
+        catch (OperationCanceledException)
+        {
+            return StatusCode(408, "The request timed out.");
+        }
+    }
+
+    [AllowAnonymous]
+    [HttpPost("ConfirmBuildUpload")]
+    public async Task<IActionResult> ConfirmBuildUploadAsync(
+        BuildUploadConfirmation confirmation,
+        CancellationToken cancellationToken = default)
+    {
+        using CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        cts.CancelAfter(TimeSpan.FromMinutes(2));
+        try
+        {
+            string result = await _api.PostAsync(Api.Services.ConfirmBuildUpload, confirmation, cts.Token)
+                .ConfigureAwait(true);
             return Ok(result);
         }
         catch (OperationCanceledException)

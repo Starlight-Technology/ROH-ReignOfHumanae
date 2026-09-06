@@ -1,10 +1,11 @@
 ﻿@using MudBlazor
+@inject IStringLocalizer<SharedResource> _loc
 
 <MudPaper Class="pa-6">
-    <MudText>Hello World</MudText>
+    <MudText>@_loc["Shared.HelloWorld"]</MudText>
 
     <MudButton OnClick="Close">
-        Close
+        @_loc["Shared.Close"]
     </MudButton>
 </MudPaper>
 

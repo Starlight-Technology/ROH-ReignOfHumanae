@@ -1,0 +1,73 @@
+@using ROH.Launcher.Services
+@using Corona.Components.Enums
+@implements IDisposable
+@inject ConfirmService ConfirmService
+
+@if (_visible && _current != null)
+{
+    <CoronaDialog Open="true" 
+                  Title="@_title" 
+                  OnClose="@(async () => await Cancel())">
+        <ChildContent>
+            <p class="corona-dialog-message">@_message</p>
+        </ChildContent>
+        <Actions>
+            <CoronaButton Variant="CoronaButtonVariant.Outlined" OnClick="@(async () => await Cancel())">
+                Cancelar
+            </CoronaButton>
+            <CoronaButton Variant="CoronaButtonVariant.Filled" Color="CoronaColorSemantic.Primary" OnClick="@(async () => await Confirm())">
+                Confirmar
+            </CoronaButton>
+        </Actions>
+    </CoronaDialog>
+}
+
+@code{
+    bool _visible = false;
+    string _title = string.Empty;
+    string _message = string.Empty;
+    ConfirmRequest? _current;
+
+    protected override void OnInitialized()
+    {
+        ConfirmService.OnConfirmRequested += OnRequested;
+    }
+
+    void OnRequested(ConfirmRequest req)
+    {
+        _current = req;
+        _title = req.Title;
+        _message = req.Message;
+        _visible = true;
+        InvokeAsync(StateHasChanged);
+    }
+
+    async Task Confirm()
+    {
+        if (_current != null)
+        {
+            _current.Tcs.TrySetResult(true);
+            _current = null;
+        }
+
+        _visible = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    async Task Cancel()
+    {
+        if (_current != null)
+        {
+            _current.Tcs.TrySetResult(false);
+            _current = null;
+        }
+
+        _visible = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        ConfirmService.OnConfirmRequested -= OnRequested;
+    }
+}

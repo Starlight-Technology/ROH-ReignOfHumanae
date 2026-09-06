@@ -1,0 +1,1282 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <!-- ===== Layout ===== -->
+  <data name="Layout.Title" xml:space="preserve">
+    <value>Reino de Humanae</value>
+  </data>
+  <data name="Layout.DrawerTitle" xml:space="preserve">
+    <value>Arquivo Humanae</value>
+  </data>
+  <data name="Layout.Menu" xml:space="preserve">
+    <value>Menu</value>
+  </data>
+  <data name="Layout.Account" xml:space="preserve">
+    <value>Conta</value>
+  </data>
+  <data name="Layout.RejoinServer" xml:space="preserve">
+    <value>Reconectando ao servidor...</value>
+  </data>
+  <data name="Layout.RejoinFailed" xml:space="preserve">
+    <value>Falha ao reconectar... tentando novamente em </value>
+  </data>
+  <data name="Layout.Seconds" xml:space="preserve">
+    <value> segundos.</value>
+  </data>
+  <data name="Layout.RejoinFailedFinal" xml:space="preserve">
+    <value>Falha ao reconectar.&lt;br /&gt;Tente novamente ou recarregue a página.</value>
+  </data>
+  <data name="Layout.Retry" xml:space="preserve">
+    <value>Tentar Novamente</value>
+  </data>
+  <data name="Layout.SessionPaused" xml:space="preserve">
+    <value>A sessão foi pausada pelo servidor.</value>
+  </data>
+  <data name="Layout.ResumeFailed" xml:space="preserve">
+    <value>Falha ao retomar a sessão.&lt;br /&gt;Tente novamente ou recarregue a página.</value>
+  </data>
+  <data name="Layout.Resume" xml:space="preserve">
+    <value>Retomar</value>
+  </data>
+  <!-- ===== Navigation ===== -->
+  <data name="Nav.Home" xml:space="preserve">
+    <value>Início</value>
+  </data>
+  <data name="Nav.Manager" xml:space="preserve">
+    <value>Gerenciador</value>
+  </data>
+  <data name="Nav.Login" xml:space="preserve">
+    <value>Entrar</value>
+  </data>
+  <data name="Nav.Crafting" xml:space="preserve">
+    <value>Craftagem</value>
+  </data>
+  <data name="Nav.Lore" xml:space="preserve">
+    <value>Lore</value>
+  </data>
+  <data name="Nav.MagicSkills" xml:space="preserve">
+    <value>Magias e Habilidades</value>
+  </data>
+  <data name="Nav.Races" xml:space="preserve">
+    <value>Raças</value>
+  </data>
+  <data name="Nav.WorldBosses" xml:space="preserve">
+    <value>Chefes Mundiais</value>
+  </data>
+  <!-- ===== Shared / Common ===== -->
+  <data name="Shared.Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Shared.Close" xml:space="preserve">
+    <value>Fechar</value>
+  </data>
+  <data name="Shared.Confirm" xml:space="preserve">
+    <value>Confirmar</value>
+  </data>
+  <data name="Shared.Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="Shared.Save" xml:space="preserve">
+    <value>Salvar</value>
+  </data>
+  <data name="Shared.Error" xml:space="preserve">
+    <value>Erro</value>
+  </data>
+  <data name="Shared.Success" xml:space="preserve">
+    <value>Sucesso</value>
+  </data>
+  <data name="Shared.Warning" xml:space="preserve">
+    <value>Aviso</value>
+  </data>
+  <data name="Shared.AccessDenied" xml:space="preserve">
+    <value>Acesso Negado</value>
+  </data>
+  <data name="Shared.NotAuthorized" xml:space="preserve">
+    <value>Você não está autorizado a ver esta página.</value>
+  </data>
+  <data name="Shared.ContactSupport" xml:space="preserve">
+    <value>Se você acredita que isto é um erro, entre em contato com o suporte.</value>
+  </data>
+  <data name="Shared.HelloWorld" xml:space="preserve">
+    <value>Olá Mundo</value>
+  </data>
+  <!-- ===== NotFound / Error ===== -->
+  <data name="NotFound.Title" xml:space="preserve">
+    <value>Não Encontrado</value>
+  </data>
+  <data name="NotFound.Message" xml:space="preserve">
+    <value>Desculpe, o conteúdo que você procura não existe.</value>
+  </data>
+  <data name="Error.Title" xml:space="preserve">
+    <value>Erro</value>
+  </data>
+  <data name="Error.Description" xml:space="preserve">
+    <value>Ocorreu um erro ao processar sua solicitação.</value>
+  </data>
+  <data name="Error.RequestId" xml:space="preserve">
+    <value>ID da Solicitação:</value>
+  </data>
+  <data name="Error.DevMode" xml:space="preserve">
+    <value>Modo de Desenvolvimento</value>
+  </data>
+  <data name="Error.DevModeDesc1" xml:space="preserve">
+    <value>Você está executando em modo de desenvolvimento. Certifique-se de que o servidor backend esteja em execução.</value>
+  </data>
+  <data name="Error.DevModeDesc2" xml:space="preserve">
+    <value>Esta página exibirá informações úteis de depuração quando ocorrerem erros.</value>
+  </data>
+  <!-- ===== Account / Login ===== -->
+  <data name="Account.LoginTitle" xml:space="preserve">
+    <value>Entrar</value>
+  </data>
+  <data name="Account.LoginField" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="Account.Password" xml:space="preserve">
+    <value>Senha</value>
+  </data>
+  <data name="Account.NewAccount" xml:space="preserve">
+    <value>Nova Conta</value>
+  </data>
+  <data name="Account.ForgotPassword" xml:space="preserve">
+    <value>Esqueci a Senha</value>
+  </data>
+  <data name="Account.CreateTitle" xml:space="preserve">
+    <value>Criar Conta</value>
+  </data>
+  <data name="Account.Email" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="Account.Username" xml:space="preserve">
+    <value>Nome de Usuário</value>
+  </data>
+  <data name="Account.ConfirmPassword" xml:space="preserve">
+    <value>Confirmar Senha</value>
+  </data>
+  <data name="Account.PasswordsDontMatch" xml:space="preserve">
+    <value>As senhas não conferem!</value>
+  </data>
+  <!-- ===== Version Manager ===== -->
+  <data name="Version.ManagerTitle" xml:space="preserve">
+    <value>Gerenciador de Versões</value>
+  </data>
+  <data name="Version.TabCurrent" xml:space="preserve">
+    <value>Atual</value>
+  </data>
+  <data name="Version.TabVersions" xml:space="preserve">
+    <value>Versões</value>
+  </data>
+  <data name="Version.TabNewVersion" xml:space="preserve">
+    <value>Nova Versão</value>
+  </data>
+  <data name="Version.DetailTitle" xml:space="preserve">
+    <value>Versão</value>
+  </data>
+  <data name="Version.ReleaseVersion" xml:space="preserve">
+    <value>Lançar Versão</value>
+  </data>
+  <data name="Version.ReleaseConfirm" xml:space="preserve">
+    <value>Lançar versão v{0}.{1}.{2}? O upload de novos arquivos será bloqueado após o lançamento.</value>
+  </data>
+  <data name="Version.UnityGuide" xml:space="preserve">
+    <value>Guia de Atualização Unity</value>
+  </data>
+  <data name="Version.UploadTab" xml:space="preserve">
+    <value>Upload de Arquivo</value>
+  </data>
+  <data name="Version.CurrentTitle" xml:space="preserve">
+    <value>Versão Atual</value>
+  </data>
+  <data name="Version.NewVersionTitle" xml:space="preserve">
+    <value>Nova Versão</value>
+  </data>
+  <data name="Version.LabelVersion" xml:space="preserve">
+    <value>Versão</value>
+  </data>
+  <data name="Version.LabelRelease" xml:space="preserve">
+    <value>Lançamento</value>
+  </data>
+  <data name="Version.LabelReview" xml:space="preserve">
+    <value>Revisão</value>
+  </data>
+  <data name="Version.CreateNewVersion" xml:space="preserve">
+    <value>Criar Nova Versão</value>
+  </data>
+  <data name="Version.VersionsList" xml:space="preserve">
+    <value>Versões</value>
+  </data>
+  <data name="Version.VersionType" xml:space="preserve">
+    <value>Tipo de Versão</value>
+  </data>
+  <data name="Version.AllVersions" xml:space="preserve">
+    <value>Todas as Versões</value>
+  </data>
+  <data name="Version.ReleasedVersions" xml:space="preserve">
+    <value>Versões Lançadas</value>
+  </data>
+  <data name="Version.Search" xml:space="preserve">
+    <value>Pesquisar</value>
+  </data>
+  <data name="Version.SearchPlaceholder" xml:space="preserve">
+    <value>Pesquisar...</value>
+  </data>
+  <data name="Version.VersionDate" xml:space="preserve">
+    <value>Data da Versão</value>
+  </data>
+  <data name="Version.Clear" xml:space="preserve">
+    <value>Limpar</value>
+  </data>
+  <data name="Version.ReleaseDate" xml:space="preserve">
+    <value>Data de Lançamento</value>
+  </data>
+  <data name="Version.Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Version.Released" xml:space="preserve">
+    <value>Lançada</value>
+  </data>
+  <data name="Version.Review" xml:space="preserve">
+    <value>Revisão</value>
+  </data>
+  <data name="Version.Previous" xml:space="preserve">
+    <value>Anterior</value>
+  </data>
+  <data name="Version.Next" xml:space="preserve">
+    <value>Próximo</value>
+  </data>
+  <data name="Version.PageOf" xml:space="preserve">
+    <value>Página {0} de {1}</value>
+  </data>
+  <data name="Version.NoVersions" xml:space="preserve">
+    <value>Nenhuma versão corresponde aos filtros atuais.</value>
+  </data>
+  <data name="Version.Pending" xml:space="preserve">
+    <value>Pendente</value>
+  </data>
+  <data name="Version.FilesTitle" xml:space="preserve">
+    <value>Arquivos</value>
+  </data>
+  <data name="Version.FileName" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="Version.FilePath" xml:space="preserve">
+    <value>Caminho</value>
+  </data>
+  <data name="Version.FileSize" xml:space="preserve">
+    <value>Tamanho</value>
+  </data>
+  <data name="Version.FileActive" xml:space="preserve">
+    <value>Ativo</value>
+  </data>
+  <data name="Version.FileInactive" xml:space="preserve">
+    <value>Inativo</value>
+  </data>
+  <data name="Version.NoFiles" xml:space="preserve">
+    <value>Nenhum arquivo enviado para esta versão.</value>
+  </data>
+  <data name="Version.Root" xml:space="preserve">
+    <value>Raiz</value>
+  </data>
+  <data name="Version.SummaryReleaseDate" xml:space="preserve">
+    <value>Data de Lançamento</value>
+  </data>
+  <!-- ===== Upload ===== -->
+  <data name="Upload.FolderHint" xml:space="preserve">
+    <value>Se o arquivo estiver em uma subpasta do build, selecione essa pasta em Target Folder antes de enviar.</value>
+  </data>
+  <data name="Upload.ReleaseHint" xml:space="preserve">
+    <value>Evite liberar a versão enquanto houver erro de validação ou arquivos essenciais faltando.</value>
+  </data>
+  <data name="Upload.UpdateTarget" xml:space="preserve">
+    <value>Alvo de Atualização</value>
+  </data>
+  <data name="Upload.TargetFolder" xml:space="preserve">
+    <value>Pasta de Destino</value>
+  </data>
+  <data name="Upload.TargetFolderPlaceholder" xml:space="preserve">
+    <value>Pasta de destino</value>
+  </data>
+  <data name="Upload.CreateFolder" xml:space="preserve">
+    <value>Criar Pasta</value>
+  </data>
+  <data name="Upload.ApplyToFiles" xml:space="preserve">
+    <value>Aplicar aos Arquivos</value>
+  </data>
+  <data name="Upload.CurrentTarget" xml:space="preserve">
+    <value>Destino atual</value>
+  </data>
+  <data name="Upload.SelectFiles" xml:space="preserve">
+    <value>Selecionar Arquivos para o Alvo</value>
+  </data>
+  <data name="Upload.Submit" xml:space="preserve">
+    <value>Enviar</value>
+  </data>
+  <data name="Upload.ClearSelection" xml:space="preserve">
+    <value>Limpar Seleção</value>
+  </data>
+  <data name="Upload.ValidationHeader" xml:space="preserve">
+    <value>Validação da seleção</value>
+  </data>
+  <data name="Upload.ReadyToSend" xml:space="preserve">
+    <value>Seleção pronta para envio.</value>
+  </data>
+  <data name="Upload.Remove" xml:space="preserve">
+    <value>Remover</value>
+  </data>
+  <data name="Upload.Progress" xml:space="preserve">
+    <value>Enviando... {0}%</value>
+  </data>
+  <data name="Upload.PresetBuildRoot" xml:space="preserve">
+    <value>Build Root</value>
+  </data>
+  <data name="Upload.PresetUnityData" xml:space="preserve">
+    <value>Pasta de Dados Unity</value>
+  </data>
+  <data name="Upload.PresetAddressables" xml:space="preserve">
+    <value>Addressables</value>
+  </data>
+  <data name="Upload.PresetStreamingAssets" xml:space="preserve">
+    <value>StreamingAssets</value>
+  </data>
+  <data name="Upload.PresetCustom" xml:space="preserve">
+    <value>Pasta Personalizada</value>
+  </data>
+  <data name="Upload.StatusReady" xml:space="preserve">
+    <value>Pronto</value>
+  </data>
+  <data name="Upload.StatusUploaded" xml:space="preserve">
+    <value>Enviado</value>
+  </data>
+  <data name="Upload.StatusUploading" xml:space="preserve">
+    <value>Enviando</value>
+  </data>
+  <data name="Upload.StatusSkipped" xml:space="preserve">
+    <value>Pulado</value>
+  </data>
+  <data name="Upload.StatusError" xml:space="preserve">
+    <value>Erro</value>
+  </data>
+  <data name="Upload.SeverityBlocks" xml:space="preserve">
+    <value>Bloqueia</value>
+  </data>
+  <data name="Upload.SeverityHint" xml:space="preserve">
+    <value>Dica</value>
+  </data>
+  <data name="Upload.GameRoot" xml:space="preserve">
+    <value>Raiz do Jogo</value>
+  </data>
+  <data name="Upload.AlertSelectFile" xml:space="preserve">
+    <value>Selecione ao menos um arquivo para enviar.</value>
+  </data>
+  <data name="Upload.AlertFileTooLarge" xml:space="preserve">
+    <value>O tamanho do arquivo deve ser menor que 1 Gb.</value>
+  </data>
+  <data name="Upload.AlertUploadFailed" xml:space="preserve">
+    <value>Falha no upload.</value>
+  </data>
+  <data name="Upload.AlertUploadSuccess" xml:space="preserve">
+    <value>Arquivo enviado com sucesso</value>
+  </data>
+  <data name="Upload.AlertUploadFolder" xml:space="preserve">
+    <value>Pasta de Upload</value>
+  </data>
+  <data name="Upload.AlertTypeFolder" xml:space="preserve">
+    <value>Digite uma pasta de destino ou use o preset de raiz do build.</value>
+  </data>
+  <data name="Upload.AlertInvalidGuid" xml:space="preserve">
+    <value>UUID de versão incorreto</value>
+  </data>
+  <data name="Upload.AlertCannotGetResponse" xml:space="preserve">
+    <value>Não foi possível obter resposta do servidor.</value>
+  </data>
+  <!-- Upload Validation Messages -->
+  <data name="Upload.ValidationEmptyFile" xml:space="preserve">
+    <value>{0}: arquivo vazio não pode ser enviado.</value>
+  </data>
+  <data name="Upload.ValidationTooLarge" xml:space="preserve">
+    <value>{0}: o tamanho do arquivo deve ser menor que 1 Gb.</value>
+  </data>
+  <data name="Upload.ValidationEditorFile" xml:space="preserve">
+    <value>{0}: arquivo de Editor/Asset Database não deve entrar no update do launcher.</value>
+  </data>
+  <data name="Upload.ValidationDebugFile" xml:space="preserve">
+    <value>{0}: arquivo de debug/log não deve ser publicado para jogadores.</value>
+  </data>
+  <data name="Upload.ValidationAddressables" xml:space="preserve">
+    <value>{0}: Addressables Windows aceita catalog*.json, *.hash ou *.bundle.</value>
+  </data>
+  <data name="Upload.ValidationDataFolder" xml:space="preserve">
+    <value>{0}: este arquivo parece ser da pasta ReignOfHumanae_Data. Escolha Unity Data Folder ou uma subpasta.</value>
+  </data>
+  <data name="Upload.ValidationStreamingAssets" xml:space="preserve">
+    <value>{0}: confirme se o jogo realmente lê este arquivo sem extensão em StreamingAssets.</value>
+  </data>
+  <data name="Upload.ValidationNoExe" xml:space="preserve">
+    <value>Build root sem .exe: confira se o executável do jogo também precisa entrar neste update.</value>
+  </data>
+  <data name="Upload.ValidationNoUnityPlayer" xml:space="preserve">
+    <value>Build root sem UnityPlayer.dll: envie quando a Unity gerar uma nova DLL.</value>
+  </data>
+  <data name="Upload.ValidationRootOnly" xml:space="preserve">
+    <value>Você selecionou apenas arquivos da raiz. Se cenas ou recursos mudaram, envie também a pasta ReignOfHumanae_Data correspondente.</value>
+  </data>
+  <data name="Upload.ValidationNoCatalog" xml:space="preserve">
+    <value>Addressables sem catalog*.json: envie o catálogo quando a lista de bundles mudar.</value>
+  </data>
+  <data name="Upload.ValidationNoHash" xml:space="preserve">
+    <value>Addressables sem *.hash: envie o hash junto do catálogo para o cliente detectar mudanças.</value>
+  </data>
+  <data name="Upload.ValidationNoBundle" xml:space="preserve">
+    <value>Addressables sem *.bundle: confirme se houve bundle novo ou alterado.</value>
+  </data>
+  <data name="Upload.SummaryBlocks" xml:space="preserve">
+    <value>{0} bloqueio(s)</value>
+  </data>
+  <data name="Upload.SummaryWarnings" xml:space="preserve">
+    <value>{0} aviso(s)</value>
+  </data>
+  <data name="Upload.SummaryReady" xml:space="preserve">
+    <value>Pronto</value>
+  </data>
+  <data name="Upload.FolderExample" xml:space="preserve">
+    <value>Dados/Mapas</value>
+  </data>
+  <!-- ===== Unity Update Guide ===== -->
+  <data name="Guide.Flow" xml:space="preserve">
+    <value>Fluxo recomendado para gerar um update</value>
+  </data>
+  <data name="Guide.Description" xml:space="preserve">
+    <value>Gere os arquivos na mesma versão da Unity do projeto, envie cada grupo para o alvo correto e só depois libere a versão. O launcher aplica os arquivos respeitando o caminho relativo salvo em cada upload.</value>
+  </data>
+  <data name="Guide.UnityVersion" xml:space="preserve">
+    <value>Unity 6000.4.8f1</value>
+  </data>
+  <data name="Guide.StepInUnity" xml:space="preserve">
+    <value>Passo na Unity</value>
+  </data>
+  <data name="Guide.FilesToSend" xml:space="preserve">
+    <value>Arquivos para enviar</value>
+  </data>
+  <data name="Guide.ValidationBeforeRelease" xml:space="preserve">
+    <value>Validação antes do release</value>
+  </data>
+  <data name="Guide.Step1Title" xml:space="preserve">
+    <value>Build raiz do player</value>
+  </data>
+  <data name="Guide.Step1Target" xml:space="preserve">
+    <value>Target: IL2CPP Build / Patch ou Game Root</value>
+  </data>
+  <data name="Guide.Step1Path" xml:space="preserve">
+    <value>File &gt; Build Profiles &gt; Windows &gt; Build. Use Standalone Windows x64 com IL2CPP e gere o build em uma pasta limpa.</value>
+  </data>
+  <data name="Guide.Step1Files" xml:space="preserve">
+    <value>ReignOfHumanae.exe; UnityPlayer.dll, GameAssembly.dll e demais DLLs da raiz; UnityCrashHandler64.exe quando for gerado pela Unity</value>
+  </data>
+  <data name="Guide.Step1Validate1" xml:space="preserve">
+    <value>O alvo deve ser Game Root.</value>
+  </data>
+  <data name="Guide.Step1Validate2" xml:space="preserve">
+    <value>Não envie arquivos da pasta ReignOfHumanae_Data nesse alvo.</value>
+  </data>
+  <data name="Guide.Step1Validate3" xml:space="preserve">
+    <value>Não envie pastas de backup, logs, PDB ou arquivos .meta.</value>
+  </data>
+  <data name="Guide.Step2Title" xml:space="preserve">
+    <value>Pasta de dados da Unity</value>
+  </data>
+  <data name="Guide.Step2Target" xml:space="preserve">
+    <value>Target: ReignOfHumanae_Data ou subpastas dentro dela</value>
+  </data>
+  <data name="Guide.Step2Path" xml:space="preserve">
+    <value>Depois do build, abra a pasta ReignOfHumanae_Data gerada ao lado do executável e envie os arquivos alterados mantendo o mesmo caminho relativo.</value>
+  </data>
+  <data name="Guide.Step2Files" xml:space="preserve">
+    <value>globalgamemanagers, resources.assets e sharedassets*.assets; Arquivos .resource, .resS, .dat e subpastas como Managed, Plugins ou il2cpp_data; Arquivos de cena e recursos gerados pela Unity</value>
+  </data>
+  <data name="Guide.Step2Validate1" xml:space="preserve">
+    <value>Use Target Folder começando por ReignOfHumanae_Data.</value>
+  </data>
+  <data name="Guide.Step2Validate2" xml:space="preserve">
+    <value>Arquivos sem extensão pertencem normalmente a esta pasta, não a raiz.</value>
+  </data>
+  <data name="Guide.Step2Validate3" xml:space="preserve">
+    <value>Mantenha cada subpasta igual ao build gerado pela Unity.</value>
+  </data>
+  <data name="Guide.Step3Title" xml:space="preserve">
+    <value>Addressables Windows</value>
+  </data>
+  <data name="Guide.Step3Target" xml:space="preserve">
+    <value>Target: ReignOfHumanae_Data/StreamingAssets/aa/StandaloneWindows64</value>
+  </data>
+  <data name="Guide.Step3Path" xml:space="preserve">
+    <value>Window &gt; Asset Management &gt; Addressables &gt; Groups &gt; Build &gt; New Build &gt; Default Build Script. Depois copie a saída de StandaloneWindows64 para o alvo indicado.</value>
+  </data>
+  <data name="Guide.Step3Files" xml:space="preserve">
+    <value>catalog*.json; *.hash; *.bundle</value>
+  </data>
+  <data name="Guide.Step3Validate1" xml:space="preserve">
+    <value>O alvo deve ser StandaloneWindows64.</value>
+  </data>
+  <data name="Guide.Step3Validate2" xml:space="preserve">
+    <value>O catálogo .json e o .hash devem ir juntos quando o catálogo mudar.</value>
+  </data>
+  <data name="Guide.Step3Validate3" xml:space="preserve">
+    <value>Bundles devem permanecer no mesmo alvo do catálogo.</value>
+  </data>
+  <data name="Guide.Step4Title" xml:space="preserve">
+    <value>StreamingAssets manuais</value>
+  </data>
+  <data name="Guide.Step4Target" xml:space="preserve">
+    <value>Target: ReignOfHumanae_Data/StreamingAssets ou subpastas dentro dela</value>
+  </data>
+  <data name="Guide.Step4Path" xml:space="preserve">
+    <value>Coloque configs ou dados manuais em Assets/StreamingAssets antes do build. A Unity copia essa pasta para ReignOfHumanae_Data/StreamingAssets.</value>
+  </data>
+  <data name="Guide.Step4Files" xml:space="preserve">
+    <value>Configs .json, .xml, .txt ou .bytes usados em runtime; Dados baixados pelo jogo a partir de StreamingAssets; Subpastas que o código do jogo espera encontrar</value>
+  </data>
+  <data name="Guide.Step4Validate1" xml:space="preserve">
+    <value>Use Target Folder começando por ReignOfHumanae_Data/StreamingAssets.</value>
+  </data>
+  <data name="Guide.Step4Validate2" xml:space="preserve">
+    <value>Não envie scripts .cs, arquivos .asmdef ou .meta.</value>
+  </data>
+  <data name="Guide.Step4Validate3" xml:space="preserve">
+    <value>Confirme se o caminho final bate com o caminho lido pelo jogo.</value>
+  </data>
+  <!-- ===== Home Page ===== -->
+  <data name="Home.Title" xml:space="preserve">
+    <value>Reino de Humanae</value>
+  </data>
+  <data name="Home.Intro" xml:space="preserve">
+    <value>O antigo reino de Humanae floresceu com uma unidade que transcendia o tempo. Os Humanae, uma raça inteligente dotada de uma consciência coletiva, prosperaram em harmonia por séculos. No entanto, conforme as épocas se desdobravam, a essência de Humanae fragmentou-se em entidades distintas, dando origem aos Humanos, Elfos, Anões e Demônios.</value>
+  </data>
+  <data name="Home.BadgeMMORPG" xml:space="preserve">
+    <value>MMORPG Imersivo</value>
+  </data>
+  <data name="Home.BadgeFourRaces" xml:space="preserve">
+    <value>Quatro Raças</value>
+  </data>
+  <data name="Home.BadgeWorldBosses" xml:space="preserve">
+    <value>Chefes Mundiais</value>
+  </data>
+  <data name="Home.SectionWorld" xml:space="preserve">
+    <value>O Mundo de Humanae</value>
+  </data>
+  <data name="Home.WorldText" xml:space="preserve">
+    <value>O mundo de Humanae é um reino vasto e implacável, onde cinco civilizações disputam domínio. Das florestas encantadas de Eldrath às profundezas em chamas de Netharion, cada nação forjou seu próprio destino através de séries de conflitos e alianças. Esta terra antiga guarda segredos que apenas os corajosos ousam descobrir.</value>
+  </data>
+  <data name="Home.SectionRaces" xml:space="preserve">
+    <value>As Raças</value>
+  </data>
+  <data name="Home.Humans" xml:space="preserve">
+    <value>Humanos</value>
+  </data>
+  <data name="Home.HumansText" xml:space="preserve">
+    <value>Os Humanos são uma raça versátil e adaptável, conhecida por sua resiliência e ambição. Originários das planícies de Valdoria, constroem impérios através da diplomacia e da força, sempre buscando expandir suas fronteiras.</value>
+  </data>
+  <data name="Home.Elves" xml:space="preserve">
+    <value>Elfos</value>
+  </data>
+  <data name="Home.ElvesText" xml:space="preserve">
+    <value>Os Elfos são seres graciosos e imortais das florestas de Eldrath. Mestres da magia arcaica e do arco, sua civilização milenar guarda segredos que os mortais mal podem compreender.</value>
+  </data>
+  <data name="Home.Dwarfs" xml:space="preserve">
+    <value>Anões</value>
+  </data>
+  <data name="Home.DwarfsText" xml:space="preserve">
+    <value>Os Anões são artesãos lendários e guerreiros robustos das montanhas de Khaz-Vorn. Forjadores de metais mágicos e construtores de fortalezas impenetráveis, sua maestria em engenharia é inigualável.</value>
+  </data>
+  <data name="Home.Demons" xml:space="preserve">
+    <value>Demônios</value>
+  </data>
+  <data name="Home.DemonsText" xml:space="preserve">
+    <value>Os Demônios são criaturas de pura essência corrupta das Terras Abissais de Netharion. Alimentados por almas e guiados por senhores sombrios, buscam consumir e corromper todo o reino de Humanae.</value>
+  </data>
+  <data name="Home.SectionAgeOfStrife" xml:space="preserve">
+    <value>A Era da Discórdia</value>
+  </data>
+  <data name="Home.AgeOfStrifeText" xml:space="preserve">
+    <value>Há séculos, as raças de Humanae viviam em guerra constante. A Era da Discórdia foi um período de sofrimento infinito, onde o sangue molhava cada centímetro do solo. Impérios surgiam e caíam em ciclos intermináveis de violência, até que algo mudou.</value>
+  </data>
+  <data name="Home.SectionSentinelAccord" xml:space="preserve">
+    <value>O Acordo Sentinel</value>
+  </data>
+  <data name="Home.SentinelAccordText" xml:space="preserve">
+    <value>Cansados do derramamento de sangue sem fim, os líderes das principais raças se reuniram para estabelecer o Acordo Sentinel, um tratado precário que delimitou fronteiras e estabeleceu uma paz tensa. Embora a trégua seja mantida, as faíscas da guerra ainda ardem sob as cinzas.</value>
+  </data>
+  <data name="Home.SectionWorldBosses" xml:space="preserve">
+    <value>Chefes Mundiais</value>
+  </data>
+  <data name="Home.WorldBossesText" xml:space="preserve">
+    <value>Bestas de poder inimaginável vagam por Humanae. Os Chefes Mundiais são criaturas colossais que exigem exércitos inteiros para serem enfrentadas. Cada derrota de um Chefe Mundial concede recompensas lendárias e glória eterna para os bravos que ousam enfrentá-los.</value>
+  </data>
+  <data name="Home.SectionRoleOfKings" xml:space="preserve">
+    <value>O Papel dos Reis</value>
+  </data>
+  <data name="Home.RoleOfKingsText" xml:space="preserve">
+    <value>Em Humanae, os reis não são meros governantes — são campeões imbuídos de poder ancestral. Cada raça elege seu monarca através de provações de força e sabedoria. O Rei ou Rainha comanda exércitos, declara guerra e negocia paz, sendo a vontade viva de seu povo.</value>
+  </data>
+  <data name="Home.SectionGuardians" xml:space="preserve">
+    <value>Guardiões</value>
+  </data>
+  <data name="Home.GuardiansText" xml:space="preserve">
+    <value>Guardiões são entidades antigas que protegem locais sagrados e portais dimensionais. Cada Guardião possui personalidade e motivações únicas — alguns são benevolentes e oferecem bênçãos, outros testam a coragem dos aventureiros que se aproximam de seus domínios.</value>
+  </data>
+  <data name="Home.SectionCrafting" xml:space="preserve">
+    <value>Artesanato</value>
+  </data>
+  <data name="Home.CraftingText" xml:space="preserve">
+    <value>O sistema de artesanato de Humanae é um dos mais profundos do gênero. Colete materiais raros, aprenda receitas lendárias e forje equipamentos que serão lembrados por gerações. Cada item criado conta uma história, e cada mestre artesão deixa sua marca no mundo.</value>
+  </data>
+  <data name="Home.SectionMagicSkills" xml:space="preserve">
+    <value>Magia &amp; Habilidades</value>
+  </data>
+  <data name="Home.MagicSkillsText" xml:space="preserve">
+    <value>Domine as artes arcanas e desenvolva habilidades únicas através de um sistema de progressão ramificada. Da piromancia ao controle elemental, cada escola de magia oferece estilos de combate distintos. Aventureiros podem especializar-se em uma escola ou misturar disciplinas para criar sinergias poderosas.</value>
+  </data>
+  <!-- ===== Lore Pages ===== -->
+  <data name="Lore.Title" xml:space="preserve">
+    <value>Lore</value>
+  </data>
+  <data name="Lore.Intro" xml:space="preserve">
+    <value>Bem-vindo ao Lore de Humanae. Mergulhe nas histórias que moldaram este mundo — desde a Criação pelos Primeiros Seres até os dias atuais do Conflito Eterno.</value>
+  </data>
+  <data name="Lore.OverviewTitle" xml:space="preserve">
+    <value>Visão Geral</value>
+  </data>
+  <data name="Lore.OverviewText" xml:space="preserve">
+    <value>Humanae é um mundo forjado por deuses antigos e moldado por incontáveis eras de conflito. Esta seção detalha a história, mitos e lendas que definem cada civilização.</value>
+  </data>
+  <data name="Races.Title" xml:space="preserve">
+    <value>As Raças</value>
+  </data>
+  <data name="WorldBosses.Title" xml:space="preserve">
+    <value>Chefes Mundiais</value>
+  </data>
+  <data name="WorldBosses.CelestialWyrm" xml:space="preserve">
+    <value>Wyrm Celestial</value>
+  </data>
+  <data name="WorldBosses.GolemTyrant" xml:space="preserve">
+    <value>Tirano Golem</value>
+  </data>
+  <data name="WorldBosses.SylvanBehemoth" xml:space="preserve">
+    <value>Beemote Silvano</value>
+  </data>
+  <data name="WorldBosses.StormSerpent" xml:space="preserve">
+    <value>Serpente da Tempestade</value>
+  </data>
+  <data name="WorldBosses.InfernalArbiter" xml:space="preserve">
+    <value>Árbitro Infernal</value>
+  </data>
+  <data name="WorldBosses.LunarGazer" xml:space="preserve">
+    <value>Observador Lunar</value>
+  </data>
+  <data name="WorldBosses.AegisGuardian" xml:space="preserve">
+    <value>Guardião Égide</value>
+  </data>
+  <data name="WorldBosses.AbyssalLeviathan" xml:space="preserve">
+    <value>Leviatã Abissal</value>
+  </data>
+  <data name="WorldBosses.CelestialWeaver" xml:space="preserve">
+    <value>Tecelão Celestial</value>
+  </data>
+  <data name="WorldBosses.EtherealWhisperer" xml:space="preserve">
+    <value>Sussurrador Etéreo</value>
+  </data>
+  <data name="WorldBosses.MoltenMonarch" xml:space="preserve">
+    <value>Monarca Derretido</value>
+  </data>
+  <data name="WorldBosses.LunarSage" xml:space="preserve">
+    <value>Sábio Lunar</value>
+  </data>
+  <data name="WorldBosses.GeneratedByAI" xml:space="preserve">
+    <value>Gerado por IA</value>
+  </data>
+  <data name="MagicSkills.Title" xml:space="preserve">
+    <value>Magias e Habilidades</value>
+  </data>
+  <data name="MagicSkills.Intro" xml:space="preserve">
+    <value>O sistema de magia de Humanae oferece profundidade e personalização incomparáveis. Cada escola de magia possui sua árvore de habilidades única, permitindo que aventureiros criem estilos de combate verdadeiramente únicos.</value>
+  </data>
+  <data name="MagicSkills.SkillDevelopment" xml:space="preserve">
+    <value>Desenvolvimento de Habilidade</value>
+  </data>
+  <data name="MagicSkills.SkillDevelopmentText" xml:space="preserve">
+    <value>Habilidades são desenvolvidas através do uso contínuo e da conclusão de missões específicas. Quanto mais você usa uma habilidade, mais ela evolui, destravando variantes mais poderosas.</value>
+  </data>
+  <data name="MagicSkills.SkillTrees" xml:space="preserve">
+    <value>Árvores de Habilidade</value>
+  </data>
+  <data name="MagicSkills.SkillTreesText" xml:space="preserve">
+    <value>Cada raça possui árvores de habilidade únicas baseadas em suas afinidades ancestrais. Humanos têm árvores versáteis, Elfos dominam magia elemental, Anões têm técnicas de forja e Demônios canalizam poder abissal.</value>
+  </data>
+  <data name="MagicSkills.MagicChanneling" xml:space="preserve">
+    <value>Canalização Mágica</value>
+  </data>
+  <data name="MagicSkills.MagicChannelingText" xml:space="preserve">
+    <value>Canalizar magia requer concentração e foco. Interrupções podem causar efeitos colaterais perigosos. Mestres em canalização podem manter múltiplos feitiços simultaneamente.</value>
+  </data>
+  <data name="MagicSkills.MagicAffinity" xml:space="preserve">
+    <value>Afinidade Mágica</value>
+  </data>
+  <data name="MagicSkills.MagicAffinityText" xml:space="preserve">
+    <value>A afinidade mágica determina sua proficiência em cada escola. Teste inicial de aptidão define afinidades primárias e secundárias. Treinamento pode expandir suas afinidades ao longo do tempo.</value>
+  </data>
+  <data name="MagicSkills.SkillCategories" xml:space="preserve">
+    <value>Categorias de Habilidade</value>
+  </data>
+  <data name="MagicSkills.SkillCategoriesText" xml:space="preserve">
+    <value>As habilidades são divididas em categorias: Combate (físico), Magia (arcano), Furtividade (sombra) e Suporte (cura/buff). Cada categoria possui subespecializações que se destravam com o nível.</value>
+  </data>
+  <data name="MagicSkills.CrossDisciplinary" xml:space="preserve">
+    <value>Multidisciplinar</value>
+  </data>
+  <data name="MagicSkills.CrossDisciplinaryText" xml:space="preserve">
+    <value>Combinar escolas de magia cria sinergias poderosas. Um mago que domina fogo e gelo pode causar choque térmico. Aventureiros veteranos frequentemente dominam três ou mais escolas.</value>
+  </data>
+  <data name="MagicSkills.SkillProgression" xml:space="preserve">
+    <value>Progressão</value>
+  </data>
+  <data name="MagicSkills.SkillProgressionText" xml:space="preserve">
+    <value>A progressão segue um sistema ramificado. Cada ponto de habilidade pode ser investido em nós que melhoram atributos específicos ou desbloqueiam novas habilidades. Resetar a árvore é possível mediante pagamento.</value>
+  </data>
+  <data name="Crafting.Title" xml:space="preserve">
+    <value>Craftagem em Reign of Humanae</value>
+  </data>
+  <data name="Crafting.Intro" xml:space="preserve">
+    <value>O sistema de artesanato de Humanae permite criar equipamentos lendários. Cada item forjado carrega a marca de seu criador e pode se tornar uma relíquia lendária.</value>
+  </data>
+  <data name="Crafting.RaceSpecific" xml:space="preserve">
+    <value>Raça Específico</value>
+  </data>
+  <data name="Crafting.RaceSpecificText" xml:space="preserve">
+    <value>Cada raça tem especializações únicas: Anões forjam armaduras lendárias, Elfos tecem tecidos mágicos, Humanos criam itens versáteis e Demônios infundem equipamentos com poder abissal.</value>
+  </data>
+  <data name="Crafting.TipUnderstandStrengths" xml:space="preserve">
+    <value>Dica: Conheça suas forças</value>
+  </data>
+  <data name="Crafting.TipCollaborate" xml:space="preserve">
+    <value>Dica: Colabore</value>
+  </data>
+  <data name="Crafting.MasterBlacksmiths" xml:space="preserve">
+    <value>Mestres Ferreiros</value>
+  </data>
+  <data name="Crafting.MasterBlacksmithsText" xml:space="preserve">
+    <value>Mestres Ferreiros são NPCs lendários que ensinam receitas épicas. Encontrá-los requer exploração e missões específicas. Cada Mestre possui uma especialidade única de forja.</value>
+  </data>
+  <data name="Crafting.TipAspire" xml:space="preserve">
+    <value>Dica: Busque maestria</value>
+  </data>
+  <data name="Crafting.TipReputation" xml:space="preserve">
+    <value>Dica: Construa reputação</value>
+  </data>
+  <data name="Crafting.MaterialRequirements" xml:space="preserve">
+    <value>Materiais</value>
+  </data>
+  <data name="Crafting.MaterialRequirementsText" xml:space="preserve">
+    <value>Cada receita exige materiais específicos — minérios raros, essências mágicas, fibras de tecelagem e componentes de monstros. Materiais de maior qualidade produzem itens superiores.</value>
+  </data>
+  <data name="Crafting.TipGather" xml:space="preserve">
+    <value>Dica: Colete sempre</value>
+  </data>
+  <data name="Crafting.TipQuests" xml:space="preserve">
+    <value>Dica: Faça missões</value>
+  </data>
+  <data name="Crafting.TipTrade" xml:space="preserve">
+    <value>Dica: Comercialize</value>
+  </data>
+  <data name="Crafting.Mechanics" xml:space="preserve">
+    <value>Mecânicas</value>
+  </data>
+  <data name="Crafting.MechanicsText" xml:space="preserve">
+    <value>O artesanato usa um sistema de mini-game baseado em timing preciso. Cada estágio da criação requer inputs corretos no momento certo para maximizar a qualidade do item.</value>
+  </data>
+  <data name="Crafting.TipMiniGames" xml:space="preserve">
+    <value>Dica: Domine mini-games</value>
+  </data>
+  <data name="Crafting.TipOptimizeTime" xml:space="preserve">
+    <value>Dica: Otimize</value>
+  </data>
+  <data name="Crafting.SkillImprovement" xml:space="preserve">
+    <value>Aprimoramento</value>
+  </data>
+  <data name="Crafting.SkillImprovementText" xml:space="preserve">
+    <value>A proficiência em artesanato aumenta com a prática. Mestres artesãos desbloqueiam receitas exclusivas e bônus de qualidade. Cada item criado concede XP de artesanato.</value>
+  </data>
+  <data name="Crafting.TipPractice" xml:space="preserve">
+    <value>Dica: Pratique</value>
+  </data>
+  <data name="Crafting.TipGoals" xml:space="preserve">
+    <value>Dica: Estabeleça metas</value>
+  </data>
+  <data name="Crafting.Customization" xml:space="preserve">
+    <value>Customização</value>
+  </data>
+  <data name="Crafting.CustomizationText" xml:space="preserve">
+    <value>Itens podem ser personalizados com runas, gemas e cores. Até 3 slots de modificação por item permitem ajustar atributos como dano, defesa e velocidade.</value>
+  </data>
+  <data name="Crafting.TipEnchantments" xml:space="preserve">
+    <value>Dica: Experimente</value>
+  </data>
+  <data name="Crafting.TipVersatility" xml:space="preserve">
+    <value>Dica: Seja versátil</value>
+  </data>
+  <!-- ===== Language Switcher ===== -->
+  <data name="Lang.Switch" xml:space="preserve">
+    <value>Idioma</value>
+  </data>
+  <data name="Lang.En" xml:space="preserve">
+    <value>Inglês</value>
+  </data>
+  <data name="Lang.Pt" xml:space="preserve">
+    <value>Português</value>
+  </data>
+  <data name="Lang.Es" xml:space="preserve">
+    <value>Espanhol</value>
+  </data>
+  <data name="Lang.Fr" xml:space="preserve">
+    <value>Francês</value>
+  </data>
+  <data name="Lang.De" xml:space="preserve">
+    <value>Alemão</value>
+  </data>
+  <data name="Lang.It" xml:space="preserve">
+    <value>Italiano</value>
+  </data>
+  <data name="Lang.Ja" xml:space="preserve">
+    <value>Japonês</value>
+  </data>
+  <data name="Lang.Ko" xml:space="preserve">
+    <value>Coreano</value>
+  </data>
+  <data name="Lang.Zh" xml:space="preserve">
+    <value>Chinês (Simplificado)</value>
+  </data>
+  <data name="Lang.Ru" xml:space="preserve">
+    <value>Russo</value>
+  </data>
+  <!-- ===== Additional keys (aliases for code references) ===== -->
+  <data name="Account.Login" xml:space="preserve">
+    <value>Entrar</value>
+  </data>
+  <data name="Account.LoginLabel" xml:space="preserve">
+    <value>Entrar</value>
+  </data>
+  <data name="Account.Confirm" xml:space="preserve">
+    <value>Confirmar</value>
+  </data>
+  <data name="Account.CreateAccount" xml:space="preserve">
+    <value>Criar Conta</value>
+  </data>
+  <data name="Version.Manager" xml:space="preserve">
+    <value>Gerenciador de Versões</value>
+  </data>
+  <data name="Version.Current" xml:space="preserve">
+    <value>Atual</value>
+  </data>
+  <data name="Version.Versions" xml:space="preserve">
+    <value>Versões</value>
+  </data>
+  <data name="Version.NewVersion" xml:space="preserve">
+    <value>Nova Versão</value>
+  </data>
+  <data name="Version.Version" xml:space="preserve">
+    <value>Versão</value>
+  </data>
+  <data name="Version.CreateNew" xml:space="preserve">
+    <value>Criar Nova Versão</value>
+  </data>
+  <data name="Version.Files" xml:space="preserve">
+    <value>Arquivos</value>
+  </data>
+  <data name="Version.Page" xml:space="preserve">
+    <value>Página</value>
+  </data>
+  <data name="Version.Of" xml:space="preserve">
+    <value>de</value>
+  </data>
+  <data name="Version.NoVersionsMatch" xml:space="preserve">
+    <value>Nenhuma versão corresponde aos filtros atuais.</value>
+  </data>
+  <data name="Version.IncorrectUuid" xml:space="preserve">
+    <value>UUID de versão incorreto</value>
+  </data>
+  <data name="Upload.UploadFile" xml:space="preserve">
+    <value>Upload de Arquivo</value>
+  </data>
+  <data name="Upload.UploadingProgress" xml:space="preserve">
+    <value>Enviando... </value>
+  </data>
+  <data name="Upload.UploadFolder" xml:space="preserve">
+    <value>Pasta de Upload</value>
+  </data>
+  <data name="Upload.TypeTargetFolder" xml:space="preserve">
+    <value>Digite uma pasta de destino ou use o preset de raiz do build.</value>
+  </data>
+  <data name="Upload.SelectFile" xml:space="preserve">
+    <value>Selecione ao menos um arquivo para enviar.</value>
+  </data>
+  <data name="Upload.MaxFileSize1Gb" xml:space="preserve">
+    <value>O tamanho do arquivo deve ser menor que 1 Gb.</value>
+  </data>
+  <data name="Upload.UploadFailed" xml:space="preserve">
+    <value>Falha no upload.</value>
+  </data>
+  <data name="Upload.Uploaded" xml:space="preserve">
+    <value>Arquivo enviado com sucesso</value>
+  </data>
+  <data name="Upload.SelectFilesForTarget" xml:space="preserve">
+    <value>Selecionar Arquivos para o Destino</value>
+  </data>
+  <data name="Shared.Version" xml:space="preserve">
+    <value>Versão</value>
+  </data>
+  <data name="Shared.Release" xml:space="preserve">
+    <value>Lançamento</value>
+  </data>
+  <data name="Shared.Review" xml:space="preserve">
+    <value>Revisão</value>
+  </data>
+  <data name="Shared.ReleaseDate" xml:space="preserve">
+    <value>Data de Lançamento</value>
+  </data>
+  <data name="Shared.Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Shared.Previous" xml:space="preserve">
+    <value>Anterior</value>
+  </data>
+  <data name="Shared.Next" xml:space="preserve">
+    <value>Próximo</value>
+  </data>
+  <data name="Shared.Name" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="Shared.Path" xml:space="preserve">
+    <value>Caminho</value>
+  </data>
+  <data name="Shared.Size" xml:space="preserve">
+    <value>Tamanho</value>
+  </data>
+  <data name="Shared.Active" xml:space="preserve">
+    <value>Ativo</value>
+  </data>
+  <data name="Shared.Inactive" xml:space="preserve">
+    <value>Inativo</value>
+  </data>
+  <data name="Shared.Submit" xml:space="preserve">
+    <value>Enviar</value>
+  </data>
+  <data name="Shared.Remove" xml:space="preserve">
+    <value>Remover</value>
+  </data>
+  <data name="Shared.Search" xml:space="preserve">
+    <value>Pesquisar</value>
+  </data>
+  <data name="Shared.Clear" xml:space="preserve">
+    <value>Limpar</value>
+  </data>
+  <data name="Shared.NoResponse" xml:space="preserve">
+    <value>Não foi possível obter resposta do servidor.</value>
+  </data>
+  <data name="Home.Welcome" xml:space="preserve">
+    <value>Bem-vindo ao Mundo de Humanae</value>
+  </data>
+  <data name="Home.Lead" xml:space="preserve">
+    <value>Explore o reino diverso e dinâmico de Reign of Humanae, onde história e magia se entrelaçam.</value>
+  </data>
+  <data name="Home.Mmorpg" xml:space="preserve">
+    <value>MMORPG Imersivo</value>
+  </data>
+  <data name="Home.FourRaces" xml:space="preserve">
+    <value>Quatro Raças</value>
+  </data>
+  <data name="Home.WorldBosses" xml:space="preserve">
+    <value>Chefes Mundiais</value>
+  </data>
+  <data name="Home.WorldOfHumanae" xml:space="preserve">
+    <value>O Mundo de Humanae</value>
+  </data>
+  <data name="Home.WorldOfHumanaeText" xml:space="preserve">
+    <value>Bem-vindo a Humanae, um vasto mundo de conflitos antigos, magia poderosa e civilizações em ascensão. Explore territórios desconhecidos, forje alianças e escreva seu próprio legado.</value>
+  </data>
+  <data name="Lore.Overview" xml:space="preserve">
+    <value>Visão Geral da Lore</value>
+  </data>
+  <data name="Lore.AgeOfStrife" xml:space="preserve">
+    <value>Era da Discórdia</value>
+  </data>
+  <data name="Lore.AgeOfStrifeText" xml:space="preserve">
+    <value>A Era da Discórdia foi um período sombrio onde as raças guerreavam sem trégua. Impérios inteiros foram reduzidos a cinzas. Heróis surgiam e morriam. Foi uma era de desespero, onde a esperança era um luxo que poucos podiam pagar.</value>
+  </data>
+  <data name="Lore.SentinelAccord" xml:space="preserve">
+    <value>Acordo Sentinel</value>
+  </data>
+  <data name="Lore.SentinelAccordText" xml:space="preserve">
+    <value>O Acordo Sentinel foi firmado pelos líderes sobreviventes após a Batalha do Crepúsculo Eterno. Este pacto estabeleceu zonas neutras, rotas comerciais seguras e um conselho inter-racial que media conflitos até hoje.</value>
+  </data>
+  <data name="Lore.WorldBosses" xml:space="preserve">
+    <value>Chefes Mundiais</value>
+  </data>
+  <data name="Lore.WorldBossesText" xml:space="preserve">
+    <value>Dizem que os Chefes Mundiais são fragmentos dos deuses antigos que caíram durante a Guerra Celestial. Cada um guarda um segredo do passado e concede conhecimento proibido aos que provam seu valor.</value>
+  </data>
+  <data name="Lore.RoleOfKings" xml:space="preserve">
+    <value>Papel dos Reis</value>
+  </data>
+  <data name="Lore.RoleOfKingsText" xml:space="preserve">
+    <value>A linhagem real de cada raça remonta aos Primeiros Sanguíneos — mortais que receberam centelhas divinas. O direito de governar é provado através do Julgamento Real, uma série de desafios mágicos que só os dignos superam.</value>
+  </data>
+  <data name="Lore.Guardians" xml:space="preserve">
+    <value>Guardiões</value>
+  </data>
+  <data name="Lore.GuardiansText" xml:space="preserve">
+    <value>Os Guardiões foram criados pelos deuses para selar os Portais do Caos. Cada Guardião é ligado a um elemento primordial e protege um pilar do mundo. Dizem que se todos os Guardiões caírem, o véu entre mundos se romperá.</value>
+  </data>
+  <data name="Lore.ItemCrafting" xml:space="preserve">
+    <value>Artesanato</value>
+  </data>
+  <data name="Lore.ItemCraftingText" xml:space="preserve">
+    <value>A arte da forja em Humanae foi ensinada pelos Ferreiros Eternos, mestres lendários que habitam o coração das montanhas. Cada runa gravada em um equipamento carrega fragmentos de poder ancestral.</value>
+  </data>
+  <data name="Lore.MagicAndSkills" xml:space="preserve">
+    <value>Magia &amp; Habilidades</value>
+  </data>
+  <data name="Lore.MagicAndSkillsText" xml:space="preserve">
+    <value>A magia em Humanae flui das Veias do Mundo — correntes subterrâneas de energia pura. Os primeiros magos aprenderam a tecer essa energia através de símbolos e rituais, dando origem às escolas de magia conhecidas hoje.</value>
+  </data>
+  <data name="Races.Humans" xml:space="preserve">
+    <value>Humanos</value>
+  </data>
+  <data name="Races.HumansText" xml:space="preserve">
+    <value>Os Humanos são governados pelo Conselho de Valdoria, uma monarquia eletiva onde qualquer cidadão pode aspirar ao trono. Sua capital, Valdoria Prime, é um centro comercial e cultural. Os Humanos se destacam em diplomacia, comércio e adaptação tática em combate.</value>
+  </data>
+  <data name="Races.Elves" xml:space="preserve">
+    <value>Elfos</value>
+  </data>
+  <data name="Races.ElvesText" xml:space="preserve">
+    <value>Os Elfos habitam a cidade-árvore de Syl'Varath, um organismo vivo entrelaçado com magia. São governados pela Rainha Eterna e divididos em três clãs: Alvorada (guerreiros), Crepúsculo (magos) e Noite (assassinos). São imortais até serem mortos em batalha.</value>
+  </data>
+  <data name="Races.Dwarfs" xml:space="preserve">
+    <value>Anões</value>
+  </data>
+  <data name="Races.DwarfsText" xml:space="preserve">
+    <value>Os Anões residem na Fortaleza de Khaz-Vorn, uma cidade subterrânea de maravilhas mecânicas. Liderados pelo Alto Tano, um conselho de mestres artesãos, os Anões valorizam acima de tudo a honra do trabalho bem feito e a lealdade ao clã.</value>
+  </data>
+  <data name="Races.Demons" xml:space="preserve">
+    <value>Demônios</value>
+  </data>
+  <data name="Races.DemonsText" xml:space="preserve">
+    <value>Os Demônios são governados por Lordes Abissais que competem eternamente pelo poder. Sua sociedade é darwinista — apenas os fortes sobrevivem. Habitam Netharion, um reino infernal de vulcões e fortalezas de obsidiana.</value>
+  </data>
+  <data name="WorldBosses.Elyndria" xml:space="preserve">
+    <value>Elyndria</value>
+  </data>
+  <data name="WorldBosses.ElyndriaText" xml:space="preserve">
+    <value>Elyndria, a Fênix de Cristal, renasce mais forte a cada derrota. Seus ataques de luz cegam e purificam, exigindo que o grupo alterne entre ofensiva e defensiva.</value>
+  </data>
+  <data name="WorldBosses.Ignar" xml:space="preserve">
+    <value>Ignar</value>
+  </data>
+  <data name="WorldBosses.IgnarText" xml:space="preserve">
+    <value>Ignar, a Besta de Brasas, é um cão infernal de três cabeças que guarda os portões de Netharion. Cada cabeça ataca com elemento diferente — fogo, veneno e sombra.</value>
+  </data>
+  <data name="WorldBosses.Verdant" xml:space="preserve">
+    <value>Verdant</value>
+  </data>
+  <data name="WorldBosses.VerdantText" xml:space="preserve">
+    <value>Verdant, o Colosso da Natureza, é uma criatura vegetal do tamanho de uma montanha. Cura-se constantemente e convoca plantas ancestrais para lutar ao seu lado.</value>
+  </data>
+  <data name="WorldBosses.Tempestia" xml:space="preserve">
+    <value>Tempestia</value>
+  </data>
+  <data name="WorldBosses.TempestiaText" xml:space="preserve">
+    <value>Tempestia, a Dama das Tormentas, canaliza o poder das tempestades tropicais. Raios e chuvas ácidas cobrem o campo, e ela teletransporta jogadores aleatoriamente.</value>
+  </data>
+  <data name="WorldBosses.Pyrax" xml:space="preserve">
+    <value>Pyrax</value>
+  </data>
+  <data name="WorldBosses.PyraxText" xml:space="preserve">
+    <value>Pyrax, o Senhor do Fogo, emerge das profundezas vulcânicas de Netharion. Sua aura flamejante queima tudo ao redor, exigindo equipamentos resistentes ao fogo.</value>
+  </data>
+  <data name="WorldBosses.Selene" xml:space="preserve">
+    <value>Selene</value>
+  </data>
+  <data name="WorldBosses.SeleneText" xml:space="preserve">
+    <value>Selene, a Sacerdotisa Lunar, manipula as fases da lua para alterar a arena. Na lua cheia ela é mais poderosa; na lua nova, mais frágil — mas seus lacaios são mais agressivos.</value>
+  </data>
+  <data name="WorldBosses.Thrain" xml:space="preserve">
+    <value>Thrain</value>
+  </data>
+  <data name="WorldBosses.ThrainText" xml:space="preserve">
+    <value>Thrain, o Ferreiro de Runa, usa o poder de runas ancestrais. Cada runa ativada concede a ele um bônus diferente — velocidade, força ou regeneração.</value>
+  </data>
+  <data name="WorldBosses.Maridrax" xml:space="preserve">
+    <value>Maridrax</value>
+  </data>
+  <data name="WorldBosses.MaridraxText" xml:space="preserve">
+    <value>Maridrax, o Leviatã das Profundezas, domina os oceanos de Humanae. Seus ataques de pressão aquática e redemoinhos exigem movimento constante para evitar ser arrastado.</value>
+  </data>
+  <data name="WorldBosses.Arachnia" xml:space="preserve">
+    <value>Arachnia</value>
+  </data>
+  <data name="WorldBosses.ArachniaText" xml:space="preserve">
+    <value>Arachnia, a Rainha das Teias, reina nas Cavernas Sussurrantes. Ela envolve o campo de batalha em teias paralisantes e convoca filhotes para sobrecarregar o grupo.</value>
+  </data>
+  <data name="WorldBosses.Zephyros" xml:space="preserve">
+    <value>Zéfiro</value>
+  </data>
+  <data name="WorldBosses.ZephyrosText" xml:space="preserve">
+    <value>Zéfiro é o Senhor dos Ventos, uma tempestade viva que habita o Pico dos Céus. Seus ataques de vento cortante e relâmpagos exigem coordenação perfeita do grupo.</value>
+  </data>
+  <data name="WorldBosses.Magmara" xml:space="preserve">
+    <value>Magmara</value>
+  </data>
+  <data name="WorldBosses.MagmaraText" xml:space="preserve">
+    <value>Magmara, a Forja Viva, é uma construto elemental de metal e lava. Ela altera o terreno da arena, criando plataformas que afundam em lava fundida.</value>
+  </data>
+  <data name="WorldBosses.Nocturna" xml:space="preserve">
+    <value>Nocturna</value>
+  </data>
+  <data name="WorldBosses.NocturnaText" xml:space="preserve">
+    <value>Nocturna, a Caçadora das Sombras, espreita nas florestas amaldiçoadas de Duskwood. Invisível até atacar, ela testa os reflexos e a percepção dos aventureiros.</value>
+  </data>
+  <data name="MagicSkills.Development" xml:space="preserve">
+    <value>Desenvolvimento</value>
+  </data>
+  <data name="MagicSkills.DevelopmentText" xml:space="preserve">
+    <value>Desenvolvimento de Habilidade</value>
+  </data>
+  <data name="MagicSkills.Trees" xml:space="preserve">
+    <value>Árvores</value>
+  </data>
+  <data name="MagicSkills.TreesText" xml:space="preserve">
+    <value>Árvores de Talento</value>
+  </data>
+  <data name="MagicSkills.Channeling" xml:space="preserve">
+    <value>Canalização</value>
+  </data>
+  <data name="MagicSkills.ChannelingText" xml:space="preserve">
+    <value>Canalização de Mana</value>
+  </data>
+  <data name="MagicSkills.Affinity" xml:space="preserve">
+    <value>Afinidade</value>
+  </data>
+  <data name="MagicSkills.AffinityText" xml:space="preserve">
+    <value>Afinidade Mágica</value>
+  </data>
+  <data name="MagicSkills.Categories" xml:space="preserve">
+    <value>Categorias</value>
+  </data>
+  <data name="MagicSkills.CategoriesText" xml:space="preserve">
+    <value>Categorias de Magia</value>
+  </data>
+  <data name="MagicSkills.Progression" xml:space="preserve">
+    <value>Progressão</value>
+  </data>
+  <data name="MagicSkills.ProgressionText" xml:space="preserve">
+    <value>Progressão de Habilidade</value>
+  </data>
+  <data name="Crafting.UnderstandStrengths" xml:space="preserve">
+    <value>Forças</value>
+  </data>
+  <data name="Crafting.UnderstandStrengthsText" xml:space="preserve">
+    <value>Entenda os pontos fortes do seu personagem. Um guerreiro se beneficia mais de armaduras pesadas, enquanto um mago prefere tecidos encantados. Crie para seu estilo.</value>
+  </data>
+  <data name="Crafting.Collaborate" xml:space="preserve">
+    <value>Colaboração</value>
+  </data>
+  <data name="Crafting.CollaborateText" xml:space="preserve">
+    <value>Oficinas colaborativas permitem que múltiplos artesãos trabalhem no mesmo item. Cada um contribui com sua especialidade para criar itens de qualidade superior.</value>
+  </data>
+  <data name="Crafting.AspireToMaster" xml:space="preserve">
+    <value>Maestria</value>
+  </data>
+  <data name="Crafting.AspireToMasterText" xml:space="preserve">
+    <value>O título de Mestre Artesão é o ápice do artesanato. Requer criar pelo menos um item de qualidade lendária de cada categoria e completar a missão do Ferreiro Eterno.</value>
+  </data>
+  <data name="Crafting.BuildReputation" xml:space="preserve">
+    <value>Reputação</value>
+  </data>
+  <data name="Crafting.BuildReputationText" xml:space="preserve">
+    <value>Construa reputação com facções artesãs. Reputação alta concede acesso a forjas especiais, materiais restritos e descontos em treinamento de receitas.</value>
+  </data>
+  <data name="Crafting.GatherResources" xml:space="preserve">
+    <value>Coleta</value>
+  </data>
+  <data name="Crafting.GatherResourcesText" xml:space="preserve">
+    <value>Recursos são encontrados em todo o mundo: minérios em cavernas, ervas em florestas, essências de monstros derrotados. Alguns recursos requerem ferramentas ou níveis específicos.</value>
+  </data>
+  <data name="Crafting.ParticipateQuests" xml:space="preserve">
+    <value>Missões</value>
+  </data>
+  <data name="Crafting.ParticipateQuestsText" xml:space="preserve">
+    <value>Missões de artesanato oferecem receitas exclusivas e materiais raros. Fique atento aos quadros de avisos nas guildas — as melhores missões aparecem sazonalmente.</value>
+  </data>
+  <data name="Crafting.EngageTrade" xml:space="preserve">
+    <value>Comércio</value>
+  </data>
+  <data name="Crafting.EngageTradeText" xml:space="preserve">
+    <value>O comércio entre jogadores é vital. Venda seus excedentes, compre materiais que não pode coletar e encomende itens de mestres especializados.</value>
+  </data>
+  <data name="Crafting.MasterMiniGames" xml:space="preserve">
+    <value>Mini-Games</value>
+  </data>
+  <data name="Crafting.MasterMiniGamesText" xml:space="preserve">
+    <value>Mini-games de artesanato testam reflexos e precisão. Sucesso perfeito concede bônus de qualidade. Falhar pode danificar o item ou desperdiçar materiais raros.</value>
+  </data>
+  <data name="Crafting.OptimizeTime" xml:space="preserve">
+    <value>Otimização</value>
+  </data>
+  <data name="Crafting.OptimizeTimeText" xml:space="preserve">
+    <value>Planeje sua produção para máxima eficiência. Processe materiais em lote, use melhorias de velocidade e coordene com outros jogadores para criar itens complexos mais rápido.</value>
+  </data>
+  <data name="Crafting.PracticeRegularly" xml:space="preserve">
+    <value>Prática</value>
+  </data>
+  <data name="Crafting.PracticeRegularlyText" xml:space="preserve">
+    <value>A prática regular é essencial. Itens simples criados diariamente mantêm sua proficiência e podem revelar receitas raras através da inspiração.</value>
+  </data>
+  <data name="Crafting.SetGoals" xml:space="preserve">
+    <value>Metas</value>
+  </data>
+  <data name="Crafting.SetGoalsText" xml:space="preserve">
+    <value>Estabeleça metas de artesanato: dominar uma receita lendária, equipar seu grupo inteiro ou abrir uma loja. Metas claras direcionam seu progresso.</value>
+  </data>
+  <data name="Crafting.ExperimentEnchantments" xml:space="preserve">
+    <value>Encantamentos</value>
+  </data>
+  <data name="Crafting.ExperimentEnchantmentsText" xml:space="preserve">
+    <value>Experimente combinações de materiais para descobrir encantamentos ocultos. Alguns dos melhores efeitos do jogo foram descobertos por acidente.</value>
+  </data>
+  <data name="Crafting.FocusVersatility" xml:space="preserve">
+    <value>Foco vs Versatilidade</value>
+  </data>
+  <data name="Crafting.FocusVersatilityText" xml:space="preserve">
+    <value>Especializar-se em uma disciplina (armadura, armas, poções) concede maestria mais rápida. Ser versátil permite criar tudo, mas o progresso é mais lento. Escolha seu caminho.</value>
+  </data>
+  <data name="Error.Heading" xml:space="preserve">
+    <value>Erro.</value>
+  </data>
+  <data name="Error.DevelopmentMode" xml:space="preserve">
+    <value>Modo de Desenvolvimento</value>
+  </data>
+  <data name="Error.DevelopmentInfo" xml:space="preserve">
+    <value>Alterar para o ambiente de &lt;strong&gt;Desenvolvimento&lt;/strong&gt; exibirá informações mais detalhadas sobre o erro ocorrido.</value>
+  </data>
+  <data name="Error.DevelopmentWarning" xml:space="preserve">
+    <value>&lt;strong&gt;O ambiente de Desenvolvimento não deve ser habilitado em aplicações implantadas.&lt;/strong&gt; Isso pode resultar na exibição de informações confidenciais de exceções para usuários finais. Para depuração local, habilite o ambiente de &lt;strong&gt;Desenvolvimento&lt;/strong&gt; definindo a variável de ambiente &lt;strong&gt;ASPNETCORE_ENVIRONMENT&lt;/strong&gt; como &lt;strong&gt;Development&lt;/strong&gt; e reiniciando o aplicativo.</value>
+  </data>
+</root>

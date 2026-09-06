@@ -17,11 +17,45 @@ namespace ROH.Service.File;
 
 public class GameFileService(IGameFileRepository gameFileRepository, IExceptionHandler exceptionHandler) : IGameFileService
 {
-    async Task<DefaultResponse> GetGameFileAsync(GameFile gameFile, CancellationToken cancellationToken = default)
+    private static string GetSafeFilePath(GameFile gameFile)
+    {
+        string rootPath = Path.GetFullPath(gameFile.Path);
+        string relativePath = NormalizeRelativePath(gameFile.Name);
+        string filePath = Path.GetFullPath(Path.Combine(rootPath, relativePath));
+        string rootWithSeparator = rootPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+            + Path.DirectorySeparatorChar;
+
+        return !filePath.StartsWith(rootWithSeparator, StringComparison.OrdinalIgnoreCase)
+            ? throw new InvalidOperationException("Invalid file path.")
+            : filePath;
+    }
+
+    private static string GetRelativeDirectory(string fileName)
+    {
+        string relativePath = NormalizeRelativePath(fileName);
+        string? directory = Path.GetDirectoryName(relativePath);
+        return string.IsNullOrWhiteSpace(directory)
+            ? string.Empty
+            : directory.Replace(Path.DirectorySeparatorChar, '/');
+    }
+
+    private static string NormalizeRelativePath(string fileName)
+    {
+        string safeName = string.IsNullOrWhiteSpace(fileName) ? "download.bin" : fileName;
+        return safeName
+            .Replace('\\', Path.DirectorySeparatorChar)
+            .Replace('/', Path.DirectorySeparatorChar)
+            .TrimStart(Path.DirectorySeparatorChar);
+    }
+
+    private async Task<DefaultResponse> GetGameFileAsync(GameFile gameFile, CancellationToken cancellationToken = default)
     {
         try
         {
-            string filePath = Path.Combine(gameFile.Path, gameFile.Name);
+            if (string.IsNullOrWhiteSpace(gameFile.Path) && !string.IsNullOrWhiteSpace(gameFile.Name))
+                return new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File not found.");
+
+            string filePath = GetSafeFilePath(gameFile);
 
             if (string.IsNullOrWhiteSpace(filePath))
                 throw new InvalidOperationException("Cant find the file path!");
@@ -38,7 +72,8 @@ public class GameFileService(IGameFileRepository gameFileRepository, IExceptionH
                         format: gameFile.Format,
                         content: fileContent,
                         size: gameFile.Size,
-                        active: gameFile.Active),
+                        active: gameFile.Active,
+                        path: GetRelativeDirectory(gameFile.Name)),
                     HttpStatusCode.OK);
             }
             else
@@ -59,7 +94,7 @@ public class GameFileService(IGameFileRepository gameFileRepository, IExceptionH
             GameFile? file = await gameFileRepository.GetFileAsync(fileGuid, cancellationToken).ConfigureAwait(true);
 
             return (file is null)
-                ? (new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File Not Found."))
+                ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File Not Found.")
                 : (await GetGameFileAsync(file, cancellationToken).ConfigureAwait(true));
         }
         catch (System.Exception ex)
@@ -75,7 +110,7 @@ public class GameFileService(IGameFileRepository gameFileRepository, IExceptionH
             GameFile? file = await gameFileRepository.GetFileAsync(id, cancellationToken).ConfigureAwait(true);
 
             return (file is null)
-                ? (new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File Not Found."))
+                ? new DefaultResponse(null, httpStatus: HttpStatusCode.NotFound, message: "File Not Found.")
                 : (await GetGameFileAsync(file, cancellationToken).ConfigureAwait(true));
         }
         catch (System.Exception ex)
@@ -113,10 +148,11 @@ public class GameFileService(IGameFileRepository gameFileRepository, IExceptionH
     {
         try
         {
-            if (!Directory.Exists(file.Path))
-                _ = Directory.CreateDirectory(file.Path);
+            string filePath = GetSafeFilePath(file);
+            string? targetDirectory = Path.GetDirectoryName(filePath);
 
-            string filePath = Path.Combine(file.Path, file.Name);
+            if (!string.IsNullOrWhiteSpace(targetDirectory) && !Directory.Exists(targetDirectory))
+                _ = Directory.CreateDirectory(targetDirectory);
 
             if (System.IO.File.Exists(filePath))
                 System.IO.File.Delete(filePath);
@@ -127,6 +163,32 @@ public class GameFileService(IGameFileRepository gameFileRepository, IExceptionH
             }
 
             await gameFileRepository.SaveFileAsync(file, cancellationToken).ConfigureAwait(true);
+        }
+        catch (System.Exception ex)
+        {
+            _ = exceptionHandler.HandleException(ex);
+        }
+    }
+
+    public async Task UpdateFileContentAsync(GameFile file, byte[] content, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            string filePath = GetSafeFilePath(file);
+            string? targetDirectory = Path.GetDirectoryName(filePath);
+
+            if (!string.IsNullOrWhiteSpace(targetDirectory) && !Directory.Exists(targetDirectory))
+                _ = Directory.CreateDirectory(targetDirectory);
+
+            if (System.IO.File.Exists(filePath))
+                System.IO.File.Delete(filePath);
+
+            using (FileStream fs = System.IO.File.Create(filePath))
+            {
+                await fs.WriteAsync(content.AsMemory(), CancellationToken.None).ConfigureAwait(true);
+            }
+
+            await gameFileRepository.UpdateFileAsync(file, cancellationToken).ConfigureAwait(true);
         }
         catch (System.Exception ex)
         {

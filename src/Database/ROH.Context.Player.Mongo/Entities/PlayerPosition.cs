@@ -11,6 +11,10 @@ namespace ROH.Context.Player.Mongo.Entities;
 
 public class PlayerPosition
 {
+    public string AccountId { get; set; } = string.Empty;
+
+    public string CharacterId { get; set; } = string.Empty;
+
     [BsonId]
     public ObjectId Id { get; set; }
 
@@ -31,4 +35,8 @@ public class PlayerPosition
     public float RotationZ { get; set; }
 
     public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+
+    public DateTime UpdatedAtUtc { get; set; } = DateTime.UtcNow;
+
+    public string WorldId { get; set; } = string.Empty;
 }

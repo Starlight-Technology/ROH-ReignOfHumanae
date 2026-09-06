@@ -19,19 +19,130 @@ using static ROH.Utils.ApiConfiguration.ApiConfigReader;
 
 namespace ROH.Service.Player.WebSocket.State;
 
-public class PlayerPositionServiceSocket() : IPlayerPositionServiceSocket
+public class PlayerPositionServiceSocket(TimeSpan persistenceInterval) : IPlayerPositionServiceSocket
 {
-    readonly ConcurrentDictionary<string, System.Net.WebSockets.WebSocket> _playerConnections = new();
-    PlayerService.PlayerServiceClient _savePlayerPositionApi;
+    private readonly ConcurrentDictionary<string, DateTime> _lastPersistedAtUtc = new();
+    private readonly ConcurrentDictionary<string, PlayerRequest> _latestPositions = new();
+    private readonly ConcurrentDictionary<string, System.Net.WebSockets.WebSocket> _playerConnections = new();
+    private readonly Lazy<PlayerService.PlayerServiceClient> _savePlayerPositionApi = new(CreateClient);
 
-    public async Task<ConcurrentDictionary<string, System.Net.WebSockets.WebSocket>> GetPlayersClient() => _playerConnections;
+    public Task<ConcurrentDictionary<string, System.Net.WebSockets.WebSocket>> GetPlayersClient() =>
+        Task.FromResult(_playerConnections);
 
-    public async Task<SaveResponse> HandlePlayerPosition(byte[] payload, System.Net.WebSockets.WebSocket socket)
+    public async Task<SaveResponse> FlushPlayerPosition(
+        string characterId,
+        CancellationToken cancellationToken = default)
+    {
+        if (!_latestPositions.TryGetValue(characterId, out PlayerRequest? latest))
+            return new SaveResponse { Success = true };
+
+        PlayerRequest request = CloneRequest(latest, persistPosition: true);
+        SaveResponse response = await _savePlayerPositionApi.Value
+            .SavePlayerDataAsync(request, cancellationToken: cancellationToken)
+            .ResponseAsync
+            .ConfigureAwait(false);
+
+        if (response.Success)
+            _lastPersistedAtUtc[characterId] = DateTime.UtcNow;
+
+        return response;
+    }
+
+    public async Task<SaveResponse> HandlePlayerPosition(
+        byte[] payload,
+        string characterId,
+        string accountId,
+        string worldId,
+        System.Net.WebSockets.WebSocket socket,
+        CancellationToken cancellationToken = default)
     {
         PlayerPositionMessage msg = MessagePackSerializer.Deserialize<PlayerPositionMessage>(payload);
 
-        await NewPlayerClient(msg.PlayerId, socket);
+        if (!_playerConnections.TryGetValue(characterId, out System.Net.WebSockets.WebSocket? activeSocket)
+            || !ReferenceEquals(activeSocket, socket))
+        {
+            return new SaveResponse { Success = false };
+        }
 
+        DateTime nowUtc = DateTime.UtcNow;
+        bool persistPosition = !_lastPersistedAtUtc.TryGetValue(characterId, out DateTime lastPersistedAtUtc)
+            || nowUtc - lastPersistedAtUtc >= persistenceInterval;
+
+        PlayerRequest request = new()
+        {
+            AccountId = accountId,
+            AnimationSate = (uint)Math.Max(0, msg.AnimationState),
+            PersistPosition = persistPosition,
+            PlayerId = characterId,
+            Position = new Position { X = msg.X, Y = msg.Y, Z = msg.Z },
+            Rotation = new Rotation { X = msg.RotX, Y = msg.RotY, Z = msg.RotZ, W = msg.RotW },
+            WorldId = worldId
+        };
+
+        SaveResponse response = await _savePlayerPositionApi.Value
+            .SavePlayerDataAsync(request, cancellationToken: cancellationToken)
+            .ResponseAsync
+            .ConfigureAwait(false);
+
+        if (response.Success)
+        {
+            _latestPositions[characterId] = CloneRequest(request, persistPosition: false);
+            if (persistPosition)
+                _lastPersistedAtUtc[characterId] = nowUtc;
+        }
+
+        return response;
+    }
+
+    public Task RegisterPlayerClient(string characterId, System.Net.WebSockets.WebSocket socket)
+    {
+        _playerConnections[characterId] = socket;
+        return Task.CompletedTask;
+    }
+
+    public async Task RemovePlayerClient(
+        string characterId,
+        System.Net.WebSockets.WebSocket socket,
+        CancellationToken cancellationToken = default)
+    {
+        if (!_playerConnections.TryGetValue(characterId, out System.Net.WebSockets.WebSocket? activeSocket)
+            || !ReferenceEquals(activeSocket, socket))
+        {
+            return;
+        }
+
+        _playerConnections.TryRemove(
+            new KeyValuePair<string, System.Net.WebSockets.WebSocket>(characterId, activeSocket));
+        _latestPositions.TryRemove(characterId, out _);
+        _lastPersistedAtUtc.TryRemove(characterId, out _);
+
+        await _savePlayerPositionApi.Value
+            .RemovePlayerDataAsync(
+                new RemovePlayerRequest { PlayerId = characterId },
+                cancellationToken: cancellationToken)
+            .ResponseAsync
+            .ConfigureAwait(false);
+    }
+
+    private static PlayerRequest CloneRequest(PlayerRequest source, bool persistPosition) => new()
+    {
+        AccountId = source.AccountId,
+        AnimationSate = source.AnimationSate,
+        PersistPosition = persistPosition,
+        PlayerId = source.PlayerId,
+        Position = new Position { X = source.Position.X, Y = source.Position.Y, Z = source.Position.Z },
+        Rotation = new Rotation
+        {
+            W = source.Rotation.W,
+            X = source.Rotation.X,
+            Y = source.Rotation.Y,
+            Z = source.Rotation.Z
+        },
+        WorldId = source.WorldId
+    };
+
+    private static PlayerService.PlayerServiceClient CreateClient()
+    {
         ApiConfigReader _apiConfig = new();
         Dictionary<ApiUrl, Uri> _apiUrl = _apiConfig.GetApiUrl();
         GrpcChannel channel = GrpcChannel.ForAddress(
@@ -40,30 +151,12 @@ public class PlayerPositionServiceSocket() : IPlayerPositionServiceSocket
             {
                 HttpHandler =
                     new HttpClientHandler
-                        {
-                            ServerCertificateCustomValidationCallback =
+                    {
+                        ServerCertificateCustomValidationCallback =
                                 HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-                        }
+                    }
             });
 
-        _savePlayerPositionApi = new(channel);
-
-        SaveResponse response = await _savePlayerPositionApi.SavePlayerDataAsync(
-            new PlayerRequest
-            {
-                PlayerId = msg.PlayerId,
-                Position = new Position { X = msg.X, Y = msg.Y, Z = msg.Z },
-                Rotation = new Rotation { X = msg.RotX, Y = msg.RotY, Z = msg.RotZ, W = msg.RotW },
-                AnimationSate = (uint)msg.AnimationState
-            });
-
-        return response;
-    }
-
-    public Task NewPlayerClient(string guid, System.Net.WebSockets.WebSocket socket)
-    {
-        _playerConnections[guid] = socket;
-
-        return Task.CompletedTask;
+        return new PlayerService.PlayerServiceClient(channel);
     }
 }

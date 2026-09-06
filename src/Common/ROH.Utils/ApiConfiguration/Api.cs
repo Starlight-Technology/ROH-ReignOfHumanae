@@ -12,6 +12,7 @@ using Newtonsoft.Json.Linq;
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
@@ -23,9 +24,9 @@ namespace ROH.Utils.ApiConfiguration
 {
     public class Api
     {
-        static readonly ApiConfigReader _apiConfig = new ApiConfigReader();
+        private static readonly ApiConfigReader _apiConfig = new ApiConfigReader();
         public static readonly Dictionary<ApiUrl, Uri> _apiUrl = _apiConfig.GetApiUrl();
-        static readonly Dictionary<Services, Uri> _servicesUrl = new Dictionary<Services, Uri>
+        private static readonly Dictionary<Services, Uri> _servicesUrl = new Dictionary<Services, Uri>
         {
             #region VERSION
             { Services.GetCurrentVersion, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.Version), "GetCurrentVersion") },
@@ -49,6 +50,11 @@ namespace ROH.Utils.ApiConfiguration
                 new Uri(_apiUrl.GetValueOrDefault(ApiUrl.VersionFile), "GetAllVersionFiles")
             },
             { Services.DownloadFile, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.VersionFile), "DownloadFile") },
+            { Services.UploadBuildZip, new Uri(_apiUrl.GetValueOrDefault(ApiUrl.VersionFile), "UploadBuildZip") },
+            {
+                Services.ConfirmBuildUpload,
+                new Uri(_apiUrl.GetValueOrDefault(ApiUrl.VersionFile), "ConfirmBuildUpload")
+            },
             #endregion FILES
 
             #region ACCOUNT
@@ -78,7 +84,7 @@ namespace ROH.Utils.ApiConfiguration
             #endregion PLAYER
         };
 
-        static bool IsSimpleType(JTokenType type) => (type == JTokenType.String) ||
+        private static bool IsSimpleType(JTokenType type) => (type == JTokenType.String) ||
             (type == JTokenType.Integer) ||
             (type == JTokenType.Float) ||
             (type == JTokenType.Boolean) ||
@@ -92,7 +98,7 @@ namespace ROH.Utils.ApiConfiguration
         {
             HttpClientHandler handler = new HttpClientHandler();
 #if DEBUG
-            handler.ServerCertificateCustomValidationCallback =(httpRequestMessage, cert, cetChain, policyErrors) => true;
+            handler.ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => true;
 #endif
             using HttpClient client = new HttpClient(handler);
 
@@ -119,7 +125,7 @@ namespace ROH.Utils.ApiConfiguration
         {
             HttpClientHandler handler = new HttpClientHandler();
 #if DEBUG
-            handler.ServerCertificateCustomValidationCallback =(httpRequestMessage, cert, cetChain, policyErrors) => true;
+            handler.ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => true;
 #endif
             using HttpClient client = new HttpClient(handler);
             string param = string.Empty;
@@ -174,7 +180,7 @@ namespace ROH.Utils.ApiConfiguration
         {
             HttpClientHandler handler = new HttpClientHandler();
 #if DEBUG
-            handler.ServerCertificateCustomValidationCallback =(httpRequestMessage, cert, cetChain, policyErrors) => true;
+            handler.ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => true;
 #endif
             using HttpClient client = new HttpClient(handler);
 
@@ -190,6 +196,32 @@ namespace ROH.Utils.ApiConfiguration
             return await response.Content.ReadAsStringAsync().ConfigureAwait(true);
         }
 
+        public async Task<string> PostFileAsync(
+            Services service,
+            Stream fileStream,
+            string fileName,
+            string versionGuid,
+            CancellationToken cancellationToken = default)
+        {
+            HttpClientHandler handler = new HttpClientHandler();
+#if DEBUG
+            handler.ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => true;
+#endif
+            using HttpClient client = new HttpClient(handler);
+
+            using MultipartFormDataContent content = new MultipartFormDataContent();
+            content.Add(new StreamContent(fileStream), "file", fileName);
+            content.Add(new StringContent(versionGuid), "versionGuid");
+
+            HttpResponseMessage response = await client.PostAsync(
+                _servicesUrl.GetValueOrDefault(service),
+                content,
+                cancellationToken)
+                .ConfigureAwait(true);
+
+            return await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+        }
+
         public async Task<string> UpdateAsync(
             Services service,
             object objectToSend,
@@ -197,7 +229,7 @@ namespace ROH.Utils.ApiConfiguration
         {
             HttpClientHandler handler = new HttpClientHandler();
 #if DEBUG
-            handler.ServerCertificateCustomValidationCallback =(httpRequestMessage, cert, cetChain, policyErrors) => true;
+            handler.ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => true;
 #endif
             using HttpClient client = new HttpClient(handler);
 
@@ -226,6 +258,8 @@ namespace ROH.Utils.ApiConfiguration
             UploadVersionFile,
             GetAllVersionFiles,
             DownloadFile,
+            UploadBuildZip,
+            ConfirmBuildUpload,
 
             CreateNewUser,
             FindUserByEmail,

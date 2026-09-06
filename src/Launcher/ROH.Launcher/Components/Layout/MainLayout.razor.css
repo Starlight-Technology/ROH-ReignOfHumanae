@@ -1,0 +1,60 @@
+.page {
+    display: flex;
+    min-height: 100vh;
+}
+
+main {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 220px),
+        var(--bg);
+    flex: 1;
+    min-width: 0;
+}
+
+.sidebar {
+    background: #15130f;
+    border-right: 1px solid var(--line);
+    flex: 0 0 260px;
+    min-height: 100vh;
+}
+
+.top-row {
+    align-items: center;
+    background: rgba(21, 19, 15, 0.94);
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    gap: 1rem;
+    height: 4rem;
+    justify-content: space-between;
+    padding: 0 1.4rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.top-account {
+    color: var(--gold-strong);
+    font-size: 0.9rem;
+    font-weight: 800;
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+    .page {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        flex: none;
+        min-height: auto;
+    }
+
+    .top-row {
+        height: auto;
+        min-height: 3.4rem;
+        padding: 0.75rem 1rem;
+    }
+}

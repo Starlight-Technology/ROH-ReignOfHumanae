@@ -11,5 +11,5 @@ namespace ROH.Contracts.WebSocket.Player;
 [MessagePackObject]
 public class NearbyPlayersMessage
 {
-    [Key(0)] public List<NearbyPlayerMessage> Players = new List<NearbyPlayerMessage>();
+    [Key(0)] public List<NearbyPlayerMessage> Players = [];
 }
