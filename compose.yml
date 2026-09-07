@@ -1,0 +1,362 @@
+name: roh
+
+services:
+
+  # ============================================================
+  # DATABASE - POSTGRESQL
+  # ============================================================
+
+  postgres:
+    image: postgres:17
+    container_name: ROH.PostgreSQL
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - roh_postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+    networks:
+      - roh_network
+
+
+  # ============================================================
+  # DATABASE - MONGODB
+  # ============================================================
+
+  mongodb:
+    image: mongo:8
+    container_name: ROH.MongoDB
+    restart: unless-stopped
+
+    ports:
+      - "27017:27017"
+
+    volumes:
+      - roh_mongodb_data:/data/db
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mongosh --quiet --eval \"db.adminCommand('ping').ok\" | grep 1"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+    networks:
+      - roh_network
+
+
+  # ============================================================
+  # GATEWAY
+  # ============================================================
+
+  gateway:
+    container_name: ROH.Gateway
+
+    build:
+      context: .
+      dockerfile: ./src/Gateway/ROH.Gateway/Dockerfile
+
+    restart: unless-stopped
+
+    ports:
+      - "9001:9001"
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+
+    networks:
+      - roh_network
+
+
+  # ============================================================
+  # BLAZOR SERVER
+  # ============================================================
+
+  blazor:
+    container_name: ROH.Blazor
+
+    build:
+      context: .
+      dockerfile: ./src/Blazor/ROH.Blazor.Server/Dockerfile
+
+    restart: unless-stopped
+
+    ports:
+      - "9010:9010"
+
+    depends_on:
+      gateway:
+        condition: service_started
+
+    networks:
+      - roh_network
+
+
+  # ============================================================
+  # API - VERSION FILES
+  # ============================================================
+
+  api-versionfiles:
+    container_name: ROH.Api.VersionFiles
+
+    build:
+      context: .
+      dockerfile: ./src/Api/ROH.Api.VersionFiles/Dockerfile
+
+    restart: unless-stopped
+
+    ports:
+      - "9100:9100"
+
+    environment:
+      ROH_DATABASE_CONNECTION_STRING_FILE: "Host=postgres;Port=5432;Database=ROH.FILE;Username=postgres;Password=postgres123;"
+      DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT: "true"
+
+    volumes:
+      - /home/roh:/app/ROH/updateFiles
+
+    user: roh
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    networks:
+      - roh_network
+
+
+  # ============================================================
+  # API - VERSION
+  # ============================================================
+
+  api-version:
+    container_name: ROH.Api.Version
+
+    build:
+      context: .
+      dockerfile: ./src/Api/ROH.Api.Version/Dockerfile
+
+    restart: unless-stopped
+
+    ports:
+      - "9101:9101"
+
+    environment:
+      ROH_DATABASE_CONNECTION_STRING_VERSION: "Host=postgres;Port=5432;Database=ROH.VERSION;Username=postgres;Password=postgres123;"
+      DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT: "true"
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    networks:
+      - roh_network
+
+
+  # ============================================================
+  # API - ACCOUNT
+  # ============================================================
+
+  api-account:
+    container_name: ROH.Api.Account
+
+    build:
+      context: .
+      dockerfile: ./src/Api/ROH.Api.Account/Dockerfile
+
+    restart: unless-stopped
+
+    ports:
+      - "9102:9102"
+
+    environment:
+      ROH_DATABASE_CONNECTION_STRING_ACCOUNT: "Host=postgres;Port=5432;Database=ROH.ACCOUNT;Username=postgres;Password=postgres123;"
+      DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT: "true"
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    networks:
+      - roh_network
+
+
+  # ============================================================
+  # API - LOGIN
+  # ============================================================
+
+  api-login:
+    container_name: ROH.Api.Login
+
+    build:
+      context: .
+      dockerfile: ./src/Api/ROH.Api.Login/Dockerfile
+
+    restart: unless-stopped
+
+    ports:
+      - "9103:9103"
+
+    environment:
+      ROH_DATABASE_CONNECTION_STRING_ACCOUNT: "Host=postgres;Port=5432;Database=ROH.ACCOUNT;Username=postgres;Password=postgres123;"
+      DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT: "true"
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    networks:
+      - roh_network
+
+
+  # ============================================================
+  # API - LOG
+  # ============================================================
+
+  api-log:
+    container_name: ROH.Api.Log
+
+    build:
+      context: .
+      dockerfile: ./src/Api/ROH.Api.Log/Dockerfile
+
+    restart: unless-stopped
+
+    ports:
+      - "9104:9104"
+
+    environment:
+      ROH_DATABASE_CONNECTION_STRING_LOG: "Host=postgres;Port=5432;Database=ROH.LOG;Username=postgres;Password=postgres123;"
+      DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT: "true"
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    networks:
+      - roh_network
+
+
+  # ============================================================
+  # API - PLAYER
+  # ============================================================
+
+  api-player:
+    container_name: ROH.Api.Player
+
+    build:
+      context: .
+      dockerfile: ./src/Api/ROH.Api.Player/Dockerfile
+
+    restart: unless-stopped
+
+    ports:
+      - "9105:9105"
+
+    environment:
+      ROH_DATABASE_CONNECTION_STRING_PLAYER: "Host=postgres;Port=5432;Database=ROH.PLAYER;Username=postgres;Password=postgres123;"
+      DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT: "true"
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    networks:
+      - roh_network
+
+
+  # ============================================================
+  # API - PLAYER SYNC STATE
+  # ============================================================
+
+  api-playersync-state:
+    container_name: ROH.Api.PlayerSync.State
+
+    build:
+      context: .
+      dockerfile: ./src/Api/ROH.Api.PlayerSync.State/Dockerfile
+
+    restart: unless-stopped
+
+    ports:
+      - "9210:9210"
+
+    environment:
+      ROH_MONGO_PLAYER_CONNECTION_STRING: "mongodb://mongodb:27017/?retryWrites=false&serverSelectionTimeoutMS=5000&connectTimeoutMS=10000"
+      DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT: "true"
+
+    depends_on:
+      mongodb:
+        condition: service_healthy
+
+    networks:
+      - roh_network
+
+
+  # ============================================================
+  # WORKER - GET NEARBY PLAYER
+  # ============================================================
+
+  worker-getnearbyplayer:
+    container_name: ROH.Worker.GetNearbyPlayer
+
+    build:
+      context: .
+      dockerfile: ./src/Worker/ROH.Worker.GetNearbyPlayer/Dockerfile
+
+    restart: unless-stopped
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+      mongodb:
+        condition: service_healthy
+
+    networks:
+      - roh_network
+
+
+# ================================================================
+# VOLUMES
+# ================================================================
+
+volumes:
+
+  roh_postgres_data:
+    name: roh_postgres_data
+
+  roh_mongodb_data:
+    name: roh_mongodb_data
+
+
+# ================================================================
+# NETWORK
+# ================================================================
+
+networks:
+
+  roh_network:
+    name: roh_network
+    driver: bridge

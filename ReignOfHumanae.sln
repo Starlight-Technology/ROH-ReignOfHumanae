@@ -115,7 +115,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Launcher", "Launcher", "{69
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROH.Launcher", "src\Launcher\ROH.Launcher\ROH.Launcher.csproj", "{C99267C2-BA90-4989-A294-1E5A84EF981F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Corona", "C:\Users\rodri\source\repos\Nebula\Corona\Corona\Corona.csproj", "{629B30A3-1D4A-C898-7609-7016379AD0CC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Corona", "Corona\Corona\Corona.csproj", "{629B30A3-1D4A-C898-7609-7016379AD0CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

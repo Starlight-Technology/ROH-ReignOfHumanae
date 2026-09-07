@@ -1,0 +1,54 @@
+{
+    "name": "ROH-ReignOfHumanae",
+
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": "."
+    },
+
+    "remoteUser": "vscode",
+
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-dotnettools.csdevkit",
+                "ms-dotnettools.csharp",
+                "ms-dotnettools.vscode-dotnet-runtime",
+                "ms-azuretools.vscode-docker",
+                "redhat.vscode-yaml",
+                "editorconfig.editorconfig"
+            ],
+            "settings": {
+                "dotnet.restoreOnStartup": true,
+                "dotnet.buildOnSave": true,
+                "editor.formatOnSave": true,
+                "editor.defaultFormatter": "ms-dotnettools.csharp",
+                "files.exclude": {
+                    "**/bin": true,
+                    "**/obj": true,
+                    "**/.vs": true
+                }
+            }
+        }
+    },
+
+    "forwardPorts": [
+        5432,
+        27017,
+        9001,
+        9010,
+        9100,
+        9101,
+        9102,
+        9103,
+        9104,
+        9105,
+        9210
+    ],
+
+    "postCreateCommand": "dotnet restore",
+
+    "runArgs": [
+        "--network=host"
+    ]
+}
